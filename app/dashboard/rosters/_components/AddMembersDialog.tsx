@@ -131,7 +131,7 @@ export function AddMembersDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-card border-border max-w-2xl max-h-[80vh] overflow-y-auto">
+      <DialogContent variant="form" className="bg-card sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle className="text-foreground">{t("addMembers.title")}</DialogTitle>
           <DialogDescription className="text-muted-foreground">
@@ -198,7 +198,7 @@ export function AddMembersDialog({
                   </span>
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-[400px] p-0" align="start">
+              <PopoverContent variant="combobox" className="p-0 sm:w-[400px]" align="start">
                 <Command>
                   <CommandInput
                     placeholder={t("memberAutocomplete.searchPlaceholder")}

@@ -26,7 +26,7 @@ import { createApiClient } from '@/lib/api';
 import { createApiClient } from '@/lib/api';
 
 // Create client instance
-const api = createApiClient('https://api.clashk.ing', 'your-access-token');
+const api = createApiClient('https://v2-api.clashk.ing', 'your-access-token');
 
 // Authentication
 const { data: user } = await api.auth.getCurrentUser();
@@ -69,7 +69,7 @@ You can also use individual clients for smaller bundle sizes:
 import { AuthClient } from '@/lib/api/clients/auth-client';
 import { ClanClient } from '@/lib/api/clients/clan-client';
 
-const config = { baseUrl: 'https://api.clashk.ing', accessToken: 'token' };
+const config = { baseUrl: 'https://v2-api.clashk.ing', accessToken: 'token' };
 
 const authClient = new AuthClient(config);
 const clanClient = new ClanClient(config);
@@ -191,7 +191,7 @@ await apiClient.refreshToken(refreshToken);
 ```typescript
 import { createApiClient } from '@/lib/api';
 
-const api = createApiClient('https://api.clashk.ing', token);
+const api = createApiClient('https://v2-api.clashk.ing', token);
 
 // Full API coverage
 api.auth.*       // 11 authentication methods

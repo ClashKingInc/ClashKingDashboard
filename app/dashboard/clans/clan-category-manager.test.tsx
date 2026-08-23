@@ -1,6 +1,7 @@
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import {
   ClanCategoryManager,
+  moveClanCategory,
   normalizeClanCategoryName,
   validateClanCategoryName,
 } from "./clan-category-manager";
@@ -9,6 +10,7 @@ const apiMock = vi.hoisted(() => ({
   list: vi.fn(),
   create: vi.fn(),
   rename: vi.fn(),
+  reorder: vi.fn(),
   previewDelete: vi.fn(),
   delete: vi.fn(),
 }));
@@ -36,6 +38,7 @@ const category = {
   id: "category-1",
   serverId: "server-1",
   name: "Competitive",
+  position: 0,
   clanCount: 2,
 };
 
@@ -47,6 +50,19 @@ describe("clan category names", () => {
     expect(validateClanCategoryName("bad\u0007name")).toBe(false);
     expect(validateClanCategoryName("😀".repeat(64))).toBe(true);
     expect(validateClanCategoryName("😀".repeat(65))).toBe(false);
+  });
+
+  it("moves categories and rewrites zero-based positions", () => {
+    const categories = [
+      category,
+      { ...category, id: "category-2", name: "Events", position: 1 },
+      { ...category, id: "category-3", name: "CWL", position: 2 },
+    ];
+    expect(moveClanCategory(categories, "category-3", "category-1")).toEqual([
+      { ...categories[2], position: 0 },
+      { ...categories[0], position: 1 },
+      { ...categories[1], position: 2 },
+    ]);
   });
 });
 
@@ -62,7 +78,7 @@ describe("ClanCategoryManager", () => {
   it("refreshes category and clan state after create and rename", async () => {
     const refreshClans = vi.fn().mockResolvedValue(undefined);
     apiMock.create.mockResolvedValue({
-      data: { category: { ...category, id: "category-2", name: "Events", clanCount: 0 } },
+      data: { category: { ...category, id: "category-2", name: "Events", position: 1, clanCount: 0 } },
       status: 201,
     });
     apiMock.rename.mockResolvedValue({

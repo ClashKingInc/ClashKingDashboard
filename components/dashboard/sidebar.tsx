@@ -1,33 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import {
-  Home,
-  Settings,
-  Users,
-  Swords,
-  ScrollText,
-  ShieldCheck,
-  Bell,
-  ClipboardList,
-  Ban,
-  Gift,
-  Check,
-  ChevronDown,
-  LayoutDashboard,
-  LayoutTemplate,
-  Link2,
-  Trophy,
-  UserCog,
-  TicketIcon,
-  FileText,
-  KeyRound,
-  Map,
-} from "lucide-react";
-import Image from "next/image";
+import { ArrowUpRight, Check, ChevronDown, TriangleAlert } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -40,8 +18,9 @@ import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 import type { GuildInfo } from "@/lib/api/types/server";
 import { useDashboardAccess } from "./dashboard-access-provider";
-import type { DashboardSection } from "@/lib/api/types/dashboard-access";
 import { dashboardHref } from "@/lib/dashboard-route";
+import { dashboardNavigationSections } from "./dashboard-navigation";
+import { InactiveServerDialog } from "./inactive-server-dialog";
 
 interface SidebarProps {
   readonly guildId: string;
@@ -57,11 +36,16 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, availableGuilds
   const router = useRouter();
   const t = useTranslations("Sidebar");
   const tNavigation = useTranslations("Navigation");
-  const tCommon = useTranslations("Common");
   const { capabilities, canView } = useDashboardAccess();
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [inactiveGuild, setInactiveGuild] = useState<GuildInfo | null>(null);
   const selectGuild = (guild: GuildInfo) => {
+    if (guild.inactive) {
+      setIsDropdownOpen(false);
+      setInactiveGuild(guild);
+      return;
+    }
     const icon = guild.icon?.startsWith("https") ? guild.icon : undefined;
     sessionStorage.setItem("selected_guild", JSON.stringify({
       id: guild.id,
@@ -72,154 +56,13 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, availableGuilds
     router.push(dashboardHref("", guild.id));
   };
 
-  const navigationSections: Array<{ titleKey: string | null; items: Array<{ nameKey: string; href: string; icon: React.ComponentType<{ className?: string }>; capability?: DashboardSection; fullAccess?: boolean }> }> = [
-    {
-      titleKey: null, // Overview - no section title
-      items: [
-        {
-          nameKey: "overview.name",
-          href: dashboardHref("", guildId),
-          icon: Home,
-        },
-      ],
-    },
-    {
-      titleKey: "sections.configuration",
-      items: [
-        {
-          nameKey: "general.name",
-          href: dashboardHref("general", guildId),
-          icon: Settings,
-          capability: "settings",
-        },
-        {
-          nameKey: "familySettings.name",
-          href: dashboardHref("family-settings", guildId),
-          icon: UserCog,
-          capability: "family_settings",
-        },
-        {
-          nameKey: "logs.name",
-          href: dashboardHref("logs", guildId),
-          icon: ScrollText,
-          capability: "logs",
-        },
-        {
-          nameKey: "dashboardAccess.name",
-          href: dashboardHref("dashboard-access", guildId),
-          icon: KeyRound,
-          fullAccess: true,
-        },
-      ],
-    },
-    {
-      titleKey: "sections.clanManagement",
-      items: [
-        {
-          nameKey: "clans.name",
-          href: dashboardHref("clans", guildId),
-          icon: Users,
-          capability: "clans",
-        },
-        {
-          nameKey: "rosters.name",
-          href: dashboardHref("rosters", guildId),
-          icon: ClipboardList,
-          capability: "rosters",
-        },
-        {
-          nameKey: "bases.name",
-          href: dashboardHref("bases", guildId),
-          icon: Map,
-          fullAccess: true,
-        },
-      ],
-    },
-    {
-      titleKey: "sections.playerManagement",
-      items: [
-        {
-          nameKey: "links.name",
-          href: dashboardHref("links", guildId),
-          icon: Link2,
-          capability: "links",
-        },
-        {
-          nameKey: "bans.name",
-          href: dashboardHref("bans-and-strikes", guildId),
-          icon: Ban,
-          capability: "moderation",
-        },
-      ],
-    },
-    {
-      titleKey: "sections.automation",
-      items: [
-        {
-          nameKey: "roles.name",
-          href: dashboardHref("roles", guildId),
-          icon: ShieldCheck,
-          capability: "roles",
-        },
-        {
-          nameKey: "reminders.name",
-          href: dashboardHref("reminders", guildId),
-          icon: Bell,
-          capability: "reminders",
-        },
-        {
-          nameKey: "autoboards.name",
-          href: dashboardHref("autoboards", guildId),
-          icon: LayoutDashboard,
-          capability: "autoboards",
-        },
-        {
-          nameKey: "giveaways.name",
-          href: dashboardHref("giveaways", guildId),
-          icon: Gift,
-          capability: "giveaways",
-        },
-        {
-          nameKey: "panels.name",
-          href: dashboardHref("panels", guildId),
-          icon: LayoutTemplate,
-          capability: "panels",
-        },
-        {
-          nameKey: "tickets.name",
-          href: dashboardHref("tickets", guildId),
-          icon: TicketIcon,
-          capability: "tickets",
-        },
-        {
-          nameKey: "embeds.name",
-          href: dashboardHref("embeds", guildId),
-          icon: FileText,
-          capability: "embeds",
-        },
-      ],
-    },
-    {
-      titleKey: "sections.statistics",
-      items: [
-        {
-          nameKey: "wars.name",
-          href: dashboardHref("wars", guildId),
-          icon: Swords,
-          capability: "wars",
-        },
-        {
-          nameKey: "leaderboards.name",
-          href: dashboardHref("leaderboards", guildId),
-          icon: Trophy,
-          capability: "leaderboards",
-        },
-      ],
-    },
-  ];
-
-  const visibleNavigationSections = navigationSections
-    .map((section) => ({ ...section, items: section.items.filter((item) => item.fullAccess ? capabilities?.full_access : !item.capability || canView(item.capability)) }))
+  const visibleNavigationSections = dashboardNavigationSections
+    .map((section) => ({
+      ...section,
+      items: section.items
+        .filter((item) => item.fullAccess ? capabilities?.full_access : !item.capability || canView(item.capability))
+        .map((item) => ({ ...item, href: dashboardHref(item.path, guildId) })),
+    }))
     .filter((section) => section.items.length > 0);
 
   const normalizedPathname = pathname.replace(/^\/[a-z]{2}(?=\/)/, "").replace(/\/$/, "") || "/";
@@ -235,8 +78,8 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, availableGuilds
   };
 
   return (
-    <aside className="flex h-full w-72 flex-col border-r border-border bg-card">
-      <div className="hidden h-[72px] shrink-0 items-center border-b border-border px-3 md:flex">
+    <aside className="flex h-full w-full flex-col border-r border-border bg-card lg:w-72">
+      <div className="hidden h-[72px] shrink-0 items-center border-b border-border px-3 lg:flex">
         {isLoading ? (
           <div className="flex min-w-0 flex-1 items-center gap-3">
             <Skeleton className="h-10 w-10 rounded-xl" />
@@ -278,6 +121,9 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, availableGuilds
                     </AvatarFallback>
                   </Avatar>
                   <span className="min-w-0 flex-1 truncate font-medium">{guild.name}</span>
+                  {guild.inactive && (
+                    <TriangleAlert className="h-4 w-4 shrink-0 text-amber-500" aria-label={t("inactiveServer")} />
+                  )}
                   {guild.id === guildId && <Check className="h-4 w-4 shrink-0 text-primary" />}
                 </DropdownMenuItem>
               ))}
@@ -308,8 +154,12 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, availableGuilds
                   <Link
                     key={item.nameKey}
                     href={item.href}
+                    prefetch={false}
+                    onMouseEnter={() => router.prefetch(item.href)}
+                    onFocus={() => router.prefetch(item.href)}
                     className={cn(
                       "group relative flex min-h-10 items-center gap-3 overflow-hidden rounded-xl px-3 py-2 text-sm font-semibold transition-colors duration-150",
+                      item.desktopOnly && "hidden lg:flex",
                       isActive
                         ? "bg-primary text-primary-foreground"
                         : "text-muted-foreground hover:bg-accent hover:text-foreground"
@@ -336,21 +186,40 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, availableGuilds
       <div className="border-t border-border bg-card p-3">
         <Link
           href={dashboardHref("support-us", guildId)}
-          className="flex items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 text-[11px] leading-none text-muted-foreground transition-colors hover:bg-accent/60 hover:text-foreground"
+          prefetch={false}
+          className="group flex min-h-10 items-center justify-between rounded-xl bg-muted/55 px-3 py-2 text-sm font-semibold text-foreground shadow-sm shadow-black/5 outline-none transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
         >
-          <span>{tCommon("poweredBy")}</span>
-          <span className="flex items-center gap-1 font-semibold text-primary">
-            <Image
-              src="/logos/bot-app-logo.png"
-              alt=""
-              width={16}
-              height={16}
-              className="h-4 w-4 object-contain"
-            />
-            ClashKing
+          <span className="flex items-center gap-2.5">
+            <span className="relative h-7 w-6 shrink-0 overflow-hidden" aria-hidden="true">
+              <Image
+                src="/concepts/clashking-wordmark-light.svg"
+                alt=""
+                width={101}
+                height={28}
+                className="absolute left-0 top-0 h-7 w-auto max-w-none dark:hidden"
+              />
+              <Image
+                src="/concepts/clashking-wordmark-dark.svg"
+                alt=""
+                width={101}
+                height={28}
+                className="absolute left-0 top-0 hidden h-7 w-auto max-w-none dark:block"
+              />
+            </span>
+            <span>{tNavigation("support")}</span>
           </span>
+          <ArrowUpRight className="h-4 w-4 text-muted-foreground transition-colors group-hover:text-primary" aria-hidden="true" />
         </Link>
       </div>
+      <InactiveServerDialog
+        guild={inactiveGuild}
+        locale={locale}
+        onClose={() => setInactiveGuild(null)}
+        onReactivated={(guild) => {
+          setInactiveGuild(null);
+          selectGuild(guild);
+        }}
+      />
     </aside>
   );
 }

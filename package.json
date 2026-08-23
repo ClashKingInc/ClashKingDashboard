@@ -8,21 +8,31 @@
     "npm": ">=12.0.1"
   },
   "scripts": {
-    "dev": "vinext dev --port 3002",
-    "build": "npm run validate:messages && vinext build && node scripts/postprocess-static-html.mjs",
-    "build:production": "NEXT_PUBLIC_API_URL=https://local-api.clashk.ing NEXT_PUBLIC_DISCORD_CLIENT_ID=824653933347209227 npm run build",
+    "dev": "vinext dev --hostname 127.0.0.1 --port 3002",
+    "build": "npm run validate:messages && vinext build && node scripts/postprocess-static-html.mjs && npm run check:bundles",
+    "build:production": "NEXT_PUBLIC_CLASHKING_API_ORIGIN=https://v2-api.clashk.ing NEXT_PUBLIC_CLASHKING_AI_ORIGIN=https://ai.clashk.ing NEXT_PUBLIC_DISCORD_CLIENT_ID=824653933347209227 npm run build",
     "start": "vinext start --port 3002",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit && tsc --noEmit -p worker/tsconfig.json",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p workers/dashboard-edge/tsconfig.json",
     "validate:messages": "node scripts/validate-messages.mjs",
+    "check:bundles": "node scripts/check-dashboard-bundles.mjs",
     "test": "NODE_OPTIONS=--no-experimental-webstorage vitest run",
     "test:watch": "NODE_OPTIONS=--no-experimental-webstorage vitest",
     "test:coverage": "NODE_OPTIONS=--no-experimental-webstorage vitest run --coverage",
     "preview": "wrangler dev",
     "worker:types": "wrangler types --config wrangler.deploy.jsonc",
-    "deploy": "npm run build:production && wrangler deploy --config wrangler.deploy.jsonc"
+    "assistant:config": "node scripts/prepare-assistant-wrangler-config.mjs",
+    "assistant:dev": "node scripts/prepare-assistant-wrangler-config.mjs --local && wrangler dev --config .wrangler/wrangler.assistant.generated.jsonc --port 8788",
+    "assistant:types": "npm run assistant:config && wrangler types workers/roster-assistant/bindings.d.ts --config .wrangler/wrangler.assistant.generated.jsonc --env-interface RosterAssistantBindings --include-runtime false",
+    "assistant:check": "tsc --noEmit -p workers/roster-assistant/tsconfig.json",
+    "deploy:dashboard": "npm run build:production && wrangler deploy --config wrangler.deploy.jsonc",
+    "deploy:assistant": "npm run assistant:check && npm run assistant:config && wrangler deploy --config .wrangler/wrangler.assistant.generated.jsonc",
+    "deploy": "npm run deploy:assistant && npm run deploy:dashboard"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^4.0.27",
+    "@ai-sdk/react": "^4.0.50",
+    "@cloudflare/codemode": "^0.5.1",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
@@ -32,6 +42,7 @@
     "@radix-ui/react-collapsible": "^1.1.20",
     "@radix-ui/react-dialog": "^1.1.19",
     "@radix-ui/react-dropdown-menu": "^2.1.24",
+    "@radix-ui/react-hover-card": "^1.1.23",
     "@radix-ui/react-icons": "^1.3.2",
     "@radix-ui/react-label": "^2.1.15",
     "@radix-ui/react-popover": "^1.1.23",
@@ -44,15 +55,19 @@
     "@radix-ui/react-toast": "^1.2.23",
     "@radix-ui/react-tooltip": "^1.2.16",
     "@remotion/player": "^4.0.512",
+    "@resvg/resvg-wasm": "2.4.0",
     "@swc/helpers": "^0.5.23",
     "@tailwindcss/postcss": "^4.3.2",
+    "@tanstack/react-query": "^5.101.4",
     "@vinext/cloudflare": "^1.0.0-beta.6",
+    "ai": "^7.0.47",
     "axios": "^1.19.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "emoji-datasource-twitter": "^16.0.0",
     "framer-motion": "^12.43.0",
+    "html-to-image": "^1.11.13",
     "lucide-react": "^1.31.0",
     "lz-string": "^1.5.0",
     "next-intl": "^4.13.7",
@@ -65,9 +80,11 @@
     "remotion": "^4.0.489",
     "tailwind-merge": "^3.6.0",
     "three": "^0.185.1",
+    "tokenlens": "^1.3.1",
     "tw-animate": "^1.0.3",
     "twemoji": "^14.0.2",
-    "vinext": "^1.0.0-beta.6"
+    "vinext": "^1.0.0-beta.6",
+    "write-excel-file": "^4.1.1"
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "^1.52.1",
@@ -97,7 +114,8 @@
   "overrides": {
     "postcss": "$postcss",
     "form-data": "^4.0.6",
-    "sharp": "^0.35.2"
+    "sharp": "^0.35.2",
+    "undici": "^7.29.0"
   },
   "type": "module"
 }

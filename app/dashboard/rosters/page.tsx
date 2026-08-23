@@ -4,14 +4,15 @@ import { useLocale } from "next-intl";
 import { useGuildId } from "@/lib/dashboard-route";
 import { dashboardHref } from "@/lib/dashboard-route";
 import React, { useState, useEffect, useMemo, useRef, useCallback } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
+import { FolderIcon } from "@/components/ui/folder-icon";
 import { Label } from "@/components/ui/label";
 import {
   Dialog,
@@ -29,13 +30,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader2, Plus, Users, Trash2, Search, RefreshCw, Eye, Copy, ClipboardList, GitCompare, Check, X, FolderOpen, Pencil, Layers, Zap, Bell, Play, Pause, MessageSquare, Lock, Unlock, Archive, UserMinus, Tag, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { Loader2, Plus, Trash2, Search, RefreshCw, Eye, Copy, ClipboardList, GitCompare, Check, X, Pencil, Layers, Zap, Bell, Play, Pause, MessageSquare, Lock, Unlock, Archive, UserMinus, AlertTriangle, CheckCircle2, Sparkles, Medal, MoreHorizontal } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ChannelCombobox } from "@/components/ui/channel-combobox";
 import { ClanCombobox } from "@/components/ui/clan-combobox";
 import { useToast } from "@/components/ui/use-toast";
 import { apiCache } from "@/lib/api-cache";
+import { useAuthSession } from "@/components/auth-session-provider";
+import { isDeveloperUserId } from "@/lib/internal/developer-access";
+import { getDefaultBaseUrl } from "@/lib/api/client";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -51,20 +55,20 @@ import {
 import { useRosters } from "./_hooks";
 import { CloneDialog } from "./_components";
 import * as api from "./_lib/api";
-import type { Roster, RosterGroup, RosterStats, RosterAutomation, AutomationActionType, DiscordChannel, CreateRosterFormData, CloneRosterFormData, SignupCategory } from "./_lib/types";
-import { calculateRosterStats, formatThRestriction, getAutomationLabel, buildOffsetSeconds, parseOffsetSeconds, formatOffsetSeconds } from "./_lib/utils";
-import type { OffsetUnit } from "./_lib/utils";
+import type { Roster, RosterGroup, RosterStats, RosterAutomation, AutomationActionType, DiscordChannel, CreateRosterFormData, CloneRosterFormData } from "./_lib/types";
+import { calculateRosterStats, formatThRestriction, getAutomationLabel, formatTimestamp, unixToDatetimeLocal, datetimeLocalToUnix } from "./_lib/utils";
 
 function getGroupsCacheKey(guildId: string): string {
   return `rosters-groups-${guildId}`;
 }
 
-function getCategoriesCacheKey(guildId: string): string {
-  return `rosters-categories-${guildId}`;
-}
-
 function getChannelsCacheKey(guildId: string): string {
   return `rosters-channels-${guildId}`;
+}
+
+function getClanBadgeUrl(clanTag?: string | null): string | undefined {
+  if (!clanTag) return undefined;
+  return `${getDefaultBaseUrl()}/v2/clan/${encodeURIComponent(clanTag)}/badge`;
 }
 
 // Roster Card Component
@@ -79,7 +83,10 @@ interface RosterCardProps {
   readonly onView: () => void;
   readonly onClone: () => void;
   readonly onDelete: () => void;
+  readonly onRename: (alias: string) => Promise<void>;
+  readonly onRefresh: () => Promise<void>;
   readonly onMoveToGroup: (groupId: string | null) => void;
+  readonly refreshing: boolean;
 }
 
 function RosterCard({
@@ -93,19 +100,57 @@ function RosterCard({
   onView,
   onClone,
   onDelete,
+  onRename,
+  onRefresh,
   onMoveToGroup,
+  refreshing,
 }: RosterCardProps) {
   const t = useTranslations("RostersPage");
+  const [editingName, setEditingName] = useState(false);
+  const [nameDraft, setNameDraft] = useState(roster.alias);
+  const [savingName, setSavingName] = useState(false);
+  const clanBadgeUrl = getClanBadgeUrl(roster.clan_tag) ?? roster.clan_badge ?? undefined;
+
+  const cancelRename = () => {
+    setNameDraft(roster.alias);
+    setEditingName(false);
+  };
+
+  const saveRename = async () => {
+    const alias = nameDraft.trim();
+    if (!alias || alias === roster.alias) {
+      cancelRename();
+      return;
+    }
+    setSavingName(true);
+    try {
+      await onRename(alias);
+      setEditingName(false);
+    } finally {
+      setSavingName(false);
+    }
+  };
+
   return (
     <Card
-      className={`bg-card border-border transition-all relative ${
+      className={`relative flex h-full flex-col border-0 bg-card shadow-sm shadow-black/5 transition-[background-color,box-shadow] ${
         compareMode
           ? isSelected // NOSONAR — JSX nested ternary for multi-branch display state
-            ? "ring-2 ring-primary border-primary bg-primary/5 cursor-pointer"
-            : "hover:border-primary/50 hover:bg-primary/5 cursor-pointer"
-          : "hover:border-primary/50"
+            ? "cursor-pointer bg-primary/5 ring-2 ring-primary"
+            : "cursor-pointer hover:bg-muted/25 hover:shadow-md"
+          : "hover:shadow-md"
       }`}
       onClick={compareMode ? onSelect : undefined}
+      onKeyDown={compareMode ? (event) => {
+        if (event.target !== event.currentTarget) return;
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onSelect();
+        }
+      } : undefined}
+      role={compareMode ? "button" : undefined}
+      tabIndex={compareMode ? 0 : undefined}
+      aria-pressed={compareMode ? isSelected : undefined}
     >
       {/* Selection indicator in compare mode */}
       {compareMode && (
@@ -117,121 +162,168 @@ function RosterCard({
           {isSelected && <Check className="w-4 h-4 text-primary-foreground" />}
         </div>
       )}
-      <CardHeader className="pb-3">
-        <div className={`flex items-center gap-3 ${compareMode ? "pr-10" : ""}`}>
-          {roster.clan_badge ? (
-            <Avatar className="h-10 w-10">
-              <AvatarImage src={roster.clan_badge} alt={roster.clan_name || ""} />
-              <AvatarFallback>{roster.alias.charAt(0)}</AvatarFallback>
-            </Avatar>
+      <CardHeader className={`pb-3 ${editingName ? "pr-5" : "pr-14"}`}>
+        <div className={`flex items-center gap-3 ${compareMode ? "pr-6" : ""}`}>
+          {clanBadgeUrl ? (
+            <Image
+              src={clanBadgeUrl}
+              alt={roster.clan_name ? `${roster.clan_name} badge` : "Clan badge"}
+              width={56}
+              height={56}
+              unoptimized
+              className="h-14 w-14 shrink-0 object-contain"
+            />
           ) : (
-            <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
-              <Users className="h-5 w-5 text-primary" />
-            </div>
+            <ClipboardList className="h-11 w-11 shrink-0 text-muted-foreground/65" aria-hidden="true" />
           )}
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2">
-              <CardTitle className="text-lg text-foreground truncate">{roster.alias}</CardTitle>
-              <Badge variant={roster.roster_type === "clan" ? "default" : "secondary"} className="text-xs">
-                {roster.roster_type}
+            {editingName ? (
+              <div
+                className="flex min-w-0 items-center gap-1"
+                onClick={(event) => event.stopPropagation()}
+                onKeyDown={(event) => event.stopPropagation()}
+              >
+                <Input
+                  autoFocus
+                  value={nameDraft}
+                  onChange={(event) => setNameDraft(event.target.value)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") void saveRename();
+                    if (event.key === "Escape") cancelRename();
+                  }}
+                  className="h-8 w-0 min-w-0 flex-1 text-base font-semibold"
+                  aria-label={t("rosterCard.renameInput")}
+                  disabled={savingName}
+                />
+                <Button type="button" variant="ghost" size="icon" className="h-8 w-8 shrink-0" onClick={() => void saveRename()} disabled={savingName || !nameDraft.trim()} aria-label={t("rosterCard.renameSave")}>
+                  {savingName ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
+                </Button>
+                <Button type="button" variant="ghost" size="icon" className="h-8 w-8 shrink-0" onClick={cancelRename} disabled={savingName} aria-label={t("rosterCard.renameCancel")}>
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            ) : (
+              <div className="flex min-w-0 items-center gap-1">
+                <CardTitle className="truncate text-lg text-foreground">{roster.alias}</CardTitle>
+              </div>
+            )}
+            <div className="mt-1 flex min-w-0 items-center gap-2">
+              {roster.clan_name && (
+                <p className="truncate text-sm text-muted-foreground">{roster.clan_name}</p>
+              )}
+              <Badge variant="secondary" className="h-5 shrink-0 border-0 bg-muted/65 px-2 text-[11px] font-medium text-muted-foreground shadow-none">
+                {t(`rosterCard.${roster.roster_type}`)}
               </Badge>
             </div>
-            {roster.clan_name && (
-              <p className="text-sm text-muted-foreground truncate">{roster.clan_name}</p>
-            )}
           </div>
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-4">
+      {!compareMode && !editingName && (
+        <div className="absolute right-4 top-4" onClick={(event) => event.stopPropagation()}>{/* NOSONAR — menu trigger handles keyboard interaction */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="h-9 w-9 rounded-xl text-muted-foreground hover:bg-muted hover:text-foreground"
+                aria-label={t("rosterCard.actions", { name: roster.alias })}
+              >
+                <MoreHorizontal className="h-5 w-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="min-w-48 rounded-xl">
+              <DropdownMenuItem
+                onClick={() => {
+                  setNameDraft(roster.alias);
+                  setEditingName(true);
+                }}
+              >
+                <Pencil className="mr-2 h-4 w-4" />
+                {t("rosterCard.edit")}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => void onRefresh()} disabled={refreshing}>
+                {refreshing
+                  ? <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  : <RefreshCw className="mr-2 h-4 w-4" />}
+                {refreshing ? t("detailsDialog.refreshing") : t("detailsDialog.refresh")}
+              </DropdownMenuItem>
+              {groups.length > 0 && (
+                <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuLabel className="text-xs text-muted-foreground">{t("rosterCard.moveToGroup")}</DropdownMenuLabel>
+                  <DropdownMenuItem onClick={() => onMoveToGroup(null)} className={roster.group_id ? "" : "font-medium"}>
+                    <FolderIcon size={16} className="mr-2" />
+                    {t("rosterCard.noGroup")}
+                  </DropdownMenuItem>
+                  {groups.map((group) => (
+                    <DropdownMenuItem key={group.group_id} onClick={() => onMoveToGroup(group.group_id)} className={roster.group_id === group.group_id ? "font-medium" : ""}>
+                      <FolderIcon size={16} className="mr-2" />
+                      {group.alias}
+                    </DropdownMenuItem>
+                  ))}
+                </>
+              )}
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={onClone}>
+                <Copy className="mr-2 h-4 w-4" />
+                {t("rosterCard.clone")}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={onDelete} className="text-destructive focus:text-destructive">
+                <Trash2 className="mr-2 h-4 w-4" />
+                {t("rosterCard.delete")}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      )}
+
+      <CardContent className="flex flex-1 flex-col gap-4">
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-4 text-center">
-          <div>
+        <div className="grid grid-cols-2 gap-2 rounded-2xl bg-muted/45 p-2 text-center">
+          <div className="rounded-xl px-3 py-2">
             <p className="text-2xl font-bold text-foreground">{stats.totalMembers}</p>
             <p className="text-xs text-muted-foreground">{t("rosterCard.members")}</p>
           </div>
-          <div>
-            <p className="text-2xl font-bold text-orange-400">{stats.avgTh || "-"}</p>
+          <div className="rounded-xl px-3 py-2">
+            <p className="text-2xl font-bold text-foreground">{stats.avgTh || "—"}</p>
             <p className="text-xs text-muted-foreground">{t("rosterCard.avgTh")}</p>
-          </div>
-          <div>
-            <p className="text-2xl font-bold text-green-400">
-              {stats.avgHitrate ? `${stats.avgHitrate}%` : "-"}
-            </p>
-            <p className="text-xs text-muted-foreground">{t("rosterCard.avgHitrate")}</p>
           </div>
         </div>
 
         {/* TH Restriction */}
         {(roster.min_th || roster.max_th) && (
           <div className="flex items-center justify-center">
-            <Badge variant="outline" className="text-xs">
+            <Badge variant="secondary" className="border-0 bg-muted/65 text-xs font-medium text-muted-foreground shadow-none">
               {formatThRestriction(roster.min_th, roster.max_th)}
             </Badge>
           </div>
         )}
 
         {/* Member distribution */}
-        {stats.totalMembers > 0 && (
-          <div className="flex justify-center gap-2 text-xs">
-            {stats.inClan > 0 && (
-              <span className="text-green-400">{stats.inClan} {t("rosterCard.clan")}</span>
-            )}
-            {stats.inFamily > 0 && (
-              <span className="text-yellow-400">{stats.inFamily} {t("rosterCard.family")}</span>
-            )}
-            {stats.external > 0 && (
-              <span className="text-red-400">{stats.external} {t("rosterCard.external")}</span>
-            )}
-          </div>
-        )}
+        <div className="flex min-h-6 flex-wrap justify-center gap-2 text-xs">
+          {stats.totalMembers > 0 && (
+            <>
+              {stats.inClan > 0 && (
+                <span className="rounded-full bg-emerald-500/10 px-2.5 py-1 text-emerald-700 dark:text-emerald-300">{stats.inClan} {t("rosterCard.clan")}</span>
+              )}
+              {stats.inFamily > 0 && (
+                <span className="rounded-full bg-amber-500/10 px-2.5 py-1 text-amber-700 dark:text-amber-300">{stats.inFamily} {t("rosterCard.family")}</span>
+              )}
+              {stats.external > 0 && (
+                <span className="rounded-full bg-rose-500/10 px-2.5 py-1 text-rose-700 dark:text-rose-300">{stats.external} {t("rosterCard.external")}</span>
+              )}
+            </>
+          )}
+        </div>
 
         {/* Actions */}
-        <div className="flex gap-2 pt-2" onClick={(e) => e.stopPropagation()}>{/* NOSONAR — stopPropagation wrapper div — keyboard handled by inner button children */}
-          <Button variant="default" size="sm" className="flex-1" onClick={onView}>
-            <Eye className="w-4 h-4 mr-1" />
+        <div className="mt-auto pt-1" onClick={(e) => e.stopPropagation()}>{/* NOSONAR — stopPropagation wrapper div — keyboard handled by inner button child */}
+          <Button variant="default" size="sm" className="w-full rounded-xl" onClick={onView}>
+            <Eye className="mr-1.5 h-4 w-4" />
             {t("rosterCard.view")}
           </Button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm">
-                <Pencil className="w-4 h-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {groups.length > 0 && (
-                <>
-                  <DropdownMenuLabel className="text-xs text-muted-foreground">{t("rosterCard.moveToGroup")}</DropdownMenuLabel>
-                  <DropdownMenuItem
-                    onClick={() => onMoveToGroup(null)}
-                    className={roster.group_id ? "" : "font-medium"}
-                  >
-                    <FolderOpen className="w-4 h-4 mr-2 text-muted-foreground" />
-                    {t("rosterCard.noGroup")}
-                  </DropdownMenuItem>
-                  {groups.map((g) => (
-                    <DropdownMenuItem
-                      key={g.group_id}
-                      onClick={() => onMoveToGroup(g.group_id)}
-                      className={roster.group_id === g.group_id ? "font-medium" : ""}
-                    >
-                      <FolderOpen className="w-4 h-4 mr-2 text-indigo-500" />
-                      {g.alias}
-                    </DropdownMenuItem>
-                  ))}
-                  <DropdownMenuSeparator />
-                </>
-              )}
-              <DropdownMenuItem onClick={onClone}>
-                <Copy className="w-4 h-4 mr-2" />
-                {t("rosterCard.clone")}
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={onDelete} className="text-destructive focus:text-destructive">
-                <Trash2 className="w-4 h-4 mr-2" />
-                {t("rosterCard.delete")}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
         </div>
       </CardContent>
     </Card>
@@ -241,6 +333,8 @@ function RosterCard({
 export default function RostersPage() { // NOSONAR — React page component: complexity is aggregate state/handler management, not a single logic unit
   const guildId = useGuildId();
   const router = useRouter();
+  const { user } = useAuthSession();
+  const canUseRosterBuilder = isDeveloperUserId(user?.user_id);
   const { toast } = useToast();
   const locale = useLocale();
   const t = useTranslations("RostersPage");
@@ -253,7 +347,9 @@ export default function RostersPage() { // NOSONAR — React page component: com
     loading,
     error,
     refresh,
+    refreshRoster,
     createRoster,
+    renameRoster,
     deleteRoster,
     cloneRoster,
   } = useRosters(guildId);
@@ -268,7 +364,6 @@ export default function RostersPage() { // NOSONAR — React page component: com
   const [deletingGroup, setDeletingGroup] = useState<string | null>(null);
   const [groupToDelete, setGroupToDelete] = useState<{ groupId: string; groupAlias: string } | null>(null);
   const [rosterToDelete, setRosterToDelete] = useState<Roster | null>(null);
-  const [categoryToDelete, setCategoryToDelete] = useState<{ categoryId: string; categoryAlias: string } | null>(null);
 
   // Group Automations state
   const [groupAutomationsDialogOpen, setGroupAutomationsDialogOpen] = useState(false);
@@ -277,25 +372,14 @@ export default function RostersPage() { // NOSONAR — React page component: com
   const [createAutomationDialogOpen, setCreateAutomationDialogOpen] = useState(false);
   const [editAutomationDialogOpen, setEditAutomationDialogOpen] = useState(false);
   const [editingAutomation, setEditingAutomation] = useState<RosterAutomation | null>(null);
-  const [newAutomation, setNewAutomation] = useState<Partial<RosterAutomation> & { _offsetVal?: string; _offsetUnit?: OffsetUnit }>({
+  const [newAutomation, setNewAutomation] = useState<Partial<RosterAutomation>>(() => ({
     action_type: "roster_ping",
-    offset_seconds: -86400,
-    _offsetVal: '1',
-    _offsetUnit: 'days',
+    scheduled_at: new Date(Date.now() + 86400000).toISOString(),
     active: true,
-  });
+  }));
   const [savingAutomation, setSavingAutomation] = useState(false);
   const [channels, setChannels] = useState<DiscordChannel[]>([]);
-  const [categories, setCategories] = useState<SignupCategory[]>([]);
-  const [newCategoryAlias, setNewCategoryAlias] = useState("");
-  const [savingCategory, setSavingCategory] = useState(false);
-  // Category management (standalone, outside group dialog)
-  const [manageCategoriesDialogOpen, setManageCategoriesDialogOpen] = useState(false);
-  const [standaloneNewAlias, setStandaloneNewAlias] = useState("");
-  const [categoryAliasesById, setCategoryAliasesById] = useState<Record<string, string>>({});
-  const [editingStandaloneCategoryId, setEditingStandaloneCategoryId] = useState<string | null>(null);
   const groupsRequestIdRef = useRef(0);
-  const categoriesRequestIdRef = useRef(0);
   const channelsRequestIdRef = useRef(0);
 
   // Fetch groups
@@ -315,26 +399,6 @@ export default function RostersPage() { // NOSONAR — React page component: com
       .catch(() => {
         if (requestId === groupsRequestIdRef.current) {
           setGroups([]);
-        }
-      });
-  }, [guildId]);
-
-  const refreshCategories = useCallback((forceRefresh = false) => {
-    if (!guildId) return;
-    const requestId = ++categoriesRequestIdRef.current;
-    if (forceRefresh) {
-      apiCache.invalidate(getCategoriesCacheKey(guildId));
-    }
-    apiCache
-      .get(getCategoriesCacheKey(guildId), () => api.fetchCategories(guildId))
-      .then((nextCategories) => {
-        if (requestId === categoriesRequestIdRef.current) {
-          setCategories(nextCategories);
-        }
-      })
-      .catch(() => {
-        if (requestId === categoriesRequestIdRef.current) {
-          setCategories([]);
         }
       });
   }, [guildId]);
@@ -361,16 +425,8 @@ export default function RostersPage() { // NOSONAR — React page component: com
 
   useEffect(() => {
     refreshGroups();
-    refreshCategories();
     refreshChannels();
-  }, [refreshGroups, refreshCategories, refreshChannels]);
-
-  useEffect(() => {
-    if (!manageCategoriesDialogOpen) return;
-    setCategoryAliasesById(
-      Object.fromEntries(categories.map((cat) => [cat.custom_id, cat.alias]))
-    );
-  }, [categories, manageCategoriesDialogOpen]);
+  }, [refreshGroups, refreshChannels]);
 
   // Group rosters by group_id
   const rostersByGroup = useMemo(() => {
@@ -395,6 +451,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
   const [rosterToClone, setRosterToClone] = useState<Roster | null>(null);
   const [creating, setCreating] = useState(false);
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [refreshingRosterId, setRefreshingRosterId] = useState<string | null>(null);
   const [compareMode, setCompareMode] = useState(false);
   const [selectedRosterIds, setSelectedRosterIds] = useState<string[]>([]);
 
@@ -414,11 +471,6 @@ export default function RostersPage() { // NOSONAR — React page component: com
 
   // Family clan tags for stats calculation
   const familyClanTags = clans.map(c => c.tag);
-
-  // Calculate global stats
-  const totalMembers = rosters.reduce((acc, r) => acc + (r.members?.length || 0), 0);
-  const clanRosters = rosters.filter(r => r.roster_type === "clan").length;
-  const familyRosters = rosters.filter(r => r.roster_type === "family").length;
 
   // Selection handlers
   const toggleRosterSelection = (rosterId: string) => {
@@ -466,26 +518,6 @@ export default function RostersPage() { // NOSONAR — React page component: com
     }
   };
 
-  const handleCreateCategoryInline = async () => {
-    if (!newCategoryAlias.trim()) return;
-    setSavingCategory(true);
-    try {
-      const created = await api.createCategory(guildId, newCategoryAlias.trim());
-      apiCache.invalidate(getCategoriesCacheKey(guildId));
-      setCategories(prev => [...prev, created]);
-      // Auto-select the new category in the editing group
-      setEditingGroup(prev => prev ? {
-        ...prev,
-        allowed_signup_categories: [...(prev.allowed_signup_categories ?? []), created.custom_id],
-      } : null);
-      setNewCategoryAlias("");
-    } catch {
-      toast({ title: t("categoryError"), variant: "destructive" });
-    } finally {
-      setSavingCategory(false);
-    }
-  };
-
   const handleEditGroup = async () => {
     if (!editingGroup?.alias.trim()) return;
     setSavingGroup(true);
@@ -493,16 +525,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
       const updated = await api.updateGroup(editingGroup.group_id, guildId, {
         alias: editingGroup.alias,
         max_accounts_per_user: editingGroup.max_accounts_per_user ?? null,
-        roster_size: editingGroup.roster_size ?? null,
         min_signups: editingGroup.min_signups ?? null,
-        // Only send allowed_signup_categories if it was explicitly set in the dialog
-        // (undefined means user never touched it, so don't cascade)
-        ...(editingGroup.allowed_signup_categories !== undefined && {
-          allowed_signup_categories: editingGroup.allowed_signup_categories,
-        }),
-        ...(editingGroup.default_signup_category !== undefined && {
-          default_signup_category: editingGroup.default_signup_category ?? null,
-        }),
       });
       apiCache.invalidate(getGroupsCacheKey(guildId));
       setGroups(prev => prev.map(g => g.group_id === updated.group_id ? updated : g));
@@ -527,57 +550,6 @@ export default function RostersPage() { // NOSONAR — React page component: com
       toast({ title: t("groupError"), variant: "destructive" });
     } finally {
       setDeletingGroup(null);
-    }
-  };
-
-  // Category management handlers (standalone, not inside group dialog)
-  const handleCreateCategoryStandalone = async () => {
-    if (!standaloneNewAlias.trim()) return;
-    setSavingCategory(true);
-    try {
-      await api.createCategory(guildId, standaloneNewAlias.trim());
-      refreshCategories(true);
-      setStandaloneNewAlias("");
-      toast({ title: t("categoryCreated") });
-    } catch {
-      toast({ title: t("categoryError"), variant: "destructive" });
-    } finally {
-      setSavingCategory(false);
-    }
-  };
-
-  const handleUpdateCategoryStandalone = async (categoryId: string) => {
-    const nextAlias = categoryAliasesById[categoryId]?.trim();
-    if (!nextAlias) return;
-    setSavingCategory(true);
-    try {
-      await api.updateCategory(categoryId, guildId, { alias: nextAlias });
-      apiCache.invalidate(getCategoriesCacheKey(guildId));
-      setCategories(prev => prev.map(c =>
-        c.custom_id === categoryId ? { ...c, alias: nextAlias } : c
-      ));
-      setEditingStandaloneCategoryId(null);
-      toast({ title: t("categoryUpdated") });
-    } catch {
-      toast({ title: t("categoryError"), variant: "destructive" });
-    } finally {
-      setSavingCategory(false);
-    }
-  };
-
-  const handleDeleteCategoryStandalone = async (categoryId: string) => {
-    try {
-      await api.deleteCategory(categoryId, guildId);
-      apiCache.invalidate(getCategoriesCacheKey(guildId));
-      setCategories(prev => prev.filter(c => c.custom_id !== categoryId));
-      setCategoryAliasesById(prev => {
-        const next = { ...prev };
-        delete next[categoryId];
-        return next;
-      });
-      toast({ title: t("categoryDeleted") });
-    } catch {
-      toast({ title: t("categoryError"), variant: "destructive" });
     }
   };
 
@@ -624,7 +596,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
         server_id: guildId,
         group_id: selectedGroupForAutomations.group_id,
         action_type: newAutomation.action_type as AutomationActionType,
-        offset_seconds: newAutomation.offset_seconds ?? -86400,
+        scheduled_at: newAutomation.scheduled_at ?? new Date(Date.now() + 86400000).toISOString(),
         discord_channel_id: newAutomation.discord_channel_id,
         active: true,
       });
@@ -634,9 +606,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
       setGroupAutomationsDialogOpen(true);
       setNewAutomation({
         action_type: "roster_ping",
-        offset_seconds: -86400,
-        _offsetVal: '1',
-        _offsetUnit: 'days',
+        scheduled_at: new Date(Date.now() + 86400000).toISOString(),
         active: true,
       });
     } catch {
@@ -652,7 +622,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
       if (editingAutomation.action_type === 'roster_ping' && !editingAutomation.options?.ping_type) return;
       const updated = await api.updateAutomation(editingAutomation.automation_id, guildId, {
         action_type: editingAutomation.action_type,
-        offset_seconds: editingAutomation.offset_seconds,
+        scheduled_at: editingAutomation.scheduled_at,
         discord_channel_id: editingAutomation.discord_channel_id,
         options: editingAutomation.options,
         active: editingAutomation.active,
@@ -669,13 +639,13 @@ export default function RostersPage() { // NOSONAR — React page component: com
 
   // Handlers
   const handleViewRoster = (roster: Roster) => {
-    router.push(dashboardHref("rosters/detail", guildId, new URLSearchParams({ rosterId: roster.custom_id })));
+    router.push(dashboardHref("rosters/detail", guildId, new URLSearchParams({ rosterId: roster.id })));
   };
 
   const handleDeleteRoster = async (roster: Roster) => {
-    setDeleting(roster.custom_id);
+    setDeleting(roster.id);
     try {
-      await deleteRoster(roster.custom_id);
+      await deleteRoster(roster.id);
       toast({
         title: tCommon("success"),
         description: t("deleteSuccessDesc", { name: roster.alias }),
@@ -693,10 +663,40 @@ export default function RostersPage() { // NOSONAR — React page component: com
 
   const handleMoveRosterToGroup = async (roster: Roster, groupId: string | null) => {
     try {
-      await api.updateRoster(roster.custom_id, guildId, { group_id: groupId });
+      await api.updateRoster(roster.id, guildId, { group_id: groupId });
       refresh();
     } catch {
       toast({ title: t("saveError"), variant: "destructive" });
+    }
+  };
+
+  const handleRenameRoster = async (roster: Roster, alias: string) => {
+    try {
+      await renameRoster(roster.id, alias);
+      toast({ title: t("rosterCard.renameSuccess", { name: alias }) });
+    } catch (error) {
+      toast({
+        title: t("saveError"),
+        description: error instanceof Error ? error.message : undefined,
+        variant: "destructive",
+      });
+      throw error;
+    }
+  };
+
+  const handleRefreshRoster = async (roster: Roster) => {
+    setRefreshingRosterId(roster.id);
+    try {
+      await refreshRoster(roster.id);
+      toast({ title: t("refreshSuccess") });
+    } catch (error) {
+      toast({
+        title: t("refreshError"),
+        description: error instanceof Error ? error.message : undefined,
+        variant: "destructive",
+      });
+    } finally {
+      setRefreshingRosterId(null);
     }
   };
 
@@ -709,7 +709,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
     if (!rosterToClone) return;
 
     try {
-      const cloned = await cloneRoster(rosterToClone.custom_id, data);
+      const cloned = await cloneRoster(rosterToClone.id, data);
       toast({
         title: tCommon("success"),
         description: t("cloneDialog.successDesc", { name: cloned.alias }),
@@ -780,96 +780,21 @@ export default function RostersPage() { // NOSONAR — React page component: com
     return (
       <div className="min-h-screen bg-background p-4 md:p-6">
         <div className="max-w-7xl mx-auto space-y-6">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div className="flex items-start gap-3">
-              <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
-                <ClipboardList className="h-8 w-8 text-primary" />
-              </div>
+          <div className="space-y-4">
+            <div className="flex items-start justify-between gap-4">
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t("title")}</h1>
-                <p className="text-muted-foreground mt-1">{t("description")}</p>
+                <h1 className="text-2xl font-bold text-foreground md:text-3xl">{t("title")}</h1>
+                <p className="mt-1 text-muted-foreground">{t("description")}</p>
               </div>
+              <Skeleton className="h-10 w-32 shrink-0 rounded-xl" />
             </div>
-            <div className="grid w-full grid-cols-2 gap-2 md:ml-auto md:flex md:w-auto md:flex-nowrap md:items-center md:justify-end md:gap-2">
-              <Button
-                variant="outline"
-                className="w-full md:w-auto pointer-events-none bg-muted text-transparent border-muted hover:bg-muted animate-pulse"
-              >
-                <RefreshCw className="w-4 h-4" />
-                <span>{tCommon("refresh")}</span>
-              </Button>
-              <Button
-                variant="outline"
-                className="w-full md:w-auto pointer-events-none bg-muted text-transparent border-muted hover:bg-muted animate-pulse"
-              >
-                <Layers className="h-4 w-4" />
-                {t("groups.create")}
-              </Button>
-              <Button
-                variant="outline"
-                className="w-full md:w-auto pointer-events-none bg-muted text-transparent border-muted hover:bg-muted animate-pulse"
-              >
-                <GitCompare className="h-4 w-4" />
-                {t("compare.enterMode")}
-              </Button>
-              <Button
-                className="w-full md:w-auto pointer-events-none bg-muted text-transparent border-muted hover:bg-muted animate-pulse"
-              >
-                <Plus className="h-4 w-4" />
-                {t("createRoster")}
-              </Button>
-            </div>
-          </div>
-          <div className="grid gap-4 md:gap-6 grid-cols-2 lg:grid-cols-4">
-            <Card className="bg-card border-blue-500/30 bg-blue-500/5">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.totalRosters")}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-between">
-                  <Skeleton className="h-9 w-16" />
-                  <ClipboardList className="h-8 w-8 text-blue-500/50" />
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="bg-card border-green-500/30 bg-green-500/5">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.totalMembers")}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-between">
-                  <Skeleton className="h-9 w-16" />
-                  <Users className="h-8 w-8 text-green-500/50" />
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="bg-card border-orange-500/30 bg-orange-500/5">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.clanRosters")}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-between">
-                  <Skeleton className="h-9 w-16" />
-                  <Users className="h-8 w-8 text-orange-500/50" />
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="bg-card border-purple-500/30 bg-purple-500/5">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.familyRosters")}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-between">
-                  <Skeleton className="h-9 w-16" />
-                  <Users className="h-8 w-8 text-purple-500/50" />
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-          {/* Search + Categories */}
-          <div className="flex flex-col sm:flex-row sm:items-start gap-3">
-            <div className="relative w-full md:w-96">
-              <Skeleton className="h-10 w-full rounded-md" />
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+              <Skeleton className="h-10 w-full rounded-xl lg:max-w-sm" />
+              <div className="flex flex-wrap gap-2 lg:ml-auto">
+                <Skeleton className="h-10 w-36 rounded-xl" />
+                <Skeleton className="h-10 w-32 rounded-xl" />
+                <Skeleton className="h-10 w-28 rounded-xl" />
+              </div>
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -903,48 +828,20 @@ export default function RostersPage() { // NOSONAR — React page component: com
     <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div className="flex items-start gap-3">
-            <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
-              <ClipboardList className="h-8 w-8 text-primary" />
-            </div>
+        <div className="space-y-4">
+          <div className="flex items-start justify-between gap-4">
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t("title")}</h1>
-              <p className="text-muted-foreground mt-1">{t("description")}</p>
+              <h1 className="text-2xl font-bold text-foreground md:text-3xl">{t("title")}</h1>
+              <p className="mt-1 text-muted-foreground">{t("description")}</p>
             </div>
-          </div>
-
-          <div className="grid w-full grid-cols-2 gap-2 md:ml-auto md:flex md:w-auto md:flex-nowrap md:items-center md:justify-end md:gap-2 md:overflow-x-auto md:pb-1 [-ms-overflow-style:none] [scrollbar-width:none] md:[&::-webkit-scrollbar]:hidden">
-            <Button onClick={refresh} variant="outline" className="w-full md:w-auto gap-2">
-              <RefreshCw className="w-4 h-4" />
-              <span>{tCommon("refresh")}</span>
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => setCreateGroupDialogOpen(true)}
-              className="gap-2 shrink-0 w-full md:w-auto"
-            >
-              <Layers className="h-4 w-4" />
-              {t("groups.create")}
-            </Button>
-            {rosters.length >= 2 && !compareMode && (
-              <Button
-                variant="outline"
-                onClick={() => setCompareMode(true)}
-                className="gap-2 shrink-0 w-full md:w-auto"
-              >
-                <GitCompare className="h-4 w-4" />
-                {t("compare.enterMode")}
-              </Button>
-            )}
             <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
               <DialogTrigger asChild>
-                <Button className="bg-primary hover:bg-primary/90 gap-2 shrink-0 w-full md:w-auto">
+                <Button className="shrink-0 gap-2 rounded-xl bg-primary hover:bg-primary/90">
                   <Plus className="h-4 w-4" />
                   {t("createRoster")}
                 </Button>
               </DialogTrigger>
-              <DialogContent className="bg-card border-border max-w-2xl">
+              <DialogContent variant="form" className="bg-card sm:max-w-2xl">
                 <DialogHeader>
                   <DialogTitle>{t("createDialog.title")}</DialogTitle>
                   <DialogDescription>{t("createDialog.description")}</DialogDescription>
@@ -1042,11 +939,49 @@ export default function RostersPage() { // NOSONAR — React page component: com
               </DialogContent>
             </Dialog>
           </div>
+
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+            <div className="flex h-10 w-full items-center gap-2 rounded-xl bg-muted/55 px-3 shadow-sm shadow-black/5 transition-shadow focus-within:ring-2 focus-within:ring-ring/35 lg:max-w-sm">
+              <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
+              <Input
+                placeholder={t("searchPlaceholder")}
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
+                className="h-9 flex-1 border-0 bg-transparent px-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
+              />
+            </div>
+            <div className="flex flex-wrap gap-2 lg:ml-auto">
+              {canUseRosterBuilder && (
+                <Button
+                  variant="outline"
+                  onClick={() => router.push(dashboardHref("rosters/builder", guildId))}
+                  className="gap-2 rounded-xl border-primary/40 bg-primary/10 text-primary hover:bg-primary/15"
+                >
+                  <Sparkles className="h-4 w-4" />
+                  <span>{t("aiBuilder.button")}</span>
+                </Button>
+              )}
+              <Button variant="secondary" onClick={() => router.push(dashboardHref("rosters/cwl-bonuses", guildId))} className="gap-2 rounded-xl border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted">
+                <Medal className="h-4 w-4 text-amber-500" />
+                <span>{t("cwlBonuses.button")}</span>
+              </Button>
+              <Button variant="secondary" onClick={() => setCreateGroupDialogOpen(true)} className="gap-2 rounded-xl border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted">
+                <Layers className="h-4 w-4" />
+                {t("groups.create")}
+              </Button>
+              {rosters.length >= 2 && !compareMode && (
+                <Button variant="secondary" onClick={() => setCompareMode(true)} className="gap-2 rounded-xl border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted">
+                  <GitCompare className="h-4 w-4" />
+                  {t("compare.enterMode")}
+                </Button>
+              )}
+            </div>
+          </div>
         </div>
 
         {/* Compare Mode Banner */}
         {compareMode && (
-          <div className="bg-primary/10 border border-primary/30 rounded-xl p-4">
+          <div className="rounded-2xl bg-primary/10 p-4 shadow-sm shadow-black/5">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div className="flex items-center gap-3">
                 <div className="p-2 rounded-lg bg-primary/20">
@@ -1085,110 +1020,9 @@ export default function RostersPage() { // NOSONAR — React page component: com
           </div>
         )}
 
-        {/* Statistics */}
-        <div className="grid gap-4 md:gap-6 grid-cols-2 lg:grid-cols-4">
-          <Card className="bg-card border-blue-500/30 bg-blue-500/5">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                {t("stats.totalRosters")}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between">
-                <div className="text-3xl font-bold text-blue-500">{rosters.length}</div>
-                <ClipboardList className="h-8 w-8 text-blue-500/50" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-card border-green-500/30 bg-green-500/5">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                {t("stats.totalMembers")}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between">
-                <div className="text-3xl font-bold text-green-500">{totalMembers}</div>
-                <Users className="h-8 w-8 text-green-500/50" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-card border-orange-500/30 bg-orange-500/5">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                {t("stats.clanRosters")}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between">
-                <div className="text-3xl font-bold text-orange-500">{clanRosters}</div>
-                <Users className="h-8 w-8 text-orange-500/50" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-card border-purple-500/30 bg-purple-500/5">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                {t("stats.familyRosters")}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between">
-                <div className="text-3xl font-bold text-purple-500">{familyRosters}</div>
-                <Users className="h-8 w-8 text-purple-500/50" />
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Search + Categories */}
-        <div className="flex flex-col sm:flex-row sm:items-start gap-3">
-          <div className="relative max-w-md w-full sm:w-auto">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder={t("searchPlaceholder")}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9 bg-background border-border"
-            />
-          </div>
-
-          {/* Categories */}
-          <div className="flex items-center gap-2 flex-wrap flex-1 min-w-0 py-1">
-            <div className="flex items-center gap-1.5 text-muted-foreground shrink-0">
-              <Tag className="w-3.5 h-3.5" />
-              <span className="text-xs font-medium">{t("categories.title")}</span>
-            </div>
-            {categories.map((cat) => (
-              <Badge
-                key={cat.custom_id}
-                variant="secondary"
-                className="px-2 py-1 bg-purple-500/10 hover:bg-purple-500/20 transition-colors"
-              >
-                {cat.alias}
-              </Badge>
-            ))}
-            <Button
-              size="sm"
-              variant="outline"
-              className="h-7 px-2 text-xs"
-              onClick={() => {
-                setStandaloneNewAlias("");
-                setManageCategoriesDialogOpen(true);
-              }}
-            >
-              <Pencil className="w-3 h-3 mr-1" />
-              {t("categories.manage")}
-            </Button>
-          </div>
-        </div>
-
         {/* Rosters Grid */}
         {filteredRosters.length === 0 ? (
-          <Card className="bg-card border-border">
+          <Card className="border-0 bg-card shadow-sm shadow-black/5">
             <CardContent className="flex flex-col items-center justify-center py-12">
               <ClipboardList className="w-12 h-12 text-muted-foreground mb-4" />
               <p className="text-foreground font-medium">
@@ -1220,9 +1054,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
                   {/* Group Header */}
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="p-2 rounded-lg bg-indigo-500/10">
-                        <FolderOpen className="h-5 w-5 text-indigo-500" />
-                      </div>
+                      <FolderIcon size={28} />
                       <div>
                         <h2 className="text-lg font-semibold text-foreground">{group.alias}</h2>
                         <div className="flex items-center gap-2 flex-wrap mt-0.5">
@@ -1232,14 +1064,8 @@ export default function RostersPage() { // NOSONAR — React page component: com
                           {group.max_accounts_per_user && (
                             <Badge variant="outline" className="text-xs h-5">{t("groups.rules.maxAccountsBadge", { count: group.max_accounts_per_user })}</Badge>
                           )}
-                          {group.roster_size && (
-                            <Badge variant="outline" className="text-xs h-5">{t("groups.rules.rosterSizeBadge", { size: group.roster_size })}</Badge>
-                          )}
                           {group.min_signups && (
                             <Badge variant="outline" className="text-xs h-5">{t("groups.rules.minSignupsBadge", { count: group.min_signups })}</Badge>
-                          )}
-                          {group.allowed_signup_categories && group.allowed_signup_categories.length > 0 && (
-                            <Badge variant="outline" className="text-xs h-5 text-indigo-500 border-indigo-500/30">{t("groups.rules.categoriesBadge", { count: group.allowed_signup_categories.length })}</Badge>
                           )}
                         </div>
                       </div>
@@ -1294,21 +1120,24 @@ export default function RostersPage() { // NOSONAR — React page component: com
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {groupRosters.map((roster) => {
                       const stats = calculateRosterStats(roster.members, roster.clan_tag, familyClanTags);
-                      const isSelected = selectedRosterIds.includes(roster.custom_id);
+                      const isSelected = selectedRosterIds.includes(roster.id);
                       return (
                         <RosterCard
-                          key={roster.custom_id}
+                          key={roster.id}
                           roster={roster}
                           stats={stats}
                           isSelected={isSelected}
                           compareMode={compareMode}
                           deleting={deleting}
                           groups={groups}
-                          onSelect={() => toggleRosterSelection(roster.custom_id)}
+                          onSelect={() => toggleRosterSelection(roster.id)}
                           onView={() => handleViewRoster(roster)}
                           onClone={() => handleOpenClone(roster)}
                           onDelete={() => setRosterToDelete(roster)}
+                          onRename={(alias) => handleRenameRoster(roster, alias)}
+                          onRefresh={() => handleRefreshRoster(roster)}
                           onMoveToGroup={(groupId) => handleMoveRosterToGroup(roster, groupId)}
+                          refreshing={refreshingRosterId === roster.id}
                         />
                       );
                     })}
@@ -1345,21 +1174,24 @@ export default function RostersPage() { // NOSONAR — React page component: com
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {ungroupedRosters.map((roster) => {
                       const stats = calculateRosterStats(roster.members, roster.clan_tag, familyClanTags);
-                      const isSelected = selectedRosterIds.includes(roster.custom_id);
+                      const isSelected = selectedRosterIds.includes(roster.id);
                       return (
                         <RosterCard
-                          key={roster.custom_id}
+                          key={roster.id}
                           roster={roster}
                           stats={stats}
                           isSelected={isSelected}
                           compareMode={compareMode}
                           deleting={deleting}
                           groups={groups}
-                          onSelect={() => toggleRosterSelection(roster.custom_id)}
+                          onSelect={() => toggleRosterSelection(roster.id)}
                           onView={() => handleViewRoster(roster)}
                           onClone={() => handleOpenClone(roster)}
                           onDelete={() => setRosterToDelete(roster)}
+                          onRename={(alias) => handleRenameRoster(roster, alias)}
+                          onRefresh={() => handleRefreshRoster(roster)}
                           onMoveToGroup={(groupId) => handleMoveRosterToGroup(roster, groupId)}
+                          refreshing={refreshingRosterId === roster.id}
                         />
                       );
                     })}
@@ -1369,120 +1201,6 @@ export default function RostersPage() { // NOSONAR — React page component: com
             })()}
           </div>
         )}
-
-        {/* Manage Categories Dialog */}
-        <Dialog open={manageCategoriesDialogOpen} onOpenChange={(open) => {
-          setManageCategoriesDialogOpen(open);
-          if (!open) {
-            setStandaloneNewAlias("");
-            setEditingStandaloneCategoryId(null);
-          }
-        }}>
-          <DialogContent className="bg-card border-border w-[calc(100vw-0.75rem)] sm:w-full sm:max-w-2xl">
-            <DialogHeader>
-              <DialogTitle>{t("categories.manage")}</DialogTitle>
-              <DialogDescription>{t("categories.description")}</DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4 py-2">
-              <div className="space-y-2">
-                <Label>{t("categories.createTitle")}</Label>
-                <div className="flex gap-2">
-                  <Input
-                    value={standaloneNewAlias}
-                    onChange={(e) => setStandaloneNewAlias(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && handleCreateCategoryStandalone()}
-                    className="bg-background border-border"
-                    placeholder={t("groups.rules.newCategoryPlaceholder")}
-                    autoFocus
-                  />
-                  <Button onClick={handleCreateCategoryStandalone} disabled={!standaloneNewAlias.trim() || savingCategory}>
-                    {savingCategory ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Plus className="w-4 h-4 mr-2" />}
-                    {t("categories.create")}
-                  </Button>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label>{t("categories.editTitle")}</Label>
-                {categories.length > 0 ? (
-                  <div className="rounded-lg border border-border divide-y divide-border">
-                    {categories.map((cat) => (
-                      <div key={cat.custom_id} className="flex flex-col sm:flex-row sm:items-center gap-2 px-3 py-2">
-                        {editingStandaloneCategoryId === cat.custom_id ? (
-                          <Input
-                            value={categoryAliasesById[cat.custom_id] ?? ""}
-                            onChange={(e) => setCategoryAliasesById(prev => ({ ...prev, [cat.custom_id]: e.target.value }))}
-                            onKeyDown={(e) => e.key === "Enter" && handleUpdateCategoryStandalone(cat.custom_id)}
-                            className="bg-background border-border"
-                            autoFocus
-                          />
-                        ) : (
-                          <div className="h-10 w-full flex items-center px-3 rounded-md border border-border bg-muted/20 text-sm">
-                            {cat.alias}
-                          </div>
-                        )}
-                        <div className="flex items-center justify-end gap-2 w-full sm:w-auto sm:shrink-0 sm:ml-auto">
-                          {editingStandaloneCategoryId === cat.custom_id ? (
-                            <>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleUpdateCategoryStandalone(cat.custom_id)}
-                                disabled={!categoryAliasesById[cat.custom_id]?.trim() || savingCategory}
-                                className="gap-1.5"
-                              >
-                                <Pencil className="w-4 h-4" />
-                                {tCommon("save")}
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => setEditingStandaloneCategoryId(null)}
-                                disabled={savingCategory}
-                              >
-                                {tCommon("cancel")}
-                              </Button>
-                            </>
-                          ) : (
-                            <>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => setEditingStandaloneCategoryId(cat.custom_id)}
-                                disabled={savingCategory}
-                                className="gap-1.5"
-                              >
-                                <Pencil className="w-4 h-4" />
-                                {tCommon("edit")}
-                              </Button>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => setCategoryToDelete({ categoryId: cat.custom_id, categoryAlias: cat.alias })}
-                                disabled={savingCategory}
-                                className="gap-1.5 text-destructive hover:text-destructive"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                                {tCommon("delete")}
-                              </Button>
-                            </>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-sm text-muted-foreground italic">{t("categories.noCategories")}</p>
-                )}
-              </div>
-            </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setManageCategoriesDialogOpen(false)}>
-                {tCommon("close")}
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
 
         {/* Clone Dialog */}
         <CloneDialog
@@ -1495,7 +1213,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
 
         {/* Create Group Dialog */}
         <Dialog open={createGroupDialogOpen} onOpenChange={(open) => { setCreateGroupDialogOpen(open); if (!open) setNewGroupAlias(""); }}>
-          <DialogContent className="bg-card border-border">
+          <DialogContent variant="form" className="bg-card">
             <DialogHeader>
               <DialogTitle>{t("groups.createTitle")}</DialogTitle>
             </DialogHeader>
@@ -1522,8 +1240,8 @@ export default function RostersPage() { // NOSONAR — React page component: com
         </Dialog>
 
         {/* Edit Group Dialog */}
-        <Dialog open={editGroupDialogOpen} onOpenChange={(open) => { setEditGroupDialogOpen(open); if (!open) { setEditingGroup(null); setNewCategoryAlias(""); } }}>
-          <DialogContent className="bg-card border-border max-w-lg">
+        <Dialog open={editGroupDialogOpen} onOpenChange={(open) => { setEditGroupDialogOpen(open); if (!open) setEditingGroup(null); }}>
+          <DialogContent variant="form" className="bg-card sm:max-w-lg">
             <DialogHeader>
               <DialogTitle>{t("groups.editTitle")}</DialogTitle>
             </DialogHeader>
@@ -1542,7 +1260,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
               {/* Rules */}
               <div className="space-y-3">
                 <Label className="text-sm font-semibold">{t("groups.rules.title")}</Label>
-                <div className="grid grid-cols-3 gap-3">
+				<div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1">
                     <Label className="text-xs text-muted-foreground">{t("groups.rules.maxAccounts")}</Label>
                     <Input
@@ -1552,20 +1270,6 @@ export default function RostersPage() { // NOSONAR — React page component: com
                       onChange={(e) => setEditingGroup(prev => prev ? {
                         ...prev,
                         max_accounts_per_user: e.target.value ? Number.parseInt(e.target.value) : undefined,
-                      } : null)}
-                      placeholder="∞"
-                      className="bg-background border-border"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <Label className="text-xs text-muted-foreground">{t("groups.rules.rosterSize")}</Label>
-                    <Input
-                      type="number"
-                      min={1}
-                      value={editingGroup?.roster_size ?? ""}
-                      onChange={(e) => setEditingGroup(prev => prev ? {
-                        ...prev,
-                        roster_size: e.target.value ? Number.parseInt(e.target.value) : undefined,
                       } : null)}
                       placeholder="∞"
                       className="bg-background border-border"
@@ -1589,89 +1293,6 @@ export default function RostersPage() { // NOSONAR — React page component: com
                 <p className="text-xs text-muted-foreground">{t("groups.rules.rulesHint")}</p>
               </div>
 
-              {/* Signup Categories */}
-              <div className="space-y-3">
-                <Label className="text-sm font-semibold">{t("groups.rules.categoriesTitle")}</Label>
-                <p className="text-xs text-muted-foreground">{t("groups.rules.categoriesHint")}</p>
-                {/* Existing categories as checkboxes */}
-                {categories.length > 0 ? (
-                  <div className="rounded-lg border border-border divide-y divide-border">
-                    {categories.map((cat) => {
-                      const selected = editingGroup?.allowed_signup_categories?.includes(cat.custom_id) ?? false;
-                      return (
-                        <div key={cat.custom_id} className="flex items-center gap-3 px-3 py-2">
-                          <input
-                            type="checkbox"
-                            id={`cat-${cat.custom_id}`}
-                            checked={selected}
-                            onChange={(e) => setEditingGroup(prev => { // NOSONAR — inline state updater in JSX handler, standard React pattern
-                              if (!prev) return null;
-                              const current = prev.allowed_signup_categories ?? [];
-                              return {
-                                ...prev,
-                                allowed_signup_categories: e.target.checked
-                                  ? [...current, cat.custom_id]
-                                  : current.filter(id => id !== cat.custom_id), // NOSONAR — JSX inline handler nesting is structural, not logic complexity
-                              };
-                            })}
-                            className="h-4 w-4 rounded border-border accent-primary"
-                          />
-                          <label htmlFor={`cat-${cat.custom_id}`} className="text-sm cursor-pointer flex-1">
-                            {cat.alias}
-                          </label>
-                          <span className="text-xs text-muted-foreground font-mono">{cat.custom_id}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                ) : (
-                  <p className="text-sm text-muted-foreground italic">{t("groups.rules.noCategories")}</p>
-                )}
-                {/* Default signup category */}
-                {(editingGroup?.allowed_signup_categories?.length ?? 0) > 0 && (
-                  <div className="space-y-1.5">
-                    <Label className="text-xs text-muted-foreground">{t("settings.defaultSignupCategory")}</Label>
-                    <Select
-                      value={editingGroup?.default_signup_category ?? "__none__"}
-                      onValueChange={(v) => setEditingGroup(prev => prev ? {
-                        ...prev,
-                        default_signup_category: v === "__none__" ? null : v,
-                      } : null)}
-                    >
-                      <SelectTrigger className="bg-background border-border">
-                        <SelectValue placeholder={t("settings.defaultSignupCategoryNone")} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="__none__">{t("settings.defaultSignupCategoryNone")}</SelectItem>
-                        {categories
-                          .filter(c => editingGroup?.allowed_signup_categories?.includes(c.custom_id))
-                          .map(c => (
-                            <SelectItem key={c.custom_id} value={c.custom_id}>{c.alias}</SelectItem>
-                          ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                )}
-
-                {/* Inline category creation */}
-                <div className="flex gap-2">
-                  <Input
-                    value={newCategoryAlias}
-                    onChange={(e) => setNewCategoryAlias(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && handleCreateCategoryInline()}
-                    placeholder={t("groups.rules.newCategoryPlaceholder")}
-                    className="bg-background border-border"
-                  />
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleCreateCategoryInline}
-                    disabled={!newCategoryAlias.trim() || savingCategory}
-                  >
-                    {savingCategory ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
-                  </Button>
-                </div>
-              </div>
             </div>
             <DialogFooter>
               <Button variant="outline" onClick={() => setEditGroupDialogOpen(false)} disabled={savingGroup}>
@@ -1690,7 +1311,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
           setGroupAutomationsDialogOpen(open);
           if (!open) setSelectedGroupForAutomations(null);
         }}>
-          <DialogContent className="bg-card border-border max-w-2xl">
+          <DialogContent variant="form" className="bg-card sm:max-w-2xl">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
                 <Zap className="w-5 h-5 text-amber-500" />
@@ -1722,7 +1343,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
                     </div>
                     <div>
                       <p className="font-medium text-sm">{getAutomationLabel(automation.action_type)}</p>
-                      <p className="text-xs text-muted-foreground">{formatOffsetSeconds(automation.offset_seconds, t)}</p>
+					  <p className="text-xs text-muted-foreground">{formatTimestamp(Math.floor(new Date(automation.scheduled_at).getTime() / 1000))}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
@@ -1813,7 +1434,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
           setCreateAutomationDialogOpen(open);
           if (!open) setGroupAutomationsDialogOpen(true);
         }}>
-          <DialogContent className="bg-card border-border">
+          <DialogContent variant="form" className="bg-card">
             <DialogHeader>
               <DialogTitle>{t("automations.createTitle")}</DialogTitle>
               <DialogDescription>
@@ -1879,38 +1500,20 @@ export default function RostersPage() { // NOSONAR — React page component: com
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>{t("automations.offsetFromEvent")}</Label>
-                <div className="flex gap-2">
-                  <span className="text-sm text-muted-foreground self-center">{t("automations.offsetBefore")}</span>
-                  <Input
-                    type="number"
-                    min={1}
-                    value={newAutomation._offsetVal ?? '1'}
-                    onChange={(e) => {
-                      const val = Number.parseInt(e.target.value) || 1;
-                      const unit = (newAutomation._offsetUnit ?? 'days') as OffsetUnit;
-                      setNewAutomation({ ...newAutomation, _offsetVal: e.target.value, offset_seconds: buildOffsetSeconds('before', val, unit) });
-                    }}
-                    className="bg-background w-20"
-                  />
-                  <Select
-                    value={newAutomation._offsetUnit ?? 'days'}
-                    onValueChange={(v) => {
-                      const unit = v as OffsetUnit;
-                      const val = Number.parseInt(newAutomation._offsetVal ?? '1') || 1;
-                      setNewAutomation({ ...newAutomation, _offsetUnit: unit, offset_seconds: buildOffsetSeconds('before', val, unit) });
-                    }}
-                  >
-                    <SelectTrigger className="bg-background flex-1">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="days">{t("automations.offsetUnit_days")}</SelectItem>
-                      <SelectItem value="hours">{t("automations.offsetUnit_hours")}</SelectItem>
-                      <SelectItem value="minutes">{t("automations.offsetUnit_minutes")}</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+				<Label>{t("automations.scheduledAt")}</Label>
+				<Input
+				  type="datetime-local"
+				  value={newAutomation.scheduled_at ? unixToDatetimeLocal(Math.floor(new Date(newAutomation.scheduled_at).getTime() / 1000)) : ""}
+				  onChange={(e) => {
+					const scheduledAt = datetimeLocalToUnix(e.target.value);
+					setNewAutomation({
+					  ...newAutomation,
+					  scheduled_at: scheduledAt === null ? undefined : new Date(scheduledAt * 1000).toISOString(),
+					});
+				  }}
+				  className="bg-muted/55 border-0 shadow-sm shadow-black/5"
+				/>
+				<p className="text-xs text-muted-foreground">{t("automations.scheduledAtHint")}</p>
               </div>
               {newAutomation.action_type === "roster_ping" && (
                 <div className="space-y-2">
@@ -1965,7 +1568,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
           setEditAutomationDialogOpen(open);
           if (!open) { setEditingAutomation(null); setGroupAutomationsDialogOpen(true); }
         }}>
-          <DialogContent className="bg-card border-border">
+          <DialogContent variant="form" className="bg-card">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
                 <Zap className="w-5 h-5 text-amber-500" />
@@ -2031,41 +1634,21 @@ export default function RostersPage() { // NOSONAR — React page component: com
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>{t("automations.offsetFromEvent")}</Label>
-                {(() => {
-                  const parsed = parseOffsetSeconds(editingAutomation?.offset_seconds ?? -86400);
-                  return (
-                    <div className="flex gap-2">
-                      <span className="text-sm text-muted-foreground self-center">{t("automations.offsetBefore")}</span>
-                      <Input
-                        type="number"
-                        min={1}
-                        value={parsed.val}
-                        onChange={(e) => {
-                          const val = Number.parseInt(e.target.value) || 1;
-                          setEditingAutomation(prev => prev ? { ...prev, offset_seconds: buildOffsetSeconds('before', val, parsed.unit) } : null);
-                        }}
-                        className="bg-background w-20"
-                      />
-                      <Select
-                        value={parsed.unit}
-                        onValueChange={(v) => {
-                          const unit = v as OffsetUnit;
-                          setEditingAutomation(prev => prev ? { ...prev, offset_seconds: buildOffsetSeconds('before', parsed.val, unit) } : null);
-                        }}
-                      >
-                        <SelectTrigger className="bg-background flex-1">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="minutes">{t("automations.offsetUnit_minutes")}</SelectItem>
-                          <SelectItem value="hours">{t("automations.offsetUnit_hours")}</SelectItem>
-                          <SelectItem value="days">{t("automations.offsetUnit_days")}</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  );
-                })()}
+				<Label>{t("automations.scheduledAt")}</Label>
+				{editingAutomation && (
+				  <Input
+					type="datetime-local"
+					value={unixToDatetimeLocal(Math.floor(new Date(editingAutomation.scheduled_at).getTime() / 1000))}
+					onChange={(e) => {
+					  const scheduledAt = datetimeLocalToUnix(e.target.value);
+					  setEditingAutomation(prev => prev && scheduledAt !== null
+						? { ...prev, scheduled_at: new Date(scheduledAt * 1000).toISOString() }
+						: prev);
+					}}
+					className="bg-muted/55 border-0 shadow-sm shadow-black/5"
+				  />
+				)}
+				<p className="text-xs text-muted-foreground">{t("automations.scheduledAtHint")}</p>
               </div>
               {editingAutomation?.action_type === "roster_ping" && (
                 <div className="space-y-2">
@@ -2138,30 +1721,6 @@ export default function RostersPage() { // NOSONAR — React page component: com
           </DialogContent>
         </Dialog>
       </div>
-
-      {/* Delete category confirmation */}
-      <AlertDialog open={!!categoryToDelete} onOpenChange={open => !open && setCategoryToDelete(null)}>
-        <AlertDialogContent className="bg-card border-border">
-          <AlertDialogHeader>
-            <AlertDialogTitle className="text-foreground">{tCommon("confirm")}</AlertDialogTitle>
-            <AlertDialogDescription className="text-muted-foreground">
-              {t("categories.deleteConfirm", { name: categoryToDelete?.categoryAlias ?? "" })}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{tCommon("cancel")}</AlertDialogCancel>
-            <AlertDialogAction
-              className="bg-destructive hover:bg-destructive/90"
-              onClick={() => {
-                handleDeleteCategoryStandalone(categoryToDelete!.categoryId);
-                setCategoryToDelete(null);
-              }}
-            >
-              {tCommon("delete")}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
 
       {/* Delete group confirmation */}
       <AlertDialog open={!!groupToDelete} onOpenChange={open => !open && setGroupToDelete(null)}>

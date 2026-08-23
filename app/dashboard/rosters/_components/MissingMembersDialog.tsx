@@ -106,7 +106,7 @@ export function MissingMembersDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-card border-border max-w-2xl max-h-[80vh] overflow-y-auto">
+      <DialogContent variant="form" className="bg-card sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle className="text-foreground flex items-center gap-2">
             <UserMinus className="w-5 h-5" />

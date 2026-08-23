@@ -1,54 +1,63 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { LogOut, Menu, X } from "lucide-react";
+import { ChevronDown, LogOut, Menu, PanelLeftClose } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePathname, useRouter } from "next/navigation";
-import { useLocale, useTranslations } from "next-intl";
-import { SettingsDropdown } from "@/components/settings-dropdown";
+import { useTranslations } from "next-intl";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { logout } from "@/lib/auth/logout";
 import { useAuthSession } from "@/components/auth-session-provider";
+import Link from "next/link";
+import { dashboardHref } from "@/lib/dashboard-route";
+import { getGraphicsEditorMode, GRAPHICS_EDITOR_MODE_EVENT } from "@/lib/graphics-editor-shell";
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
 
 export function DashboardLayoutWrapper({
   sidebar,
   mobileHeader,
+  guildId = "",
   children,
 }: {
   readonly sidebar: React.ReactNode;
   readonly mobileHeader?: React.ReactNode;
+  readonly guildId?: string;
   readonly children: React.ReactNode;
 }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [graphicsEditorActive, setGraphicsEditorActive] = useState(false);
   const mainContentRef = useRef<HTMLElement | null>(null);
   const pathname = usePathname();
   const router = useRouter();
-  const locale = useLocale();
   const tCommon = useTranslations("Common");
   const tNavigation = useTranslations("Navigation");
-  const { status: authStatus, user } = useAuthSession();
-
-  // A static dashboard route may load as a fresh document. Wait for the
-  // refresh-cookie restoration before deciding that the user is anonymous.
-  useEffect(() => {
-    if (authStatus === "anonymous") {
-      router.replace("/login");
-    }
-  }, [authStatus, router]);
+  const { user } = useAuthSession();
+  const usesContextualHeader = pathname === "/dashboard/rosters/builder";
+  const isGraphicsRoute = pathname.includes("/dashboard/graphics");
+  const usesEditorShell = isGraphicsRoute && graphicsEditorActive;
 
   const handleLogout = async () => {
     await logout();
     router.push("/");
   };
 
-  const accountControls = user ? (
-    <>
-      <Avatar className="h-8 w-8 border border-border">
-        <AvatarImage src={user.avatar_url} alt={user.username} />
-        <AvatarFallback className="text-xs">
-          {user.username.substring(0, 2).toUpperCase()}
-        </AvatarFallback>
-      </Avatar>
+  const accountLink = user ? (
+      <Link
+        href={dashboardHref("settings", guildId)}
+        className="inline-flex items-center gap-1 rounded-full border border-border bg-background/60 p-1 pr-1.5 outline-none transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring"
+        aria-label={tNavigation("accountSettings")}
+      >
+        <Avatar className="h-8 w-8 border border-border">
+          <AvatarImage src={user.avatar_url} alt={user.username} />
+          <AvatarFallback className="text-xs">
+            {user.username.substring(0, 2).toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
+        <ChevronDown className="hidden h-3.5 w-3.5 text-muted-foreground sm:block" aria-hidden="true" />
+      </Link>
+  ) : null;
+
+  const logoutControl = user ? (
       <Button
         variant="ghost"
         size="icon"
@@ -58,7 +67,6 @@ export function DashboardLayoutWrapper({
       >
         <LogOut className="h-4 w-4" />
       </Button>
-    </>
   ) : null;
 
   // Close sidebar on route change
@@ -68,76 +76,71 @@ export function DashboardLayoutWrapper({
     mainContentRef.current?.scrollTo({ top: 0, behavior: "auto" });
   }, [pathname]);
 
+  useEffect(() => {
+    if (!isGraphicsRoute) {
+      setGraphicsEditorActive(false);
+      return;
+    }
+    setGraphicsEditorActive(getGraphicsEditorMode());
+    const onEditorMode = (event: Event) => setGraphicsEditorActive(Boolean((event as CustomEvent<boolean>).detail));
+    window.addEventListener(GRAPHICS_EDITOR_MODE_EVENT, onEditorMode);
+    return () => window.removeEventListener(GRAPHICS_EDITOR_MODE_EVENT, onEditorMode);
+  }, [isGraphicsRoute]);
+
   return (
     <div className="dashboard-app flex h-dvh overflow-hidden bg-background">
       {/* Desktop Sidebar */}
-      <div className="hidden md:block h-full">
-        {sidebar}
-      </div>
+      {!usesEditorShell && <div className="hidden h-full lg:block">{sidebar}</div>}
 
       {/* Mobile Sidebar Overlay */}
-      <div
-        className={`fixed inset-0 z-50 md:hidden transition-opacity duration-200 ${isSidebarOpen ? "opacity-100" : "pointer-events-none opacity-0"}`}
-        aria-hidden={!isSidebarOpen}
-        inert={!isSidebarOpen}
-      >
-        <button
-          className={`fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity duration-200 ${isSidebarOpen ? "opacity-100" : "opacity-0"}`}
-          onClick={() => setIsSidebarOpen(false)}
-          aria-label="Close sidebar"
-          tabIndex={isSidebarOpen ? 0 : -1}
-        />
-        <div
-          className={`fixed inset-y-0 left-0 w-72 max-w-[85vw] bg-card shadow-2xl transition-transform duration-200 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
-        >
-          <div className="h-full relative">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsSidebarOpen(false)}
-              className="absolute right-3 top-3 z-50 h-8 w-8 rounded-lg"
-              aria-label={tCommon("close")}
-              tabIndex={isSidebarOpen ? 0 : -1}
-            >
-              <X className="h-4 w-4" />
-            </Button>
-            {sidebar}
-          </div>
-        </div>
-      </div>
+      {!usesEditorShell && (
+        <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
+          <SheetContent className="flex flex-col lg:hidden" closeLabel={tCommon("close")} showClose={false}>
+            <SheetTitle className="sr-only">{tCommon("dashboard")}</SheetTitle>
+            <SheetDescription className="sr-only">{tCommon("openMenu")}</SheetDescription>
+            <div data-slot="mobile-sidebar-header" className="flex min-h-16 shrink-0 items-center justify-between border-b border-border px-3 pb-2 pt-[max(0.5rem,env(safe-area-inset-top))]">
+              <span className="min-w-0 truncate px-2 text-sm font-semibold text-foreground">{tCommon("dashboard")}</span>
+              <SheetClose asChild>
+                <Button variant="ghost" size="touch-icon" className="shrink-0 text-muted-foreground hover:bg-accent/60 hover:text-foreground" aria-label={tCommon("close")}>
+                  <PanelLeftClose className="h-5 w-5" aria-hidden="true" />
+                </Button>
+              </SheetClose>
+            </div>
+            <div className="min-h-0 flex-1">{sidebar}</div>
+          </SheetContent>
+        </Sheet>
+      )}
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col h-full overflow-hidden">
         {/* Mobile Header */}
-        <div className="flex h-16 items-center border-b border-border bg-card/95 px-4 text-card-foreground backdrop-blur md:hidden">
-          <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(true)} className="-ml-2 h-10 w-10" aria-label={tCommon("openMenu")}>
+        {!usesEditorShell && <div className="flex min-h-16 items-center border-b border-border bg-card/95 px-4 pb-2 pt-[max(0.5rem,env(safe-area-inset-top))] text-card-foreground backdrop-blur lg:hidden">
+          <Button variant="ghost" size="touch-icon" onClick={() => setIsSidebarOpen(true)} className="-ml-2" aria-label={tCommon("openMenu")}>
             <Menu className="h-5 w-5" />
           </Button>
-          <div className="ml-2 min-w-0 flex-1">
-            {mobileHeader ?? <span className="font-semibold">{tCommon("dashboard")}</span>}
+          <div className="ml-1 min-w-0 flex-1 sm:ml-2">
+            {usesContextualHeader ? (
+              <div id="dashboard-mobile-header-actions" className="min-w-0" />
+            ) : (
+              mobileHeader ?? <span className="font-semibold">{tCommon("dashboard")}</span>
+            )}
           </div>
-          <SettingsDropdown
-            locale={locale}
-            triggerButtonClassName="h-10 w-10 rounded-xl"
-            menuClassName="w-52"
-            subTriggerClassName="flex items-center gap-2 rounded-lg py-2"
-            itemClassName="flex items-center gap-2 rounded-lg py-2"
-          />
-          {accountControls}
-        </div>
+          {!usesContextualHeader && (
+            <div className="ml-1 shrink-0">{accountLink}</div>
+          )}
+        </div>}
 
-        <div className="hidden h-[72px] shrink-0 items-center justify-end gap-1.5 border-b border-border bg-card/70 px-6 backdrop-blur md:flex">
-          <SettingsDropdown
-            locale={locale}
-            triggerButtonClassName="h-9 w-9 border-0 bg-transparent shadow-none hover:bg-accent/60"
-            menuClassName="w-52"
-            subTriggerClassName="flex items-center gap-2 rounded-lg py-2"
-            itemClassName="flex items-center gap-2 rounded-lg py-2"
-          />
-          {accountControls}
-        </div>
+        {!usesEditorShell && <div className="hidden h-[72px] shrink-0 items-center gap-1.5 border-b border-border bg-card/70 px-6 backdrop-blur lg:flex">
+          <div id="dashboard-header-actions" className="min-w-0 flex-1" />
+          {!usesContextualHeader && (
+            <>
+              {accountLink}
+              {logoutControl}
+            </>
+          )}
+        </div>}
 
-        <main ref={mainContentRef} className="dashboard-content flex-1 overflow-y-auto [scrollbar-gutter:stable]">
+        <main ref={mainContentRef} className={usesEditorShell ? "min-h-0 flex-1 overflow-hidden" : "dashboard-content @container/dashboard flex-1 overflow-y-auto [scrollbar-gutter:stable]"}>
           {children}
         </main>
       </div>

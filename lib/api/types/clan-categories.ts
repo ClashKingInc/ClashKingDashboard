@@ -2,6 +2,7 @@ export interface ClanCategory {
   id: string;
   serverId: string;
   name: string;
+  position: number;
   clanCount: number;
 }
 
@@ -32,6 +33,7 @@ export function isClanCategory(value: unknown): value is ClanCategory {
   return typeof candidate.id === "string"
     && typeof candidate.serverId === "string"
     && typeof candidate.name === "string"
+    && typeof candidate.position === "number"
     && typeof candidate.clanCount === "number";
 }
 

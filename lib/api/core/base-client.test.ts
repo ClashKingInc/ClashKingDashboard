@@ -246,6 +246,19 @@ describe("BaseApiClient — request", () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 
+  it("does not retry rate-limited responses", async () => {
+    fetchMock.mockResolvedValue({
+      ok: false,
+      status: 429,
+      json: vi.fn().mockResolvedValue({ detail: "Rate limited" }),
+    });
+
+    const result = await client.req("/v2/server/123/channels");
+    expect(result.error).toBe("Rate limited");
+    expect(result.status).toBe(429);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
   it("retries on 401 when refresh token is available and refresh succeeds", async () => {
     localStorage.setItem("refresh_token", "ref_tok");
     fetchMock

@@ -3,17 +3,17 @@
 import { useGuildId } from "@/lib/dashboard-route";
 import { dashboardHref } from "@/lib/dashboard-route";
 import { getAccessToken } from "@/lib/auth/session";
-import { apiFetch } from "@/lib/api/fetch";
+import { apiFetch, apiUrl } from "@/lib/api/fetch";
 
 
 import { useEffect, useMemo, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import Image from "next/image";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
   DialogContent,
@@ -34,33 +34,31 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectSeparator, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ChannelCombobox } from "@/components/ui/channel-combobox";
 import { RoleCombobox } from "@/components/ui/role-combobox";
 import { InfoPopover } from "@/components/ui/info-popover";
-import { Switch } from "@/components/ui/switch";
-import { Separator } from "@/components/ui/separator";
+import { FolderIcon } from "@/components/ui/folder-icon";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { getClashClanProfileUrl } from "@/components/ui/clan-profile-popover";
 import {
   Settings,
   Plus,
   Users,
   Trash2,
-  Hash,
-  Shield,
   Loader2,
   AlertCircle,
   Save,
-  ArrowDown,
-  ArrowUp,
-  ChevronDown,
+  Search,
+  ExternalLink,
+  Info,
 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
-import { apiCache } from "@/lib/api-cache";
 import { apiClient } from "@/lib/api/client";
 import type { RoleMode, ServerRole } from "@/lib/api/types/roles";
-import type { ClanCategory } from "@/lib/api/types/clan-categories";
-import { dashboardCacheKeys, normalizeChannelsPayload, normalizeDiscordRolesPayload } from "@/lib/dashboard-cache";
+import { isClanCategoriesResponse, type ClanCategory } from "@/lib/api/types/clan-categories";
+import { normalizeDiscordRolesPayload } from "@/lib/dashboard-cache";
+import { dashboardQueryKeys } from "@/lib/dashboard-query";
+import { dashboardQueryOptions } from "@/lib/dashboard-query-options";
 import { ClanCategoryManager } from "./clan-category-manager";
 
 interface ClanSettings {
@@ -84,13 +82,8 @@ interface Clan {
   clanLevel?: number | null;
   member_count?: number | null;
   members?: number | null;
+  added_at?: string | null;
   settings?: ClanSettings;
-}
-
-interface Channel {
-  id: string;
-  name: string;
-  parent_name?: string;
 }
 
 interface DiscordRole {
@@ -110,8 +103,12 @@ function normalizeClansPayload(payload: unknown): Clan[] {
   return [];
 }
 
-type ClanSortField = "added" | "name" | "level" | "members";
-type SortDirection = "asc" | "desc";
+export function formatClanAddedAt(value: string | null | undefined, locale: string): string | null {
+  if (!value) return null;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+  return new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(date);
+}
 
 const PREMADE_CLAN_CATEGORIES = [
   "Main",
@@ -152,19 +149,19 @@ export default function ClansPage() {
   const { toast } = useToast();
   const t = useTranslations("ClansPage");
   const tCommon = useTranslations("Common");
+  const queryClient = useQueryClient();
 
 
   const [clans, setClans] = useState<Clan[]>([]);
-  const [channels, setChannels] = useState<Channel[]>([]);
   const [discordRoles, setDiscordRoles] = useState<DiscordRole[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [clanToDelete, setClanToDelete] = useState<string | null>(null);
+  const [clanToDelete, setClanToDelete] = useState<{ tag: string; name: string } | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [clanSortField, setClanSortField] = useState<ClanSortField>("added");
-  const [clanSortDirection, setClanSortDirection] = useState<SortDirection>("asc");
+  const [clanSearch, setClanSearch] = useState("");
   const [clanCategories, setClanCategories] = useState<ClanCategory[]>([]);
   const [categoryRefreshVersion, setCategoryRefreshVersion] = useState(0);
+  const [isCategoryDialogOpen, setIsCategoryDialogOpen] = useState(false);
 
   // Dialog states
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -176,37 +173,12 @@ export default function ClansPage() {
   const [memberRole, setMemberRole] = useState<ClanRoleSelection>({ role_id: null, mode: 'both' });
   const [leaderRole, setLeaderRole] = useState<ClanRoleSelection>({ role_id: null, mode: 'both' });
 
-  // Countdown states
-  const [countdownStatus, setCountdownStatus] = useState<{
-    war_score: string | null;
-    war_timer: string | null;
-  }>({ war_score: null, war_timer: null });
-  const [countdownLoading, setCountdownLoading] = useState<string | null>(null);
-
-  const clansCacheKey = `dashboard-server-clans-${guildId}`;
-  const sortPreferenceStorageKey = `clans-sort-preference-${guildId}`;
-  const channelsCacheKey = dashboardCacheKeys.channels(guildId);
-  const rolesCacheKey = dashboardCacheKeys.discordRoles(guildId);
-
-  const fetchClans = async (accessToken: string, forceRefresh = false): Promise<Clan[]> => {
+  const fetchClans = async (_accessToken: string, forceRefresh = false): Promise<Clan[]> => {
     if (forceRefresh) {
-      apiCache.invalidate(clansCacheKey);
+      await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.clans(guildId), exact: true });
     }
 
-    const cachedOrFetched = await apiCache.get(clansCacheKey, async () => {
-      const response = await apiFetch(`/v2/server/${guildId}/clans`, {
-        headers: { Authorization: `Bearer ${accessToken}` }
-      });
-
-      if (!response.ok) {
-        const error = new Error(`Failed to fetch clans: ${response.status}`) as Error & { status?: number };
-        error.status = response.status;
-        throw error;
-      }
-
-      const payload = await response.json();
-      return normalizeClansPayload(payload);
-    });
+    const cachedOrFetched = await queryClient.fetchQuery(dashboardQueryOptions.clans(guildId));
 
     // Normalize again to protect against stale cache entries written by older code paths.
     return normalizeClansPayload(cachedOrFetched);
@@ -222,34 +194,19 @@ export default function ClansPage() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const accessToken = getAccessToken() ?? "";
-
-        const clansData = await fetchClans(accessToken);
-          setClans(normalizeClansPayload(clansData));
-
-        const [channelsResult, rolesResult] = await Promise.allSettled([
-          apiCache.get(channelsCacheKey, async () => {
-            const response = await apiFetch(`/v2/server/${guildId}/channels`, {
-              headers: { Authorization: `Bearer ${accessToken}` }
-            });
-            if (!response.ok) throw new Error("Failed to fetch channels");
-            return response.json();
-          }),
-          apiCache.get(rolesCacheKey, async () => {
-            const response = await apiFetch(`/v2/server/${guildId}/discord-roles`, {
-              headers: { Authorization: `Bearer ${accessToken}` }
-            });
-            if (!response.ok) throw new Error("Failed to fetch roles");
-            return response.json();
-          })
+        const [clansResult, rolesResult, categoriesResult] = await Promise.allSettled([
+          fetchClans(""),
+          queryClient.fetchQuery(dashboardQueryOptions.roles(guildId)),
+          apiClient.clanCategories.list(guildId),
         ]);
 
-        if (channelsResult.status === "fulfilled") {
-          setChannels(normalizeChannelsPayload(channelsResult.value));
-        }
-
+        if (clansResult.status === "rejected") throw clansResult.reason;
+        setClans(normalizeClansPayload(clansResult.value));
         if (rolesResult.status === "fulfilled") {
           setDiscordRoles(normalizeDiscordRolesPayload(rolesResult.value));
+        }
+        if (categoriesResult.status === "fulfilled" && isClanCategoriesResponse(categoriesResult.value.data)) {
+          setClanCategories(categoriesResult.value.data.items);
         }
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -269,42 +226,6 @@ export default function ClansPage() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [guildId]);
-
-  useEffect(() => {
-    if (!guildId) return;
-
-    const storedPreference = localStorage.getItem(sortPreferenceStorageKey);
-    if (!storedPreference) return;
-
-    try {
-      const parsedPreference = JSON.parse(storedPreference) as {
-        field?: unknown;
-        direction?: unknown;
-      };
-
-      const isValidField = parsedPreference.field === "added"
-        || parsedPreference.field === "name"
-        || parsedPreference.field === "level"
-        || parsedPreference.field === "members";
-      const isValidDirection = parsedPreference.direction === "asc" || parsedPreference.direction === "desc";
-
-      if (isValidField && isValidDirection) {
-        setClanSortField(parsedPreference.field as ClanSortField);
-        setClanSortDirection(parsedPreference.direction as SortDirection);
-      }
-    } catch {
-      localStorage.removeItem(sortPreferenceStorageKey);
-    }
-  }, [guildId, sortPreferenceStorageKey]);
-
-  useEffect(() => {
-    if (!guildId) return;
-
-    localStorage.setItem(
-      sortPreferenceStorageKey,
-      JSON.stringify({ field: clanSortField, direction: clanSortDirection }),
-    );
-  }, [clanSortDirection, clanSortField, guildId, sortPreferenceStorageKey]);
 
   // Add clan
   const handleAddClan = async () => {
@@ -381,6 +302,8 @@ export default function ClansPage() {
       });
 
       await refreshClans(accessToken || "");
+      setIsSettingsDialogOpen(false);
+      setSelectedClan(null);
     } catch (err) {
       console.error("Error deleting clan:", err);
       toast({
@@ -401,13 +324,7 @@ export default function ClansPage() {
 
     try {
       const clanTag = clan.tag || clan.clan_tag || '';
-      const accessToken = getAccessToken();
-      const [rulesResponse, countdownResponse] = await Promise.all([
-        apiClient.roles.getServerRoles(guildId, { type: 'clan_role', clan_tag: clanTag }),
-        apiFetch(`/v2/server/${guildId}/clan/${encodeURIComponent(clanTag)}/countdowns`, {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        }),
-      ]);
+      const rulesResponse = await apiClient.roles.getServerRoles(guildId, { type: 'clan_role', clan_tag: clanTag });
       if (rulesResponse.error) throw new Error(rulesResponse.error);
       const roles = rulesResponse.data?.roles || [];
       setClanServerRoles(roles);
@@ -415,72 +332,16 @@ export default function ClansPage() {
       const leader = roles.find((role) => role.option === 'leader');
       setMemberRole({ role_id: member?.role_id || null, mode: member?.mode || 'both' });
       setLeaderRole({ role_id: leader?.role_id || null, mode: leader?.mode || 'both' });
-      if (!countdownResponse.ok) throw new Error('Failed to load clan countdowns');
-      const payload = await countdownResponse.json();
-      const status = Object.fromEntries((payload.countdowns || []).map((item: { type: string; channel_id?: string }) => [item.type, item.channel_id || null]));
-      setCountdownStatus({ war_score: status.war_score || null, war_timer: status.war_timer || null });
     } catch (err) {
       console.error("Error loading clan settings:", err);
       setClanServerRoles([]);
       setMemberRole({ role_id: null, mode: 'both' });
       setLeaderRole({ role_id: null, mode: 'both' });
-      setCountdownStatus({ war_score: null, war_timer: null });
       toast({
         title: tCommon("error"),
         description: t("toast.errorLoadingSettings"),
         variant: "destructive",
       });
-    }
-  };
-
-  // Toggle countdown (enable/disable)
-  const handleToggleCountdown = async (countdownType: 'war_score' | 'war_timer', enabled: boolean) => {
-    if (!selectedClan) return;
-
-    const clanTag = selectedClan.tag || selectedClan.clan_tag || '';
-    setCountdownLoading(countdownType);
-
-    try {
-      const accessToken = getAccessToken();
-
-      const response = await apiFetch(`/v2/server/${guildId}/countdowns`, {
-        method: enabled ? 'POST' : 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          countdown_type: countdownType,
-          clan_tag: clanTag,
-        }),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.detail || `Failed to ${enabled ? 'enable' : 'disable'} countdown`);
-      }
-
-      const data = await response.json();
-
-      // Update local state
-      setCountdownStatus(prev => ({
-        ...prev,
-        [countdownType]: enabled ? data.channel_id : null,
-      }));
-
-      toast({
-        title: tCommon("success"),
-        description: enabled ? t("toast.countdownEnabled") : t("toast.countdownDisabled"),
-      });
-    } catch (err) {
-      console.error("Error toggling countdown:", err);
-      toast({
-        title: tCommon("error"),
-        description: err instanceof Error ? err.message : t("toast.errorTogglingCountdown"),
-        variant: "destructive",
-      });
-    } finally {
-      setCountdownLoading(null);
     }
   };
 
@@ -553,40 +414,39 @@ export default function ClansPage() {
     }
   };
 
-  const sortedClans = useMemo(() => {
-    const clansToSort = [...clans];
-    const directionMultiplier = clanSortDirection === "asc" ? 1 : -1;
+  const filteredClans = useMemo(() => {
+    const normalizedSearch = clanSearch.trim().toLowerCase();
+    return clans.filter((clan) => {
+      if (!normalizedSearch) return true;
+      return (clan.name || clan.clan_name || "").toLowerCase().includes(normalizedSearch)
+        || (clan.tag || clan.clan_tag || "").toLowerCase().includes(normalizedSearch)
+        || (clan.settings?.category || "").toLowerCase().includes(normalizedSearch);
+    });
+  }, [clanSearch, clans]);
 
-    const clanOrderByTag = new Map(clans.map((clan, index) => [clan.tag || clan.clan_tag || String(index), index]));
-    const getClanName = (clan: Clan) => (clan.name || clan.clan_name || "").toLowerCase();
-    const getClanLevel = (clan: Clan) => clan.level ?? clan.clanLevel ?? 0;
-    const getClanMembers = (clan: Clan) => clan.member_count ?? clan.members ?? 0;
-    const getClanOrder = (clan: Clan) => clanOrderByTag.get(clan.tag || clan.clan_tag || "") ?? Number.MAX_SAFE_INTEGER;
+  const clanSections = useMemo(() => {
+    const byCategory = new Map<string, Clan[]>();
+    clanCategories.forEach((category) => byCategory.set(category.name, []));
+    const uncategorized: Clan[] = [];
 
-    clansToSort.sort((a, b) => {
-      if (clanSortField === "added") {
-        return (getClanOrder(a) - getClanOrder(b)) * directionMultiplier;
-      }
-
-      if (clanSortField === "name") {
-        return getClanName(a).localeCompare(getClanName(b)) * directionMultiplier;
-      }
-
-      if (clanSortField === "level") {
-        return (getClanLevel(a) - getClanLevel(b)) * directionMultiplier;
-      }
-
-      return (getClanMembers(a) - getClanMembers(b)) * directionMultiplier;
+    filteredClans.forEach((clan) => {
+      const category = clan.settings?.category?.trim();
+      const categoryClans = category ? byCategory.get(category) : undefined;
+      if (categoryClans) categoryClans.push(clan);
+      else uncategorized.push(clan);
     });
 
-    return clansToSort;
-  }, [clanSortDirection, clanSortField, clans]);
+    const sections = clanCategories
+      .map((category) => ({ id: category.id, name: category.name, clans: byCategory.get(category.name) ?? [] }))
+      .filter((section) => section.clans.length > 0 || !clanSearch.trim());
+
+    if (uncategorized.length > 0) {
+      sections.push({ id: "uncategorized", name: t("categories.uncategorized"), clans: uncategorized });
+    }
+    return sections;
+  }, [clanCategories, clanSearch, filteredClans, t]);
 
   const totalMembers = clans.reduce((sum, clan) => sum + (clan.member_count || clan.members || 0), 0);
-  const configuredClans = clans.filter(c =>
-    c.settings?.category
-  ).length;
-
   const categoryOptions = useMemo(() => {
     const counts = new Map(clanCategories.map((category) => [category.name, category.clanCount]));
     const premade = PREMADE_CLAN_CATEGORIES.map((name) => ({ name, count: counts.get(name) || 0 }));
@@ -624,360 +484,188 @@ export default function ClansPage() {
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div className="flex items-start gap-3">
-            <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
-              <Shield className="h-8 w-8 text-primary" />
-            </div>
-            <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t("title")}</h1>
-              <p className="text-muted-foreground mt-1">
-                {t("description")}
-              </p>
-            </div>
+      <div className="mx-auto max-w-7xl space-y-7">
+        <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-foreground md:text-3xl">{t("title")}</h1>
+            <p className="mt-1 text-muted-foreground">{t("description")}</p>
           </div>
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <Button type="button" variant="secondary" className="border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted" onClick={() => setIsCategoryDialogOpen(true)}>
+              <FolderIcon size={16} />
+              {t("categories.manage")}
+            </Button>
+            <Button type="button" onClick={() => setIsAddDialogOpen(true)}>
+              <Plus className="h-4 w-4" />
+              {t("addClan")}
+            </Button>
+          </div>
+        </header>
 
-          {/* Add Clan Dialog */}
-          <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-            <DialogContent className="bg-card border-border max-w-2xl">
-              <DialogHeader>
-                <DialogTitle>{t("addNewClan")}</DialogTitle>
-                <DialogDescription>
-                  {t("addClanDescription")}
-                </DialogDescription>
-              </DialogHeader>
-              <div className="space-y-4 py-4">
-                <div className="space-y-2">
-                  <Label htmlFor="clan-tag">{t("clanTag")}</Label>
-                  <Input
-                    id="clan-tag"
-                    placeholder="#ABCD1234"
-                    value={newClanTag}
-                    onChange={(e) => setNewClanTag(e.target.value)}
-                    className="bg-background border-border"
-                    onKeyDown={(e) => e.key === 'Enter' && handleAddClan()}
-                  />
-                </div>
-              </div>
-              <DialogFooter>
-                <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
-                  {tCommon("cancel")}
-                </Button>
-                <Button
-                  className="bg-primary hover:bg-primary/90"
-                  onClick={handleAddClan}
-                  disabled={saving}
-                >
-                  {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : t("addClan")}
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        </div>
-
-        {/* Statistics */}
-        <div className="grid grid-cols-2 gap-4 md:gap-6 lg:grid-cols-4 mb-8">
-          <Card className="bg-card border-blue-500/30 bg-blue-500/5">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">{t("totalClans")}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between">
-                {loading ? (
-                  <Skeleton className="h-9 w-12 animate-pulse" />
-                ) : (
-                  <div className="text-3xl font-bold text-blue-500">{clans.length}</div>
-                )}
-                <Shield className="h-8 w-8 text-blue-500/50" />
-              </div>
-              <p className="text-xs text-muted-foreground mt-2">
-                {t("registeredClans")}
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-card border-green-500/30 bg-green-500/5">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">{t("configured")}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between">
-                {loading ? (
-                  <Skeleton className="h-9 w-12 animate-pulse" />
-                ) : (
-                  <div className="text-3xl font-bold text-green-500">{configuredClans}</div>
-                )}
-                <Settings className="h-8 w-8 text-green-500/50" />
-              </div>
-              <p className="text-xs text-muted-foreground mt-2">
-                {t("withSettingsConfigured")}
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-card border-purple-500/30 bg-purple-500/5">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">{t("totalMembers")}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between">
-                {loading ? (
-                  <Skeleton className="h-9 w-16 animate-pulse" />
-                ) : (
-                  <div className="text-3xl font-bold text-purple-500">{totalMembers}</div>
-                )}
-                <Users className="h-8 w-8 text-purple-500/50" />
-              </div>
-              <p className="text-xs text-muted-foreground mt-2">
-                {t("acrossAllClans")}
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-card border-yellow-500/30 bg-yellow-500/5">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">{t("channels")}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between">
-                {loading ? (
-                  <Skeleton className="h-9 w-12 animate-pulse" />
-                ) : (
-                  <div className="text-3xl font-bold text-yellow-500">{channels.length}</div>
-                )}
-                <Hash className="h-8 w-8 text-yellow-500/50" />
-              </div>
-              <p className="text-xs text-muted-foreground mt-2">
-                {t("availableChannels")}
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-
-        <ClanCategoryManager
-          serverId={guildId}
-          refreshVersion={categoryRefreshVersion}
-          onCategoriesChange={setClanCategories}
-          onRefreshClans={async () => {
-            await refreshClans(getAccessToken() || "");
-          }}
-        />
-
-        <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-          {(loading || clans.length > 0) && (
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-              <Label className="text-sm text-muted-foreground">{t("sorting.label")}</Label>
-              {loading ? (
-                <div className="flex items-center gap-2">
-                  <Skeleton className="h-9 w-9 animate-pulse" />
-                  <Skeleton className="h-9 w-[220px] animate-pulse" />
-                </div>
-              ) : (
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="h-9 w-9"
-                    aria-label={t("sorting.toggleDirection")}
-                    onClick={() => setClanSortDirection((current) => (current === "asc" ? "desc" : "asc"))}
-                  >
-                    {clanSortDirection === "asc" ? (
-                      <ArrowUp className="h-4 w-4" />
-                    ) : (
-                      <ArrowDown className="h-4 w-4" />
-                    )}
-                  </Button>
-                  <Select value={clanSortField} onValueChange={(value) => setClanSortField(value as ClanSortField)}>
-                    <SelectTrigger className="w-full min-w-[220px] border-border bg-background sm:w-[220px]">
-                      <SelectValue placeholder={t("sorting.sortBy")} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="added">{t("sorting.added")}</SelectItem>
-                      <SelectItem value="name">
-                        {t("sorting.name")}
-                      </SelectItem>
-                      <SelectItem value="level">{t("sorting.level")}</SelectItem>
-                      <SelectItem value="members">{t("sorting.members")}</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+        <section className="space-y-4" aria-labelledby="clan-list-title">
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex items-center gap-2">
+              <h2 id="clan-list-title" className="text-lg font-semibold">{t("listTitle")}</h2>
+              {!loading && (
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-muted/65 px-2.5 py-1 text-xs font-medium text-muted-foreground">
+                  <Users className="h-3.5 w-3.5" />
+                  {t("memberSummary", { count: totalMembers })}
+                </span>
               )}
             </div>
-          )}
-
-          <Button onClick={() => setIsAddDialogOpen(true)} className="w-full gap-2 bg-primary hover:bg-primary/90 md:w-auto">
-            <Plus className="h-4 w-4" />
-            {t("addClan")}
-          </Button>
-        </div>
-
-        {/* Clans Grid */}
-        {loading ? (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {[1, 2, 3].map((i) => (
-              <Card key={i} className="bg-card border-border hover:border-primary/50 transition-all duration-200">
-                <CardHeader className="pb-4">
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-3">
-                      <Skeleton className="h-14 w-14 rounded-lg animate-pulse" />
-                      <div>
-                        <Skeleton className="h-5 w-32 animate-pulse mb-2" />
-                        <Skeleton className="h-4 w-24 animate-pulse" />
-                      </div>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="bg-secondary/50 rounded-lg p-3 border border-border">
-                      <Skeleton className="h-3 w-10 animate-pulse mb-2" />
-                      <Skeleton className="h-6 w-12 animate-pulse" />
-                    </div>
-                    <div className="bg-secondary/50 rounded-lg p-3 border border-border">
-                      <Skeleton className="h-3 w-14 animate-pulse mb-2" />
-                      <Skeleton className="h-6 w-16 animate-pulse" />
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between py-2">
-                    <Skeleton className="h-4 w-12 animate-pulse" />
-                    <Skeleton className="h-6 w-28 rounded-full animate-pulse" />
-                  </div>
-                  <Separator className="bg-border" />
-                  <div className="flex gap-2">
-                    <Skeleton className="h-10 flex-1 animate-pulse" />
-                    <Skeleton className="h-10 w-10 animate-pulse" />
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <div className="flex h-10 min-w-0 items-center gap-2 rounded-xl bg-muted/55 px-3 shadow-sm shadow-black/5 focus-within:ring-2 focus-within:ring-ring/35 sm:w-72">
+                <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
+                <Input
+                  aria-label={t("searchLabel")}
+                  placeholder={t("searchPlaceholder")}
+                  value={clanSearch}
+                  onChange={(event) => setClanSearch(event.target.value)}
+                  className="h-auto border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
+                />
+              </div>
+            </div>
           </div>
-        ) : clans.length === 0 ? ( // NOSONAR — JSX nested ternary for multi-branch display state
-          <Card className="bg-card border-border">
-            <CardContent className="py-12 text-center">
-              <Shield className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-foreground mb-2">{t("noClansYet")}</h3>
-              <p className="text-muted-foreground mb-4">
-                {t("getStartedAdding")}
-              </p>
-              <Button onClick={() => setIsAddDialogOpen(true)} className="gap-2">
+
+          {loading ? (
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {[1, 2, 3].map((item) => <Skeleton key={item} className="h-24 w-full rounded-[24px]" />)}
+            </div>
+          ) : clans.length === 0 ? (
+            <div className="rounded-[24px] bg-muted/45 px-5 py-10 text-center shadow-sm shadow-black/5">
+              <h3 className="font-semibold">{t("noClansYet")}</h3>
+              <p className="mt-1 text-sm text-muted-foreground">{t("getStartedAdding")}</p>
+              <Button className="mt-4" onClick={() => setIsAddDialogOpen(true)}>
                 <Plus className="h-4 w-4" />
                 {t("addFirstClan")}
               </Button>
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-            {sortedClans.map((clan) => {
-              const isConfigured = !!clan.settings?.category;
-
-              return (
-                <Card key={clan.tag} className="bg-card border-border hover:border-primary/50 transition-all duration-200">
-                  <CardHeader className="pb-4">
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-center gap-3">
-                        <Avatar className="h-14 w-14 overflow-visible rounded-none border-0 bg-transparent">
-                          <AvatarImage
-                            src={clan.badge_url || clan.clan_badge_url || ''}
-                            alt={clan.name || clan.clan_name || 'Clan'}
-                            className="object-contain"
+            </div>
+          ) : filteredClans.length === 0 ? (
+            <div className="rounded-[24px] bg-muted/45 px-5 py-10 text-center text-sm text-muted-foreground">{t("noSearchResults")}</div>
+          ) : (
+            <div className="space-y-8">
+              {clanSections.map((section) => (
+                <div key={section.id} className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <FolderIcon size={28} />
+                    <div>
+                      <h3 className="text-lg font-semibold text-foreground">{section.name}</h3>
+                      <p className="text-sm text-muted-foreground">{t("categories.sectionCount", { count: section.clans.length })}</p>
+                    </div>
+                  </div>
+                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    {section.clans.map((clan) => {
+                      const clanTag = clan.tag || clan.clan_tag || "";
+                      const clanName = clan.name || clan.clan_name || t("unknownClan");
+                      const addedAt = formatClanAddedAt(clan.added_at, locale);
+                      return (
+                        <div key={clanTag} className="relative flex min-h-40 flex-col items-center rounded-[20px] bg-card px-4 py-4 text-center shadow-sm shadow-black/5">
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="absolute right-2.5 top-2.5 h-8 w-8 text-muted-foreground hover:bg-muted hover:text-foreground"
+                            aria-label={t("configureClanLabel", { name: clanName })}
+                            onClick={() => void handleOpenSettings(clan)}
+                          >
+                            <Settings className="h-4 w-4" />
+                          </Button>
+                          <Image
+                            src={apiUrl(`/v2/clan/${encodeURIComponent(clanTag)}/badge`)}
+                            alt={t("badgeAlt", { name: clanName })}
+                            width={64}
+                            height={64}
+                            unoptimized
+                            className="h-16 w-16 object-contain"
                           />
-                          <AvatarFallback className="rounded-xl bg-secondary text-foreground">
-                            {(clan.name || clan.clan_name || 'C').charAt(0)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <CardTitle className="text-lg font-bold text-foreground">
-                            {clan.name || clan.clan_name || 'Unknown'}
-                          </CardTitle>
-                          <CardDescription className="text-muted-foreground font-mono text-xs">
-                            {clan.tag || clan.clan_tag}
-                          </CardDescription>
+                          <h4 className="mt-1.5 max-w-full truncate text-sm font-semibold text-foreground">{clanName}</h4>
+                          <div className="flex max-w-full items-center justify-center gap-1">
+                            <p className="truncate text-sm text-muted-foreground">{clanTag}</p>
+                            {addedAt && (
+                              <TooltipProvider delayDuration={150}>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <button
+                                      type="button"
+                                      className="shrink-0 rounded-full text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                      aria-label={t("addedOnLabel", { name: clanName })}
+                                    >
+                                      <Info className="h-3.5 w-3.5" />
+                                    </button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>{t("addedOn", { date: addedAt })}</TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            )}
+                          </div>
+                          <div className="mt-2.5 flex flex-wrap items-center justify-center gap-2">
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-muted/65 px-2.5 py-1 text-xs font-medium text-muted-foreground">
+                              <Users className="h-3.5 w-3.5" />
+                              {t("memberCount", { count: clan.member_count ?? clan.members ?? 0 })}
+                            </span>
+                            <a
+                              href={getClashClanProfileUrl(clanTag)}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+                            >
+                              {tCommon("openInGame")}
+                              <ExternalLink className="h-3.5 w-3.5" />
+                            </a>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                  </CardHeader>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
 
-                  <CardContent className="space-y-4">
-                    {/* Clan Stats */}
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="bg-secondary/50 rounded-lg p-3 border border-border">
-                        <div className="text-xs text-muted-foreground mb-1">{t("level")}</div>
-                        <div className="text-lg font-bold text-foreground">{clan.level || clan.clanLevel || t("notAvailable")}</div>
-                      </div>
-                      <div className="bg-secondary/50 rounded-lg p-3 border border-border">
-                        <div className="text-xs text-muted-foreground mb-1">{t("members")}</div>
-                        <div className="text-lg font-bold text-foreground flex items-center gap-1">
-                          <Users className="h-4 w-4" />
-                          {clan.member_count || clan.members || 0}/50
-                        </div>
-                      </div>
-                    </div>
+        <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+          <DialogContent variant="form" className="sm:max-w-lg">
+            <DialogHeader>
+              <DialogTitle>{t("addNewClan")}</DialogTitle>
+              <DialogDescription>{t("addClanDescription")}</DialogDescription>
+            </DialogHeader>
+            <div className="space-y-2 py-2">
+              <Label htmlFor="clan-tag">{t("clanTag")}</Label>
+              <Input id="clan-tag" placeholder="#ABCD1234" value={newClanTag} onChange={(event) => setNewClanTag(event.target.value)} onKeyDown={(event) => event.key === "Enter" && void handleAddClan()} />
+            </div>
+            <DialogFooter>
+              <Button variant="secondary" onClick={() => setIsAddDialogOpen(false)}>{tCommon("cancel")}</Button>
+              <Button onClick={() => void handleAddClan()} disabled={saving}>{saving ? <Loader2 className="h-4 w-4 animate-spin" /> : t("addClan")}</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
 
-                    {/* Status Badge */}
-                    <div className="flex items-center justify-between py-2">
-                      <span className="text-sm text-muted-foreground">{t("status")}</span>
-                      <Badge
-                        variant={isConfigured ? "outline" : "secondary"}
-                        className={isConfigured ? "border-green-600 bg-green-600 text-white hover:bg-green-700 dark:text-white" : "bg-secondary"}
-                      >
-                        {isConfigured ? t("configuredBadge") : t("setupRequired")}
-                      </Badge>
-                    </div>
+        <Dialog open={isCategoryDialogOpen} onOpenChange={setIsCategoryDialogOpen}>
+          <DialogContent variant="form" className="sm:max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>{t("categories.title")}</DialogTitle>
+              <DialogDescription>{t("categories.description")}</DialogDescription>
+            </DialogHeader>
+            <ClanCategoryManager
+              serverId={guildId}
+              refreshVersion={categoryRefreshVersion}
+              onCategoriesChange={setClanCategories}
+              onRefreshClans={async () => refreshClans(getAccessToken() || "")}
+            />
+          </DialogContent>
+        </Dialog>
 
-                    <Separator className="bg-border" />
-
-                    {/* Action Buttons */}
-                    <div className="flex gap-2">
-                      <Button
-                        variant="outline"
-                        className="flex-1 border-border hover:border-primary hover:bg-primary/10"
-                        onClick={() => handleOpenSettings(clan)}
-                      >
-                        <Settings className="mr-2 h-4 w-4" />
-                        {t("configure")}
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="border-border hover:border-destructive hover:bg-destructive/10 hover:text-destructive"
-                        onClick={() => setClanToDelete(clan.tag || clan.clan_tag || '')}
-                        disabled={saving}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-        )}
-
-        {/* Settings Dialog */}
         <Dialog open={isSettingsDialogOpen} onOpenChange={setIsSettingsDialogOpen}>
-          <DialogContent className="bg-card border-border max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogContent variant="form" className="sm:max-w-2xl">
             <DialogHeader>
               <DialogTitle className="pr-8 text-base leading-tight sm:text-lg">
-                {t("configureClan", { 
-                  name: selectedClan?.name || selectedClan?.clan_name || 'Unknown', 
-                  tag: selectedClan?.tag || selectedClan?.clan_tag || 'Unknown' 
+                {t("configureClan", {
+                  name: selectedClan?.name || selectedClan?.clan_name || t("unknownClan"),
+                  tag: selectedClan?.tag || selectedClan?.clan_tag || "—",
                 })}
               </DialogTitle>
-              <DialogDescription className="text-sm">
-                {t("customizeIntegration")}
-              </DialogDescription>
             </DialogHeader>
-
-            <Tabs defaultValue="basic" className="w-full">
-              <TabsList className="grid h-auto w-full grid-cols-1 sm:grid-cols-2">
-                <TabsTrigger value="basic">{t("tabs.basic")}</TabsTrigger>
-                <TabsTrigger value="war">{t("tabs.war")}</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="basic" className="space-y-4">
-                <div className="grid gap-4">
+            <div className="grid gap-4 py-1">
                   <div className="grid grid-cols-3 items-end gap-2">
                     <div className="col-span-2 min-w-0 space-y-1.5">
                       <div className="flex items-center gap-1.5">
@@ -1080,49 +768,28 @@ export default function ClansPage() {
                       className="bg-background border-border"
                     />
                   </div>
-                </div>
-              </TabsContent>
-
-
-              <TabsContent value="war" className="space-y-4">
-                <div className="grid gap-4">
-                  <div className="flex items-center justify-between rounded-lg border border-border bg-secondary/50 p-4">
-                    <div className="space-y-0.5">
-                      <Label>{t("warScoreCountdown")}</Label>
-                      <p className="text-sm text-muted-foreground">
-                        {t("warScoreCountdownDescription")}
-                      </p>
-                    </div>
-                    <Switch
-                      checked={!!countdownStatus.war_score}
-                      onCheckedChange={(checked) => handleToggleCountdown('war_score', checked)}
-                      disabled={countdownLoading === 'war_score'}
-                    />
-                  </div>
-
-                  <div className="flex items-center justify-between rounded-lg border border-border bg-secondary/50 p-4">
-                    <div className="space-y-0.5">
-                      <Label>{t("warTimerCountdown")}</Label>
-                      <p className="text-sm text-muted-foreground">
-                        {t("warTimerCountdownDescription")}
-                      </p>
-                    </div>
-                    <Switch
-                      checked={!!countdownStatus.war_timer}
-                      onCheckedChange={(checked) => handleToggleCountdown('war_timer', checked)}
-                      disabled={countdownLoading === 'war_timer'}
-                    />
-                  </div>
-
-                </div>
-              </TabsContent>
-            </Tabs>
+            </div>
 
             <DialogFooter>
-              <Button variant="outline" onClick={() => setIsSettingsDialogOpen(false)}>
+              <Button
+                variant="destructive"
+                className="sm:mr-auto"
+                disabled={saving || !selectedClan}
+                onClick={() => {
+                  if (!selectedClan) return;
+                  setClanToDelete({
+                    tag: selectedClan.tag || selectedClan.clan_tag || "",
+                    name: selectedClan.name || selectedClan.clan_name || t("unknownClan"),
+                  });
+                }}
+              >
+                <Trash2 className="h-4 w-4" />
+                {t("deleteClan")}
+              </Button>
+              <Button variant="secondary" onClick={() => setIsSettingsDialogOpen(false)}>
                 {tCommon("cancel")}
               </Button>
-              <Button onClick={handleSaveSettings} disabled={saving} className="gap-2">
+              <Button onClick={handleSaveSettings} disabled={saving} className="gap-2 bg-emerald-600 text-white hover:bg-emerald-700">
                 {saving ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -1140,19 +807,23 @@ export default function ClansPage() {
         </Dialog>
       </div>
 
-      <AlertDialog open={!!clanToDelete} onOpenChange={open => !open && setClanToDelete(null)}>
+      <AlertDialog open={!!clanToDelete} onOpenChange={(open) => !open && setClanToDelete(null)}>
         <AlertDialogContent className="bg-card border-border">
           <AlertDialogHeader>
             <AlertDialogTitle className="text-foreground">{tCommon("confirm")}</AlertDialogTitle>
             <AlertDialogDescription className="text-muted-foreground">
-              {t("deleteConfirm", { tag: clanToDelete ?? "" })}
+              {t("deleteConfirm", { name: clanToDelete?.name ?? "" })}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>{tCommon("cancel")}</AlertDialogCancel>
             <AlertDialogAction
               className="bg-destructive hover:bg-destructive/90"
-              onClick={() => { handleDeleteClan(clanToDelete!); setClanToDelete(null); }} // NOSONAR — non-null assertion guards against null safely in context
+              onClick={() => {
+                if (!clanToDelete) return;
+                void handleDeleteClan(clanToDelete.tag);
+                setClanToDelete(null);
+              }}
             >
               {tCommon("delete")}
             </AlertDialogAction>

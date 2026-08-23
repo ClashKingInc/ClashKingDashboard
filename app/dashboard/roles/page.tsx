@@ -2,17 +2,18 @@
 
 import { useGuildId } from "@/lib/dashboard-route";
 import { apiFetch } from "@/lib/api/fetch";
-
-
-import { useState, useEffect, useEffectEvent } from "react";
+import Image from "next/image";
+import { useState, useEffect, useEffectEvent, useRef } from "react";
 import { useTranslations, useLocale } from "next-intl";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useQueryClient } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
+import { InfoPopover } from "@/components/ui/info-popover";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { DashboardTabsList, DashboardTabTrigger } from "@/components/ui/dashboard-tabs";
 import { RoleCombobox } from "@/components/ui/role-combobox";
 import {
   Dialog,
@@ -24,55 +25,37 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Shield,
   Plus,
   Trash2,
-  Settings,
   Loader2,
   AlertCircle,
   Save,
-  Users,
-  Trophy,
-  Hammer,
-  Award,
   ChevronsUpDown,
   ChevronUp,
   ChevronDown,
-  Tag,
+  Tags,
 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
 import { apiClient } from "@/lib/api/client";
-import { apiCache } from "@/lib/api-cache";
+import { dashboardQueryKeys } from "@/lib/dashboard-query";
+import { dashboardQueryOptions } from "@/lib/dashboard-query-options";
 import type {
   RoleType,
   DiscordRole,
-  ServerRole,
   RoleMode,
   RoleSettings,
 } from "@/lib/api/types/roles";
+import { playerLeagueImageUrl, townHallImageUrl } from "@/lib/theme";
+import {
+  builderHallImageUrl,
+  builderLeagueImageUrl,
+  parseRoleLevel,
+  roleCriteriaImageUrl,
+  roleTypeImageUrl,
+} from "./role-assets";
 
-const ROLE_TYPES_CONFIG: Array<{ value: RoleType; icon: any }> = [
-  { value: "townhall", icon: Users },
-  { value: "league", icon: Trophy },
-  { value: "builderhall", icon: Hammer },
-  { value: "builder_league", icon: Award },
-];
-
-const ROLE_TYPE_COUNT_BADGE_CLASS: Record<"townhall" | "league" | "builderhall" | "builder_league", string> = {
-  townhall: "bg-blue-600",
-  league: "bg-green-600",
-  builderhall: "bg-amber-600",
-  builder_league: "bg-purple-600",
-};
+const ROLE_TYPES_CONFIG: RoleType[] = ["townhall", "league", "builderhall", "builder_league", "clan_category"];
 
 const BUILDER_LEAGUE_TIERS = [
   { id: "diamond", apiName: "Diamond", range: null },
@@ -122,11 +105,12 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
   const locale = useLocale();
   const t = useTranslations("RolesPage");
   const tCommon = useTranslations("Common");
-  const rolesCacheKey = `roles-page-data-${guildId}`;
+  const queryClient = useQueryClient();
+  const staticOptionsRequested = useRef(false);
 
-  const roleTypes = ROLE_TYPES_CONFIG.map((rt) => ({
-    ...rt,
-    label: t(`roleTypes.${rt.value.replaceAll(/_([a-z])/g, (g) => g[1].toUpperCase())}`),
+  const roleTypes = ROLE_TYPES_CONFIG.map((value) => ({
+    value,
+    label: t(`roleTypes.${value.replaceAll(/_([a-z])/g, (g) => g[1].toUpperCase())}`),
   }));
 
   const builderLeagues = BUILDER_LEAGUE_TIERS.flatMap((tier) => {
@@ -171,8 +155,8 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
     league: [],
     builderhall: [],
     builder_league: [],
+    clan_category: [],
   });
-  const [serverRoles, setServerRoles] = useState<ServerRole[]>([]);
 
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [currentRoleType, setCurrentRoleType] = useState<RoleType>("townhall");
@@ -181,13 +165,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
   const [sortCol, setSortCol] = useState<"role" | "criteria" | null>(null);
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
 
-  const [categoryRoles, setCategoryRoles] = useState<Record<string, string>>({});
   const [availableCategories, setAvailableCategories] = useState<string[]>([]);
-  const [categoryRoleSaving, setCategoryRoleSaving] = useState<string | null>(null);
-  const [isAddCategoryOpen, setIsAddCategoryOpen] = useState(false);
-  const [newCategoryName, setNewCategoryName] = useState("");
-  const [newCategoryRoleId, setNewCategoryRoleId] = useState("");
-  const [addCategoryError, setAddCategoryError] = useState<string | null>(null);
 
   // Dynamic league data loaded from API
   const [availableLeagues, setAvailableLeagues] = useState<Array<{ value: string; label: string }>>([]);
@@ -202,24 +180,24 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
 
   const loadMaxLevels = async () => {
     try {
-      // Load Town Hall max level
       const thEncoded = encodeURIComponent('Town Hall');
       const thUrl = `/v2/static/buildings/${thEncoded}/max-level`;
-      const thResponse = await apiFetch(thUrl);
+      const bhEncoded = encodeURIComponent('Builder Hall');
+      const bhUrl = `/v2/static/buildings/${bhEncoded}/max-level`;
+      const [thResponse, bhResponse] = await Promise.all([
+        apiFetch(thUrl, { cache: "force-cache" }),
+        apiFetch(bhUrl, { cache: "force-cache" }),
+      ]);
       if (thResponse.ok) {
-        const thData = await thResponse.json();
+        const thData = await thResponse.json() as { max_level: number };
         setTownHallMaxLevel(thData.max_level);
       } else {
         const errorText = await thResponse.text();
         console.error('Failed to load Town Hall max level:', thResponse.status, thResponse.statusText, errorText);
       }
 
-      // Load Builder Hall max level
-      const bhEncoded = encodeURIComponent('Builder Hall');
-      const bhUrl = `/v2/static/buildings/${bhEncoded}/max-level`;
-      const bhResponse = await apiFetch(bhUrl);
       if (bhResponse.ok) {
-        const bhData = await bhResponse.json();
+        const bhData = await bhResponse.json() as { max_level: number };
         setBuilderHallMaxLevel(bhData.max_level);
       } else {
         const errorText = await bhResponse.text();
@@ -260,7 +238,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
       const apiLocale = localeMap[locale] || 'EN';
 
       // Load league tiers from static data API via Next.js proxy with locale
-      const response = await apiFetch(`/v2/static/league_tiers/names?locale=${apiLocale}`);
+      const response = await apiFetch(`/v2/static/league_tiers/names?locale=${apiLocale}`, { cache: "force-cache" });
       if (response.ok) {
         const leagueNames: string[] = await response.json();
         // Transform to {value, label} format for the select
@@ -277,46 +255,50 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
       setIsLoading(true);
       setError(null);
 
-      const { rolesRes, settingsRes, discordRolesRes, clansRes } = await apiCache.get(
-        rolesCacheKey,
-        async () => {
-          const [rolesRes, settingsRes, discordRolesRes, clansRes] = await Promise.all([
-            apiClient.roles.getServerRoles(guildId),
-            apiClient.roles.getRoleSettings(guildId),
-            apiClient.roles.getDiscordRoles(guildId),
-            apiClient.servers.getServerClans(guildId),
-          ]);
+      const [rolesData, settingsData, discordRolesData, clansData] = await Promise.all([
+        queryClient.fetchQuery({
+          queryKey: dashboardQueryKeys.route("server-roles", guildId, "all"),
+          queryFn: async () => {
+            const response = await apiClient.roles.getServerRoles(guildId);
+            if (response.error || !response.data) throw new Error(response.error || "Failed to load server roles");
+            return response.data;
+          },
+        }),
+        queryClient.fetchQuery({
+          queryKey: dashboardQueryKeys.route("role-settings", guildId),
+          queryFn: async () => {
+            const response = await apiClient.roles.getRoleSettings(guildId);
+            if (response.error || !response.data) throw new Error(response.error || "Failed to load role settings");
+            return response.data;
+          },
+        }),
+        queryClient.fetchQuery(dashboardQueryOptions.roles(guildId)),
+        queryClient.fetchQuery(dashboardQueryOptions.clans(guildId)),
+      ]);
 
-          return { rolesRes, settingsRes, discordRolesRes, clansRes };
-        }
-      );
-
-      if (rolesRes.data) {
-        const rules = rolesRes.data.roles;
-        setServerRoles(rules);
+      if (rolesData) {
+        const rules = rolesData.roles;
         const normalizedRoles = {
-          townhall: rules.filter((r) => !r.clan_tag && r.type === 'townhall').map((r) => ({ rule_id: r.id, role_id: r.role_id, th: Number(r.option), mode: r.mode })),
+          townhall: rules.filter((r) => !r.clan_tag && r.type === 'townhall').map((r) => ({ rule_id: r.id, role_id: r.role_id, th: parseRoleLevel(r.option), mode: r.mode })),
           league: rules.filter((r) => !r.clan_tag && r.type === 'league').map((r) => ({ rule_id: r.id, role_id: r.role_id, type: r.option, mode: r.mode })),
-          builderhall: rules.filter((r) => !r.clan_tag && r.type === 'builderhall').map((r) => ({ rule_id: r.id, role_id: r.role_id, bh: Number(r.option), mode: r.mode })),
+          builderhall: rules.filter((r) => !r.clan_tag && r.type === 'builderhall').map((r) => ({ rule_id: r.id, role_id: r.role_id, bh: parseRoleLevel(r.option), mode: r.mode })),
           builder_league: rules.filter((r) => !r.clan_tag && r.type === 'builder_league').map((r) => ({ rule_id: r.id, role_id: r.role_id, type: r.option, mode: r.mode })),
+          clan_category: rules.filter((r) => !r.clan_tag && r.type === 'clan_category').map((r) => ({ rule_id: r.id, role_id: r.role_id, category: r.option, mode: r.mode })),
         };
         setAllRoles(normalizedRoles);
-        setCategoryRoles(Object.fromEntries(
-          rules.filter((r) => !r.clan_tag && r.type === 'clan_category').map((r) => [r.option, r.role_id])
-        ));
       }
 
-      if (settingsRes.data) {
-        setRoleSettings(settingsRes.data);
-        setOriginalRoleSettings(settingsRes.data);
+      if (settingsData) {
+        setRoleSettings(settingsData);
+        setOriginalRoleSettings(settingsData);
       }
 
-      if (discordRolesRes.data) {
-        setDiscordRoles(discordRolesRes.data.roles);
+      if (discordRolesData) {
+        setDiscordRoles(discordRolesData.roles);
       }
 
-      if (clansRes.data) {
-        const clans = Array.isArray(clansRes.data) ? clansRes.data : (clansRes.data as any).items || [];
+      if (clansData) {
+        const clans = Array.isArray(clansData) ? clansData : (clansData as any).items || [];
         const cats = Array.from(new Set(
           clans
             .map((c: any) => c.settings?.category)
@@ -334,8 +316,6 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
 
   const loadInitialData = useEffectEvent(() => {
     void loadData();
-    void loadLeagues();
-    void loadMaxLevels();
   });
 
   useEffect(() => { loadInitialData(); }, [guildId, locale]);
@@ -351,7 +331,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
         autoeval_triggers: roleSettings.autoeval_triggers,
         autoeval_log: roleSettings.autoeval_log,
       });
-      apiCache.invalidate(rolesCacheKey);
+      await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.route("role-settings", guildId), exact: true });
 
       setOriginalRoleSettings({ ...roleSettings });
       setSaveStatus('saved');
@@ -385,7 +365,9 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
           ? String(newRole.bh)
           : currentRoleType === 'league'
             ? newRole.league
-            : newRole.builder_league;
+            : currentRoleType === 'builder_league'
+              ? newRole.builder_league
+              : newRole.category;
       const result = await apiClient.roles.createServerRole(guildId, {
         type: currentRoleType,
         option,
@@ -398,7 +380,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
         return;
       }
 
-      apiCache.invalidate(rolesCacheKey);
+      await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.route("server-roles", guildId, "all"), exact: true });
       await loadData();
       setIsAddDialogOpen(false);
       setNewRole({ mode: 'both' });
@@ -416,7 +398,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
       const result = await apiClient.roles.deleteServerRole(guildId, ruleId);
       if (result.error) throw new Error(result.error);
 
-      apiCache.invalidate(rolesCacheKey);
+      await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.route("server-roles", guildId, "all"), exact: true });
       await loadData();
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
@@ -430,48 +412,11 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
       setError(null);
       const result = await apiClient.roles.updateServerRole(guildId, ruleId, { mode });
       if (result.error) throw new Error(result.error);
-      apiCache.invalidate(rolesCacheKey);
+      await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.route("server-roles", guildId, "all"), exact: true });
       await loadData();
     } catch (err: any) {
       setError(err.message || "Failed to update role mode");
     }
-  };
-
-  const handleUpdateCategoryRole = async (category: string, roleId: string) => {
-    try {
-      setCategoryRoleSaving(category);
-      const current = serverRoles.find((role) => !role.clan_tag && role.type === 'clan_category' && role.option === category);
-      if (current && roleId) {
-        const response = await apiClient.roles.updateServerRole(guildId, current.id, { role_id: roleId });
-        if (response.error) throw new Error(response.error);
-      } else if (current) {
-        const response = await apiClient.roles.deleteServerRole(guildId, current.id);
-        if (response.error) throw new Error(response.error);
-      } else if (roleId) {
-        const response = await apiClient.roles.createServerRole(guildId, {
-          type: 'clan_category', option: category, role_id: roleId, mode: 'both',
-        });
-        if (response.error) throw new Error(response.error);
-      }
-      apiCache.invalidate(rolesCacheKey);
-      await loadData();
-    } catch (err: any) {
-      setError(err.message || "Failed to update category role");
-    } finally {
-      setCategoryRoleSaving(null);
-    }
-  };
-
-  const handleAddCategoryRole = async () => {
-    const name = newCategoryName.trim();
-    if (!name) { setAddCategoryError(t("categoryRoles.errorCategoryRequired")); return; }
-    if (!newCategoryRoleId) { setAddCategoryError(t("categoryRoles.errorRoleRequired")); return; }
-    if (categoryRoles[name] !== undefined) { setAddCategoryError(t("categoryRoles.errorCategoryExists")); return; }
-    await handleUpdateCategoryRole(name, newCategoryRoleId);
-    setIsAddCategoryOpen(false);
-    setNewCategoryName("");
-    setNewCategoryRoleId("");
-    setAddCategoryError(null);
   };
 
   const renderRoleForm = () => {
@@ -492,7 +437,10 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                 <SelectContent className="max-h-80">
                   {Array.from({ length: townHallMaxLevel }, (_, i) => townHallMaxLevel - i).map((th) => (
                     <SelectItem key={th} value={th.toString()}>
-                      {thPrefix} {th}
+                      <span className="flex items-center gap-2">
+                        <Image src={townHallImageUrl(th)} alt="" width={24} height={24} unoptimized className="h-6 w-6 object-contain" />
+                        {thPrefix} {th}
+                      </span>
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -529,7 +477,10 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                 <SelectContent className="max-h-80">
                   {availableLeagues.map((league) => (
                     <SelectItem key={league.value} value={league.value}>
-                      {league.label}
+                      <span className="flex items-center gap-2">
+                        <Image src={playerLeagueImageUrl(league.value)} alt="" width={24} height={24} unoptimized className="h-6 w-6 object-contain" />
+                        {league.label}
+                      </span>
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -566,7 +517,10 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                 <SelectContent className="max-h-80">
                   {Array.from({ length: builderHallMaxLevel }, (_, i) => builderHallMaxLevel - i).map((bh) => (
                     <SelectItem key={bh} value={bh.toString()}>
-                      {bhPrefix} {bh}
+                      <span className="flex items-center gap-2">
+                        <Image src={builderHallImageUrl(bh)} alt="" width={24} height={24} unoptimized className="h-6 w-6 object-contain" />
+                        {bhPrefix} {bh}
+                      </span>
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -603,9 +557,49 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                 <SelectContent className="max-h-80">
                   {builderLeagues.map((league) => (
                     <SelectItem key={league.value} value={league.value}>
-                      {league.label}
+                      <span className="flex items-center gap-2">
+                        <Image src={builderLeagueImageUrl(league.value)} alt="" width={24} height={24} unoptimized className="h-6 w-6 object-contain" />
+                        {league.label}
+                      </span>
                     </SelectItem>
                   ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="role">{t("addRoleDialog.discordRole")}<span className="ml-1 text-destructive">*</span></Label>
+              <RoleCombobox
+                roles={discordRoles}
+                value={newRole.role_id?.toString() || ""}
+                onValueChange={(value) => setNewRole({ ...newRole, role_id: value })}
+                placeholder={t("addRoleDialog.selectRole")}
+                showDisabled={false}
+              />
+              {duplicateExactSelected && (
+                <p className="text-xs text-destructive">{t("addRoleDialog.errorDuplicateExact")}</p>
+              )}
+            </div>
+          </>
+        );
+
+      case "clan_category":
+        return (
+          <>
+            <div className="space-y-2">
+              <Label htmlFor="clan-category">{t("categoryRoles.categoryName")}<span className="ml-1 text-destructive">*</span></Label>
+              <Select
+                value={newRole.category ?? ""}
+                onValueChange={(value) => setNewRole({ ...newRole, category: value })}
+              >
+                <SelectTrigger id="clan-category">
+                  <SelectValue placeholder={t("categoryRoles.categoryNamePlaceholder")} />
+                </SelectTrigger>
+                <SelectContent>
+                  {availableCategories
+                    .filter((category) => !allRoles.clan_category.some((role) => role.category === category))
+                    .map((category) => (
+                      <SelectItem key={category} value={category}>{category}</SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
             </div>
@@ -645,10 +639,17 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
 
     const getCriteriaLabel = (role: any): string => {
       switch (roleType) {
-        case "townhall": return role.th ? `TH ${role.th.toString().replace(/^th/i, "")}` : "";
+        case "townhall": {
+          const level = parseRoleLevel(role.th ?? role.option);
+          return level ? `TH ${level}` : "";
+        }
         case "league": return role.type ? denormalizeLeagueName(role.type) : "";
-        case "builderhall": return role.bh ? `BH ${role.bh.toString().replace(/^bh/i, "")}` : "";
+        case "builderhall": {
+          const level = parseRoleLevel(role.bh ?? role.option);
+          return level ? `BH ${level}` : "";
+        }
         case "builder_league": return role.type ? denormalizeLeagueName(role.type) : "";
+        case "clan_category": return role.category ?? role.option ?? "";
         default: return "";
       }
     };
@@ -670,47 +671,95 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
       // Default: criteria ascending
       if (roleType === "townhall") return normNum(a.th) - normNum(b.th);
       if (roleType === "builderhall") return normNum(a.bh) - normNum(b.bh);
-      return (a.type ?? "").localeCompare(b.type ?? "");
+      return getCriteriaLabel(a).localeCompare(getCriteriaLabel(b));
     });
 
     if (roles.length === 0) {
       return (
-        <div className="text-center py-8 text-muted-foreground">
+        <div className="rounded-[24px] bg-card px-5 py-8 text-center text-muted-foreground shadow-sm shadow-black/5">
           <p>{t("configuredRoles.noRolesConfigured", { roleType: roleType.replace("_", " ") })}</p>
-          <p className="text-sm mt-2">{t("configuredRoles.addRoleToStart")}</p>
+          <p className="mt-1 text-sm">{t("configuredRoles.addRoleToStart")}</p>
         </div>
       );
     }
 
     return (
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead
-              className="cursor-pointer select-none hover:text-foreground"
-              onClick={() => handleSortClick("role")}
-            >
-              {t("configuredRoles.discordRole")}<SortIcon col="role" sortCol={sortCol} sortDir={sortDir} />
-            </TableHead>
-            <TableHead
-              className="cursor-pointer select-none hover:text-foreground"
-              onClick={() => handleSortClick("criteria")}
-            >
-              {t("configuredRoles.criteria")}<SortIcon col="criteria" sortCol={sortCol} sortDir={sortDir} />
-            </TableHead>
-            <TableHead>{t("configuredRoles.mode")}</TableHead>
-            <TableHead className="text-right">{t("configuredRoles.actions")}</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
+      <>
+      <div className="space-y-2 md:hidden">
+        {roles.map((role: any, index: number) => {
+          const roleId = role.role_id || role.id;
+          const discordRole = discordRoles.find((candidate) => candidate.id === roleId);
+          const criteria = getCriteriaLabel(role);
+          const criteriaValue = roleType === "townhall"
+            ? role.th ?? role.option
+            : roleType === "builderhall"
+              ? role.bh ?? role.option
+              : role.type ?? role.category ?? role.option;
+          const criteriaImage = roleCriteriaImageUrl(roleType, criteriaValue);
+
+          return (
+            <article key={`${roleId}-${index}`} className="rounded-2xl bg-card p-4 shadow-sm shadow-black/5">
+              <div className="flex min-w-0 items-center gap-2">
+                <span
+                  className="h-3 w-3 shrink-0 rounded-full"
+                  style={{ backgroundColor: discordRole && discordRole.color !== 0 ? `#${discordRole.color.toString(16).padStart(6, "0")}` : "#99AAB5" }}
+                />
+                <span className="min-w-0 flex-1 truncate text-sm font-medium">{discordRole?.name || t("configuredRoles.unknownRole")}</span>
+                <span className="inline-flex shrink-0 items-center gap-1.5 text-sm text-muted-foreground">
+                  {criteriaImage && <Image src={criteriaImage} alt="" width={24} height={24} unoptimized className="h-6 w-6 object-contain" />}
+                  {criteria || "—"}
+                </span>
+              </div>
+              <div className="mt-3 flex items-center gap-2 border-t border-border/60 pt-3">
+                <Select value={role.mode || "both"} onValueChange={(value) => void handleUpdateRoleMode(role.rule_id, value as RoleMode)}>
+                  <SelectTrigger className="min-h-11 min-w-0 flex-1"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="both">{t("configuredRoles.modeBoth")}</SelectItem>
+                    <SelectItem value="add">{t("configuredRoles.modeAdd")}</SelectItem>
+                    <SelectItem value="remove">{t("configuredRoles.modeRemove")}</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Button variant="ghost" size="touch-icon" onClick={() => handleDeleteRole(roleType, role.rule_id)} className="shrink-0 text-destructive hover:bg-destructive/10 hover:text-destructive" aria-label={t("configuredRoles.remove")}>
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+      <div className="hidden overflow-x-auto rounded-[24px] bg-card shadow-sm shadow-black/5 md:block">
+        <table className="w-full min-w-[720px] text-sm">
+          <thead className="text-xs font-semibold text-muted-foreground">
+            <tr>
+              <th className="px-4 py-3 text-left">
+                <button type="button" className="select-none transition-colors hover:text-foreground" onClick={() => handleSortClick("role")}>
+                  {t("configuredRoles.discordRole")}<SortIcon col="role" sortCol={sortCol} sortDir={sortDir} />
+                </button>
+              </th>
+              <th className="px-4 py-3 text-left">
+                <button type="button" className="select-none transition-colors hover:text-foreground" onClick={() => handleSortClick("criteria")}>
+                  {t("configuredRoles.criteria")}<SortIcon col="criteria" sortCol={sortCol} sortDir={sortDir} />
+                </button>
+              </th>
+              <th className="px-4 py-3 text-left">{t("configuredRoles.mode")}</th>
+              <th className="px-4 py-3 text-right">{t("configuredRoles.actions")}</th>
+            </tr>
+          </thead>
+          <tbody>
           {roles.map((role: any, index: number) => {
             const roleId = role.role_id || role.id;
             const discordRole = discordRoles.find((r) => r.id === roleId);
             const criteria = getCriteriaLabel(role);
+            const criteriaValue = roleType === "townhall"
+              ? role.th ?? role.option
+              : roleType === "builderhall"
+                ? role.bh ?? role.option
+                : role.type ?? role.category ?? role.option;
+            const criteriaImage = roleCriteriaImageUrl(roleType, criteriaValue);
 
             return (
-              <TableRow key={`${roleId}-${index}`}>
-                <TableCell>
+              <tr key={`${roleId}-${index}`} className="transition-colors hover:bg-muted/30">
+                <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
                     <div
                       className="w-3 h-3 rounded-full"
@@ -722,9 +771,14 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                     />
                     <span>{discordRole?.name || t("configuredRoles.unknownRole")}</span>
                   </div>
-                </TableCell>
-                <TableCell>{criteria}</TableCell>
-                <TableCell>
+                </td>
+                <td className="px-4 py-3">
+                  <span className="inline-flex items-center gap-2">
+                    {criteriaImage && <Image src={criteriaImage} alt="" width={28} height={28} unoptimized className="h-7 w-7 object-contain" />}
+                    {criteria || "—"}
+                  </span>
+                </td>
+                <td className="px-4 py-3">
                   <Select value={role.mode || 'both'} onValueChange={(value) => void handleUpdateRoleMode(role.rule_id, value as RoleMode)}>
                     <SelectTrigger className="w-40">
                       <SelectValue />
@@ -735,8 +789,8 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                       <SelectItem value="remove">{t("configuredRoles.modeRemove")}</SelectItem>
                     </SelectContent>
                   </Select>
-                </TableCell>
-                <TableCell className="text-right">
+                </td>
+                <td className="px-4 py-3 text-right">
                   <Button
                     variant="ghost"
                     size="sm"
@@ -746,19 +800,16 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                     <Trash2 className="h-4 w-4 mr-1" />
                     {t("configuredRoles.remove")}
                   </Button>
-                </TableCell>
-              </TableRow>
+                </td>
+              </tr>
             );
           })}
-        </TableBody>
-      </Table>
+          </tbody>
+        </table>
+      </div>
+      </>
     );
   };
-
-  // Calculate statistics
-  const totalRoles = Object.values(allRoles).reduce((sum, roles: any) => sum + (roles?.length || 0), 0);
-  const activeRoleTypes = Object.entries(allRoles).filter(([_, roles]: [string, any]) => roles.length > 0).length;
-  const totalRoleTypes = 4; // townhall, league, builderhall, builder_league
 
   const getRoleDuplicateState = () => {
     const existingRoles: any[] = allRoles[currentRoleType] || [];
@@ -779,6 +830,9 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
     } else if (currentRoleType === "builder_league") {
       matchesCriterion = existingRoles.some((r) => r.type === newRole.builder_league);
       matchesExact = existingRoles.some((r) => r.type === newRole.builder_league && r.role_id === newRole.role_id);
+    } else if (currentRoleType === "clan_category") {
+      matchesCriterion = existingRoles.some((r) => r.category === newRole.category);
+      matchesExact = existingRoles.some((r) => r.category === newRole.category && r.role_id === newRole.role_id);
     }
 
     return { matchesCriterion, matchesExact };
@@ -799,105 +853,16 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
       case "league": return !newRole.league;
       case "builderhall": return !newRole.bh;
       case "builder_league": return !newRole.builder_league;
+      case "clan_category": return !newRole.category;
       default: return true;
     }
   };
 
   return (
-    <div className="min-h-screen bg-background p-4 md:p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        {/* Header */}
-        <div className="flex items-start gap-4">
-          <div className="shrink-0 rounded-lg border border-primary/30 bg-primary/10 p-3">
-            <Shield className="h-8 w-8 text-primary" />
-          </div>
-          <div>
-            <h1 className="text-3xl font-bold text-foreground">{t("title")}</h1>
-            <p className="text-muted-foreground mt-1">
-              {t("description")}
-            </p>
-          </div>
-        </div>
-
-        {/* Statistics Overview */}
-        <div className="grid grid-cols-2 gap-6 lg:grid-cols-4">
-          <Card className="bg-card border-blue-500/30 bg-blue-500/5">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.totalRoles")}</CardTitle>
-            </CardHeader>
-            <CardContent className="h-[84px] flex flex-col justify-between">
-              <div className="flex h-10 items-start justify-between gap-3">
-                {isLoading ? (
-                  <Skeleton className="h-9 w-16 animate-pulse" />
-                ) : (
-                  <div className="flex h-8 items-center text-3xl font-bold text-blue-500">{totalRoles}</div>
-                )}
-                <Shield className="mt-0.5 h-8 w-8 shrink-0 text-blue-500/50" />
-              </div>
-              <p className="text-xs text-muted-foreground mt-2">
-                {t("stats.totalRolesDesc")}
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-card border-green-500/30 bg-green-500/5">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.autoEvaluation")}</CardTitle>
-            </CardHeader>
-            <CardContent className="h-[84px] flex flex-col justify-between">
-              <div className="flex h-10 items-start justify-between gap-3">
-                {isLoading ? (
-                  <Skeleton className="h-9 w-20 animate-pulse" />
-                ) : (
-                  <div className={`flex h-8 items-center text-3xl font-bold ${roleSettings.auto_eval_status ? 'text-green-500' : 'text-green-500/50'}`}>
-                    {roleSettings.auto_eval_status ? t("stats.autoEvaluationOn") : t("stats.autoEvaluationOff")}
-                  </div>
-                )}
-                <Settings className={`mt-0.5 h-8 w-8 shrink-0 ${roleSettings.auto_eval_status ? 'text-green-500/50' : 'text-green-500/30'}`} />
-              </div>
-              <p className="text-xs text-muted-foreground mt-2">
-                {roleSettings.auto_eval_status ? t("stats.autoEvaluationActiveDesc") : t("stats.autoEvaluationInactiveDesc")}
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-card border-purple-500/30 bg-purple-500/5">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.activeTypes")}</CardTitle>
-            </CardHeader>
-            <CardContent className="h-[84px] flex flex-col justify-between">
-              <div className="flex h-10 items-start justify-between gap-3">
-                {isLoading ? (
-                  <Skeleton className="h-9 w-12 animate-pulse" />
-                ) : (
-                  <div className="flex h-8 items-center text-3xl font-bold text-purple-500">{activeRoleTypes}/{totalRoleTypes}</div>
-                )}
-                <Trophy className="mt-0.5 h-8 w-8 shrink-0 text-purple-500/50" />
-              </div>
-              <p className="text-xs text-muted-foreground mt-2">
-                {t("stats.activeTypesDesc")}
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-card border-yellow-500/30 bg-yellow-500/5">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.discordRoles")}</CardTitle>
-            </CardHeader>
-            <CardContent className="h-[84px] flex flex-col justify-between">
-              <div className="flex h-10 items-start justify-between gap-3">
-                {isLoading ? (
-                  <Skeleton className="h-9 w-12 animate-pulse" />
-                ) : (
-                  <div className="flex h-8 items-center text-3xl font-bold text-yellow-500">{discordRoles.length}</div>
-                )}
-                <Users className="mt-0.5 h-8 w-8 shrink-0 text-yellow-500/50" />
-              </div>
-              <p className="text-xs text-muted-foreground mt-2">
-                {t("stats.discordRolesDesc")}
-              </p>
-            </CardContent>
-          </Card>
+    <div className="mx-auto max-w-7xl space-y-8 p-4 pb-12 md:p-6 lg:p-8">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight md:text-3xl">{t("title")}</h1>
+          <p className="mt-1 text-sm text-muted-foreground">{t("description")}</p>
         </div>
 
         {/* Error/Success Alerts */}
@@ -915,29 +880,35 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
           </Alert>
         )}
 
-        {/* Auto-Eval Settings */}
-        <Card className="bg-card border-border">
-          <CardHeader>
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div>
-                <CardTitle className="flex items-center gap-2">
-                  <Settings className="h-5 w-5" />
-                  {t("settings.title")}
-                </CardTitle>
-                <CardDescription>
-                  {t("settings.description")}
-                </CardDescription>
+        <section className="space-y-3">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+              <div className="min-w-0">
+                <div className="flex items-center gap-2">
+                  <h2 className="font-semibold">{t("settings.title")}</h2>
+                  <InfoPopover
+                    label={t("infoCard.title")}
+                    content={(
+                      <div className="space-y-2">
+                        <p><span className="font-semibold">{t("infoCard.automaticEvaluation")}</span> {t("infoCard.automaticEvaluationDesc")}</p>
+                        <p><span className="font-semibold">{t("infoCard.rolePriority")}</span> {t("infoCard.rolePriorityDesc")}</p>
+                        <p><span className="font-semibold">{t("infoCard.manualOverride")}</span> {t("infoCard.manualOverrideDesc")}</p>
+                      </div>
+                    )}
+                  />
+                </div>
+                <p className="mt-0.5 text-sm text-muted-foreground">{t("settings.description")}</p>
               </div>
               {saveStatus === 'saved' ? (
-                <div className="flex items-center gap-2 text-green-600 bg-green-500/10 px-3 py-2 rounded-md">
+                <div className="flex items-center gap-2 text-sm font-medium text-green-600">
                   <AlertCircle className="h-4 w-4" />
-                  <span className="text-sm font-medium">{t("toast.changesSaved")}</span>
+                  <span>{t("toast.changesSaved")}</span>
                 </div>
               ) : hasChanged && (
                 <Button
                   onClick={handleSaveSettings}
                   disabled={saveStatus === 'saving'}
-                  className="bg-primary hover:bg-primary/90 w-full md:w-auto"
+                  size="sm"
+                  className="w-full sm:w-auto"
                 >
                   {saveStatus === 'saving' ? (
                     <>
@@ -952,15 +923,12 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                   )}
                 </Button>
               )}
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between rounded-lg border border-border bg-secondary/50 p-4">
-              <div className="space-y-0.5">
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="flex items-center justify-between gap-4 rounded-[24px] bg-card px-5 py-4 shadow-sm shadow-black/5">
+              <div className="min-w-0 space-y-0.5">
                 <Label htmlFor="auto-eval">{t("settings.enableAutoEval")}</Label>
-                <p className="text-sm text-muted-foreground">
-                  {t("settings.enableAutoEvalDesc")}
-                </p>
+                <p className="text-xs leading-relaxed text-muted-foreground">{t("settings.enableAutoEvalDesc")}</p>
               </div>
               {isLoading ? (
                 <Skeleton className="h-6 w-11 rounded-full animate-pulse" />
@@ -975,12 +943,10 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
               )}
             </div>
 
-            <div className="flex items-center justify-between rounded-lg border border-border bg-secondary/50 p-4">
-              <div className="space-y-0.5">
+            <div className="flex items-center justify-between gap-4 rounded-[24px] bg-card px-5 py-4 shadow-sm shadow-black/5">
+              <div className="min-w-0 space-y-0.5">
                 <Label htmlFor="auto-nickname">{t("settings.autoNickname")}</Label>
-                <p className="text-sm text-muted-foreground">
-                  {t("settings.autoNicknameDesc")}
-                </p>
+                <p className="text-xs leading-relaxed text-muted-foreground">{t("settings.autoNicknameDesc")}</p>
               </div>
               {isLoading ? (
                 <Skeleton className="h-6 w-11 rounded-full animate-pulse" />
@@ -994,132 +960,27 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                 />
               )}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </section>
 
-        {/* Category Roles */}
-        <Card className="bg-card border-border">
-          <CardHeader>
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div>
-                <CardTitle className="flex items-center gap-2">
-                  <Tag className="h-5 w-5" />
-                  {t("categoryRoles.title")}
-                </CardTitle>
-                <CardDescription>{t("categoryRoles.description")}</CardDescription>
-              </div>
-              <Button variant="outline" className="w-full md:w-auto" onClick={() => { setIsAddCategoryOpen(true); setAddCategoryError(null); }}>
-                <Plus className="mr-2 h-4 w-4" />
-                {t("categoryRoles.addButton")}
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>
-            {isLoading ? (
-              <div className="space-y-2">
-                {[1, 2].map((i) => <Skeleton key={i} className="h-10 w-full animate-pulse" />)}
-              </div>
-            ) : Object.keys(categoryRoles).length === 0 && !isAddCategoryOpen ? ( // NOSONAR — JSX nested ternary for multi-branch display state
-              <div className="text-center py-8 text-muted-foreground">
-                <p>{t("categoryRoles.noCategoryRoles")}</p>
-                <p className="text-sm mt-2">{t("categoryRoles.noCategoryRolesDesc")}</p>
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {Object.entries(categoryRoles).map(([category, roleId]) => {
-                  const isSaving = categoryRoleSaving === category;
-                  return (
-                    <div key={category} className="flex items-center gap-3 rounded-lg border border-border bg-secondary/30 px-4 py-2">
-                      <span className="min-w-[140px] font-medium text-sm">{category}</span>
-                      <div className="flex-1">
-                        <RoleCombobox
-                          roles={discordRoles}
-                          value={roleId}
-                          onValueChange={(val) => handleUpdateCategoryRole(category, val)}
-                          placeholder={t("addRoleDialog.selectRole")}
-                          showDisabled={false}
-                        />
-                      </div>
-                      {isSaving ? (
-                        <Loader2 className="h-4 w-4 animate-spin text-muted-foreground shrink-0" />
-                      ) : (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleUpdateCategoryRole(category, "")}
-                          className="text-red-500 hover:text-red-600 hover:bg-red-500/10 shrink-0"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      )}
-                    </div>
-                  );
-                })}
-                {isAddCategoryOpen && (
-                  <div className="rounded-lg border border-primary/40 bg-primary/5 px-4 py-3 space-y-3">
-                    <p className="text-sm font-medium">{t("categoryRoles.addTitle")}</p>
-                    <div className="flex flex-col sm:flex-row gap-2">
-                      <Select
-                        value={newCategoryName}
-                        onValueChange={(val) => { setNewCategoryName(val); setAddCategoryError(null); }}
-                      >
-                        <SelectTrigger className="sm:max-w-[200px]">
-                          <SelectValue placeholder={t("categoryRoles.categoryNamePlaceholder")} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {availableCategories
-                            .filter((cat) => categoryRoles[cat] === undefined)
-                            .map((cat) => (
-                              <SelectItem key={cat} value={cat}>{cat}</SelectItem>
-                            ))}
-                        </SelectContent>
-                      </Select>
-                      <div className="flex-1">
-                        <RoleCombobox
-                          roles={discordRoles}
-                          value={newCategoryRoleId}
-                          onValueChange={(val) => { setNewCategoryRoleId(val); setAddCategoryError(null); }}
-                          placeholder={t("addRoleDialog.selectRole")}
-                          showDisabled={false}
-                        />
-                      </div>
-                      <div className="flex gap-2 shrink-0">
-                        <Button
-                          size="sm"
-                          onClick={handleAddCategoryRole}
-                          disabled={categoryRoleSaving !== null}
-                          className="bg-primary hover:bg-primary/90"
-                        >
-                          {categoryRoleSaving == null ? t("categoryRoles.addConfirm") : <Loader2 className="h-4 w-4 animate-spin" />} {/* NOSONAR */}
-                        </Button>
-                        <Button size="sm" variant="outline" onClick={() => { setIsAddCategoryOpen(false); setNewCategoryName(""); setNewCategoryRoleId(""); setAddCategoryError(null); }}>
-                          {t("addRoleDialog.cancel")}
-                        </Button>
-                      </div>
-                    </div>
-                    {addCategoryError && (
-                      <p className="text-xs text-destructive">{addCategoryError}</p>
-                    )}
-                  </div>
-                )}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Role Types Tabs */}
-        <Card className="bg-card border-border">
-          <CardHeader>
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <CardTitle>{t("configuredRoles.title")}</CardTitle>
-              <Dialog open={isAddDialogOpen} onOpenChange={(open) => { setIsAddDialogOpen(open); if (!open) setDialogError(null); }}>
+        <section className="space-y-4">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+              <h2 className="font-semibold">{t("configuredRoles.title")}</h2>
+              <Dialog open={isAddDialogOpen} onOpenChange={(open) => {
+                setIsAddDialogOpen(open);
+                if (open && !staticOptionsRequested.current) {
+                  staticOptionsRequested.current = true;
+                  void Promise.all([loadLeagues(), loadMaxLevels()]);
+                }
+                if (!open) setDialogError(null);
+              }}>
                 <DialogTrigger asChild>
-                  <Button className="bg-primary hover:bg-primary/90 w-full md:w-auto">
+                  <Button size="sm" className="w-full sm:w-auto">
                     <Plus className="mr-2 h-4 w-4" />
                     {tCommon("add")} {t("addRoleDialog.roleType")}
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-[500px]">
+                <DialogContent variant="form" className="sm:max-w-[500px]">
                   <DialogHeader>
                     <DialogTitle>{t("addRoleDialog.title")}</DialogTitle>
                     <DialogDescription>
@@ -1189,90 +1050,56 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                 </DialogContent>
               </Dialog>
             </div>
-          </CardHeader>
-          <CardContent>
+          <div>
             <Tabs defaultValue="townhall" className="w-full">
-              <TabsList className="grid h-auto w-full grid-cols-1 gap-1 rounded-lg border border-border bg-muted p-1 sm:grid-cols-2 lg:grid-cols-4 sm:gap-0">
+              <DashboardTabsList>
                 {roleTypes.map((type) => (
-                  <TabsTrigger
+                  <DashboardTabTrigger
                     key={type.value}
                     value={type.value}
-                    className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm"
+                    artwork={type.value === "clan_category" ? (
+                      <Tags aria-hidden="true" />
+                    ) : (
+                      <Image
+                        src={roleTypeImageUrl(type.value, townHallMaxLevel, builderHallMaxLevel)}
+                        alt=""
+                        width={22}
+                        height={22}
+                        unoptimized
+                      />
+                    )}
+                    count={isLoading ? <Skeleton className="h-2.5 w-2.5 rounded-[2px]" /> : (allRoles[type.value]?.length ?? 0)}
                   >
-                    <type.icon className="h-3.5 w-3.5 shrink-0" />
-                    <span className="truncate">{type.label}</span>
-                    <span
-                      className={`inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] px-1 text-[11px] font-semibold leading-none text-white shadow-sm ${ROLE_TYPE_COUNT_BADGE_CLASS[type.value as "townhall" | "league" | "builderhall" | "builder_league"]}`}
-                    >
-                      {isLoading ? <Skeleton className="h-2.5 w-2.5 rounded-[2px]" /> : (allRoles[type.value]?.length ?? 0)}
-                    </span>
-                  </TabsTrigger>
+                    {type.label}
+                  </DashboardTabTrigger>
                 ))}
-              </TabsList>
+              </DashboardTabsList>
 
               {roleTypes.map((type) => (
                 <TabsContent key={type.value} value={type.value} className="mt-6">
                   {isLoading ? (
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>
-                            <Skeleton className="h-4 w-24 animate-pulse" />
-                          </TableHead>
-                          <TableHead>
-                            <Skeleton className="h-4 w-20 animate-pulse" />
-                          </TableHead>
-                          <TableHead className="text-right">
-                            <Skeleton className="h-4 w-16 animate-pulse ml-auto" />
-                          </TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {[1, 2, 3].map((i) => (
-                          <TableRow key={i}>
-                            <TableCell>
-                              <div className="flex items-center gap-2">
-                                <Skeleton className="h-3 w-3 rounded-full animate-pulse" />
-                                <Skeleton className="h-4 w-32 animate-pulse" />
-                              </div>
-                            </TableCell>
-                            <TableCell>
-                              <Skeleton className="h-4 w-24 animate-pulse" />
-                            </TableCell>
-                            <TableCell className="text-right">
-                              <Skeleton className="h-8 w-20 animate-pulse ml-auto" />
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
+                    <div className="space-y-3 rounded-[24px] bg-card p-5 shadow-sm shadow-black/5">
+                      <div className="grid grid-cols-3 gap-4">
+                        <Skeleton className="h-4 w-24" />
+                        <Skeleton className="h-4 w-20" />
+                        <Skeleton className="ml-auto h-4 w-16" />
+                      </div>
+                      {[1, 2, 3].map((i) => (
+                        <div key={i} className="grid grid-cols-3 items-center gap-4 py-2">
+                          <div className="flex items-center gap-2"><Skeleton className="h-3 w-3 rounded-full" /><Skeleton className="h-4 w-32" /></div>
+                          <Skeleton className="h-4 w-24" />
+                          <Skeleton className="ml-auto h-8 w-20" />
+                        </div>
+                      ))}
+                    </div>
                   ) : (
                     renderRolesList(type.value)
                   )}
                 </TabsContent>
               ))}
             </Tabs>
-          </CardContent>
-        </Card>
-
-        {/* Info Card */}
-        <Card className="border-blue-500/30 bg-blue-500/5">
-          <CardHeader>
-            <CardTitle className="text-blue-400">{t("infoCard.title")}</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2 text-sm text-blue-300">
-            <p>
-              <strong>{t("infoCard.automaticEvaluation")}</strong> {t("infoCard.automaticEvaluationDesc")}
-            </p>
-            <p>
-              <strong>{t("infoCard.rolePriority")}</strong> {t("infoCard.rolePriorityDesc")}
-            </p>
-            <p>
-              <strong>{t("infoCard.manualOverride")}</strong> {t("infoCard.manualOverrideDesc")}
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+        </section>
     </div>
   );
 }

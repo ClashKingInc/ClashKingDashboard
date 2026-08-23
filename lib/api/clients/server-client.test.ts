@@ -12,6 +12,19 @@ describe("ServerClient dashboard access", () => {
     expect(fetchMock).toHaveBeenCalledWith("http://dashboard.test/v2/server/123/dashboard-capabilities", expect.objectContaining({ method: "GET" }));
   });
 
+  it("re-enables tracking through the server activity endpoint", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({ message: "Server tracking re-enabled" }), { status: 200 }));
+    vi.stubGlobal("fetch", fetchMock);
+    const client = new ServerClient({ baseUrl: "http://dashboard.test", accessToken: "token" });
+
+    await client.reactivateServer("123");
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      "http://dashboard.test/v2/server/123/reactivate",
+      expect.objectContaining({ method: "POST" }),
+    );
+  });
+
   it("sends an atomic grant replacement", async () => {
     const fetchMock = vi.fn().mockResolvedValue({ ok: true, status: 200, json: vi.fn().mockResolvedValue({ grants: [] }) });
     vi.stubGlobal("fetch", fetchMock);
@@ -87,8 +100,8 @@ describe("ServerClient dashboard access", () => {
       prize: "Gold pass",
       channelId: "456",
       status: "ongoing",
-      startTime: "2026-07-24T12:00:00Z",
-      endTime: "2026-07-25T12:00:00Z",
+      start: "2026-07-24T12:00:00Z",
+      end: "2026-07-25T12:00:00Z",
       winners: 1,
       mentions: [],
       textAboveEmbed: "",
@@ -100,7 +113,7 @@ describe("ServerClient dashboard access", () => {
       rolesMode: "none",
       roles: [],
       boosters: [],
-      entryCount: 4,
+      entries: ["user-1", "user-1", "user-2", "user-3"],
       updated: false,
       messageId: "message-1",
       winnersList: [],

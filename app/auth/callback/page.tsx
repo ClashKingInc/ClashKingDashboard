@@ -132,8 +132,9 @@ export default function AuthCallbackPage() {
           // Still redirect, it will fetch on servers page
         }
 
-        // Redirect to servers page
-        router.push("/servers");
+        const returnTo = sessionStorage.getItem("auth_return_to");
+        sessionStorage.removeItem("auth_return_to");
+        router.push(returnTo?.startsWith("/") ? returnTo : "/servers");
       } catch (err) {
         console.error("Authentication error:", err);
         setError(err instanceof Error ? err.message : t("errorAuthenticateFailed"));

@@ -1,38 +1,39 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import ReactMarkdown from "react-markdown";
 import type { Components } from "react-markdown";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChannelCombobox } from "@/components/ui/channel-combobox";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RoleCombobox } from "@/components/ui/role-combobox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { DashboardTabsList, DashboardTabTrigger } from "@/components/ui/dashboard-tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useToast } from "@/components/ui/use-toast";
 import { DiscordUserDisplay } from "@/components/ui/discord-user-display";
 import { DiscordOpenPopover } from "@/components/ui/discord-open-popover";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
-import { AlertCircle, CalendarRange, CheckCircle2, Clock3, Copy, ExternalLink, Eye, Gift, Loader2, Pencil, Plus, RefreshCw, ShieldCheck, Sword, Trash2, Trophy, User, Users, X } from "lucide-react";
+import { AlertCircle, CalendarRange, CheckCircle2, Copy, Ellipsis, ExternalLink, Eye, Loader2, Pencil, Plus, RefreshCw, Sword, Trash2, Trophy, User, Users, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { apiClient } from "@/lib/api/client";
-import { apiCache } from "@/lib/api-cache";
 import {
-  dashboardCacheKeys,
   normalizeChannelsPayload,
   normalizeDiscordRolesPayload,
 } from "@/lib/dashboard-cache";
+import { dashboardQueryKeys } from "@/lib/dashboard-query";
+import { dashboardQueryOptions } from "@/lib/dashboard-query-options";
 import { isGiveawaysResponse, type Giveaway } from "@/lib/api/types/server";
 import { useGiveawayEntries } from "./useGiveawayEntries";
 
@@ -48,6 +49,7 @@ type FormState = {
 
 const ENDED_LIMIT = 20;
 const MAX_IMAGE_BYTES = 8 * 1024 * 1024;
+const GIVEAWAY_FORM_TAB_CLASS = "mt-0 min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-5 pb-8 sm:px-7";
 
 const buildEmptyState = (t: (key: string) => string): FormState => ({
   prize: "", channelId: "", startTime: "", startNow: false, endTime: "", winners: "1", mentions: [],
@@ -64,28 +66,6 @@ const boostChoices = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3
 
 interface GiveawaysClientProps {
   guildId: string;
-  locale: string;
-  title: string;
-  description: string;
-  statsLabels: {
-    totalEntries: string;
-    ongoing: string;
-    upcoming: string;
-    ended: string;
-  };
-  statsDescriptions: {
-    totalEntries: string;
-    ongoing: string;
-    upcoming: string;
-    ended: string;
-  };
-  listTitle: string;
-  listDescription: string;
-  tabs: {
-    ongoing: string;
-    upcoming: string;
-    ended: string;
-  };
 }
 
 type TranslationValues = Record<string, string | number | Date>;
@@ -120,9 +100,9 @@ export function giveawayToFormState(
   return {
     prize: giveaway.prize,
     channelId: giveaway.channelId || "",
-    startTime: duplicate ? "" : toInputDate(giveaway.startTime),
+    startTime: duplicate ? "" : toInputDate(giveaway.start),
     startNow: false,
-    endTime: duplicate ? "" : toInputDate(giveaway.endTime),
+    endTime: duplicate ? "" : toInputDate(giveaway.end),
     winners: String(giveaway.winners),
     mentions: giveaway.mentions || [],
     textAbove: giveaway.textAboveEmbed || "",
@@ -133,7 +113,7 @@ export function giveawayToFormState(
     rolesMode: giveaway.rolesMode || "none",
     roles: giveaway.roles || [],
     imageFile: null,
-    imagePreview: giveaway.imageUrl,
+    imagePreview: giveaway.imageUrl ?? null,
     removeImage: false,
     boosters: (giveaway.boosters || []).map((booster) => ({
       ...booster,
@@ -147,6 +127,17 @@ function fmt(value: string) {
     return new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(value));
   }
   return "-";
+}
+
+export function sortGiveawaysByRelevance(items: Giveaway[]): Giveaway[] {
+  const statusRank: Record<Giveaway["status"], number> = { ongoing: 0, scheduled: 1, ended: 2 };
+  return [...items].sort((left, right) => {
+    const rankDifference = statusRank[left.status] - statusRank[right.status];
+    if (rankDifference !== 0) return rankDifference;
+    const leftTime = new Date(left.status === "scheduled" ? left.start : left.end).getTime();
+    const rightTime = new Date(right.status === "scheduled" ? right.start : right.end).getTime();
+    return left.status === "ended" ? rightTime - leftTime : leftTime - rightTime;
+  });
 }
 
 function getPreviewStatus(effectiveStart: Date | null, effectiveEnd: Date | null): Giveaway["status"] {
@@ -209,17 +200,15 @@ function fmtRelative(iso: string): string {
   return past ? `${d}d ago` : `in ${d}d`;
 }
 
-interface GiveawaysTableProps {
+interface GiveawaysListProps {
   items: Giveaway[];
-  tab: "ongoing" | "upcoming" | "ended";
   shownEnded: number;
   tableLoading: boolean;
   guildId: string;
   t: TranslationFn;
   tCommon: TranslationFn;
   channelName: (id: string | null) => string | null;
-  onOpenCreate: () => void;
-  onOpenEdit: (giveaway: Giveaway) => void;
+  onOpenEdit: (giveaway: Giveaway, initialTab?: "general" | "winners") => void;
   onDuplicate: (giveaway: Giveaway) => void;
   onDelete: (id: string) => void;
   onOpenReroll: (giveaway: Giveaway) => void;
@@ -229,23 +218,14 @@ interface GiveawaysTableProps {
 
 interface GiveawaysMainContentProps {
   loading: boolean;
-  statsLabels: GiveawaysClientProps["statsLabels"];
-  statsDescriptions: GiveawaysClientProps["statsDescriptions"];
-  listTitle: string;
-  listDescription: string;
-  tabs: GiveawaysClientProps["tabs"];
   t: TranslationFn;
   tCommon: TranslationFn;
-  totalEntries: number;
-  giveaways: { ongoing: Giveaway[]; upcoming: Giveaway[]; ended: Giveaway[]; total: number };
-  activeTab: string;
-  onActiveTabChange: (value: string) => void;
+  items: Giveaway[];
   shownEnded: number;
   tableLoading: boolean;
   guildId: string;
   channelName: (id: string | null) => string | null;
-  onOpenCreate: () => void;
-  onOpenEdit: (giveaway: Giveaway) => void;
+  onOpenEdit: (giveaway: Giveaway, initialTab?: "general" | "winners") => void;
   onDuplicate: (giveaway: Giveaway) => void;
   onDelete: (id: string) => void;
   onOpenReroll: (giveaway: Giveaway) => void;
@@ -255,22 +235,13 @@ interface GiveawaysMainContentProps {
 
 function GiveawaysMainContent({
   loading,
-  statsLabels,
-  statsDescriptions,
-  listTitle,
-  listDescription,
-  tabs,
   t,
   tCommon,
-  totalEntries,
-  giveaways,
-  activeTab,
-  onActiveTabChange,
+  items,
   shownEnded,
   tableLoading,
   guildId,
   channelName,
-  onOpenCreate,
   onOpenEdit,
   onDuplicate,
   onDelete,
@@ -280,285 +251,88 @@ function GiveawaysMainContent({
 }: Readonly<GiveawaysMainContentProps>) {
   if (loading) {
     return (
-      <>
-        <div className="grid grid-cols-2 gap-6 xl:grid-cols-4">
-          <Card className="border-blue-500/30 bg-blue-500/5">
-            <CardHeader className="pb-3"><CardTitle className="text-sm font-medium text-muted-foreground">{statsLabels.totalEntries}</CardTitle></CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between"><Skeleton className="h-9 w-20" /><Users className="h-8 w-8 text-blue-500/50" /></div>
-              <p className="mt-2 text-xs text-muted-foreground">{statsDescriptions.totalEntries}</p>
-            </CardContent>
-          </Card>
-          <Card className="border-green-500/30 bg-green-500/5">
-            <CardHeader className="pb-3"><CardTitle className="text-sm font-medium text-muted-foreground">{statsLabels.ongoing}</CardTitle></CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between"><Skeleton className="h-9 w-16" /><Clock3 className="h-8 w-8 text-green-500/50" /></div>
-              <p className="mt-2 text-xs text-muted-foreground">{statsDescriptions.ongoing}</p>
-            </CardContent>
-          </Card>
-          <Card className="border-amber-500/30 bg-amber-500/5">
-            <CardHeader className="pb-3"><CardTitle className="text-sm font-medium text-muted-foreground">{statsLabels.upcoming}</CardTitle></CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between"><Skeleton className="h-9 w-16" /><CalendarRange className="h-8 w-8 text-amber-500/50" /></div>
-              <p className="mt-2 text-xs text-muted-foreground">{statsDescriptions.upcoming}</p>
-            </CardContent>
-          </Card>
-          <Card className="border-slate-500/30 bg-slate-500/5">
-            <CardHeader className="pb-3"><CardTitle className="text-sm font-medium text-muted-foreground">{statsLabels.ended}</CardTitle></CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between"><Skeleton className="h-9 w-16" /><Trophy className="h-8 w-8 text-slate-400/60" /></div>
-              <p className="mt-2 text-xs text-muted-foreground">{statsDescriptions.ended}</p>
-            </CardContent>
-          </Card>
-        </div>
-        <Card>
-          <CardHeader><CardTitle>{listTitle}</CardTitle><CardDescription>{listDescription}</CardDescription></CardHeader>
-          <CardContent>
-            <Tabs value="ongoing">
-              <TabsList className="grid h-auto w-full grid-cols-1 gap-1 rounded-lg border border-border bg-muted p-1 sm:grid-cols-3 sm:gap-0">
-                <TabsTrigger value="ongoing" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
-                  <span className="truncate">{tabs.ongoing}</span>
-                  <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-green-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
-                    <Skeleton className="h-2.5 w-2.5 rounded-[2px]" />
-                  </span>
-                </TabsTrigger>
-                <TabsTrigger value="upcoming" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
-                  <span className="truncate">{tabs.upcoming}</span>
-                  <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-amber-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
-                    <Skeleton className="h-2.5 w-2.5 rounded-[2px]" />
-                  </span>
-                </TabsTrigger>
-                <TabsTrigger value="ended" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
-                  <span className="truncate">{tabs.ended}</span>
-                  <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-slate-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
-                    <Skeleton className="h-2.5 w-2.5 rounded-[2px]" />
-                  </span>
-                </TabsTrigger>
-              </TabsList>
-            </Tabs>
-            <div className="mt-6 space-y-3">
-              <Skeleton className="h-12 w-full" />
-              <Skeleton className="h-12 w-full" />
-              <Skeleton className="h-12 w-full" />
-              <Skeleton className="h-12 w-full" />
-            </div>
-          </CardContent>
-        </Card>
-      </>
+      <div className="space-y-3">{[1, 2, 3, 4].map((item) => <Skeleton key={item} className="h-28 rounded-[24px]" />)}</div>
     );
   }
 
   return (
-    <>
-      <div className="grid grid-cols-2 gap-6 xl:grid-cols-4">
-        <Card className="border-blue-500/30 bg-blue-500/5">
-          <CardHeader className="pb-3"><CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.totalEntries")}</CardTitle></CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between"><div className="text-3xl font-bold text-blue-500">{totalEntries.toLocaleString()}</div><Users className="h-8 w-8 text-blue-500/50" /></div>
-            <p className="mt-2 text-xs text-muted-foreground">{t("statsDescriptions.totalEntries")}</p>
-          </CardContent>
-        </Card>
-        <Card className="border-green-500/30 bg-green-500/5">
-          <CardHeader className="pb-3"><CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.ongoing")}</CardTitle></CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between"><div className="text-3xl font-bold text-green-500">{giveaways.ongoing.length}</div><Clock3 className="h-8 w-8 text-green-500/50" /></div>
-            <p className="mt-2 text-xs text-muted-foreground">{t("statsDescriptions.ongoing")}</p>
-          </CardContent>
-        </Card>
-        <Card className="border-amber-500/30 bg-amber-500/5">
-          <CardHeader className="pb-3"><CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.upcoming")}</CardTitle></CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between"><div className="text-3xl font-bold text-amber-500">{giveaways.upcoming.length}</div><CalendarRange className="h-8 w-8 text-amber-500/50" /></div>
-            <p className="mt-2 text-xs text-muted-foreground">{t("statsDescriptions.upcoming")}</p>
-          </CardContent>
-        </Card>
-        <Card className="border-slate-500/30 bg-slate-500/5">
-          <CardHeader className="pb-3"><CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.ended")}</CardTitle></CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between"><div className="text-3xl font-bold text-slate-300">{giveaways.ended.length}</div><Trophy className="h-8 w-8 text-slate-400/60" /></div>
-            <p className="mt-2 text-xs text-muted-foreground">{t("statsDescriptions.ended")}</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card>
-        <CardHeader><CardTitle>{t("listTitle")}</CardTitle><CardDescription>{t("listDescription")}</CardDescription></CardHeader>
-        <CardContent>
-          <Tabs value={activeTab} onValueChange={onActiveTabChange}>
-            <TabsList className="grid h-auto w-full grid-cols-1 gap-1 rounded-lg border border-border bg-muted p-1 sm:grid-cols-3 sm:gap-0">
-              <TabsTrigger value="ongoing" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
-                <span className="truncate">{t("tabs.ongoing")}</span>
-                <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-green-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
-                  {giveaways.ongoing.length}
-                </span>
-              </TabsTrigger>
-              <TabsTrigger value="upcoming" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
-                <span className="truncate">{t("tabs.upcoming")}</span>
-                <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-amber-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
-                  {giveaways.upcoming.length}
-                </span>
-              </TabsTrigger>
-              <TabsTrigger value="ended" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
-                <span className="truncate">{t("tabs.ended")}</span>
-                <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-slate-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
-                  {giveaways.ended.length}
-                </span>
-              </TabsTrigger>
-            </TabsList>
-            <TabsContent value="ongoing" className="mt-6">
-              <GiveawaysTable
-                items={giveaways.ongoing}
-                tab="ongoing"
-                shownEnded={shownEnded}
-                tableLoading={tableLoading}
-                guildId={guildId}
-                t={t}
-                tCommon={tCommon}
-                channelName={channelName}
-                onOpenCreate={onOpenCreate}
-                onOpenEdit={onOpenEdit}
-                onDuplicate={onDuplicate}
-                onDelete={onDelete}
-                onOpenReroll={onOpenReroll}
-                onOpenEntries={onOpenEntries}
-                onShowMore={onShowMore}
-              />
-            </TabsContent>
-            <TabsContent value="upcoming" className="mt-6">
-              <GiveawaysTable
-                items={giveaways.upcoming}
-                tab="upcoming"
-                shownEnded={shownEnded}
-                tableLoading={tableLoading}
-                guildId={guildId}
-                t={t}
-                tCommon={tCommon}
-                channelName={channelName}
-                onOpenCreate={onOpenCreate}
-                onOpenEdit={onOpenEdit}
-                onDuplicate={onDuplicate}
-                onDelete={onDelete}
-                onOpenReroll={onOpenReroll}
-                onOpenEntries={onOpenEntries}
-                onShowMore={onShowMore}
-              />
-            </TabsContent>
-            <TabsContent value="ended" className="mt-6">
-              <GiveawaysTable
-                items={giveaways.ended}
-                tab="ended"
-                shownEnded={shownEnded}
-                tableLoading={tableLoading}
-                guildId={guildId}
-                t={t}
-                tCommon={tCommon}
-                channelName={channelName}
-                onOpenCreate={onOpenCreate}
-                onOpenEdit={onOpenEdit}
-                onDuplicate={onDuplicate}
-                onDelete={onDelete}
-                onOpenReroll={onOpenReroll}
-                onOpenEntries={onOpenEntries}
-                onShowMore={onShowMore}
-              />
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
-    </>
+    <GiveawaysList
+      items={items}
+      shownEnded={shownEnded}
+      tableLoading={tableLoading}
+      guildId={guildId}
+      t={t}
+      tCommon={tCommon}
+      channelName={channelName}
+      onOpenEdit={onOpenEdit}
+      onDuplicate={onDuplicate}
+      onDelete={onDelete}
+      onOpenReroll={onOpenReroll}
+      onOpenEntries={onOpenEntries}
+      onShowMore={onShowMore}
+    />
   );
 }
 
-function GiveawaysTable({
+function GiveawaysList({
   items,
-  tab,
   shownEnded,
   tableLoading,
   guildId,
   t,
   tCommon,
   channelName,
-  onOpenCreate,
   onOpenEdit,
   onDuplicate,
   onDelete,
   onOpenReroll,
   onOpenEntries,
   onShowMore,
-}: Readonly<GiveawaysTableProps>) {
-  const isEnded = tab === "ended";
-  const displayItems = isEnded ? items.slice(0, shownEnded) : items;
-  const hasMore = isEnded && items.length > shownEnded;
+}: Readonly<GiveawaysListProps>) {
+  let endedSeen = 0;
+  const displayItems = items.filter((item) => item.status !== "ended" || ++endedSeen <= shownEnded);
+  const endedCount = items.filter((item) => item.status === "ended").length;
+  const shownEndedCount = Math.min(shownEnded, endedCount);
+  const hasMore = endedCount > shownEnded;
 
   if (items.length === 0) {
     return (
-      <div className="flex flex-col items-center gap-4 rounded-xl border border-dashed border-border p-10 text-center">
-        <Gift className="h-8 w-8 text-muted-foreground/40" />
+      <div className="flex flex-col items-center gap-3 rounded-[24px] bg-muted/45 px-6 py-12 text-center">
+        <div className="grid h-10 w-10 place-items-center rounded-full bg-muted"><CalendarRange className="h-5 w-5 text-muted-foreground" /></div>
         <div>
           <p className="text-sm font-medium text-foreground">{t("emptyTab.title")}</p>
-          <p className="mt-1 text-xs text-muted-foreground">{t(`emptyTab.${tab}`)}</p>
+          <p className="mt-1 text-xs text-muted-foreground">{t("empty")}</p>
         </div>
-        {!isEnded && (
-          <Button size="sm" onClick={onOpenCreate}>
-            <Plus className="mr-2 h-4 w-4" />{t("create")}
-          </Button>
-        )}
       </div>
     );
   }
 
   const activeWinnersLabel = (g: Giveaway) => {
     const active = g.winnersList.filter((w) => w.status === "winner");
-    const rerolled = g.winnersList.filter((w) => w.status === "rerolled");
-    if (active.length === 0 && rerolled.length === 0) return null;
-    const shown = active.slice(0, 3);
+    if (active.length === 0) return null;
+    const shown = active.slice(0, 1);
     const overflow = active.length - shown.length;
     return (
-      <div className="flex flex-wrap items-center gap-1">
+      <div className="flex w-full min-w-0 flex-nowrap items-center gap-1">
         {shown.map((w) => (
           <DiscordUserDisplay
             key={w.userId}
             userId={w.userId}
             username={w.username}
             avatarUrl={w.avatarUrl}
+            isOnServer={w.inServer}
             size="sm"
-            triggerContent={(
-              <button
-                type="button"
-                className="inline-flex items-center gap-0.5 rounded-full bg-green-500/10 px-2 py-0.5 text-[11px] font-medium text-green-400 ring-1 ring-green-500/20 transition-opacity hover:opacity-80"
-              >
-                <Trophy className="h-2.5 w-2.5" />{w.username ? `@${w.username}` : w.userId}
-              </button>
-            )}
+            className="min-w-0 max-w-[7rem] flex-1 rounded-full bg-green-500/10 py-0.5 pl-0.5 pr-2 ring-1 ring-green-500/20 [&>span]:min-w-0"
           />
         ))}
         {overflow > 0 && (
-          <TooltipProvider delayDuration={200}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <span className="cursor-default rounded-full bg-muted px-2 py-0.5 text-[11px] text-muted-foreground">+{overflow}</span>
-              </TooltipTrigger>
-              <TooltipContent>
-                <div className="space-y-1">
-                  {active.slice(3).map((w) => <div key={w.userId}>{w.username ? `@${w.username}` : w.userId}</div>)}
-                </div>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        )}
-        {rerolled.length > 0 && (
-          <TooltipProvider delayDuration={200}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <span className="cursor-default rounded-full bg-muted px-2 py-0.5 text-[11px] text-muted-foreground line-through">{t("table.rerolledCount", { count: rerolled.length })}</span>
-              </TooltipTrigger>
-              <TooltipContent>
-                <div className="space-y-1">
-                  {rerolled.map((w) => <div key={w.userId} className="line-through opacity-60">{w.username ? `@${w.username}` : w.userId}</div>)}
-                </div>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <button
+            type="button"
+            onClick={() => onOpenEdit(g, "winners")}
+            className="shrink-0 rounded-full bg-muted px-2 py-0.5 text-[11px] text-muted-foreground transition-colors hover:bg-muted/80 hover:text-foreground"
+          >
+            +{overflow}
+          </button>
         )}
       </div>
     );
@@ -566,52 +340,47 @@ function GiveawaysTable({
 
   return (
     <div className={cn("space-y-3", tableLoading && "pointer-events-none opacity-50 transition-opacity")}>
-      <div className="overflow-x-auto rounded-xl border border-border bg-card">
-        <table className="w-full text-sm">
-          <thead className="bg-muted/40">
-            <tr className="text-left text-xs font-medium text-muted-foreground uppercase">
-              <th className="px-4 py-3">{t("table.giveaway")}</th>
-              <th className="px-4 py-3">{t("table.channel")}</th>
-              <th className="px-4 py-3">{isEnded ? t("table.winnersHeader") : t("table.entries")}</th>
-              <th className="px-4 py-3">{t("table.timing")}</th>
-              <th className="px-4 py-3" />
-            </tr>
-          </thead>
-          <tbody>
+      <div className="space-y-3">
             {displayItems.map((g) => {
-              const ch = channelName(g.channelId);
+              const ch = channelName(g.channelId ?? null);
+              const isEnded = g.status === "ended";
+              const isOngoing = g.status === "ongoing";
               return (
-                <tr key={g.id} className="border-t border-border/60 hover:bg-muted/20 transition-colors align-middle">
-                  <td className="px-4 py-3 max-w-xs">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-medium text-foreground truncate">{g.prize}</span>
-                      {tab === "ongoing" && g.updated && (
-                        <TooltipProvider delayDuration={200}>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Badge variant="outline" className="border-amber-500/50 bg-amber-500/10 text-amber-400 text-[10px] cursor-default shrink-0">
-                                {t("table.pendingUpdate")}
-                              </Badge>
-                            </TooltipTrigger>
-                            <TooltipContent>{t("table.pendingUpdateHelp")}</TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      )}
+                <article key={g.id} className="grid gap-3 rounded-[24px] bg-card px-4 py-4 shadow-sm shadow-black/5 transition-shadow hover:shadow-md hover:shadow-black/5 md:px-5 xl:grid-cols-[minmax(14rem,1.1fr)_minmax(8rem,.55fr)_minmax(8rem,.55fr)_minmax(9rem,.65fr)_auto] xl:items-center xl:gap-4">
+                  <div className="min-w-0">
+                    <div className="min-w-0">
+                        <div className="flex min-w-0 items-start justify-between gap-3">
+                          <span className="min-w-0 break-words text-base font-semibold leading-snug text-foreground">{g.prize}</span>
+                          <Badge className={cn("shrink-0 border-0 px-2.5 py-1 shadow-none", isOngoing && "bg-emerald-500/12 text-emerald-700 hover:bg-emerald-500/12 dark:text-emerald-300", g.status === "scheduled" && "bg-amber-500/12 text-amber-700 hover:bg-amber-500/12 dark:text-amber-300", isEnded && "bg-muted text-muted-foreground hover:bg-muted")}>{t(`status.${g.status}`)}</Badge>
+                        </div>
+                        <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                          <span className="flex items-center gap-1"><Trophy className="h-3 w-3" />{t("table.winners", { count: g.winners })}</span>
+                          {isOngoing && g.updated && (
+                            <TooltipProvider delayDuration={200}>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Badge variant="outline" className="shrink-0 cursor-default border-amber-500/50 bg-amber-500/10 text-[10px] text-amber-400">
+                                    {t("table.pendingUpdate")}
+                                  </Badge>
+                                </TooltipTrigger>
+                                <TooltipContent>{t("table.pendingUpdateHelp")}</TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          )}
+                          {g.profilePictureRequired && (
+                            <TooltipProvider delayDuration={200}><Tooltip><TooltipTrigger asChild><User className="h-3 w-3" /></TooltipTrigger><TooltipContent>{t("preview.profileRequired")}</TooltipContent></Tooltip></TooltipProvider>
+                          )}
+                          {g.cocAccountRequired && (
+                            <TooltipProvider delayDuration={200}><Tooltip><TooltipTrigger asChild><Sword className="h-3 w-3" /></TooltipTrigger><TooltipContent>{t("preview.accountRequired")}</TooltipContent></Tooltip></TooltipProvider>
+                          )}
+                          {g.boosters.length > 0 && (
+                            <TooltipProvider delayDuration={200}><Tooltip><TooltipTrigger asChild><CheckCircle2 className="h-3 w-3" /></TooltipTrigger><TooltipContent>{t("table.boosters", { count: g.boosters.length })}</TooltipContent></Tooltip></TooltipProvider>
+                          )}
+                        </div>
                     </div>
-                    <div className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
-                      <span className="flex items-center gap-1"><Trophy className="h-3 w-3" />{t("table.winners", { count: g.winners })}</span>
-                      {g.profilePictureRequired && (
-                        <TooltipProvider delayDuration={200}><Tooltip><TooltipTrigger asChild><User className="h-3 w-3" /></TooltipTrigger><TooltipContent>{t("preview.profileRequired")}</TooltipContent></Tooltip></TooltipProvider>
-                      )}
-                      {g.cocAccountRequired && (
-                        <TooltipProvider delayDuration={200}><Tooltip><TooltipTrigger asChild><Sword className="h-3 w-3" /></TooltipTrigger><TooltipContent>{t("preview.accountRequired")}</TooltipContent></Tooltip></TooltipProvider>
-                      )}
-                      {g.boosters.length > 0 && (
-                        <TooltipProvider delayDuration={200}><Tooltip><TooltipTrigger asChild><CheckCircle2 className="h-3 w-3" /></TooltipTrigger><TooltipContent>{t("table.boosters", { count: g.boosters.length })}</TooltipContent></Tooltip></TooltipProvider>
-                      )}
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 text-sm text-muted-foreground whitespace-nowrap">
+                  </div>
+                  <div className="flex min-w-0 flex-wrap items-center gap-x-4 gap-y-2 rounded-2xl bg-muted/45 px-3 py-2.5 xl:contents">
+                  <div className="min-w-0 text-sm text-muted-foreground">
                     {ch ? (
                       <DiscordOpenPopover
                         title={ch}
@@ -621,7 +390,7 @@ function GiveawaysTable({
                         trigger={(
                           <button
                             type="button"
-                            className="max-w-[240px] truncate text-left text-sm text-muted-foreground transition-colors hover:text-foreground"
+                            className="max-w-[13rem] truncate text-left text-sm text-muted-foreground transition-colors hover:text-foreground xl:max-w-[240px]"
                           >
                             {ch}
                           </button>
@@ -637,8 +406,8 @@ function GiveawaysTable({
                         </Tooltip>
                       </TooltipProvider>
                     )}
-                  </td>
-                  <td className="px-4 py-3">
+                  </div>
+                  <div className={cn("min-w-0", isEnded && "hidden xl:block")}>
                     {isEnded ? (activeWinnersLabel(g) ?? <span className="text-xs text-muted-foreground">—</span>) : (
                       <TooltipProvider delayDuration={200}>
                         <Tooltip>
@@ -648,26 +417,26 @@ function GiveawaysTable({
                               onClick={() => onOpenEntries(g)}
                               className="flex items-center gap-1.5 text-sm text-muted-foreground tabular-nums hover:text-foreground transition-colors"
                             >
-                              <Users className="h-3.5 w-3.5 shrink-0" />{g.entryCount}
+                              <Users className="h-3.5 w-3.5 shrink-0" />{g.entries.length}
                             </button>
                           </TooltipTrigger>
                           <TooltipContent>{t("table.viewEntries")}</TooltipContent>
                         </Tooltip>
                       </TooltipProvider>
                     )}
-                  </td>
-                  <td className="px-4 py-3 whitespace-nowrap">
-                    {tab === "ongoing" && <div><div className="text-sm font-medium text-green-500">{fmtRelative(g.endTime)}</div><div className="text-xs text-muted-foreground">{fmt(g.endTime)}</div></div>}
-                    {tab === "upcoming" && <div><div className="text-sm text-foreground">{fmtRelative(g.startTime)}</div><div className="text-xs text-muted-foreground">{fmt(g.startTime)}</div></div>}
-                    {tab === "ended" && <div><div className="text-sm text-muted-foreground">{fmt(g.endTime)}</div><div className="text-xs text-muted-foreground/60">{fmtRelative(g.endTime)}</div></div>}
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-1 justify-end">
+                  </div>
+                  <div className="whitespace-nowrap">{isOngoing && <div><div className="text-sm font-medium text-emerald-600 dark:text-emerald-300">{fmtRelative(g.end)}</div><div className="text-xs text-muted-foreground">{fmt(g.end)}</div></div>}{g.status === "scheduled" && <div><div className="text-sm text-foreground">{fmtRelative(g.start)}</div><div className="text-xs text-muted-foreground">{fmt(g.start)}</div></div>}{isEnded && <div><div className="text-sm text-muted-foreground">{fmt(g.end)}</div><div className="text-xs text-muted-foreground/60">{fmtRelative(g.end)}</div></div>}</div>
+                  </div>
+                  <div className="flex items-center gap-1.5 border-t border-border/50 pt-3 xl:justify-end xl:border-0 xl:pt-0">
+                      <Button variant="secondary" size="sm" className="min-w-0 flex-1 border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted xl:flex-none" onClick={() => onOpenEdit(g)}>
+                        {isEnded ? <Eye className="h-4 w-4" /> : <Pencil className="h-4 w-4" />}
+                        {isEnded ? t("table.viewGiveaway") : t("table.editGiveaway")}
+                      </Button>
                       {g.messageId && g.channelId && (
                         <TooltipProvider delayDuration={200}>
                           <Tooltip>
                             <TooltipTrigger asChild>
-                              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => window.open(`https://discord.com/channels/${guildId}/${g.channelId}/${g.messageId}`, "_blank", "noreferrer")}>
+                              <Button variant="ghost" size="icon" className="h-8 w-8" aria-label={t("table.viewInDiscord")} onClick={() => window.open(`https://discord.com/channels/${guildId}/${g.channelId}/${g.messageId}`, "_blank", "noreferrer")}>
                                 <ExternalLink className="h-4 w-4" />
                               </Button>
                             </TooltipTrigger>
@@ -675,62 +444,45 @@ function GiveawaysTable({
                           </Tooltip>
                         </TooltipProvider>
                       )}
-                      {isEnded && g.winnersList.some((w) => w.status === "winner") && (
+                      <DropdownMenu>
                         <TooltipProvider delayDuration={200}>
                           <Tooltip>
                             <TooltipTrigger asChild>
-                              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onOpenReroll(g)}>
-                                <RefreshCw className="h-4 w-4" />
-                              </Button>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon" className="h-8 w-8" aria-label={t("table.moreActions")}>
+                                  <Ellipsis className="h-4 w-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
                             </TooltipTrigger>
-                            <TooltipContent>{t("table.reroll")}</TooltipContent>
+                            <TooltipContent>{t("table.moreActions")}</TooltipContent>
                           </Tooltip>
                         </TooltipProvider>
-                      )}
-                      <TooltipProvider delayDuration={200}>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onOpenEdit(g)}>
-                              {isEnded ? <Eye className="h-4 w-4" /> : <Pencil className="h-4 w-4" />}
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>{isEnded ? tCommon("view") : tCommon("edit")}</TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                      <TooltipProvider delayDuration={200}>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onDuplicate(g)}>
-                              <Copy className="h-4 w-4" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>{t("table.duplicate")}</TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                      <TooltipProvider delayDuration={200}>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10" onClick={() => onDelete(g.id)}>
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>{tCommon("delete")}</TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </div>
-                  </td>
-                </tr>
+                        <DropdownMenuContent align="end" className="w-48 rounded-xl">
+                          <DropdownMenuItem className="gap-2 rounded-lg" onSelect={() => onDuplicate(g)}>
+                            <Copy className="h-4 w-4" />{t("table.duplicate")}
+                          </DropdownMenuItem>
+                          {isEnded && g.winnersList.some((w) => w.status === "winner") && (
+                            <DropdownMenuItem className="gap-2 rounded-lg text-amber-700 focus:text-amber-700 dark:text-amber-300 dark:focus:text-amber-300" onSelect={() => onOpenReroll(g)}>
+                              <RefreshCw className="h-4 w-4" />{t("table.reroll")}
+                            </DropdownMenuItem>
+                          )}
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem className="gap-2 rounded-lg text-destructive focus:text-destructive" onSelect={() => onDelete(g.id)}>
+                            <Trash2 className="h-4 w-4" />{tCommon("delete")}
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                  </div>
+                </article>
               );
             })}
-          </tbody>
-        </table>
       </div>
-      {isEnded && (
+      {endedCount > 0 && (
         <div className="flex items-center justify-between px-1 text-xs text-muted-foreground">
-          <span>{t("table.showingEnded", { shown: displayItems.length, total: items.length })}</span>
+          <span>{t("table.showingEnded", { shown: shownEndedCount, total: endedCount })}</span>
           {hasMore && (
             <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={onShowMore}>
-              {t("table.showMore", { count: Math.min(ENDED_LIMIT, items.length - shownEnded) })}
+              {t("table.showMore", { count: Math.min(ENDED_LIMIT, endedCount - shownEnded) })}
             </Button>
           )}
         </div>
@@ -739,25 +491,65 @@ function GiveawaysTable({
   );
 }
 
+function GiveawayWinnerList({ giveaway, t }: Readonly<{ giveaway: Giveaway; t: TranslationFn }>) {
+  const sections = [
+    { status: "winner" as const, label: t("winners.current") },
+    { status: "rerolled" as const, label: t("winners.rerolled") },
+  ];
+
+  if (giveaway.winnersList.length === 0) {
+    return <p className="py-8 text-center text-sm text-muted-foreground">{t("winners.none")}</p>;
+  }
+
+  return (
+    <div className="flex h-full min-h-0 flex-col gap-4">
+      <p className="shrink-0 text-sm text-muted-foreground">{t("winners.description")}</p>
+      <div className="min-h-0 flex-1 overflow-y-auto pr-2">
+        <div className="space-y-5">
+          {sections.map(({ status, label }) => {
+            const winners = giveaway.winnersList.filter((winner) => winner.status === status);
+            if (winners.length === 0) return null;
+            return (
+              <section key={status} className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-medium text-foreground">{label}</h3>
+                  <Badge variant="secondary" className="tabular-nums">{winners.length}</Badge>
+                </div>
+                <div className="space-y-2">
+                  {winners.map((winner) => (
+                    <div key={`${status}-${winner.userId}`} className="flex items-center justify-between gap-3 rounded-2xl bg-muted/45 px-3 py-3">
+                      <DiscordUserDisplay
+                        userId={winner.userId}
+                        username={winner.username}
+                        avatarUrl={winner.avatarUrl}
+                        isOnServer={winner.inServer}
+                        size="md"
+                        className="min-w-0"
+                      />
+                      <p className="min-w-0 truncate text-[11px] text-muted-foreground" title={winner.userId}>{winner.userId}</p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function GiveawaysClient({ // NOSONAR — complexity comes from aggregate giveaway form state management, not a single logic unit
   guildId,
-  locale,
-  title,
-  description,
-  statsLabels,
-  statsDescriptions,
-  listTitle,
-  listDescription,
-  tabs,
 }: Readonly<GiveawaysClientProps>) { // NOSONAR
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const t = useTranslations("GiveawaysPage");
   const tCommon = useTranslations("Common");
 
   const [loading, setLoading] = useState(true);
   const [tableLoading, setTableLoading] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [activeTab, setActiveTab] = useState("ongoing");
   const [activeFormTab, setActiveFormTab] = useState("general");
   const [shownEnded, setShownEnded] = useState(ENDED_LIMIT);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -766,6 +558,7 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewMode, setPreviewMode] = useState<"giveaway" | "end">("giveaway");
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingGiveaway, setEditingGiveaway] = useState<Giveaway | null>(null);
   const [editingEntryCount, setEditingEntryCount] = useState<number>(0);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
@@ -786,10 +579,6 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
   const [channels, setChannels] = useState<Channel[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
   const [form, setForm] = useState<FormState>(buildEmptyState(t));
-  const giveawaysCacheKey = `giveaways-${guildId}`;
-  const channelsCacheKey = dashboardCacheKeys.channels(guildId);
-  const rolesCacheKey = dashboardCacheKeys.discordRoles(guildId);
-
   const updateForm = (updater: (prev: FormState) => FormState) => {
     setFormModified(true);
     setForm(updater);
@@ -800,24 +589,13 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
     else setLoading(true);
     try {
       if (isRefresh) {
-        apiCache.invalidate(giveawaysCacheKey);
-        apiCache.invalidate(channelsCacheKey);
-        apiCache.invalidate(rolesCacheKey);
+        await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.route("giveaways", guildId), exact: true });
       }
 
-      const [gRes, channelsPayload, rolesPayload] = await Promise.all([
-        apiCache.get(giveawaysCacheKey, () => apiClient.servers.getGiveaways(guildId)),
-        apiCache.get(channelsCacheKey, async () => {
-          const response = await apiClient.servers.getChannels(guildId);
-          if (response.error) throw new Error(response.error);
-          return response.data;
-        }),
-        apiCache.get(rolesCacheKey, async () => {
-          const response = await apiClient.servers.getDiscordRoles(guildId);
-          if (response.error) throw new Error(response.error);
-          return response.data;
-        }),
-      ]);
+      const gRes = await queryClient.fetchQuery({
+        queryKey: dashboardQueryKeys.route("giveaways", guildId),
+        queryFn: () => apiClient.servers.getGiveaways(guildId),
+      });
       if (gRes.status === 401 || gRes.status === 403) {
         throw new Error(gRes.error || t("toast.loadError"));
       }
@@ -825,8 +603,6 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
         throw new Error(gRes.error || t("toast.loadError"));
       }
       setGiveaways(gRes.data);
-      setChannels(normalizeChannelsPayload(channelsPayload));
-      setRoles(normalizeDiscordRolesPayload(rolesPayload));
     } catch (error) {
       toast({ title: t("toast.errorTitle"), description: error instanceof Error ? error.message : t("toast.loadError"), variant: "destructive" });
     } finally {
@@ -835,13 +611,22 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
     }
   };
 
+  const loadDiscordMetadata = async () => {
+    const [channelsResult, rolesResult] = await Promise.allSettled([
+      queryClient.fetchQuery(dashboardQueryOptions.channels(guildId)),
+      queryClient.fetchQuery(dashboardQueryOptions.roles(guildId)),
+    ]);
+    if (channelsResult.status === "fulfilled") setChannels(normalizeChannelsPayload(channelsResult.value));
+    if (rolesResult.status === "fulfilled") setRoles(normalizeDiscordRolesPayload(rolesResult.value));
+  };
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { void load(); }, [guildId]);
+  useEffect(() => { void load(); void loadDiscordMetadata(); }, [guildId]);
 
   const channelName = (id: string | null) => id ? (`#${channels.find((c) => c.id === id)?.name || id}`) : null;
 
   const reset = () => {
-    setDialogOpen(false); setEditingId(null); setEditingEntryCount(0);
+    setDialogOpen(false); setEditingId(null); setEditingGiveaway(null); setEditingEntryCount(0);
     setForm(buildEmptyState(t)); setFormModified(false); setActiveFormTab("general");
   };
 
@@ -856,7 +641,7 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
 
   const openCreate = () => {
     setForm(buildEmptyState(t)); setFormModified(false);
-    setActiveFormTab("general"); setEditingId(null); setEditingEntryCount(0);
+    setActiveFormTab("general"); setEditingId(null); setEditingGiveaway(null); setEditingEntryCount(0);
     setDialogOpen(true);
   };
 
@@ -879,16 +664,21 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
     winnersCount >= 1;
 
   const totalEntries = [...giveaways.ongoing, ...giveaways.upcoming, ...giveaways.ended]
-    .reduce((sum, g) => sum + (g.entryCount || 0), 0);
+    .reduce((sum, g) => sum + g.entries.length, 0);
+  const sortedGiveaways = sortGiveawaysByRelevance([
+    ...giveaways.ongoing,
+    ...giveaways.upcoming,
+    ...giveaways.ended,
+  ]);
 
-  const openEdit = (g: Giveaway) => {
-    setEditingId(g.id); setEditingEntryCount(g.entryCount || 0);
+  const openEdit = (g: Giveaway, initialTab: "general" | "winners" = "general") => {
+    setEditingId(g.id); setEditingGiveaway(g); setEditingEntryCount(g.entries.length);
     setForm(giveawayToFormState(g));
-    setFormModified(false); setActiveFormTab("general"); setDialogOpen(true);
+    setFormModified(false); setActiveFormTab(initialTab); setDialogOpen(true);
   };
 
   const duplicate = (g: Giveaway) => {
-    setEditingId(null); setEditingEntryCount(0);
+    setEditingId(null); setEditingGiveaway(null); setEditingEntryCount(0);
     setForm(giveawayToFormState(g, true));
     setFormModified(true); setActiveFormTab("general"); setDialogOpen(true);
   };
@@ -905,13 +695,6 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
     form.rolesMode === "allow" ? t("preview.rolesAllow") : null,
     form.rolesMode === "deny" ? t("preview.rolesDeny") : null,
   ].filter(Boolean) as string[];
-
-  const summaryStats = [
-    { icon: Trophy, label: t("preview.winnerCount"), value: form.winners || "1" },
-    { icon: Users, label: t("preview.mentionCount"), value: String(form.mentions.length) },
-    { icon: ShieldCheck, label: t("preview.requirementCount"), value: String(requirementBadges.length) },
-    { icon: CheckCircle2, label: t("preview.boosterCount"), value: String(form.boosters.filter((b) => b.roles.length > 0).length) },
-  ];
 
   const openPreview = (mode: "giveaway" | "end") => { setPreviewMode(mode); setPreviewOpen(true); };
 
@@ -974,42 +757,28 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="mx-auto max-w-7xl space-y-6">
-       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div className="flex items-start gap-3">
-            <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
-              <Gift className="h-8 w-8 text-primary" />
-            </div>
-            <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t("title")}</h1>
-              <p className="text-muted-foreground mt-1">{t("description")}</p>
-            </div>
+        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-foreground md:text-3xl">{t("title")}</h1>
+            <p className="mt-1 text-muted-foreground">{t("description")}</p>
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline" size="icon" onClick={() => load(true)} disabled={tableLoading} title={tCommon("refresh")}>
-              <RefreshCw className={cn("h-4 w-4", tableLoading && "animate-spin")} />
-            </Button>
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="inline-flex items-center gap-2 rounded-full bg-muted/65 px-3 py-1.5 text-sm text-muted-foreground shadow-sm shadow-black/5">
+              <Users className="h-4 w-4" /><span>{t("stats.totalEntries")}</span><span className="font-semibold tabular-nums text-foreground">{totalEntries.toLocaleString()}</span>
+            </div>
             <Button onClick={openCreate}><Plus className="mr-2 h-4 w-4" />{t("create")}</Button>
           </div>
         </div>
         
         <GiveawaysMainContent
           loading={loading}
-          statsLabels={statsLabels}
-          statsDescriptions={statsDescriptions}
-          listTitle={listTitle}
-          listDescription={listDescription}
-          tabs={tabs}
           t={t}
           tCommon={tCommon}
-          totalEntries={totalEntries}
-          giveaways={giveaways}
-          activeTab={activeTab}
-          onActiveTabChange={setActiveTab}
+          items={sortedGiveaways}
           shownEnded={shownEnded}
           tableLoading={tableLoading}
           guildId={guildId}
           channelName={channelName}
-          onOpenCreate={openCreate}
           onOpenEdit={openEdit}
           onDuplicate={duplicate}
           onDelete={setDeleteConfirmId}
@@ -1029,42 +798,37 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
             closeDialog();
           }}
         >
-          <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-3xl">
-            <DialogHeader>
+          <DialogContent
+            variant="workspace"
+            className="flex min-h-0 flex-col gap-0 overflow-hidden bg-background shadow-2xl shadow-black/30 sm:max-w-3xl"
+          >
+            <DialogHeader className="shrink-0 px-5 pb-4 pr-16 pt-5 text-left sm:px-7 sm:pb-5 sm:pr-16 sm:pt-7">
               <DialogTitle>{editingId ? t("dialog.editTitle") : t("dialog.createTitle")}</DialogTitle>
-              <DialogDescription>{t("dialog.description")}</DialogDescription>
+              <DialogDescription className="max-w-2xl leading-relaxed">{t("dialog.description")}</DialogDescription>
             </DialogHeader>
 
-            {/* Live summary strip */}
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-              {summaryStats.map(({ icon: Icon, label, value }) => (
-                <div key={label} className="flex items-center gap-2 rounded-lg border border-border bg-muted/20 px-3 py-2">
-                  <Icon className="h-4 w-4 shrink-0 text-muted-foreground" />
-                  <div className="min-w-0">
-                    <div className="truncate text-[10px] text-muted-foreground">{label}</div>
-                    <div className="text-sm font-semibold text-foreground">{value}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <Tabs
+              value={activeFormTab}
+              onValueChange={setActiveFormTab}
+              className="flex min-h-0 flex-1 flex-col"
+            >
+              <DashboardTabsList className="mx-5 w-[calc(100%-2.5rem)] shrink-0 sm:mx-7 sm:w-[calc(100%-3.5rem)]">
+                <DashboardTabTrigger value="general">{t("formTabs.general")}</DashboardTabTrigger>
+                <DashboardTabTrigger value="messages">{t("formTabs.messages")}</DashboardTabTrigger>
+                <DashboardTabTrigger value="restrictions">{t("formTabs.restrictions")}</DashboardTabTrigger>
+                <DashboardTabTrigger value="advanced">{t("formTabs.advanced")}</DashboardTabTrigger>
+                {editingGiveaway && <DashboardTabTrigger value="winners">{t("formTabs.winners")}</DashboardTabTrigger>}
+              </DashboardTabsList>
 
-            <Tabs value={activeFormTab} onValueChange={setActiveFormTab}>
-              <TabsList className="grid h-auto w-full grid-cols-2 sm:grid-cols-4">
-                <TabsTrigger value="general">{t("formTabs.general")}</TabsTrigger>
-                <TabsTrigger value="messages">{t("formTabs.messages")}</TabsTrigger>
-                <TabsTrigger value="restrictions">{t("formTabs.restrictions")}</TabsTrigger>
-                <TabsTrigger value="advanced">{t("formTabs.advanced")}</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="general" className="mt-4 space-y-4">
+              <TabsContent value="general" className={cn(GIVEAWAY_FORM_TAB_CLASS, "space-y-5")}>
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
                     <Label>{t("form.prize")}<span className="ml-1 text-destructive">*</span></Label>
-                    <Input value={form.prize} onChange={(e) => updateForm((s) => ({ ...s, prize: e.target.value }))} placeholder={t("form.prizePlaceholder")} />
+                    <Input className="border-0 bg-muted/55 shadow-sm shadow-black/5" value={form.prize} onChange={(e) => updateForm((s) => ({ ...s, prize: e.target.value }))} placeholder={t("form.prizePlaceholder")} />
                   </div>
                   <div className="space-y-2">
                     <Label>{t("form.channel")}<span className="ml-1 text-destructive">*</span></Label>
-                    <ChannelCombobox channels={channels} value={form.channelId} onValueChange={(value) => updateForm((s) => ({ ...s, channelId: value }))} placeholder={t("form.channelPlaceholder")} showDisabled={false} />
+                    <ChannelCombobox className="border-0 bg-muted/55 shadow-sm shadow-black/5 hover:bg-muted" channels={channels} value={form.channelId} onValueChange={(value) => updateForm((s) => ({ ...s, channelId: value }))} placeholder={t("form.channelPlaceholder")} showDisabled={false} />
                   </div>
                 </div>
                 <div className="grid gap-4 md:grid-cols-2">
@@ -1074,55 +838,54 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
                       <Checkbox id="startNow" checked={form.startNow} onCheckedChange={(checked) => updateForm((s) => ({ ...s, startNow: checked === true, startTime: checked === true ? "" : s.startTime }))} />
                       <Label htmlFor="startNow" className="cursor-pointer font-normal">{t("form.startNow")}</Label>
                     </div>
-                    {!form.startNow && <Input className="mt-2" type="datetime-local" value={form.startTime} onChange={(e) => updateForm((s) => ({ ...s, startTime: e.target.value }))} />}
+                    {!form.startNow && <Input className="mt-2 min-w-0 max-w-full border-0 bg-muted/55 shadow-sm shadow-black/5" type="datetime-local" value={form.startTime} onChange={(e) => updateForm((s) => ({ ...s, startTime: e.target.value }))} />}
                   </div>
                   <div className="space-y-2">
                     <Label>{t("form.endTime")}<span className="ml-1 text-destructive">*</span></Label>
-                    <Input type="datetime-local" value={form.endTime} onChange={(e) => updateForm((s) => ({ ...s, endTime: e.target.value }))} />
+                    <Input className="min-w-0 max-w-full border-0 bg-muted/55 shadow-sm shadow-black/5" type="datetime-local" value={form.endTime} onChange={(e) => updateForm((s) => ({ ...s, endTime: e.target.value }))} />
                   </div>
                 </div>
                 <div className="md:w-1/2 md:pr-2">
                   <div className="space-y-2">
                     <Label>{t("form.winners")}<span className="ml-1 text-destructive">*</span></Label>
-                    <Input type="number" min="1" max="100" value={form.winners} onChange={(e) => updateForm((s) => ({ ...s, winners: e.target.value }))} />
+                    <Input className="border-0 bg-muted/55 shadow-sm shadow-black/5" type="number" min="1" max="100" value={form.winners} onChange={(e) => updateForm((s) => ({ ...s, winners: e.target.value }))} />
                   </div>
                 </div>
               </TabsContent>
 
-              <TabsContent value="messages" className="mt-4 space-y-4">
+              <TabsContent value="messages" className={cn(GIVEAWAY_FORM_TAB_CLASS, "space-y-4")}>
                 <div className="space-y-2">
                   <Label>{t("form.textAboveEmbed")}</Label>
-                  <Textarea rows={4} className="font-mono text-sm" value={form.textAbove} onChange={(e) => updateForm((s) => ({ ...s, textAbove: e.target.value }))} />
+                  <Textarea rows={4} className="border-0 bg-muted/55 shadow-sm shadow-black/5" value={form.textAbove} onChange={(e) => updateForm((s) => ({ ...s, textAbove: e.target.value }))} />
                 </div>
                 <div className="space-y-2">
                   <Label>{t("form.textInEmbed")}</Label>
-                  <Textarea rows={4} className="font-mono text-sm" value={form.textEmbed} onChange={(e) => updateForm((s) => ({ ...s, textEmbed: e.target.value }))} />
+                  <Textarea rows={4} className="border-0 bg-muted/55 shadow-sm shadow-black/5" value={form.textEmbed} onChange={(e) => updateForm((s) => ({ ...s, textEmbed: e.target.value }))} />
                 </div>
                 <div className="space-y-2">
                   <Label>{t("form.textOnEnd")}</Label>
-                  <Textarea rows={3} className="font-mono text-sm" value={form.textEnd} onChange={(e) => updateForm((s) => ({ ...s, textEnd: e.target.value }))} />
+                  <Textarea rows={3} className="border-0 bg-muted/55 shadow-sm shadow-black/5" value={form.textEnd} onChange={(e) => updateForm((s) => ({ ...s, textEnd: e.target.value }))} />
                 </div>
                 <div className="flex flex-wrap gap-2 pt-1">
-                  <Button type="button" variant="outline" size="sm" onClick={() => openPreview("giveaway")}>
-                    <Gift className="mr-2 h-4 w-4" />{t("form.previewGiveaway")}
+                  <Button type="button" variant="secondary" size="sm" className="border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted" onClick={() => openPreview("giveaway")}>
+                    <Eye className="mr-2 h-4 w-4" />{t("form.previewGiveaway")}
                   </Button>
-                  <Button type="button" variant="outline" size="sm" onClick={() => openPreview("end")}>
+                  <Button type="button" variant="secondary" size="sm" className="border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted" onClick={() => openPreview("end")}>
                     <Trophy className="mr-2 h-4 w-4" />{t("form.previewEnd")}
                   </Button>
                 </div>
               </TabsContent>
 
-              <TabsContent value="restrictions" className="mt-4 space-y-4">
+              <TabsContent value="restrictions" className={cn(GIVEAWAY_FORM_TAB_CLASS, "space-y-5")}>
                 <div className="space-y-2">
                   <Label>{t("form.mentions")}</Label>
-                  <RoleCombobox roles={roles} mode="add" excludeRoleIds={form.mentions} onAdd={(id) => updateForm((s) => ({ ...s, mentions: [...s.mentions, id] }))} />
+                  <RoleCombobox className="border-0 bg-muted/55 shadow-sm shadow-black/5 hover:bg-muted" roles={roles} mode="add" excludeRoleIds={form.mentions} onAdd={(id) => updateForm((s) => ({ ...s, mentions: [...s.mentions, id] }))} />
                   {form.mentions.length > 0 && roleBadges(form.mentions, (id) => updateForm((s) => ({ ...s, mentions: s.mentions.filter((x) => x !== id) })))}
                 </div>
-                <Separator />
-                <div className="space-y-2">
+                <div className="space-y-2 rounded-[20px] bg-muted/35 p-4">
                   <Label>{t("form.rolesMode")}</Label>
                   <Select value={form.rolesMode} onValueChange={(value: "allow" | "deny" | "none") => updateForm((s) => ({ ...s, rolesMode: value }))}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectTrigger className="border-0 bg-card shadow-sm shadow-black/5"><SelectValue /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="none">{t("form.rolesModeOptions.none")}</SelectItem>
                       <SelectItem value="allow">{t("form.rolesModeOptions.allow")}</SelectItem>
@@ -1134,12 +897,11 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
                 {form.rolesMode !== "none" && (
                   <div className="space-y-2">
                     <Label>{t("form.roleRequirements")}</Label>
-                    <RoleCombobox roles={roles} mode="add" excludeRoleIds={form.roles} onAdd={(id) => updateForm((s) => ({ ...s, roles: [...s.roles, id] }))} />
+                    <RoleCombobox className="border-0 bg-muted/55 shadow-sm shadow-black/5 hover:bg-muted" roles={roles} mode="add" excludeRoleIds={form.roles} onAdd={(id) => updateForm((s) => ({ ...s, roles: [...s.roles, id] }))} />
                     {form.roles.length > 0 && roleBadges(form.roles, (id) => updateForm((s) => ({ ...s, roles: s.roles.filter((x) => x !== id) })))}
                   </div>
                 )}
-                <Separator />
-                <div className="mt-3 space-y-3">
+                <div className="space-y-3 rounded-[20px] bg-muted/35 p-4">
                   <Label>{t("form.requirements")}</Label>
                   <div className="flex items-center gap-2">
                     <Checkbox id="profileRequired" checked={form.profileRequired} onCheckedChange={(checked) => updateForm((s) => ({ ...s, profileRequired: checked === true }))} />
@@ -1152,10 +914,10 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
                 </div>
               </TabsContent>
 
-              <TabsContent value="advanced" className="mt-4 space-y-4">
-                <div className="space-y-3 rounded-xl border border-border p-4">
+              <TabsContent value="advanced" className={cn(GIVEAWAY_FORM_TAB_CLASS, "space-y-4")}>
+                <div className="space-y-3 rounded-[20px] bg-muted/35 p-4">
                   <Label>{t("form.image")}</Label>
-                  <Input type="file" accept="image/*" onChange={(e) => {
+                  <Input className="border-0 bg-card shadow-sm shadow-black/5" type="file" accept="image/*" onChange={(e) => {
                     const file = e.target.files?.[0] || null;
                     if (file && file.size > MAX_IMAGE_BYTES) {
                       toast({ title: t("toast.errorTitle"), description: t("validation.imageTooLarge"), variant: "destructive" });
@@ -1168,13 +930,13 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
                     <Checkbox id="removeImage" checked={form.removeImage} onCheckedChange={(checked) => updateForm((s) => ({ ...s, removeImage: checked === true, imageFile: checked === true ? null : s.imageFile, imagePreview: checked === true ? null : s.imagePreview }))} />
                     <Label htmlFor="removeImage" className="cursor-pointer font-normal">{t("form.removeImage")}</Label>
                   </div>
-                  {form.imagePreview && !form.removeImage && <Image src={form.imagePreview} alt={t("form.imagePreviewAlt")} width={640} height={240} unoptimized className="max-h-40 w-full rounded-lg border border-border object-cover" />}
+                  {form.imagePreview && !form.removeImage && <Image src={form.imagePreview} alt={t("form.imagePreviewAlt")} width={640} height={240} unoptimized className="max-h-40 w-full rounded-xl object-cover" />}
                 </div>
 
-                <div className="space-y-3 rounded-xl border border-border p-4">
+                <div className="space-y-3 rounded-[20px] bg-muted/35 p-4">
                   <div className="flex items-center justify-between">
                     <Label>{t("form.boosters")}</Label>
-                    <Button type="button" variant="outline" size="sm" onClick={addBooster}>
+                    <Button type="button" variant="secondary" size="sm" className="border-0 bg-card shadow-sm shadow-black/5 hover:bg-muted" onClick={addBooster}>
                       <Plus className="mr-2 h-4 w-4" />{t("form.addBooster")}
                     </Button>
                   </div>
@@ -1183,7 +945,7 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
                   ) : (
                     <div className="space-y-4">
                       {form.boosters.map((booster, index) => (
-                        <div key={booster.id} className="rounded-lg border border-border p-4">
+                        <div key={booster.id} className="rounded-2xl bg-card p-4 shadow-sm shadow-black/5">
                           <div className="mb-3 flex items-center justify-between">
                             <div className="text-sm font-medium">{t("form.boosterLabel", { index: index + 1 })}</div>
                             <Button type="button" variant="ghost" size="sm" onClick={() => removeBooster(index)}><Trash2 className="h-4 w-4" /></Button>
@@ -1192,13 +954,13 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
                             <div className="space-y-2">
                               <Label>{t("form.boostValue")}</Label>
                               <Select value={String(booster.value)} onValueChange={(value) => updateBooster(index, { ...booster, value: Number(value) })}>
-                                <SelectTrigger><SelectValue /></SelectTrigger>
+                              <SelectTrigger className="border-0 bg-muted/55 shadow-sm shadow-black/5"><SelectValue /></SelectTrigger>
                                 <SelectContent>{boostChoices.map((choice) => <SelectItem key={choice} value={String(choice)}>{`x${choice}`}</SelectItem>)}</SelectContent>
                               </Select>
                             </div>
                             <div className="space-y-2">
                               <Label>{t("form.boostRoles")}</Label>
-                              <RoleCombobox roles={roles} mode="add" excludeRoleIds={booster.roles} onAdd={(id) => updateBooster(index, { ...booster, roles: [...booster.roles, id] })} />
+                              <RoleCombobox className="border-0 bg-muted/55 shadow-sm shadow-black/5 hover:bg-muted" roles={roles} mode="add" excludeRoleIds={booster.roles} onAdd={(id) => updateBooster(index, { ...booster, roles: [...booster.roles, id] })} />
                               {booster.roles.length > 0 && roleBadges(booster.roles, (id) => updateBooster(index, { ...booster, roles: booster.roles.filter((x) => x !== id) }))}
                             </div>
                           </div>
@@ -1208,11 +970,16 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
                   )}
                 </div>
               </TabsContent>
+              {editingGiveaway && (
+                <TabsContent value="winners" className={cn(GIVEAWAY_FORM_TAB_CLASS, "overflow-hidden")}>
+                  <GiveawayWinnerList giveaway={editingGiveaway} t={t} />
+                </TabsContent>
+              )}
             </Tabs>
 
-            <DialogFooter>
-              <Button variant="outline" onClick={closeDialog} disabled={saving}>{tCommon("cancel")}</Button>
-              <Button onClick={submit} disabled={saving || !hasRequiredFields}>
+            <DialogFooter className="shrink-0 flex-row gap-2 border-t border-border/50 bg-background px-5 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-7 sm:py-4 sm:space-x-0 [&>*]:w-auto">
+              <Button variant="secondary" className="min-w-0 flex-1 border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted sm:flex-none" onClick={closeDialog} disabled={saving}>{tCommon("cancel")}</Button>
+              <Button className="min-w-0 flex-1 sm:flex-none" onClick={submit} disabled={saving || !hasRequiredFields}>
                 {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {editingId ? t("dialog.saveChanges") : t("dialog.create")}
               </Button>
@@ -1254,7 +1021,7 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
 
         {/* Reroll dialog */}
         <Dialog open={rerollDialogOpen} onOpenChange={(open) => { if (!open) { setRerollDialogOpen(false); setRerollTarget(null); setRerollSelected([]); } }}>
-          <DialogContent className="sm:max-w-md">
+          <DialogContent variant="form" className="sm:max-w-md">
             <DialogHeader>
               <DialogTitle>{t("reroll.title")}</DialogTitle>
               <DialogDescription>{t("reroll.description")}</DialogDescription>
@@ -1288,7 +1055,7 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
 
         {/* Entries Dialog */}
         <Dialog open={entriesDialogOpen} onOpenChange={(open) => { if (!open) closeEntries(); }}>
-          <DialogContent className="sm:max-w-lg">
+          <DialogContent variant="form" className="sm:max-w-lg">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2"><Users className="h-5 w-5" />{entriesTarget?.prize}</DialogTitle>
               <DialogDescription>{t("entries.description")}</DialogDescription>
@@ -1316,7 +1083,7 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
                   <div className="max-h-72 overflow-y-auto rounded-lg border border-border">
                     <table className="w-full text-sm">
                       <thead className="sticky top-0 bg-muted/80 backdrop-blur-sm">
-                        <tr className="text-left text-xs font-medium text-muted-foreground uppercase">
+                        <tr className="text-left text-xs font-medium text-muted-foreground">
                           <th className="px-3 py-2">{t("entries.userId")}</th>
                           <th className="px-3 py-2 text-center">{t("entries.entryCount")}</th>
                           <th className="px-3 py-2 text-right">{t("entries.winChance")}</th>
@@ -1325,7 +1092,7 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
                       <tbody>
                         {entriesData.entrants.map((e, i) => (
                           <tr key={e.userId} className={cn("border-t border-border/60", i % 2 === 0 ? "bg-background" : "bg-muted/10")}>
-                            <td className="px-3 py-2 font-mono text-xs text-muted-foreground">{e.userId}</td>
+                            <td className="px-3 py-2 text-xs text-muted-foreground">{e.userId}</td>
                             <td className="px-3 py-2 text-center tabular-nums">{e.entries}</td>
                             <td className="px-3 py-2 text-right tabular-nums text-primary">{e.winChance.toFixed(2)}%</td>
                           </tr>
@@ -1344,7 +1111,7 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
 
         {/* Preview Dialog */}
         <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
-          <DialogContent className="sm:max-w-2xl">
+          <DialogContent variant="form" className="sm:max-w-2xl">
             <DialogHeader>
               <DialogTitle>{previewMode === "giveaway" ? t("preview.giveawayTitle") : t("preview.endTitle")}</DialogTitle>
               <DialogDescription>{previewMode === "giveaway" ? t("preview.giveawayDescription") : t("preview.endDescription")}</DialogDescription>
@@ -1357,7 +1124,7 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
                     <span className="text-sm text-muted-foreground">{selectedChannel ? `#${selectedChannel.name}` : t("preview.noChannel")}</span>
                   </div>
                   <div className="rounded-2xl border border-white/10 bg-[#313338] p-5">
-                    <div className="text-xs font-medium uppercase text-slate-400">{t("preview.discordPreview")}</div>
+                    <div className="text-xs font-medium text-slate-400">{t("preview.discordPreview")}</div>
                     {mentionLabels.length > 0 && <div className="mt-4 flex flex-wrap gap-2 text-sm text-sky-300">{mentionLabels.map((m) => <span key={m}>{m}</span>)}</div>}
                     {form.textAbove && <div className="mt-4 prose prose-invert max-w-none text-sm text-slate-200">{renderMarkdown(form.textAbove)}</div>}
                     <div className="mt-4 rounded-xl border-l-4 border-l-[#5865f2] border border-white/10 bg-[#2b2d31] p-4 text-slate-100">
@@ -1374,7 +1141,7 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
               ) : (
                 <div className="space-y-4">
                   <div className="rounded-2xl border border-white/10 bg-[#313338] p-5">
-                    <div className="text-xs font-medium uppercase text-slate-400">{t("preview.discordPreview")}</div>
+                    <div className="text-xs font-medium text-slate-400">{t("preview.discordPreview")}</div>
                     <div className="mt-4 text-sm text-sky-300">@Winner</div>
                     <div className="mt-4 prose prose-invert max-w-none text-sm text-slate-200">{renderMarkdown(form.textEnd, t("preview.noEndText"))}</div>
                     <div className="mt-4 rounded-xl border-l-4 border-l-[#ed4245] border border-white/10 bg-[#2b2d31] p-4 text-slate-100">
@@ -1391,17 +1158,6 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
         </Dialog>
       </div>
 
-      {/* Floating CTA */}
-      {!dialogOpen && (
-        <Button
-          onClick={openCreate}
-          size="icon"
-          className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg md:hidden"
-          aria-label={t("create")}
-        >
-          <Plus className="h-6 w-6" />
-        </Button>
-      )}
     </div>
   );
 }

@@ -79,6 +79,7 @@ export interface ClanSettingsResponse {
 export interface ServerClanListItem {
   tag: string;
   name: string;
+  added_at: string;
   badge_url?: string | null;
   clan_badge_url?: string | null;
   badge?: string | null;
@@ -114,7 +115,7 @@ export interface BannedPlayer {
   clan_tag?: string | null;
   clan_name?: string | null;
   current_role?: string | null;
-  image_url?: string;
+  image?: string;
   edited_by?: Array<{
     user: number | string; // Can be string to preserve precision for large Discord IDs
     previous: {
@@ -213,6 +214,8 @@ export interface GuildInfo {
   role: "Owner" | "Administrator" | "Manager" | "Member";
   features: string[];
   has_bot: boolean;
+  last_command_at?: string;
+  inactive: boolean;
   member_count?: number;
   owner_id?: string;
   description?: string;
@@ -236,6 +239,7 @@ export interface GiveawayWinner {
   userId: string;
   username?: string | null;
   avatarUrl?: string | null;
+  inServer: boolean;
   status: 'winner' | 'rerolled';
   timestamp?: string | null;
   reason?: string | null;
@@ -248,27 +252,27 @@ export interface Giveaway {
   id: string;
   serverId: string;
   prize: string;
-  channelId: string | null;
+  channelId?: string | null;
   status: 'scheduled' | 'ongoing' | 'ended';
-  startTime: string;
-  endTime: string;
+  start: string;
+  end: string;
   winners: number;
   mentions: string[];
   textAboveEmbed: string;
   textInEmbed: string;
   textOnEnd: string;
-  imageUrl: string | null;
+  imageUrl?: string | null;
   profilePictureRequired: boolean;
   cocAccountRequired: boolean;
   rolesMode: 'allow' | 'deny' | 'none';
   roles: string[];
   boosters: GiveawayBooster[];
-  entryCount: number;
+  entries: unknown[];
   updated: boolean;
-  messageId: string | null;
+  messageId?: string | null;
   winnersList: GiveawayWinner[];
-  eventPending: string | null;
-  eventPendingAt: string | null;
+  eventPending?: string | null;
+  eventPendingAt?: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -287,12 +291,17 @@ function isNullableString(value: unknown): value is string | null {
   return typeof value === 'string' || value === null;
 }
 
+function isOptionalNullableString(value: unknown): value is string | null | undefined {
+  return value === undefined || isNullableString(value);
+}
+
 function isGiveawayWinner(value: unknown): value is GiveawayWinner {
   if (!value || typeof value !== 'object') return false;
   const candidate = value as Partial<GiveawayWinner>;
   return typeof candidate.userId === 'string'
     && (candidate.username === undefined || isNullableString(candidate.username))
     && (candidate.avatarUrl === undefined || isNullableString(candidate.avatarUrl))
+    && typeof candidate.inServer === 'boolean'
     && ['winner', 'rerolled'].includes(candidate.status ?? '')
     && (candidate.timestamp === undefined || isNullableString(candidate.timestamp))
     && (candidate.reason === undefined || isNullableString(candidate.reason));
@@ -312,17 +321,17 @@ export function isGiveaway(value: unknown): value is Giveaway {
   return typeof candidate.id === 'string'
     && typeof candidate.serverId === 'string'
     && typeof candidate.prize === 'string'
-    && isNullableString(candidate.channelId)
+    && isOptionalNullableString(candidate.channelId)
     && ['scheduled', 'ongoing', 'ended'].includes(candidate.status ?? '')
-    && typeof candidate.startTime === 'string'
-    && typeof candidate.endTime === 'string'
+    && typeof candidate.start === 'string'
+    && typeof candidate.end === 'string'
     && typeof candidate.winners === 'number'
     && Array.isArray(candidate.mentions)
     && candidate.mentions.every((mention) => typeof mention === 'string')
     && typeof candidate.textAboveEmbed === 'string'
     && typeof candidate.textInEmbed === 'string'
     && typeof candidate.textOnEnd === 'string'
-    && isNullableString(candidate.imageUrl)
+    && isOptionalNullableString(candidate.imageUrl)
     && typeof candidate.profilePictureRequired === 'boolean'
     && typeof candidate.cocAccountRequired === 'boolean'
     && ['allow', 'deny', 'none'].includes(candidate.rolesMode ?? '')
@@ -330,13 +339,13 @@ export function isGiveaway(value: unknown): value is Giveaway {
     && candidate.roles.every((role) => typeof role === 'string')
     && Array.isArray(candidate.boosters)
     && candidate.boosters.every(isGiveawayBooster)
-    && typeof candidate.entryCount === 'number'
+    && Array.isArray(candidate.entries)
     && typeof candidate.updated === 'boolean'
-    && isNullableString(candidate.messageId)
+    && isOptionalNullableString(candidate.messageId)
     && Array.isArray(candidate.winnersList)
     && candidate.winnersList.every(isGiveawayWinner)
-    && isNullableString(candidate.eventPending)
-    && isNullableString(candidate.eventPendingAt)
+    && isOptionalNullableString(candidate.eventPending)
+    && isOptionalNullableString(candidate.eventPendingAt)
     && typeof candidate.createdAt === 'string'
     && typeof candidate.updatedAt === 'string';
 }

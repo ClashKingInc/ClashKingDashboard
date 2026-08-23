@@ -4,9 +4,23 @@ import {
   darkTheme,
   cssVariables,
   applyThemeVariables,
+  clashKingAssets,
+  cwlLeagueImageUrl,
+  playerLeagueImageUrl,
   townHallImageUrl,
   theme,
 } from "./theme";
+
+describe("clashKingAssets", () => {
+  it("maps the Capital Gold resource and XP artwork", () => {
+    expect(clashKingAssets.resources.capitalGold).toBe(
+      "https://assets.clashk.ing/resources/capital_gold.webp"
+    );
+    expect(clashKingAssets.icons.hv.xp).toBe(
+      "https://assets.clashk.ing/icons/Icon_HV_XP.png"
+    );
+  });
+});
 
 describe("clashKingColors", () => {
   it("has the correct primary color", () => {
@@ -89,6 +103,46 @@ describe("townHallImageUrl", () => {
   it("works for level 1", () => {
     expect(townHallImageUrl(1)).toBe(
       "https://assets.clashk.ing/buildings/home-village/town_hall/level_1.webp"
+    );
+  });
+});
+
+describe("cwlLeagueImageUrl", () => {
+  it("maps known CWL leagues to the published badge family", () => {
+    expect(cwlLeagueImageUrl("Champion League II")).toBe(
+      "https://assets.clashk.ing/leagues/cwl/champion_league_2.png"
+    );
+    expect(cwlLeagueImageUrl("Legend League")).toBe(
+      "https://assets.clashk.ing/leagues/cwl/legend_league.png"
+    );
+  });
+
+  it("uses the unranked badge for missing or unknown leagues", () => {
+    expect(cwlLeagueImageUrl()).toBe(
+      "https://assets.clashk.ing/leagues/cwl/unranked.png"
+    );
+    expect(cwlLeagueImageUrl("Unknown League")).toBe(
+      "https://assets.clashk.ing/leagues/cwl/unranked.png"
+    );
+  });
+});
+
+describe("playerLeagueImageUrl", () => {
+  it("matches the assets and app league-tier convention", () => {
+    expect(playerLeagueImageUrl("Titan League 26")).toBe(
+      "https://assets.clashk.ing/leagues/league-tier/titan_league_26.png"
+    );
+    expect(playerLeagueImageUrl("Legend League III")).toBe(
+      "https://assets.clashk.ing/leagues/league-tier/legend_league_3.png"
+    );
+    expect(playerLeagueImageUrl("Legend II")).toBe(
+      "https://assets.clashk.ing/leagues/league-tier/legend_league_2.png"
+    );
+    expect(playerLeagueImageUrl("Legend 1")).toBe(
+      "https://assets.clashk.ing/leagues/league-tier/legend_league_1.png"
+    );
+    expect(playerLeagueImageUrl("Legend 3")).toBe(
+      "https://assets.clashk.ing/leagues/league-tier/legend_league_3.png"
     );
   });
 });

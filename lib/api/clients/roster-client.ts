@@ -11,9 +11,16 @@ import type {
   UpdateMemberModel,
   CreateRosterGroupModel,
   UpdateRosterGroupModel,
-  CreateRosterSignupCategoryModel,
   CreateRosterAutomationModel,
   RosterCloneModel,
+  CreateRosterViewModel,
+  UpdateRosterViewModel,
+  MaterializedRosterView,
+  RosterView,
+  RosterViewResult,
+  RosterMetricQuery,
+  RosterMetricQueryResult,
+  ApplyRosterMembershipChangesModel,
 } from '../types/roster';
 
 export class RosterClient extends BaseApiClient {
@@ -135,35 +142,6 @@ export class RosterClient extends BaseApiClient {
   }
 
   // ============================================================================
-  // Signup Categories
-  // ============================================================================
-
-  async createCategory(data: CreateRosterSignupCategoryModel): Promise<ApiResponse<{ message: string }>> {
-    return this.request('/v2/roster-signup-category', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    });
-  }
-
-  async listCategories(serverId: number): Promise<ApiResponse<PaginatedResponse<any>>> {
-    const query = this.buildQueryString({ server_id: serverId });
-    return this.request(`/v2/roster-signup-category/list${query}`, { method: 'GET' });
-  }
-
-  async updateCategory(customId: string, serverId: number, data: any): Promise<ApiResponse<{ message: string }>> {
-    const query = this.buildQueryString({ server_id: serverId });
-    return this.request(`/v2/roster-signup-category/${customId}${query}`, {
-      method: 'PATCH',
-      body: JSON.stringify(data),
-    });
-  }
-
-  async deleteCategory(customId: string, serverId: number): Promise<ApiResponse<{ message: string }>> {
-    const query = this.buildQueryString({ server_id: serverId });
-    return this.request(`/v2/roster-signup-category/${customId}${query}`, { method: 'DELETE' });
-  }
-
-  // ============================================================================
   // Automation
   // ============================================================================
 
@@ -195,5 +173,94 @@ export class RosterClient extends BaseApiClient {
   async deleteAutomation(automationId: string, serverId: number): Promise<ApiResponse<{ message: string }>> {
     const query = this.buildQueryString({ server_id: serverId });
     return this.request(`/v2/roster-automation/${automationId}${query}`, { method: 'DELETE' });
+  }
+
+  // ============================================================================
+  // AI roster views
+  // ============================================================================
+
+  async listViews(serverId: string | number): Promise<ApiResponse<RosterView[]>> {
+    const query = this.buildQueryString({ server_id: serverId });
+    return this.request(`/v2/roster/views${query}`, { method: 'GET' });
+  }
+
+  async queryMetric(
+    serverId: string | number,
+    data: RosterMetricQuery,
+  ): Promise<ApiResponse<RosterMetricQueryResult>> {
+    const query = this.buildQueryString({ server_id: serverId });
+    return this.request(`/v2/roster/metrics/query${query}`, {
+      method: 'POST',
+      body: JSON.stringify({ ...data, force: data.force ?? false }),
+    });
+  }
+
+  async getView(viewId: string, serverId: string | number): Promise<ApiResponse<RosterView>> {
+    const query = this.buildQueryString({ server_id: serverId });
+    return this.request(`/v2/roster/views/${encodeURIComponent(viewId)}${query}`, { method: 'GET' });
+  }
+
+  async resolveSharedView(viewId: string): Promise<ApiResponse<RosterView>> {
+    return this.request(`/v2/roster/views/shared/${encodeURIComponent(viewId)}`, { method: 'GET' });
+  }
+
+  async createView(serverId: string | number, data: CreateRosterViewModel): Promise<ApiResponse<RosterView>> {
+    const query = this.buildQueryString({ server_id: serverId });
+    return this.request(`/v2/roster/views${query}`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateView(
+    viewId: string,
+    serverId: string | number,
+    data: UpdateRosterViewModel,
+  ): Promise<ApiResponse<RosterView>> {
+    const query = this.buildQueryString({ server_id: serverId });
+    return this.request(`/v2/roster/views/${encodeURIComponent(viewId)}${query}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteView(viewId: string, serverId: string | number): Promise<ApiResponse<{ message: string }>> {
+    const query = this.buildQueryString({ server_id: serverId });
+    return this.request(`/v2/roster/views/${encodeURIComponent(viewId)}${query}`, { method: 'DELETE' });
+  }
+
+  async previewView(
+    serverId: string | number,
+	view: MaterializedRosterView,
+    rosterIds: string[],
+  ): Promise<ApiResponse<{ view: RosterView; result: RosterViewResult }>> {
+    const query = this.buildQueryString({ server_id: serverId });
+    return this.request(`/v2/roster/views/preview${query}`, {
+      method: 'POST',
+      body: JSON.stringify({
+        serverId: String(serverId),
+        rosterIds,
+        viewId: view.id || undefined,
+        name: view.name,
+        sourceCode: view.sourceCode,
+        sourceVersion: view.sourceVersion,
+        columns: view.spec.columns,
+        filters: view.spec.filters ?? [],
+        sort: view.spec.sort ?? [],
+        highlights: view.spec.highlights ?? [],
+        limit: view.spec.limit ?? null,
+      }),
+    });
+  }
+
+  async applyMembershipChanges(
+    serverId: string | number,
+    data: ApplyRosterMembershipChangesModel,
+  ): Promise<ApiResponse<{ applied: boolean; changeCount: number; revisions: Record<string, number> }>> {
+    const query = this.buildQueryString({ server_id: serverId });
+    return this.request(`/v2/roster/membership-changes${query}`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
   }
 }
