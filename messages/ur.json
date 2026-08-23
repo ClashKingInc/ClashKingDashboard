@@ -273,7 +273,7 @@
       "playerManagement": "کھلاڑیوں کا انتظام",
       "automation": "خودکاری",
       "statistics": "شماریات",
-      "general": "General",
+      "general": "عمومی",
       "serverManagement": "Server Management"
     },
     "switchServer": "سرور تبدیل کریں",
@@ -566,7 +566,7 @@
       "newest": "Newest first",
       "oldest": "Oldest first",
       "player": "Player name",
-      "reason": "Reason",
+      "reason": "وجہ",
       "moderator": "Moderator",
       "weight": "Highest weight",
       "count": "Most strikes",
@@ -701,7 +701,7 @@
       "clone": "نقل بنائیں",
       "allRosters": "تمام روسٹرز",
       "manageRosters": "اپنے جنگی روسٹرز اور لائن اپس کا انتظام کریں",
-      "rename": "Rename {name}",
+      "rename": "{name} کا نام بدلیں",
       "actions": "Actions for {name}",
       "renameInput": "Roster name",
       "renameSave": "Save roster name",
@@ -945,13 +945,13 @@
       "unknownError": "An unknown error occurred",
       "memberCount": "{count, plural, one {# member} other {# members}}",
       "dragPlayer": "Drag {name}",
-      "townHallAlt": "Town Hall {level}",
+      "townHallAlt": "ٹاؤن ہال {level}",
       "duplicate": "This player appears in multiple rosters",
       "dropHere": "Drop a player here",
       "status": {
-        "clan": "Clan",
-        "family": "Family",
-        "external": "External"
+        "clan": "قبیلہ",
+        "family": "فیملی",
+        "external": "بیرونی"
       }
     },
     "ungrouped": "بلا گروپ",
@@ -971,6 +971,8 @@
       "editTitle": "خودکاری میں ترمیم کریں",
       "createDesc": "خودکار کارروائی شیڈول کریں",
       "actionType": "کارروائی کی قسم",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "ایونٹ کے لحاظ سے وقت",
       "offsetBefore": "ایونٹ سے پہلے",
       "offsetAfter": "ایونٹ کے بعد",
@@ -1016,9 +1018,7 @@
         "roster_clear": "روسٹر حذف کیے بغیر اس سے تمام ارکان ہٹاتا ہے",
         "roster_archive": "روسٹر محفوظ شدہ میں ڈال کر اسے صرف پڑھنے کے قابل بناتا ہے"
       },
-      "infoBox": "خودکاریاں ایونٹ شروع ہونے کے وقت کے لحاظ سے چلتی ہیں۔ وقفہ مقرر کریں (مثلاً 3 دن پہلے) تو بوٹ اس وقت کارروائی خودکار طور پر انجام دے گا، بار بار ہونے والے ایونٹس کے لیے بھی۔",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "خودکاریاں ایونٹ شروع ہونے کے وقت کے لحاظ سے چلتی ہیں۔ وقفہ مقرر کریں (مثلاً 3 دن پہلے) تو بوٹ اس وقت کارروائی خودکار طور پر انجام دے گا، بار بار ہونے والے ایونٹس کے لیے بھی۔"
     },
     "groups": {
       "title": "روسٹر گروپس",
@@ -1116,7 +1116,7 @@
     },
     "aiBuilder": {
       "button": "Roster Assistant",
-      "new": "New",
+      "new": "نیا",
       "title": "Roster Assistant",
       "description": "Build and save reusable roster views with natural language."
     },
@@ -1125,11 +1125,11 @@
       "title": "CWL Bonuses",
       "description": "Calculate and assign the available seasonal bonus awards.",
       "back": "Back to rosters",
-      "clan": "Clan",
-      "selectClan": "Select a clan",
+      "clan": "قبیلہ",
+      "selectClan": "کلین منتخب کریں",
       "searchClans": "Search clans",
       "noClanFound": "No clan found",
-      "season": "Season",
+      "season": "سیزن",
       "noStoredSeasons": "No stored seasons",
       "unknownLeague": "Unknown league",
       "unrankedLeague": "Unranked CWL league",
@@ -1137,8 +1137,8 @@
       "loadClansError": "Failed to load configured clans.",
       "loadMedalRulesError": "Failed to load CWL medal rules.",
       "loadDataError": "Failed to load CWL data.",
-      "league": "League",
-      "rank": "Rank",
+      "league": "لیگ",
+      "rank": "رینک",
       "warsWon": "Wars won",
       "leagueMedals": "League medals",
       "bonusSlots": "Bonus slots",
@@ -1155,7 +1155,7 @@
       "chooseMore": "{count, plural, one {Choose # more recipient.} other {Choose # more recipients.}}",
       "save": "Save bonuses",
       "saved": "CWL bonus recipients saved",
-      "townHallAlt": "Town Hall {level}",
+      "townHallAlt": "ٹاؤن ہال {level}",
       "stars": "{count, plural, one {# star} other {# stars}}",
       "attacks": "{count, plural, one {# attack} other {# attacks}}",
       "noPlayers": "No players are available for this CWL season."
@@ -1290,7 +1290,7 @@
       "clan": "کلین",
       "allClans": "تمام کلینز",
       "townHall": "ٹاؤن ہال",
-      "townHallShort": "TH",
+      "townHallShort": "ٹی ایچ",
       "allTownHalls": "تمام TH سطحیں",
       "townHallLevel": "TH {level}",
       "period": "مدت",
@@ -1537,8 +1537,8 @@
         "reorder": "Failed to save the category order."
       },
       "manage": "Manage categories",
-      "uncategorized": "Uncategorized",
-      "sectionCount": "{count, plural, one {# clan} other {# clans}}",
+      "uncategorized": "بلا زمرہ",
+      "sectionCount": "{count, plural, one {# کلین} other {# کلینز}}",
       "reorderAction": "Reorder {name}",
       "reordered": "Category order saved."
     },
@@ -1740,7 +1740,7 @@
       "selectRole": "رول منتخب کریں",
       "townHallLevel": "ٹاؤن ہال کی سطح",
       "selectThLevel": "TH کی سطح منتخب کریں",
-      "thPrefix": "TH",
+      "thPrefix": "ٹی ایچ",
       "league": "لیگ",
       "selectLeague": "لیگ منتخب کریں",
       "builderHallLevel": "بلڈر ہال کی سطح",
@@ -1933,7 +1933,7 @@
       "selectClan": "Select a different clan",
       "noOtherClans": "Add another clan to this server before cloning this reminder.",
       "action": "Clone reminder",
-      "cloning": "Cloning..."
+      "cloning": "نقل بنائی جا رہی ہے..."
     }
   },
   "LogsPage": {
@@ -2108,8 +2108,8 @@
       "serverFallback": "This server"
     },
     "scope": {
-      "clan": "Clan",
-      "server": "Server",
+      "clan": "قبیلہ",
+      "server": "سرور",
       "serverTitle": "Server logs",
       "serverDescription": "These feeds apply to the whole Discord server and do not change with the selected clan."
     },
@@ -2125,7 +2125,7 @@
     },
     "emptyClans": "Add a clan to this server before configuring clan logs.",
     "serverTabs": {
-      "logs": "Logs",
+      "logs": "لاگز",
       "countdowns": "Countdowns",
       "joinPanel": "Join panel"
     },
@@ -2136,15 +2136,15 @@
       "toggle": "Toggle {name}",
       "types": {
         "clan_games_timer": {
-          "label": "Clan Games",
+          "label": "کلان گیمز",
           "description": "Show the time remaining in Clan Games in a voice channel."
         },
         "cwl_timer": {
-          "label": "Clan War League",
+          "label": "قبیلہ وار لیگ",
           "description": "Show the time remaining in Clan War League in a voice channel."
         },
         "raid_weekend_timer": {
-          "label": "Raid Weekend",
+          "label": "چھاپہ ویک اینڈ",
           "description": "Show the time remaining in Raid Weekend in a voice channel."
         },
         "season_end_timer": {
@@ -2223,19 +2223,19 @@
         "title": "Dashboard access",
         "description": "Give Discord roles view or management access to specific dashboard sections. Multiple roles combine.",
         "loadError": "Could not load dashboard access",
-        "retry": "Retry",
+        "retry": "دوبارہ کوشش کریں",
         "selectRole": "Select a Discord role",
         "addRole": "Add role",
         "empty": "No dashboard roles have been added.",
         "removeRole": "Remove {role}",
         "levels": {
           "none": "No access",
-          "view": "View",
-          "manage": "Manage"
+          "view": "دیکھیں",
+          "manage": "انتظام کریں۔"
         },
         "status": {
           "saving": "Saving",
-          "saved": "Saved",
+          "saved": "محفوظ",
           "pending": "Pending changes",
           "error": "Not saved"
         }
@@ -2322,7 +2322,7 @@
       },
       "autocompleteHint": "Type an opening brace to insert a placeholder",
       "pending": "Waiting to save",
-      "saved": "Saved"
+      "saved": "محفوظ"
     },
     "familyRoles": {
       "title": "فیملی رولز",
@@ -2378,11 +2378,11 @@
   },
   "LoginPage": {
     "redirecting": "Discord پر بھیجا جا رہا ہے...",
-    "dashboardLabel": "Dashboard",
+    "dashboardLabel": "ڈیش بورڈ",
     "eyebrow": "ClashKing Dashboard",
     "title": "Welcome, Chief.",
     "subtitle": "Sign in to manage your Discord servers, configure ClashKing, and keep your clan running smoothly.",
-    "continueWithDiscord": "Continue with Discord",
+    "continueWithDiscord": "Discord کے ساتھ جاری رکھیں",
     "checkingSession": "Checking your session...",
     "openingDiscord": "Opening Discord...",
     "helper": "Discord confirms who you are. ClashKing never sees or stores your Discord password.",
@@ -2813,7 +2813,7 @@
     "thRequirementsHint": "یہ ٹکٹ کھولنے کے لیے ہر ٹاؤن ہال سطح پر درکار ہیروز کی کم از کم سطحیں۔",
     "thHeroLegend": "BK = باربیرین کنگ · AQ = آرچر کوئین · GW = گرینڈ وارڈن · RC = رائل چیمپیئن · WARST = جنگی ستارے",
     "addThLevel": "TH سطح شامل کریں",
-    "thLevel": "TH",
+    "thLevel": "ٹی ایچ",
     "numApplyHint": "CoC اکاؤنٹس کی زیادہ سے زیادہ تعداد جن کے ساتھ صارف درخواست دے سکتا ہے (1–25)۔",
     "embeds": "ایمبیڈز",
     "embedsHint": "پینل یا ٹکٹ کھلنے کے پیغامات کے طور پر استعمال ہونے والے Discord ایمبیڈز۔",
@@ -2838,11 +2838,11 @@
     "legacyEmbed": "بوٹ کے ذریعے بنایا گیا — ترمیم فعال کرنے کے لیے Discohook URL چسپاں کریں۔",
     "invalidDiscohookUrl": "غلط URL۔ Discohook صفحے کا URL چسپاں کریں (discohook.app/?data=... یا discohook.app/?share=...)۔",
     "tabEmbeds": "ایمبیڈز",
-    "configurePanel": "Configure",
+    "configurePanel": "ترتیب دیں",
     "configurePanelDescription": "Manage the panel message, buttons, pre-written messages, categories, and logs.",
     "categoryCoverage": "{configured}/{total} categories",
     "logCoverage": "{configured}/{total} logs",
-    "panelPreview": "Discord preview",
+    "panelPreview": "Discord پیش منظر",
     "panelPreviewHint": "This combines the selected panel embed and ticket buttons so you can review what members will see before configuring it."
   },
   "EmbedsPage": {
@@ -3042,7 +3042,7 @@
       "messages": "پیغامات",
       "restrictions": "پابندیاں",
       "advanced": "اعلیٰ ترتیبات",
-      "winners": "Winners"
+      "winners": "فاتحین"
     },
     "tabs": {
       "ongoing": "جاری",
@@ -3099,7 +3099,7 @@
       "rerolledCount": "{count, plural, one {# دوبارہ منتخب} other {# دوبارہ منتخب}}",
       "viewEntries": "اندراجات دیکھیں",
       "viewGiveaway": "View giveaway",
-      "editGiveaway": "Edit giveaway",
+      "editGiveaway": "انعامی قرعہ اندازی میں ترمیم کریں",
       "moreActions": "More giveaway actions"
     },
     "entries": {
@@ -3222,8 +3222,8 @@
       "description": "Select a winner to copy their Discord ID or open their Discord profile.",
       "current": "Current winners",
       "rerolled": "Rerolled winners",
-      "onServer": "On server",
-      "notOnServer": "Not on server",
+      "onServer": "سرور پر موجود",
+      "notOnServer": "سرور پر موجود نہیں",
       "none": "No winners have been recorded."
     }
   },
@@ -3318,7 +3318,7 @@
       "joinTestFlight": "TestFlight میں شامل ہوں",
       "getAndroidApp": "Android ایپ حاصل کریں",
       "login": "Log in",
-      "dashboard": "Dashboard",
+      "dashboard": "ڈیش بورڈ",
       "iosApp": "iOS app",
       "androidApp": "Android app",
       "addDiscordBot": "Add Discord bot"
@@ -3443,9 +3443,9 @@
   "AccountSettings": {
     "title": "Account settings",
     "description": "Manage your ClashKing profile, preferences, usage, and subscription.",
-    "retry": "Retry",
+    "retry": "دوبارہ کوشش کریں",
     "profile": {
-      "title": "Profile",
+      "title": "پروفائل",
       "description": "The identity attached to your ClashKing account.",
       "discord": "Discord",
       "account": "ClashKing",
@@ -3455,13 +3455,13 @@
     "appearance": {
       "title": "Appearance & language",
       "description": "Choose how the dashboard looks and which language it uses.",
-      "theme": "Theme",
+      "theme": "تھیم",
       "themes": {
-        "system": "System",
-        "light": "Light",
-        "dark": "Dark"
+        "system": "سسٹم",
+        "light": "روشنی",
+        "dark": "اندھیرا"
       },
-      "language": "Language",
+      "language": "زبان",
       "browserLanguage": "Use browser language"
     },
     "usage": {
@@ -3480,7 +3480,7 @@
       "subscribers": "Credit from {count, plural, one {# subscription} other {# subscriptions}}"
     },
     "billing": {
-      "active": "Active",
+      "active": "فعال",
       "free": "Free plan",
       "currentPlan": "ClashKing subscription",
       "supportTitle": "Support ClashKing ❤️",
