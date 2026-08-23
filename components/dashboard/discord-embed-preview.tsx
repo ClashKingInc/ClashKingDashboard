@@ -588,11 +588,31 @@ const parseBroadcastMention: MarkdownParser = (text, start, key) => {
   return null;
 };
 
+export function discordCustomEmojiUrl(id: string, animated: boolean): string | null {
+  if (!/^\d+$/.test(id)) return null;
+  const extension = animated ? "gif" : "webp";
+  return `https://cdn.discordapp.com/emojis/${id}.${extension}?size=48&quality=lossless`;
+}
+
 const parseCustomEmoji: MarkdownParser = (text, start, key) => {
   const match = /^<(a?):(\w+):(\d+)>/.exec(text.slice(start));
   if (!match) return null;
+  const emojiUrl = discordCustomEmojiUrl(match[3], match[1] === "a");
+  if (!emojiUrl) return null;
   return {
-    node: <span key={key} className="font-medium text-[#f0b232]">{`:${match[2]}:`}</span>,
+    node: (
+      <Image
+        key={key}
+        src={emojiUrl}
+        alt={`:${match[2]}:`}
+        title={`:${match[2]}:`}
+        width={22}
+        height={22}
+        unoptimized
+        className="mx-[1px] inline-block h-[1.375em] w-[1.375em] object-contain align-[-0.3em]"
+        draggable={false}
+      />
+    ),
     nextIndex: start + match[0].length,
   };
 };

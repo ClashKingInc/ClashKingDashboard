@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 
-import { resolveDiscordChannelUrl } from "@/components/dashboard/discord-embed-preview";
+import {
+  discordCustomEmojiUrl,
+  resolveDiscordChannelUrl,
+} from "@/components/dashboard/discord-embed-preview";
 
 const mentionContext = {
   channels: [
@@ -42,5 +45,20 @@ describe("resolveDiscordChannelUrl", () => {
       0,
       mentionContext,
     )).toBeNull();
+  });
+});
+
+describe("discordCustomEmojiUrl", () => {
+  it("uses Discord's static and animated emoji assets", () => {
+    expect(discordCustomEmojiUrl("722088222766923847", false)).toBe(
+      "https://cdn.discordapp.com/emojis/722088222766923847.webp?size=48&quality=lossless",
+    );
+    expect(discordCustomEmojiUrl("742256196295065661", true)).toBe(
+      "https://cdn.discordapp.com/emojis/742256196295065661.gif?size=48&quality=lossless",
+    );
+  });
+
+  it("rejects values that cannot be Discord emoji IDs", () => {
+    expect(discordCustomEmojiUrl("not-an-id", false)).toBeNull();
   });
 });
