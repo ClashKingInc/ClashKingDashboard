@@ -913,6 +913,34 @@ function ViewTable({
 export default function RosterBuilderPage() {
   const guildId = useGuildId();
   const router = useRouter();
+  const { status, user } = useAuthSession();
+  const canUseRosterBuilder = status === "authenticated" && isDeveloperUserId(user?.user_id);
+
+  useEffect(() => {
+    if (status === "anonymous") {
+      router.replace("/login");
+      return;
+    }
+    if (status === "authenticated" && !canUseRosterBuilder) {
+      router.replace(dashboardHref("rosters", guildId));
+    }
+  }, [canUseRosterBuilder, guildId, router, status]);
+
+  if (!canUseRosterBuilder) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center text-sm text-muted-foreground" role="status">
+        <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+        Opening rosters…
+      </div>
+    );
+  }
+
+  return <RosterBuilderWorkspace />;
+}
+
+function RosterBuilderWorkspace() {
+  const guildId = useGuildId();
+  const router = useRouter();
   const { user } = useAuthSession();
   const chatStorageScope = user?.user_id && guildId ? `${user.user_id}:${guildId}` : undefined;
   const showDeveloperContext = isDeveloperUserId(user?.user_id);

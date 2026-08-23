@@ -29,6 +29,7 @@ import {
   savedViewProgramGuidance,
 } from "./view-program-contract";
 import { resolveAssistantSecrets } from "./runtime-secrets";
+import { assertRosterAssistantDeveloper, RosterAssistantAuthorizationError } from "./developer-authorization";
 
 const MODEL = ROSTER_ASSISTANT_MODEL;
 const MAX_ROSTERS = 25;
@@ -137,6 +138,7 @@ async function apiRequest(env: RosterAssistantRuntimeEnv, body: AssistantRequest
 }
 
 async function prepareRequest(env: RosterAssistantRuntimeEnv, request: AssistantBrowserRequest, userToken: string, signal: AbortSignal): Promise<AssistantRequest> {
+  await assertRosterAssistantDeveloper(env.CLASHKING_API_ORIGIN, userToken, signal);
   // Only user-authored text crosses the browser trust boundary. The same
   // transcript is authorized by the API and then forwarded to the model.
   const messages = buildTrustedUserTranscript(request.messages);
@@ -314,7 +316,7 @@ const rosterAssistantWorker = {
       return json(
         request,
         { error: error instanceof Error ? error.message : "Roster context request failed" },
-        error instanceof ContextRequestError ? error.status : 502,
+        error instanceof ContextRequestError || error instanceof RosterAssistantAuthorizationError ? error.status : 502,
       );
     }
 
