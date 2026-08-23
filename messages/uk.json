@@ -971,6 +971,8 @@
       "editTitle": "Редагувати автоматизацію",
       "createDesc": "Заплануйте автоматичну дію",
       "actionType": "Тип дії",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "Час відносно події",
       "offsetBefore": "До події",
       "offsetAfter": "Після події",
@@ -1016,9 +1018,7 @@
         "roster_clear": "Вилучає всіх учасників, не видаляючи склад",
         "roster_archive": "Архівує склад і робить його доступним лише для читання"
       },
-      "infoBox": "Автоматизації запускаються відносно часу початку події. Укажіть зсув, наприклад за 3 дні до початку, і бот автоматично виконає дію, зокрема для повторюваних подій.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "Автоматизації запускаються відносно часу початку події. Укажіть зсув, наприклад за 3 дні до початку, і бот автоматично виконає дію, зокрема для повторюваних подій."
     },
     "groups": {
       "title": "Групи складів",
