@@ -971,6 +971,8 @@
       "editTitle": "Modifica automazione",
       "createDesc": "Programma un'azione automatica",
       "actionType": "Tipo di azione",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "Tempistica rispetto all'evento",
       "offsetBefore": "Prima dell'evento",
       "offsetAfter": "Dopo l'evento",
@@ -1016,9 +1018,7 @@
         "roster_clear": "Rimuove tutti i membri dal roster senza eliminarlo",
         "roster_archive": "Archivia il roster rendendolo di sola lettura"
       },
-      "infoBox": "Le automazioni vengono attivate rispetto all'ora di inizio dell'evento. Imposta un intervallo (ad esempio 3 giorni prima) e il bot eseguirà automaticamente l'azione, anche per gli eventi ricorrenti.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "Le automazioni vengono attivate rispetto all'ora di inizio dell'evento. Imposta un intervallo (ad esempio 3 giorni prima) e il bot eseguirà automaticamente l'azione, anche per gli eventi ricorrenti."
     },
     "groups": {
       "title": "Gruppi di roster",
