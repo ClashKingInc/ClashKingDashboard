@@ -273,7 +273,7 @@
       "playerManagement": "プレイヤー管理",
       "automation": "自動化",
       "statistics": "統計",
-      "general": "General",
+      "general": "一般",
       "serverManagement": "Server Management"
     },
     "switchServer": "サーバーを切り替え",
@@ -566,7 +566,7 @@
       "newest": "Newest first",
       "oldest": "Oldest first",
       "player": "Player name",
-      "reason": "Reason",
+      "reason": "理由",
       "moderator": "Moderator",
       "weight": "Highest weight",
       "count": "Most strikes",
@@ -701,7 +701,7 @@
       "clone": "複製",
       "allRosters": "すべてのロスター",
       "manageRosters": "対戦ロスターと編成を管理します",
-      "rename": "Rename {name}",
+      "rename": "{name}の名前を変更",
       "actions": "Actions for {name}",
       "renameInput": "Roster name",
       "renameSave": "Save roster name",
@@ -945,13 +945,13 @@
       "unknownError": "An unknown error occurred",
       "memberCount": "{count, plural, one {# member} other {# members}}",
       "dragPlayer": "Drag {name}",
-      "townHallAlt": "Town Hall {level}",
+      "townHallAlt": "タウンホール {level}",
       "duplicate": "This player appears in multiple rosters",
       "dropHere": "Drop a player here",
       "status": {
-        "clan": "Clan",
-        "family": "Family",
-        "external": "External"
+        "clan": "クラン",
+        "family": "ファミリー",
+        "external": "外部"
       }
     },
     "ungrouped": "グループなし",
@@ -971,6 +971,8 @@
       "editTitle": "自動処理を編集",
       "createDesc": "自動処理をスケジュールします",
       "actionType": "操作の種類",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "イベントを基準にしたタイミング",
       "offsetBefore": "イベント前",
       "offsetAfter": "イベント後",
@@ -1016,9 +1018,7 @@
         "roster_clear": "ロスターを削除せずにすべてのメンバーを外します",
         "roster_archive": "ロスターをアーカイブして読み取り専用にします"
       },
-      "infoBox": "自動処理はイベント開始時刻を基準に実行されます。オフセット（例：3日前）を設定すると、繰り返しイベントを含め、その時刻にボットが自動実行します。",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "自動処理はイベント開始時刻を基準に実行されます。オフセット（例：3日前）を設定すると、繰り返しイベントを含め、その時刻にボットが自動実行します。"
     },
     "groups": {
       "title": "ロスターグループ",
@@ -1116,7 +1116,7 @@
     },
     "aiBuilder": {
       "button": "Roster Assistant",
-      "new": "New",
+      "new": "新着",
       "title": "Roster Assistant",
       "description": "Build and save reusable roster views with natural language."
     },
@@ -1125,11 +1125,11 @@
       "title": "CWL Bonuses",
       "description": "Calculate and assign the available seasonal bonus awards.",
       "back": "Back to rosters",
-      "clan": "Clan",
-      "selectClan": "Select a clan",
+      "clan": "クラン",
+      "selectClan": "クランを選択",
       "searchClans": "Search clans",
       "noClanFound": "No clan found",
-      "season": "Season",
+      "season": "シーズン",
       "noStoredSeasons": "No stored seasons",
       "unknownLeague": "Unknown league",
       "unrankedLeague": "Unranked CWL league",
@@ -1137,8 +1137,8 @@
       "loadClansError": "Failed to load configured clans.",
       "loadMedalRulesError": "Failed to load CWL medal rules.",
       "loadDataError": "Failed to load CWL data.",
-      "league": "League",
-      "rank": "Rank",
+      "league": "リーグ",
+      "rank": "ランク",
       "warsWon": "Wars won",
       "leagueMedals": "League medals",
       "bonusSlots": "Bonus slots",
@@ -1155,7 +1155,7 @@
       "chooseMore": "{count, plural, one {Choose # more recipient.} other {Choose # more recipients.}}",
       "save": "Save bonuses",
       "saved": "CWL bonus recipients saved",
-      "townHallAlt": "Town Hall {level}",
+      "townHallAlt": "タウンホール {level}",
       "stars": "{count, plural, one {# star} other {# stars}}",
       "attacks": "{count, plural, one {# attack} other {# attacks}}",
       "noPlayers": "No players are available for this CWL season."
@@ -1537,8 +1537,8 @@
         "reorder": "Failed to save the category order."
       },
       "manage": "Manage categories",
-      "uncategorized": "Uncategorized",
-      "sectionCount": "{count, plural, one {# clan} other {# clans}}",
+      "uncategorized": "カテゴリーなし",
+      "sectionCount": "{count, plural, one {クラン#件} other {クラン#件}}",
       "reorderAction": "Reorder {name}",
       "reordered": "Category order saved."
     },
@@ -1933,7 +1933,7 @@
       "selectClan": "Select a different clan",
       "noOtherClans": "Add another clan to this server before cloning this reminder.",
       "action": "Clone reminder",
-      "cloning": "Cloning..."
+      "cloning": "複製中..."
     }
   },
   "LogsPage": {
@@ -2108,8 +2108,8 @@
       "serverFallback": "This server"
     },
     "scope": {
-      "clan": "Clan",
-      "server": "Server",
+      "clan": "クラン",
+      "server": "サーバー",
       "serverTitle": "Server logs",
       "serverDescription": "These feeds apply to the whole Discord server and do not change with the selected clan."
     },
@@ -2125,7 +2125,7 @@
     },
     "emptyClans": "Add a clan to this server before configuring clan logs.",
     "serverTabs": {
-      "logs": "Logs",
+      "logs": "ログ",
       "countdowns": "Countdowns",
       "joinPanel": "Join panel"
     },
@@ -2136,15 +2136,15 @@
       "toggle": "Toggle {name}",
       "types": {
         "clan_games_timer": {
-          "label": "Clan Games",
+          "label": "クランゲーム",
           "description": "Show the time remaining in Clan Games in a voice channel."
         },
         "cwl_timer": {
-          "label": "Clan War League",
+          "label": "クラン対戦リーグ",
           "description": "Show the time remaining in Clan War League in a voice channel."
         },
         "raid_weekend_timer": {
-          "label": "Raid Weekend",
+          "label": "レイドウィークエンド",
           "description": "Show the time remaining in Raid Weekend in a voice channel."
         },
         "season_end_timer": {
@@ -2223,19 +2223,19 @@
         "title": "Dashboard access",
         "description": "Give Discord roles view or management access to specific dashboard sections. Multiple roles combine.",
         "loadError": "Could not load dashboard access",
-        "retry": "Retry",
+        "retry": "再試行",
         "selectRole": "Select a Discord role",
         "addRole": "Add role",
         "empty": "No dashboard roles have been added.",
         "removeRole": "Remove {role}",
         "levels": {
           "none": "No access",
-          "view": "View",
-          "manage": "Manage"
+          "view": "表示",
+          "manage": "管理"
         },
         "status": {
           "saving": "Saving",
-          "saved": "Saved",
+          "saved": "保存済み",
           "pending": "Pending changes",
           "error": "Not saved"
         }
@@ -2322,7 +2322,7 @@
       },
       "autocompleteHint": "Type an opening brace to insert a placeholder",
       "pending": "Waiting to save",
-      "saved": "Saved"
+      "saved": "保存済み"
     },
     "familyRoles": {
       "title": "ファミリーロール",
@@ -2378,11 +2378,11 @@
   },
   "LoginPage": {
     "redirecting": "Discordにリダイレクト中...",
-    "dashboardLabel": "Dashboard",
+    "dashboardLabel": "ダッシュボード",
     "eyebrow": "ClashKing Dashboard",
     "title": "Welcome, Chief.",
     "subtitle": "Sign in to manage your Discord servers, configure ClashKing, and keep your clan running smoothly.",
-    "continueWithDiscord": "Continue with Discord",
+    "continueWithDiscord": "Discordで続行",
     "checkingSession": "Checking your session...",
     "openingDiscord": "Opening Discord...",
     "helper": "Discord confirms who you are. ClashKing never sees or stores your Discord password.",
@@ -2838,11 +2838,11 @@
     "legacyEmbed": "ボットで作成されています。編集を有効にするにはDiscohookのURLを貼り付けてください。",
     "invalidDiscohookUrl": "URLが無効です。DiscohookページのURL（discohook.app/?data=... または discohook.app/?share=...）を貼り付けてください。",
     "tabEmbeds": "埋め込み",
-    "configurePanel": "Configure",
+    "configurePanel": "設定",
     "configurePanelDescription": "Manage the panel message, buttons, pre-written messages, categories, and logs.",
     "categoryCoverage": "{configured}/{total} categories",
     "logCoverage": "{configured}/{total} logs",
-    "panelPreview": "Discord preview",
+    "panelPreview": "Discordプレビュー",
     "panelPreviewHint": "This combines the selected panel embed and ticket buttons so you can review what members will see before configuring it."
   },
   "EmbedsPage": {
@@ -3042,7 +3042,7 @@
       "messages": "メッセージ",
       "restrictions": "制限",
       "advanced": "詳細",
-      "winners": "Winners"
+      "winners": "当選者"
     },
     "tabs": {
       "ongoing": "進行中",
@@ -3099,7 +3099,7 @@
       "rerolledCount": "{count, plural, one {#名を再抽選} other {#名を再抽選}}",
       "viewEntries": "応募者を表示",
       "viewGiveaway": "View giveaway",
-      "editGiveaway": "Edit giveaway",
+      "editGiveaway": "プレゼント企画を編集",
       "moreActions": "More giveaway actions"
     },
     "entries": {
@@ -3222,8 +3222,8 @@
       "description": "Select a winner to copy their Discord ID or open their Discord profile.",
       "current": "Current winners",
       "rerolled": "Rerolled winners",
-      "onServer": "On server",
-      "notOnServer": "Not on server",
+      "onServer": "サーバー内",
+      "notOnServer": "サーバー外",
       "none": "No winners have been recorded."
     }
   },
@@ -3318,7 +3318,7 @@
       "joinTestFlight": "TestFlightに参加",
       "getAndroidApp": "Androidアプリを入手",
       "login": "Log in",
-      "dashboard": "Dashboard",
+      "dashboard": "ダッシュボード",
       "iosApp": "iOS app",
       "androidApp": "Android app",
       "addDiscordBot": "Add Discord bot"
@@ -3337,7 +3337,7 @@
         },
         "stats": {
           "first": "見る",
-          "second": "",
+          "second": "the",
           "third": "統計"
         }
       },
@@ -3443,9 +3443,9 @@
   "AccountSettings": {
     "title": "Account settings",
     "description": "Manage your ClashKing profile, preferences, usage, and subscription.",
-    "retry": "Retry",
+    "retry": "再試行",
     "profile": {
-      "title": "Profile",
+      "title": "プロフィール",
       "description": "The identity attached to your ClashKing account.",
       "discord": "Discord",
       "account": "ClashKing",
@@ -3455,13 +3455,13 @@
     "appearance": {
       "title": "Appearance & language",
       "description": "Choose how the dashboard looks and which language it uses.",
-      "theme": "Theme",
+      "theme": "テーマ",
       "themes": {
-        "system": "System",
-        "light": "Light",
-        "dark": "Dark"
+        "system": "システム",
+        "light": "ライト",
+        "dark": "暗い"
       },
-      "language": "Language",
+      "language": "言語",
       "browserLanguage": "Use browser language"
     },
     "usage": {
@@ -3480,7 +3480,7 @@
       "subscribers": "Credit from {count, plural, one {# subscription} other {# subscriptions}}"
     },
     "billing": {
-      "active": "Active",
+      "active": "アクティブ",
       "free": "Free plan",
       "currentPlan": "ClashKing subscription",
       "supportTitle": "Support ClashKing ❤️",
