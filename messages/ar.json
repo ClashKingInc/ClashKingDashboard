@@ -97,15 +97,15 @@
     },
     "stats": {
       "servers": "خوادم Discord",
-      "users": "المستخدمون النشطون",
-      "clans": "القبائل المتتبَّعة"
+      "users": "المستخدمين النشطين",
+      "clans": "القبائل المتابعة"
     },
     "features": {
-      "title": "كل ما تحتاجه لإدارة قبيلتك",
+      "title": "كل ما تريده لإدارة عشيرتك",
       "subtitle": "ميزات قوية مصممة خصيصًا لمجتمعات Clash of Clans",
       "autoRoles": {
         "title": "إدارة الرتب تلقائيًا",
-        "description": "عيّن الرتب تلقائيًا حسب حالة اللاعب وموقعه في القبيلة وإنجازاته، وحافظ على تنظيم خادمك."
+        "description": "تعديل وتعيين الرتب تلقائياً بناءً على حالة اللاعب، وموقعه في القبيلة، وإنجازاته. حافظ على تنظيم الخادم بكل سهولة."
       },
       "playerStats": {
         "title": "إحصاءات اللاعب",
@@ -113,7 +113,7 @@
       },
       "leaderboards": {
         "title": "قوائم المتصدرين",
-        "description": "أنشئ لوحات منافسة للتبرعات والكؤوس ونجوم الحرب والمقاييس المخصصة."
+        "description": "أنشئ لوحات صدارة للتبرعات والجوائز ونجوم الحرب لتحفيز المشاركة والتنافس."
       },
       "warTracking": {
         "title": "متابعة الحرب",
@@ -124,7 +124,7 @@
         "description": "تنبيهات تلقائية لألعاب القبيلة وهجمات الحرب ودوري الحروب والفعاليات المخصصة ليكون الجميع على علم بكل جديد."
       },
       "customization": {
-        "title": "تخصيص كامل",
+        "title": "​تعديل كامل",
         "description": "تحكّم بالأوامر، ألوان الرسائل المدمجة، الألقاب، والصلاحيات. اجعل البوت يعبر عن قبيلتك."
       },
       "familyManagement": {
@@ -137,7 +137,7 @@
       },
       "performance": {
         "title": "سرعة فائقة",
-        "description": "أداء سريع مع استجابات فورية للأوامر وتحديثات مباشرة، دون تأخير."
+        "description": "​أداء فائق السرعة مع استجابة أوتوماتيكية وتحديثات لحظية بلا أي تعليق أو تأخير."
       },
       "security": {
         "title": "آمن وموثوق",
@@ -161,7 +161,7 @@
       "resources": {
         "title": "الموارد",
         "documentation": "الوثائق",
-        "quickStart": "دليل البدء السريع",
+        "quickStart": "دليل التشغيل السريع",
         "github": "GitHub"
       },
       "community": {
@@ -169,7 +169,7 @@
         "discord": "خادم Discord",
         "twitter": "X (Twitter)",
         "reportBug": "الإبلاغ عن خلل",
-        "requestFeature": "طلب ميزة"
+        "requestFeature": "طلب ميزه"
       },
       "legal": {
         "copyright": "ClashKing. جميع الحقوق محفوظة.",
@@ -236,8 +236,8 @@
       "description": "لوحات متصدرين آلية"
     },
     "giveaways": {
-      "name": "السحوبات",
-      "description": "إدارة حملات السحوبات"
+      "name": "الجوائز",
+      "description": "إدارة حملات الجوائز"
     },
     "panels": {
       "name": "اللوحات",
@@ -277,7 +277,7 @@
       "serverManagement": "Server Management"
     },
     "switchServer": "تبديل الخادم",
-    "goHome": "الصفحة الرئيسية",
+    "goHome": "واجهة الموقع",
     "graphics": {
       "name": "Graphics",
       "description": "Dynamic image templates"
@@ -471,7 +471,7 @@
       "playerTag": "وسم اللاعب",
       "reason": "السبب",
       "weight": "الوزن",
-      "rolloverDays": "مدة الصلاحية بالأيام",
+      "rolloverDays": "أيام التجديد",
       "createdAt": "تاريخ الإنشاء",
       "search": "البحث بوسم اللاعب...",
       "howItWorks": {
@@ -604,7 +604,7 @@
       "compare": "مقارنة",
       "compareRosters": "مقارنة القوائم",
       "selectRosters": "اختر القوائم",
-      "selectRostersDesc": "اختر قائمتين على الأقل للمقارنة",
+      "selectRostersDesc": "يرجى تحديد تشكيلتين 2 كحد أدنى للمقارنة",
       "maxReached": "بلغت الحد الأقصى",
       "maxReachedDesc": "يمكنك مقارنة حتى 4 تشكيلات في المرة الواحدة"
     },
@@ -971,6 +971,8 @@
       "editTitle": "تعديل الأتمتة",
       "createDesc": "جدولة إجراء آلي",
       "actionType": "نوع الإجراء",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "التوقيت بالنسبة إلى الحدث",
       "offsetBefore": "قبل الحدث",
       "offsetAfter": "بعد الحدث",
@@ -1016,9 +1018,7 @@
         "roster_clear": "يزيل جميع الأعضاء دون حذف القائمة",
         "roster_archive": "يؤرشف القائمة ويجعلها للقراءة فقط"
       },
-      "infoBox": "تُشغّل الأتمتة نسبةً إلى وقت بدء الحدث. حدّد فارقًا زمنيًا، مثل ثلاثة أيام قبل الحدث، وسينفذ البوت الإجراء تلقائيًا، بما في ذلك الأحداث المتكررة.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "تُشغّل الأتمتة نسبةً إلى وقت بدء الحدث. حدّد فارقًا زمنيًا، مثل ثلاثة أيام قبل الحدث، وسينفذ البوت الإجراء تلقائيًا، بما في ذلك الأحداث المتكررة."
     },
     "groups": {
       "title": "مجموعات القوائم",
