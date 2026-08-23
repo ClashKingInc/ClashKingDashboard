@@ -59,7 +59,7 @@ export function LanguageSwitcher() {
                 className="object-cover"
               />
             </div>
-            {lang.name}
+            <span lang={lang.code}>{lang.name}</span>
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

@@ -49,7 +49,7 @@
     "openInGame": "Maak in die spel oop",
     "openChannelInDiscord": "Maak hierdie kanaal in Discord oop",
     "playerProfile": {
-      "clan": "Clan",
+      "clan": "Klan",
       "townHallLevel": "Stadsaalvlak",
       "trophies": "Trofees",
       "warPreference": "Oorlogsvoorkeur",
@@ -208,7 +208,7 @@
       "description": "Familierolle en byname"
     },
     "clans": {
-      "name": "Clans",
+      "name": "Klans",
       "description": "Bestuur jou clans"
     },
     "logs": {
@@ -585,7 +585,7 @@
       "avgTh": "Gem. TH",
       "avgHitrate": "Gem. Trefferkoers",
       "distribution": "Verdeling",
-      "clan": "Clan",
+      "clan": "Klan",
       "family": "Familie",
       "external": "Ekstern",
       "thDistribution": "TH-verdeling",
@@ -595,7 +595,7 @@
       "search": "Soek spanlyste...",
       "type": "Tik",
       "all": "Alles",
-      "clan": "Clan",
+      "clan": "Klan",
       "family": "Familie",
       "clear": "Maak skoon"
     },
@@ -614,12 +614,12 @@
       "aliasLabel": "Spanlysnaam",
       "aliasPlaceholder": "bv. CWL spanlys",
       "typeLabel": "Spanlystipe",
-      "typeClan": "Clan",
+      "typeClan": "Klan",
       "typeFamily": "Familie",
       "signupScopeLabel": "Aanmeldingsreeks",
       "scopeClanOnly": "Slegs clan",
       "scopeFamilyWide": "Familiewyd",
-      "clanLabel": "Clan",
+      "clanLabel": "Klan",
       "clanPlaceholder": "Kies 'n clan",
       "descriptionLabel": "Beskrywing (opsioneel)",
       "descriptionPlaceholder": "SpanlysBeskrywing...",
@@ -678,7 +678,7 @@
       "thRestriction": "Stadsaalvlak",
       "avgTh": "Gem. TH",
       "avgHitrate": "Gem. Trefferscore",
-      "clan": "Clan",
+      "clan": "Klan",
       "family": "Familie",
       "external": "Ekstern",
       "substitute": "PLAASVERVANGER",
@@ -689,7 +689,7 @@
       "thLevel": "Stadsaalvlak",
       "avgTh": "Gem. TH",
       "avgHitrate": "Gem. Trefferscore",
-      "clan": "Clan",
+      "clan": "Klan",
       "family": "Familie",
       "external": "Ekstern",
       "noRestriction": "Geen beperking nie",
@@ -1073,12 +1073,12 @@
       "restrictions": "Beperkings en limiete",
       "name": "Spanlysnaam",
       "rosterType": "Spanlystipe",
-      "typeClan": "Clan",
+      "typeClan": "Klan",
       "typeFamily": "Familie",
       "signupScope": "Aanmeldingsreeks",
       "scopeClanOnly": "Slegs clan",
       "scopeFamilyWide": "Familiewyd",
-      "clan": "Clan",
+      "clan": "Klan",
       "selectClan": "Kies 'n clan",
       "description": "Beskrywing",
       "descriptionPlaceholder": "Voer 'n Beskrywing in vir hierdie spanlys...",
@@ -1287,7 +1287,7 @@
     "filters": {
       "title": "Filtere",
       "description": "Filter oorlogstatistieke volgens verskillende kriteria",
-      "clan": "Clan",
+      "clan": "Klan",
       "allClans": "Alle clans",
       "townHall": "Stadsaal",
       "townHallShort": "SH",
@@ -1369,7 +1369,7 @@
       "title": "Clan-oorlogstatistieke",
       "description": "Gedetailleerde statistieke vir elke clan",
       "headers": {
-        "clan": "Clan",
+        "clan": "Klan",
         "status": "Status",
         "wars": "Oorloë",
         "record": "W/L/D",
@@ -1413,7 +1413,7 @@
     },
     "types": {
       "player": "Spelers",
-      "clan": "Clans"
+      "clan": "Klans"
     },
     "metrics": {
       "capital": {
@@ -1860,7 +1860,7 @@
       "forumPost": "forumplasing",
       "forumPostPlaceholder": "Kies 'n forumplasing",
       "forumPostRequired": "'n Forumplasing is verpligtend vir forumkanale.",
-      "clan": "Clan",
+      "clan": "Klan",
       "clanPlaceholder": "Kies clan",
       "customMessage": "Pasgemaakte boodskap",
       "customMessagePlaceholder": "Moenie vergeet om jou aanvalle te gebruik nie!",
@@ -1954,7 +1954,7 @@
       "placeholder": "Kies 'n clan"
     },
     "tabs": {
-      "clan": "Clan",
+      "clan": "Klan",
       "war": "Oorlog",
       "capital": "Kapitaal",
       "player": "Speler",

@@ -44,13 +44,13 @@ export function formatUsd(value: number, fractionDigits = 2): string {
   }).format(value);
 }
 
-function LanguageOption({ flagCode, name }: { readonly flagCode: string; readonly name: string }) {
+function LanguageOption({ flagCode, locale, name }: { readonly flagCode: string; readonly locale: SupportedLocale; readonly name: string }) {
   return (
     <span className="flex items-center gap-2">
       <span className="relative h-3.5 w-5 overflow-hidden rounded-sm">
         <Image src={`https://flagcdn.com/w40/${flagCode}.png`} alt="" fill sizes="20px" className="object-cover" />
       </span>
-      <span>{name}</span>
+      <span lang={locale}>{name}</span>
     </span>
   );
 }
@@ -224,7 +224,7 @@ export default function AccountSettingsPage() {
               <SelectTrigger id="account-language" className={FILLED_SELECT_CLASS}><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="browser">{t("appearance.browserLanguage")}</SelectItem>
-                {LANGUAGE_OPTIONS.map((language) => <SelectItem key={language.code} value={language.code}><LanguageOption flagCode={language.flagCode} name={language.name} /></SelectItem>)}
+                {LANGUAGE_OPTIONS.map((language) => <SelectItem key={language.code} value={language.code}><LanguageOption flagCode={language.flagCode} locale={language.code} name={language.name} /></SelectItem>)}
               </SelectContent>
             </Select>
           </label>

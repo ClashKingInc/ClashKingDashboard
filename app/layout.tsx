@@ -28,7 +28,7 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: MOBILE_PLATFORM_BOOTSTRAP }} />
         <link
           rel="preload"
-          href="/fonts/clashking.woff2?v=01f23070"
+          href="/fonts/clashking.woff2?v=4ab9fae1"
           as="font"
           type="font/woff2"
           crossOrigin="anonymous"

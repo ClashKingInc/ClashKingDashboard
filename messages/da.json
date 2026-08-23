@@ -41,7 +41,7 @@
     "description": "Beskrivelse",
     "createdAt": "Oprettet",
     "updatedAt": "Opdateret",
-    "dashboard": "Dashboard",
+    "dashboard": "Instrumentbræt",
     "loadError": "Kunne ikke indlæse data.",
     "tryAgain": "Prøv igen",
     "create": "Opret",
@@ -155,7 +155,7 @@
       },
       "bot": {
         "title": "Bot",
-        "dashboard": "Dashboard",
+        "dashboard": "Instrumentbræt",
         "inviteBot": "Inviter botten"
       },
       "resources": {
@@ -593,7 +593,7 @@
     },
     "filters": {
       "search": "Søg trupplaner...",
-      "type": "Type",
+      "type": "Klantype",
       "all": "Alle",
       "clan": "Klan",
       "family": "Familie",
@@ -1399,14 +1399,14 @@
     "comingSoon": "Denne funktion kommer snart. Kig forbi igen senere!",
     "stats": {
       "totalEntries": "Deltagelser i alt",
-      "type": "Type",
+      "type": "Klantype",
       "league": "Liga",
       "weekend": "Weekend"
     },
     "filters": {
       "title": "Filtre",
       "description": "Tilpas ranglistevisningen",
-      "type": "Type",
+      "type": "Klantype",
       "metric": "Måling",
       "league": "Liga",
       "weekend": "Weekend"
@@ -3301,7 +3301,7 @@
       "homeLabel": "ClashKing-startside",
       "mobileApp": "Mobilapp",
       "discordBot": "Discord-bot",
-      "dashboard": "Dashboard"
+      "dashboard": "Instrumentbræt"
     },
     "language": {
       "label": "Sprog"
@@ -3389,7 +3389,7 @@
       }
     },
     "dashboard": {
-      "title": "Dashboard",
+      "title": "Instrumentbræt",
       "intro": "Administrer trupplaner, påmindelser og serverindstillinger samlet ét sted.",
       "imageLabel": "Bygmesterhytte, der repræsenterer værktøjer til klanadministration",
       "imageAlt": "Bygmesterhytte niveau 8",

@@ -1331,7 +1331,7 @@
       "warTypeDistribution": {
         "title": "वॉर प्रकार वितरण",
         "description": "वॉर प्रकार के अनुसार विवरण",
-        "cwl": "CWL",
+        "cwl": "सीडब्ल्यूएल",
         "random": "यादृच्छिक",
         "friendly": "दोस्ताना"
       },
@@ -1380,7 +1380,7 @@
       },
       "status": {
         "inWar": "वॉर में",
-        "cwl": "CWL",
+        "cwl": "सीडब्ल्यूएल",
         "peace": "वॉर में नहीं"
       },
       "noData": "क्लैन आँकड़े उपलब्ध नहीं हैं। फ़िल्टर लागू करें या डेटा लोड होने की प्रतीक्षा करें।"
@@ -1869,7 +1869,7 @@
       "warTypes": "वॉर प्रकार",
       "random": "यादृच्छिक",
       "friendly": "दोस्ताना",
-      "cwl": "CWL",
+      "cwl": "सीडब्ल्यूएल",
       "pointThreshold": "अंक सीमा",
       "pointThresholdPlaceholder": "4000",
       "pointThresholdHelp": "उन लोगों को पिंग करेगा जिनके {threshold} से कम अंक हैं।",

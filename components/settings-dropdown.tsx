@@ -146,7 +146,7 @@ export function SettingsDropdown({
                     className="object-cover"
                   />
                 </div>
-                <span className={textClassName}>{lang.name}</span>
+                <span lang={lang.code} className={textClassName}>{lang.name}</span>
               </DropdownMenuItem>
             ))}
           </DropdownMenuSubContent>
