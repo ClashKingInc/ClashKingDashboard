@@ -420,7 +420,7 @@
       },
       "list": {
         "title": "Udelukkede spillere",
-        "count": "{count, plural, one {# spiller udelukket} other {# spillere udelukket}}",
+        "count": "{count} player{count, plural, one {} other {s}} banned",
         "searchPlaceholder": "Søg efter navn, tag eller årsag...",
         "noBansFound": "Ingen udelukkelser fundet",
         "noBans": "Ingen udelukkede spillere",
@@ -490,7 +490,7 @@
       },
       "list": {
         "title": "Spilleradvarsler",
-        "count": "{count, plural, one {# advarsel udstedt} other {# advarsler udstedt}}",
+        "count": "{count} strike{count, plural, one {} other {s}} issued",
         "searchPlaceholder": "Søg efter navn, tag eller årsag...",
         "noStrikesFound": "Ingen advarsler fundet",
         "noStrikes": "Ingen advarsler udstedt",
@@ -971,6 +971,8 @@
       "editTitle": "Rediger automatisering",
       "createDesc": "Planlæg en automatiseret handling",
       "actionType": "Handlingstype",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "Tid i forhold til begivenheden",
       "offsetBefore": "Før begivenheden",
       "offsetAfter": "Efter begivenheden",
@@ -1016,9 +1018,7 @@
         "roster_clear": "Fjerner alle medlemmer fra trupplanen uden at slette den",
         "roster_archive": "Arkiverer trupplanen og gør den skrivebeskyttet"
       },
-      "infoBox": "Automatiseringer udløses i forhold til begivenhedens starttidspunkt. Angiv en forskydning, f.eks. 3 dage før, så udfører botten automatisk handlingen på det tidspunkt – også ved gentagne begivenheder.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "Automatiseringer udløses i forhold til begivenhedens starttidspunkt. Angiv en forskydning, f.eks. 3 dage før, så udfører botten automatisk handlingen på det tidspunkt – også ved gentagne begivenheder."
     },
     "groups": {
       "title": "Trupplangrupper",
@@ -3082,8 +3082,8 @@
       "start": "Starter",
       "end": "Slutter",
       "winnersHeader": "Vindere",
-      "winners": "{count, plural, one {# vinder} other {# vindere}}",
-      "boosters": "{count, plural, one {# booster} other {# boostere}}",
+      "winners": "{count} winner{count, plural, one {} other {s}}",
+      "boosters": "{count} booster{count, plural, one {} other {s}}",
       "noChannel": "Ingen kanal",
       "noChannelHelp": "Ingen kanal tildelt. Rediger giveawayen for at rette det.",
       "endsAt": "Slutter kl.",
@@ -3195,7 +3195,7 @@
       "notScheduled": "Ikke planlagt",
       "schedule": "Tidsplan",
       "endMessage": "Vinderbesked",
-      "endSummary": "{winners, plural, one {# vinder bliver annonceret her.} other {# vindere bliver annonceret her.}}",
+      "endSummary": "{winners} winner{winners, plural, one {} other {s}} will be announced here.",
       "totalParticipants": "Deltagere i alt: {count}",
       "participate": "Deltag",
       "buttonHint": "Den primære handlingsknap vises under Discord-indlægget."
