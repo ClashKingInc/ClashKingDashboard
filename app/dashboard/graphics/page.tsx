@@ -40,7 +40,7 @@ function DesktopRequired() {
 
 function EditorLoading() {
   return (
-    <div className="flex h-full min-h-[calc(100dvh-4.5rem)] flex-col gap-3 p-4" aria-busy="true">
+    <div className="flex h-full min-h-[calc(100dvh-4.5rem)] flex-col gap-3 p-4 md:p-6" aria-busy="true">
       <Skeleton className="h-12 w-full rounded-xl" />
       <Skeleton className="min-h-0 flex-1 rounded-xl" />
     </div>

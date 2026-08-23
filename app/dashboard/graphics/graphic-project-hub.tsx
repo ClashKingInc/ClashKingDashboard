@@ -36,10 +36,10 @@ export function GraphicProjectHub({ projects, onCreate, onOpen, onDelete }: {
   };
 
   return (
-    <div className="h-full overflow-y-auto bg-background">
-      <div className="mx-auto max-w-6xl px-6 py-10 lg:px-10">
+    <div className="h-full overflow-y-auto bg-background p-4 md:p-6">
+      <div className="mx-auto max-w-7xl">
         <div className="flex flex-wrap items-end justify-between gap-4">
-          <div><h1 className="text-3xl font-bold">Graphics</h1><p className="mt-1 text-sm text-muted-foreground">Create reusable player, clan, and war graphics from structured data.</p></div>
+          <div><h1 className="text-2xl font-bold md:text-3xl">Graphics</h1><p className="mt-1 text-muted-foreground">Create reusable player, clan, and war graphics from structured data.</p></div>
           <Button onClick={() => setCreateOpen(true)}><Plus />New graphic</Button>
         </div>
 
