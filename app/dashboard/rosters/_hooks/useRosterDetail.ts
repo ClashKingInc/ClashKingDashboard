@@ -7,7 +7,6 @@ import type {
   ClanMember,
   RosterAutomation,
   RosterGroup,
-  SignupCategory,
   MissingMembersResult,
   DiscordChannel,
 } from '../_lib/types';
@@ -21,7 +20,6 @@ interface UseRosterDetailResult {
   serverMembers: ClanMember[];
   automations: RosterAutomation[];
   groups: RosterGroup[];
-  categories: SignupCategory[];
   channels: DiscordChannel[];
   missingMembers: MissingMembersResult | null;
 
@@ -29,7 +27,6 @@ interface UseRosterDetailResult {
   loading: boolean;
   loadingAutomations: boolean;
   loadingGroups: boolean;
-  loadingCategories: boolean;
   loadingChannels: boolean;
   loadingMissingMembers: boolean;
   loadingServerMembers: boolean;
@@ -44,8 +41,8 @@ interface UseRosterDetailResult {
   addMembers: (tags: string[]) => Promise<void>;
   removeMember: (tag: string) => Promise<void>;
   clearMembers: () => Promise<void>;
-  updateMemberCategory: (memberTag: string, categoryId: string | null) => Promise<void>;
   refreshMember: (memberTag: string) => Promise<void>;
+  refreshDiscordIdentity: (memberTag: string) => Promise<void>;
   loadMissingMembers: (groupId?: string) => Promise<void>;
   loadServerMembers: () => Promise<void>;
 
@@ -59,10 +56,6 @@ interface UseRosterDetailResult {
   updateGroup: (groupId: string, data: Partial<RosterGroup>) => Promise<void>;
   deleteGroup: (groupId: string) => Promise<void>;
 
-  // Category actions
-  createCategory: (alias: string) => Promise<SignupCategory>;
-  updateCategory: (categoryId: string, data: Partial<SignupCategory>) => Promise<void>;
-  deleteCategory: (categoryId: string) => Promise<void>;
 }
 
 export function useRosterDetail(rosterId: string, serverId: string): UseRosterDetailResult {
@@ -77,7 +70,6 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
   const [serverMembers, setServerMembers] = useState<ClanMember[]>([]);
   const [automations, setAutomations] = useState<RosterAutomation[]>([]);
   const [groups, setGroups] = useState<RosterGroup[]>([]);
-  const [categories, setCategories] = useState<SignupCategory[]>([]);
   const [channels, setChannels] = useState<DiscordChannel[]>([]);
   const [missingMembers, setMissingMembers] = useState<MissingMembersResult | null>(null);
 
@@ -85,7 +77,6 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
   const [loading, setLoading] = useState(true);
   const [loadingAutomations, setLoadingAutomations] = useState(false);
   const [loadingGroups, setLoadingGroups] = useState(false);
-  const [loadingCategories, setLoadingCategories] = useState(false);
   const [loadingChannels, setLoadingChannels] = useState(false);
   const [loadingMissingMembers, setLoadingMissingMembers] = useState(false);
   const [loadingServerMembers, setLoadingServerMembers] = useState(false);
@@ -106,20 +97,20 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
 
     let clanTag: string | null | undefined;
     try {
-      const [rosterData, clansData] = await Promise.all([
-        api.fetchRoster(rosterId, serverId),
-        api.fetchClans(serverId),
-      ]);
-
+      const rosterData = await api.fetchRoster(rosterId, serverId);
       setRoster(rosterData);
       groupIdRef.current = rosterData.group_id ?? null;
-      setClans(clansData);
       clanTag = rosterData.clan_tag;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load roster');
     } finally {
       setLoading(false);
     }
+
+    // Clan configuration is useful context, but it is not evidence that the
+    // roster exists. An interrupted clan request must not discard a roster
+    // that the roster endpoint already returned.
+    api.fetchClans(serverId).then(setClans).catch(() => setClans([]));
 
     // Fetch clan members separately — calls an external proxy (proxy.clashk.ing)
     // not routed through Next.js, so a failure must not block the page.
@@ -168,19 +159,6 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
     }
   }, [serverId]);
 
-  // Load categories
-  const loadCategories = useCallback(async () => {
-    setLoadingCategories(true);
-    try {
-      const data = await api.fetchCategories(serverId);
-      setCategories(data);
-    } catch (err) {
-      console.error('[useRosterDetail] Failed to load categories:', err);
-    } finally {
-      setLoadingCategories(false);
-    }
-  }, [serverId]);
-
   // Load Discord channels
   const loadChannels = useCallback(async () => {
     if (channelsLoadedRef.current) return;
@@ -200,9 +178,8 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
   useEffect(() => {
     loadData();
     loadGroups();
-    loadCategories();
     loadChannels();
-  }, [loadData, loadGroups, loadCategories, loadChannels]);
+  }, [loadData, loadGroups, loadChannels]);
 
   const rosterGroupId = roster?.group_id;
 
@@ -255,20 +232,6 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
     });
   }, [rosterId, serverId]);
 
-  // Update member category
-  const updateMemberCategory = useCallback(async (memberTag: string, categoryId: string | null) => {
-    await api.updateMemberCategory(rosterId, serverId, memberTag, categoryId);
-    setRoster(prev => {
-      if (!prev) return null;
-      return {
-        ...prev,
-        members: prev.members?.map(m =>
-          m.tag === memberTag ? { ...m, signup_group: categoryId } : m
-        ),
-      };
-    });
-  }, [rosterId, serverId]);
-
   // Refresh single member
   const refreshMember = useCallback(async (memberTag: string) => {
     const updated = await api.refreshRosterMember(rosterId, serverId, memberTag);
@@ -279,6 +242,14 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
         members: prev.members?.map(m => m.tag === memberTag ? { ...m, ...updated } : m),
       };
     });
+  }, [rosterId, serverId]);
+
+  const refreshDiscordIdentity = useCallback(async (memberTag: string) => {
+	const updated = await api.refreshRosterDiscordIdentity(rosterId, serverId, memberTag);
+	setRoster(prev => prev ? {
+		...prev,
+		members: prev.members?.map(member => member.tag === memberTag ? { ...member, ...updated } : member),
+	} : null);
   }, [rosterId, serverId]);
 
   // Load missing members (for current roster or its group)
@@ -344,23 +315,6 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
     setGroups(prev => prev.filter(g => g.group_id !== groupId));
   }, [serverId]);
 
-  // Category actions
-  const createCategory = useCallback(async (alias: string): Promise<SignupCategory> => {
-    const created = await api.createCategory(serverId, alias);
-    await loadCategories();
-    return created;
-  }, [serverId, loadCategories]);
-
-  const updateCategory = useCallback(async (categoryId: string, data: Partial<SignupCategory>) => {
-    await api.updateCategory(categoryId, serverId, data);
-    await loadCategories();
-  }, [serverId, loadCategories]);
-
-  const deleteCategory = useCallback(async (categoryId: string) => {
-    await api.deleteCategory(categoryId, serverId);
-    setCategories(prev => prev.filter(c => c.custom_id !== categoryId));
-  }, [serverId]);
-
   return {
     // Data
     roster,
@@ -369,7 +323,6 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
     serverMembers,
     automations,
     groups,
-    categories,
     channels,
     missingMembers,
 
@@ -377,7 +330,6 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
     loading,
     loadingAutomations,
     loadingGroups,
-    loadingCategories,
     loadingChannels,
     loadingMissingMembers,
     loadingServerMembers,
@@ -392,8 +344,8 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
     addMembers,
     removeMember,
     clearMembers,
-    updateMemberCategory,
     refreshMember,
+    refreshDiscordIdentity,
     loadMissingMembers,
     loadServerMembers,
 
@@ -407,9 +359,5 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
     updateGroup,
     deleteGroup,
 
-    // Category actions
-    createCategory,
-    updateCategory,
-    deleteCategory,
   };
 }

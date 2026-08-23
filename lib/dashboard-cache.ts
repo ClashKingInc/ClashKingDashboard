@@ -76,5 +76,15 @@ export function normalizeDiscordRolesPayload(payload: unknown): DiscordRolesResp
 
 export function normalizeServerSettingsPayload(payload: unknown): ServerSettings | null {
   const unwrapped = unwrapApiData<unknown>(payload);
-  return unwrapped && typeof unwrapped === "object" ? (unwrapped as ServerSettings) : null;
+  if (!unwrapped || typeof unwrapped !== "object") {
+    return null;
+  }
+
+  const settings = { ...(unwrapped as ServerSettings & { embed_color?: number | string }) };
+  if (settings.embed_color !== undefined) {
+    const embedColor = Number(settings.embed_color);
+    if (Number.isFinite(embedColor)) settings.embed_color = embedColor;
+    else delete settings.embed_color;
+  }
+  return settings as ServerSettings;
 }

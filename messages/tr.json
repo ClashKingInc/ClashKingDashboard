@@ -79,7 +79,8 @@
     "lightTheme": "Açık tema",
     "darkTheme": "Koyu tema",
     "language": "Dil",
-    "browserLanguage": "Tarayıcı dili"
+    "browserLanguage": "Tarayıcı dili",
+    "accountSettings": "Account settings"
   },
   "HomePage": {
     "badge": "{serverCount}+ sunucu ClashKing kullanıyor",
@@ -271,10 +272,17 @@
       "clanManagement": "Klan Yönetimi",
       "playerManagement": "Oyuncu Yönetimi",
       "automation": "Otomasyon",
-      "statistics": "İstatistikler"
+      "statistics": "İstatistikler",
+      "general": "General",
+      "serverManagement": "Server Management"
     },
     "switchServer": "Sunucu değiştir",
-    "goHome": "Ana sayfa"
+    "goHome": "Ana sayfa",
+    "graphics": {
+      "name": "Graphics",
+      "description": "Dynamic image templates"
+    },
+    "inactiveServer": "Tracking is disabled for this server"
   },
   "BasesPage": {
     "eyebrow": "Klan Yönetimi",
@@ -545,6 +553,24 @@
       "errorAddingStrike": "Uyarı eklenemedi",
       "errorRemovingBan": "Yasaklama kaldırılamadı",
       "errorRemovingStrike": "Uyarı kaldırılamadı"
+    },
+    "image": {
+      "label": "Evidence image URL (optional)",
+      "placeholder": "https://example.com/evidence.png",
+      "help": "Attach one publicly accessible image to this record.",
+      "invalid": "Enter a valid http or https image URL.",
+      "view": "View evidence"
+    },
+    "sort": {
+      "label": "Sort records",
+      "newest": "Newest first",
+      "oldest": "Oldest first",
+      "player": "Player name",
+      "reason": "Reason",
+      "moderator": "Moderator",
+      "weight": "Highest weight",
+      "count": "Most strikes",
+      "recent": "Most recent strike"
     }
   },
   "RostersPage": {
@@ -674,7 +700,13 @@
       "moveToGroup": "Gruba taşı",
       "clone": "Kopyala",
       "allRosters": "Tüm Listeler",
-      "manageRosters": "Savaş listelerinizi ve kadrolarınızı yönetin"
+      "manageRosters": "Savaş listelerinizi ve kadrolarınızı yönetin",
+      "rename": "Rename {name}",
+      "actions": "Actions for {name}",
+      "renameInput": "Roster name",
+      "renameSave": "Save roster name",
+      "renameCancel": "Cancel rename",
+      "renameSuccess": "Renamed roster to {name}"
     },
     "memberColumns": {
       "name": "Ad",
@@ -759,7 +791,8 @@
       "cancel": "İptal",
       "cloning": "Kopyalanıyor...",
       "clone": "Listeyi kopyala",
-      "copyMembersHint": "Üyeler orijinal listeden kopyalanır"
+      "copyMembersHint": "Üyeler orijinal listeden kopyalanır",
+      "successDesc": "Roster “{name}” was created."
     },
     "missingMembers": {
       "title": "Eksik Üyeler",
@@ -906,7 +939,20 @@
       "dragToMoveCategory": "Üyeleri listeler ve kategoriler arasında sürükleyin",
       "categoryChanged": "Kategori değiştirildi",
       "categoryChangedDesc": "{name}, {category} kategorisine taşındı",
-      "uncategorized": "Kategorisiz"
+      "uncategorized": "Kategorisiz",
+      "description": "Drag players between rosters to move them.",
+      "back": "Back to rosters",
+      "unknownError": "An unknown error occurred",
+      "memberCount": "{count, plural, one {# member} other {# members}}",
+      "dragPlayer": "Drag {name}",
+      "townHallAlt": "Town Hall {level}",
+      "duplicate": "This player appears in multiple rosters",
+      "dropHere": "Drop a player here",
+      "status": {
+        "clan": "Clan",
+        "family": "Family",
+        "external": "External"
+      }
     },
     "ungrouped": "Gruplandırılmamış",
     "automations": {
@@ -970,7 +1016,9 @@
         "roster_clear": "Listeyi silmeden tüm üyeleri kaldırır",
         "roster_archive": "Listeyi arşivleyip salt okunur hâle getirir"
       },
-      "infoBox": "Otomasyonlar etkinliğin başlangıç zamanına göre tetiklenir. Bir zaman farkı belirlediğinizde (ör. 3 gün önce) bot, yinelenen etkinlikler de dâhil olmak üzere işlemi o anda otomatik olarak yürütür."
+      "infoBox": "Otomasyonlar etkinliğin başlangıç zamanına göre tetiklenir. Bir zaman farkı belirlediğinizde (ör. 3 gün önce) bot, yinelenen etkinlikler de dâhil olmak üzere işlemi o anda otomatik olarak yürütür.",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time."
     },
     "groups": {
       "title": "Liste grupları",
@@ -1065,6 +1113,52 @@
       "categoriesManagedByGroup": "Kayıt kategorileri grup düzeyinde yönetilir. Bu gruptaki tüm listelerde kullanılabilecek kategorileri yapılandırmak için Listeler sayfasındaki grup ayarlarını açın.",
       "saving": "Kaydediliyor...",
       "save": "Ayarları kaydet"
+    },
+    "aiBuilder": {
+      "button": "Roster Assistant",
+      "new": "New",
+      "title": "Roster Assistant",
+      "description": "Build and save reusable roster views with natural language."
+    },
+    "cwlBonuses": {
+      "button": "CWL Bonuses",
+      "title": "CWL Bonuses",
+      "description": "Calculate and assign the available seasonal bonus awards.",
+      "back": "Back to rosters",
+      "clan": "Clan",
+      "selectClan": "Select a clan",
+      "searchClans": "Search clans",
+      "noClanFound": "No clan found",
+      "season": "Season",
+      "noStoredSeasons": "No stored seasons",
+      "unknownLeague": "Unknown league",
+      "unrankedLeague": "Unranked CWL league",
+      "loading": "Loading stored CWL data…",
+      "loadClansError": "Failed to load configured clans.",
+      "loadMedalRulesError": "Failed to load CWL medal rules.",
+      "loadDataError": "Failed to load CWL data.",
+      "league": "League",
+      "rank": "Rank",
+      "warsWon": "Wars won",
+      "leagueMedals": "League medals",
+      "bonusSlots": "Bonus slots",
+      "movement": {
+        "promoted": "Promotion position",
+        "demoted": "Demotion position",
+        "unchanged": "League unchanged"
+      },
+      "incomplete": "The stored group is incomplete. Every war must be stored and ended before bonuses can be assigned.",
+      "awardBonuses": "Award bonuses",
+      "selectionSummary": "{selected}/{total} selected · {medals} medals each",
+      "selectionLocked": "Selection unlocks when the stored group is complete.",
+      "ready": "Ready to save",
+      "chooseMore": "{count, plural, one {Choose # more recipient.} other {Choose # more recipients.}}",
+      "save": "Save bonuses",
+      "saved": "CWL bonus recipients saved",
+      "townHallAlt": "Town Hall {level}",
+      "stars": "{count, plural, one {# star} other {# stars}}",
+      "attacks": "{count, plural, one {# attack} other {# attacks}}",
+      "noPlayers": "No players are available for this CWL season."
     }
   },
   "LinksPage": {
@@ -1324,7 +1418,7 @@
     "metrics": {
       "capital": {
         "player": {
-      "capitalLooted": "Yağmalanan Başkent ganimeti"
+          "capitalLooted": "Yağmalanan Başkent ganimeti"
         },
         "clan": {
           "capitalTotalLoot": "Toplam Ganimet",
@@ -1439,8 +1533,14 @@
         "preview": "Silme önizlemesi yüklenemedi.",
         "delete": "Klan kategorisi silinemedi.",
         "refresh": "Kategori değiştirildi, ancak güncel kategori veya klan durumu yüklenemedi.",
-        "invalidName": "Boş olmayan, en fazla 64 karakterlik ve denetim karakteri içermeyen bir ad kullanın."
-      }
+        "invalidName": "Boş olmayan, en fazla 64 karakterlik ve denetim karakteri içermeyen bir ad kullanın.",
+        "reorder": "Failed to save the category order."
+      },
+      "manage": "Manage categories",
+      "uncategorized": "Uncategorized",
+      "sectionCount": "{count, plural, one {# clan} other {# clans}}",
+      "reorderAction": "Reorder {name}",
+      "reordered": "Category order saved."
     },
     "fieldHelp": {
       "infoButtonLabel": "Daha fazla bilgi göster",
@@ -1469,7 +1569,19 @@
       "countdownEnabled": "Geri sayım ses kanalı oluşturuldu",
       "countdownDisabled": "Geri sayım ses kanalı kaldırıldı",
       "errorTogglingCountdown": "Geri sayım değiştirilemedi"
-    }
+    },
+    "listTitle": "Connected clans",
+    "memberSummary": "{count, plural, one {# member} other {# members}}",
+    "memberCount": "{count}/50 members",
+    "searchLabel": "Search clans",
+    "searchPlaceholder": "Search by name, tag, or category",
+    "noSearchResults": "No clans match this search.",
+    "unknownClan": "Unknown clan",
+    "badgeAlt": "{name} clan badge",
+    "addedOn": "Added to this server {date}",
+    "addedOnLabel": "Show when {name} was added",
+    "configureClanLabel": "Configure {name}",
+    "deleteClan": "Delete clan"
   },
   "RolesPage": {
     "title": "Rol yönetimi",
@@ -1504,7 +1616,8 @@
       "builderLeague": "İnşaatçı Ligi",
       "achievement": "Başarım",
       "status": "Discord kıdem",
-      "familyPosition": "Aile konumu"
+      "familyPosition": "Aile konumu",
+      "clanCategory": "Clan Category"
     },
     "familyPositions": {
       "member": "Üye",
@@ -1712,7 +1825,11 @@
       "addCapitalReminder": "Başkent hatırlatıcısı ekle",
       "addClanGamesReminder": "Klan Oyunları hatırlatıcısı ekle",
       "addInactivityReminder": "Etkin olmama hatırlatıcısı ekle",
-      "retry": "Yeniden dene"
+      "retry": "Yeniden dene",
+      "clone": "Clone reminder",
+      "edit": "Edit reminder",
+      "delete": "Delete reminder",
+      "more": "Reminder actions"
     },
     "clanSelector": {
       "label": "Klan:",
@@ -1759,7 +1876,11 @@
       "attackThreshold": "Saldırı eşiği",
       "attackThresholdPlaceholder": "1",
       "attackThresholdHelp": "{threshold} veya daha fazla saldırı hakkı kalan kişileri etiketler.",
-      "notSet": "Ayarlanmamış"
+      "notSet": "Ayarlanmamış",
+      "pointsValue": "{count} points",
+      "attacksValue": "{count, plural, one {1 attack remaining} other {# attacks remaining}}",
+      "customImageAlt": "Custom reminder image",
+      "customGifTitle": "Custom reminder GIF"
     },
     "dialog": {
       "addTitle": "Yeni hatırlatıcı ekle",
@@ -1788,7 +1909,31 @@
       "invalidDestination": "Seçilen iş parçacığı bu kanala ait değil.",
       "timeExceedsLimit": "Kalan süre {min} ile {max} saat arasında olmalıdır",
       "pointThresholdInvalid": "Puan eşiği {min} ile {max} arasında olmalıdır",
-      "attackThresholdInvalid": "Saldırı eşiği {min} ile {max} arasında olmalıdır"
+      "attackThresholdInvalid": "Saldırı eşiği {min} ile {max} arasında olmalıdır",
+      "reminderCloned": "Reminder cloned successfully",
+      "failedToClone": "Failed to clone reminder"
+    },
+    "section": {
+      "title": "Configured reminders",
+      "description": "Filter by clan, then choose a reminder type to review or change its delivery."
+    },
+    "issues": {
+      "title": "{count, plural, one {1 reminder needs attention} other {# reminders need attention}}",
+      "description": "These reminders point to a channel, thread, or forum post that is no longer available.",
+      "channelMissing": "Channel {channelId} was deleted or is unavailable",
+      "threadMissing": "Thread or forum post was deleted or is unavailable",
+      "showDetails": "Show details",
+      "hideDetails": "Hide details",
+      "review": "Review"
+    },
+    "clone": {
+      "title": "Clone reminder",
+      "description": "Choose a different clan. The time, channel, message, and all other settings will stay the same.",
+      "targetClan": "New clan",
+      "selectClan": "Select a different clan",
+      "noOtherClans": "Add another clan to this server before cloning this reminder.",
+      "action": "Clone reminder",
+      "cloning": "Cloning..."
     }
   },
   "LogsPage": {
@@ -1813,7 +1958,8 @@
       "war": "Savaş",
       "capital": "Başkent",
       "player": "Oyuncu",
-      "server": "Sunucu"
+      "server": "Sunucu",
+      "countdowns": "Countdowns"
     },
     "clanLogs": {
       "joinLog": {
@@ -1951,6 +2097,73 @@
       "on": "Açık",
       "off": "Kapalı",
       "example": "örnek"
+    },
+    "source": {
+      "title": "Choose what you're configuring",
+      "description": "Select a Clan for clan-specific logs & setup or the server for server-wide logs & setup",
+      "label": "Server or clan",
+      "placeholder": "Select a server or clan",
+      "searchPlaceholder": "Search server or clans",
+      "serverDescription": "Logs, countdowns, and join panel",
+      "serverFallback": "This server"
+    },
+    "scope": {
+      "clan": "Clan",
+      "server": "Server",
+      "serverTitle": "Server logs",
+      "serverDescription": "These feeds apply to the whole Discord server and do not change with the selected clan."
+    },
+    "issues": {
+      "title": "{count, plural, one {1 destination needs attention} other {# destinations need attention}}",
+      "description": "These enabled logs point to a channel, thread, or forum post that is no longer available.",
+      "serverScope": "Server-wide",
+      "channelMissing": "Channel {channelId} was deleted or is unavailable",
+      "threadMissing": "Thread or forum post was deleted or is unavailable",
+      "showDetails": "Show details",
+      "hideDetails": "Hide details",
+      "review": "Review"
+    },
+    "emptyClans": "Add a clan to this server before configuring clan logs.",
+    "serverTabs": {
+      "logs": "Logs",
+      "countdowns": "Countdowns",
+      "joinPanel": "Join panel"
+    },
+    "countdowns": {
+      "loadError": "Failed to load countdowns.",
+      "updateError": "Failed to update the countdown.",
+      "empty": "No countdown types are available.",
+      "toggle": "Toggle {name}",
+      "types": {
+        "clan_games_timer": {
+          "label": "Clan Games",
+          "description": "Show the time remaining in Clan Games in a voice channel."
+        },
+        "cwl_timer": {
+          "label": "Clan War League",
+          "description": "Show the time remaining in Clan War League in a voice channel."
+        },
+        "raid_weekend_timer": {
+          "label": "Raid Weekend",
+          "description": "Show the time remaining in Raid Weekend in a voice channel."
+        },
+        "season_end_timer": {
+          "label": "Season end",
+          "description": "Show the time remaining in the current season in a voice channel."
+        },
+        "season_day_timer": {
+          "label": "Season day",
+          "description": "Show the current season day in a voice channel."
+        },
+        "war_score": {
+          "label": "War score",
+          "description": "Show this clan's current war score in a voice channel."
+        },
+        "war_timer": {
+          "label": "War timer",
+          "description": "Show the time remaining in this clan's current war in a voice channel."
+        }
+      }
     }
   },
   "GeneralPage": {
@@ -2005,7 +2218,28 @@
       "description": "Erişimi ve doğrulamayı yönetin",
       "fullWhitelistRole": "Tam izinli rol",
       "fullWhitelistRoleDesc": "Tüm izin denetimlerini atlayarak bot komutlarına tam erişim sağlayan Discord rolü",
-      "noRole": "Rol yok"
+      "noRole": "Rol yok",
+      "dashboardAccess": {
+        "title": "Dashboard access",
+        "description": "Give Discord roles view or management access to specific dashboard sections. Multiple roles combine.",
+        "loadError": "Could not load dashboard access",
+        "retry": "Retry",
+        "selectRole": "Select a Discord role",
+        "addRole": "Add role",
+        "empty": "No dashboard roles have been added.",
+        "removeRole": "Remove {role}",
+        "levels": {
+          "none": "No access",
+          "view": "View",
+          "manage": "Manage"
+        },
+        "status": {
+          "saving": "Saving",
+          "saved": "Saved",
+          "pending": "Pending changes",
+          "error": "Not saved"
+        }
+      }
     },
     "familyRoles": {
       "title": "Aile rolleri",
@@ -2085,7 +2319,10 @@
         "playerClan": "Klan adı",
         "playerLeague": "Lig",
         "playerClanAbbr": "Klan kısaltması"
-      }
+      },
+      "autocompleteHint": "Type an opening brace to insert a placeholder",
+      "pending": "Waiting to save",
+      "saved": "Saved"
     },
     "familyRoles": {
       "title": "Aile rolleri",
@@ -2140,7 +2377,21 @@
     "loadingWarStats": "Neredeyse hazır..."
   },
   "LoginPage": {
-    "redirecting": "Discord’a yönlendiriliyor..."
+    "redirecting": "Discord’a yönlendiriliyor...",
+    "dashboardLabel": "Dashboard",
+    "eyebrow": "ClashKing Dashboard",
+    "title": "Welcome, Chief.",
+    "subtitle": "Sign in to manage your Discord servers, configure ClashKing, and keep your clan running smoothly.",
+    "continueWithDiscord": "Continue with Discord",
+    "checkingSession": "Checking your session...",
+    "openingDiscord": "Opening Discord...",
+    "helper": "Discord confirms who you are. ClashKing never sees or stores your Discord password.",
+    "artCaption": "Your command center awaits",
+    "backToHome": "Back to ClashKing",
+    "footer": "Built for clans that mean business.",
+    "legalLabel": "Legal links",
+    "privacy": "Privacy",
+    "terms": "Terms"
   },
   "FeaturesPage": {
     "hero": {
@@ -2257,6 +2508,19 @@
     "whySupport": {
       "title": "Neden bizi desteklemelisiniz?",
       "description": "Her katkı doğrudan sunucu maliyetlerine ve API ücretlerine gider. İçerik üreticisi kodumuzu kullanmak size ek ücret getirmez, bize büyük destek olur!"
+    },
+    "subscription": {
+      "title": "Support the project and unlock more",
+      "price": "$6.99 / month",
+      "perks": {
+        "notifications": "Notifications for up to 10 bookmarked players",
+        "credit": "$5 of AI assistant usage every month",
+        "botProfile": "Customize the bot's name and profile picture",
+        "autoBoards": "Increase a server from {freeLimit} to {paidLimit} AutoBoards",
+        "crossPlatform": "One subscription across dashboard and mobile"
+      },
+      "cta": "Sign in to subscribe",
+      "ctaDashboard": "View subscription"
     }
   },
   "ServersPage": {
@@ -2277,6 +2541,16 @@
     "noServers": {
       "title": "Sunucu bulunamadı",
       "description": "Sahibi veya yöneticisi olduğunuz bir Discord sunucusu bulunamadı."
+    },
+    "inactive": {
+      "tooltip": "Tracking disabled after 90 days of inactivity",
+      "title": "Re-enable server tracking?",
+      "description": "Automations and server tracking were disabled because this server has been inactive for more than 90 days.",
+      "lastUsed": "Last command: {date}",
+      "unknown": "No command history",
+      "cancel": "Not now",
+      "confirm": "Re-enable",
+      "reactivating": "Re-enabling..."
     }
   },
   "AutoboardsPage": {
@@ -2293,7 +2567,8 @@
     "metrics": {
       "total": "Yapılandırılmış",
       "refresh": "Tabloları yenile",
-      "send": "Planlanmış gönderimler"
+      "send": "Planlanmış gönderimler",
+      "remaining": "available"
     },
     "filters": {
       "all": "Tümü"
@@ -2412,6 +2687,11 @@
       "load": "Otomatik tablolar yüklenemedi.",
       "save": "Otomatik tablo kaydedilemedi.",
       "delete": "Otomatik tablo silinemedi."
+    },
+    "entitlement": {
+      "title": "Every server includes {freeLimit} AutoBoards",
+      "description": "Assign a subscription to this server to unlock up to {paidLimit}. Multiple subscriptions do not increase that limit.",
+      "current": "This server currently allows {limit} AutoBoards."
     }
   },
   "TicketsSettingsPage": {
@@ -2557,7 +2837,13 @@
     "noEmbedsHint": "Burada bir embed oluşturup ardından bir panele veya düğmeye atayın.",
     "legacyEmbed": "Bot üzerinden oluşturuldu — düzenlemeyi etkinleştirmek için bir Discohook URL'si yapıştırın.",
     "invalidDiscohookUrl": "Geçersiz URL. Bir Discohook sayfa URL'si (discohook.app/?data=... veya discohook.app/?share=...) yapıştırın.",
-    "tabEmbeds": "Embedler"
+    "tabEmbeds": "Embedler",
+    "configurePanel": "Configure",
+    "configurePanelDescription": "Manage the panel message, buttons, pre-written messages, categories, and logs.",
+    "categoryCoverage": "{configured}/{total} categories",
+    "logCoverage": "{configured}/{total} logs",
+    "panelPreview": "Discord preview",
+    "panelPreviewHint": "This combines the selected panel embed and ticket buttons so you can review what members will see before configuring it."
   },
   "EmbedsPage": {
     "title": "Embedler",
@@ -2735,7 +3021,9 @@
       "Green": "Yeşil",
       "Grey": "Gri",
       "Red": "Kırmızı"
-    }
+    },
+    "joinPanelTitle": "Join panel",
+    "enabled": "Enable join panel"
   },
   "GiveawaysPage": {
     "title": "Çekilişler",
@@ -2753,7 +3041,8 @@
       "general": "Genel",
       "messages": "Mesajlar",
       "restrictions": "Kısıtlamalar",
-      "advanced": "Gelişmiş"
+      "advanced": "Gelişmiş",
+      "winners": "Winners"
     },
     "tabs": {
       "ongoing": "Devam eden",
@@ -2808,7 +3097,10 @@
       "viewInDiscord": "Discord’da görüntüle",
       "reroll": "Kazananları yeniden çek",
       "rerolledCount": "{count, plural, one {# yeniden çekildi} other {# yeniden çekildi}}",
-      "viewEntries": "Katılımları görüntüle"
+      "viewEntries": "Katılımları görüntüle",
+      "viewGiveaway": "View giveaway",
+      "editGiveaway": "Edit giveaway",
+      "moreActions": "More giveaway actions"
     },
     "entries": {
       "description": "Katılımcıların ve kazanma olasılıklarının listesi.",
@@ -2925,6 +3217,14 @@
       "description": "Değiştirilecek kazananları seçin. Yeni kazananlar uygun katılımcılar arasından seçilir.",
       "selectWinners": "Değiştirilecek kazananları seçin:",
       "confirm": "Yeniden çek {count, plural, one {# kazanan} other {# kazananlar}}"
+    },
+    "winners": {
+      "description": "Select a winner to copy their Discord ID or open their Discord profile.",
+      "current": "Current winners",
+      "rerolled": "Rerolled winners",
+      "onServer": "On server",
+      "notOnServer": "Not on server",
+      "none": "No winners have been recorded."
     }
   },
   "OverviewPage": {
@@ -3016,7 +3316,12 @@
       "addClashKing": "ClashKing’i ekle",
       "openDashboard": "Kontrol panelini aç",
       "joinTestFlight": "TestFlight’a katıl",
-      "getAndroidApp": "Android uygulamasını indir"
+      "getAndroidApp": "Android uygulamasını indir",
+      "login": "Log in",
+      "dashboard": "Dashboard",
+      "iosApp": "iOS app",
+      "androidApp": "Android app",
+      "addDiscordBot": "Add Discord bot"
     },
     "hero": {
       "phrases": {
@@ -3134,5 +3439,76 @@
       "heading": "Hizmet Şartları",
       "eyebrow": "ClashKing yasal bilgileri"
     }
+  },
+  "AccountSettings": {
+    "title": "Account settings",
+    "description": "Manage your ClashKing profile, preferences, usage, and subscription.",
+    "retry": "Retry",
+    "profile": {
+      "title": "Profile",
+      "description": "The identity attached to your ClashKing account.",
+      "discord": "Discord",
+      "account": "ClashKing",
+      "synced": "Your name and profile picture are synced from Discord.",
+      "local": "This profile is managed by your ClashKing account."
+    },
+    "appearance": {
+      "title": "Appearance & language",
+      "description": "Choose how the dashboard looks and which language it uses.",
+      "theme": "Theme",
+      "themes": {
+        "system": "System",
+        "light": "Light",
+        "dark": "Dark"
+      },
+      "language": "Language",
+      "browserLanguage": "Use browser language"
+    },
+    "usage": {
+      "title": "AI assistant usage",
+      "serverDescription": "Usage for the selected Discord server this month.",
+      "serverName": "Usage for {name} this month.",
+      "accountDescription": "Usage across your subscribed account this month.",
+      "used": "used this month",
+      "of": "of {limit}",
+      "available": "Usage available",
+      "freePoolUsed": "Shared free usage is currently unavailable",
+      "resets": "Resets {date}",
+      "progressLabel": "{percent}% of monthly usage used",
+      "infoLabel": "How free usage works",
+      "freePoolInfo": "Free server usage is available while ClashKing's shared monthly free allowance still has capacity. It can pause before your server reaches its own limit and resets at the start of each UTC month.",
+      "subscribers": "Credit from {count, plural, one {# subscription} other {# subscriptions}}"
+    },
+    "billing": {
+      "active": "Active",
+      "free": "Free plan",
+      "currentPlan": "ClashKing subscription",
+      "supportTitle": "Support ClashKing ❤️",
+      "price": "$6.99 per month",
+      "activeDescription": "Your Stripe subscription is active.",
+      "description": "Assign one subscription to one Discord server. Account features work across the dashboard and mobile app.",
+      "notifications": "Notifications for up to {limit} bookmarked players",
+      "credit": "{credit} of AI assistant usage each month",
+      "crossPlatform": "Available on the dashboard and mobile app",
+      "manage": "Manage subscription in Stripe",
+      "subscribe": "$6.99/month",
+      "learnMore": "Learn more",
+      "secure": "Secure checkout and billing management are handled by Stripe.",
+      "stripeUnavailable": "Stripe is not available right now.",
+      "checkoutUnavailable": "Subscriptions are not available yet. Every server currently uses the $0.05 monthly AI allowance.",
+      "checkoutSuccess": "Checkout completed. Your subscription will update as soon as Stripe confirms it.",
+      "checkoutCancelled": "Checkout was cancelled. Nothing was charged.",
+      "compactDescription": "$6.99 per month, including server perks and $5.00 of AI assistant usage.",
+      "assignServer": "Subscription server",
+      "selectServer": "Select a server",
+      "assignmentHelp": "Server perks follow this selection. Moving it can disable AutoBoards above the free limit on the previous server; AI usage already spent stays with your account.",
+      "checkoutAssignmentHelp": "Choose which server receives the subscription perks and included $5.00 monthly AI credit.",
+      "subscriptionRequired": "Subscribe to choose which server receives subscription perks.",
+      "selectServerFirst": "Choose a server before starting checkout."
+    }
+  },
+  "GraphicsPage": {
+    "desktopOnlyTitle": "Graphics is available on desktop",
+    "desktopOnlyDescription": "The graphics editor needs a desktop-sized workspace. Open this page on a screen at least 1024 pixels wide."
   }
 }

@@ -34,4 +34,13 @@ describe("dashboard route state", () => {
       "/dashboard/roles?guildId=123456789",
     );
   });
+
+  it("restores the selected guild after Stripe returns without a query string", () => {
+    globalThis.history.replaceState({}, "", "/dashboard/settings?checkout=success");
+    sessionStorage.setItem("selected_guild", JSON.stringify({ id: "987654321", name: "Clan" }));
+
+    render(<DashboardParams />);
+
+    expect(screen.getByTestId("guild-id")).toHaveTextContent("987654321");
+  });
 });

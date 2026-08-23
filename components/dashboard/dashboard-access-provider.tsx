@@ -1,11 +1,12 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { usePathname } from "next/navigation";
+import { createContext, useCallback, useContext, useEffect, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { usePathname, useSearchParams } from "next/navigation";
 import { ShieldAlert } from "lucide-react";
-import { apiClient } from "@/lib/api/client";
 import { Button } from "@/components/ui/button";
 import type { DashboardCapabilities, DashboardSection } from "@/lib/api/types/dashboard-access";
+import { dashboardQueryOptions } from "@/lib/dashboard-query-options";
 
 interface DashboardAccessContextValue {
   capabilities: DashboardCapabilities | null;
@@ -27,11 +28,11 @@ function capabilitiesCacheKey(guildId: string) {
   return `dashboard-capabilities:${guildId}`;
 }
 
-function readCachedCapabilities(guildId: string): DashboardCapabilities | null {
+function readCachedCapabilities(guildId: string): CachedCapabilities | null {
   try {
     const cached = JSON.parse(sessionStorage.getItem(capabilitiesCacheKey(guildId)) ?? "null") as CachedCapabilities | null;
     if (!cached || Date.now() - cached.cachedAt >= CAPABILITIES_CACHE_TTL_MS) return null;
-    return cached.capabilities;
+    return cached;
   } catch {
     return null;
   }
@@ -46,40 +47,40 @@ const pathSections: Array<[string, DashboardSection]> = [
   ["/rosters", "rosters"], ["/links", "links"], ["/bans-and-strikes", "moderation"],
   ["/roles", "roles"], ["/reminders", "reminders"], ["/autoboards", "autoboards"],
   ["/giveaways", "giveaways"], ["/panels", "panels"], ["/tickets", "tickets"],
-  ["/embeds", "embeds"], ["/wars", "wars"], ["/leaderboards", "leaderboards"],
-  ["/general", "settings"],
+  ["/embeds", "embeds"], ["/graphics", "embeds"], ["/general", "settings"],
 ];
 
-export function DashboardAccessProvider({ guildId, children }: { guildId: string; children: React.ReactNode }) {
-  const [capabilities, setCapabilities] = useState<DashboardCapabilities | null>(null);
-  const [loading, setLoading] = useState(true);
+export function canAccessDashboardPath(
+  capabilities: DashboardCapabilities | null,
+  pathname: string,
+  tab?: string | null,
+): boolean {
+  if (pathname.includes("/bases")) return capabilities?.full_access === true;
+  const section = pathSections.find(([path]) => pathname.includes(path))?.[1];
+  if (!section) return true;
+  if (capabilities?.full_access === true || Boolean(capabilities?.sections[section])) return true;
+  return section === "logs" && tab === "join-panel" && Boolean(capabilities?.sections.panels);
+}
 
+export function DashboardAccessProvider({ guildId, children }: { guildId: string; children: React.ReactNode }) {
+  const cached = useMemo(() => readCachedCapabilities(guildId), [guildId]);
+  const capabilitiesQuery = useQuery({
+    ...dashboardQueryOptions.capabilities(guildId),
+    enabled: Boolean(guildId),
+    initialData: cached?.capabilities,
+    initialDataUpdatedAt: cached?.cachedAt,
+  });
+  const capabilities = capabilitiesQuery.data ?? null;
+  const loading = capabilitiesQuery.isPending;
+
+  const { refetch } = capabilitiesQuery;
   const refresh = useCallback(async () => {
-    setLoading(true);
-    const response = await apiClient.servers.getDashboardCapabilities(guildId);
-    const nextCapabilities = response.data ?? null;
-    setCapabilities(nextCapabilities);
-    if (nextCapabilities) writeCachedCapabilities(guildId, nextCapabilities);
-    setLoading(false);
-  }, [guildId]);
+    await refetch();
+  }, [refetch]);
 
   useEffect(() => {
-    let active = true;
-    const cached = readCachedCapabilities(guildId);
-    setCapabilities(cached);
-    setLoading(cached === null);
-    void apiClient.servers.getDashboardCapabilities(guildId).then((response) => {
-      if (!active) return;
-      if (response.data) {
-        setCapabilities(response.data);
-        writeCachedCapabilities(guildId, response.data);
-      } else if (!cached) {
-        setCapabilities(null);
-      }
-      setLoading(false);
-    });
-    return () => { active = false; };
-  }, [guildId]);
+    if (capabilities) writeCachedCapabilities(guildId, capabilities);
+  }, [capabilities, guildId]);
 
   const value = useMemo<DashboardAccessContextValue>(() => ({
     capabilities,
@@ -100,10 +101,9 @@ export function useDashboardAccess() {
 
 export function DashboardRouteAccess({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const { capabilities, loading, canView } = useDashboardAccess();
-  const section = pathSections.find(([path]) => pathname.includes(path))?.[1];
-  const isFullAccessOnly = pathname.includes("/dashboard-access") || pathname.includes("/bases");
-  const allowed = isFullAccessOnly ? capabilities?.full_access === true : !section || canView(section);
+  const searchParams = useSearchParams();
+  const { capabilities, loading } = useDashboardAccess();
+  const allowed = canAccessDashboardPath(capabilities, pathname, searchParams.get("tab"));
 
   if (loading) return <div className="p-6 text-sm text-muted-foreground">Loading dashboard access…</div>;
   if (allowed) return children;
@@ -114,7 +114,7 @@ export function DashboardRouteAccess({ children }: { children: React.ReactNode }
         <ShieldAlert className="mx-auto mb-4 h-9 w-9 text-primary" />
         <h1 className="text-xl font-semibold">You don&apos;t have access to this section</h1>
         <p className="mt-2 text-sm text-muted-foreground">Ask a server manager to add one of your Discord roles to this dashboard section.</p>
-        <Button asChild className="mt-5"><a href="../">Return to overview</a></Button>
+        <Button asChild className="mt-5"><a href="/servers">Choose another server</a></Button>
       </div>
     </div>
   );

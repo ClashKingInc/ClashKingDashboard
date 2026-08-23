@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, type ReactNode } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useAuthSession } from "@/components/auth-session-provider";
 import { Sidebar } from "./sidebar";
 import { MobileServerDropdown } from "./mobile-server-dropdown";
-import { apiClient } from "@/lib/api/client";
-import { apiCache } from "@/lib/api-cache";
 import type { GuildInfo } from "@/lib/api/types/server";
+import { dashboardQueryOptions } from "@/lib/dashboard-query-options";
 
 interface SidebarWrapperProps {
   readonly guildId: string;
@@ -14,17 +14,21 @@ interface SidebarWrapperProps {
   readonly variant?: "sidebar" | "mobile-header";
 }
 
+interface SidebarData {
+  isLoading: boolean;
+  serverInfo: {
+    name: string;
+    icon?: string;
+  };
+  availableGuilds: GuildInfo[];
+}
+
+const SidebarDataContext = createContext<SidebarData | null>(null);
+
 interface CachedGuildInfo {
   id: string;
   name: string;
   icon?: string;
-}
-
-const GUILD_INFO_CACHE_TTL = 120000;
-const GUILD_LIST_CACHE_KEY = "dashboard-guild-list";
-
-function getGuildInfoCacheKey(guildId: string): string {
-  return `guild-info-${guildId}`;
 }
 
 function getStoredGuildInfo(guildId: string): CachedGuildInfo | null {
@@ -45,96 +49,61 @@ function getStoredGuildInfo(guildId: string): CachedGuildInfo | null {
   }
 }
 
-export function SidebarWrapper({ guildId, locale, variant = "sidebar" }: SidebarWrapperProps) {
+export function SidebarDataProvider({ guildId, children }: { readonly guildId: string; readonly children: ReactNode }) {
   const { status: authStatus } = useAuthSession();
-  const [isLoading, setIsLoading] = useState(true);
-  const [serverInfo, setServerInfo] = useState({
-    name: "My Server",
-    icon: undefined as string | undefined,
+  const storedGuild = useMemo(() => getStoredGuildInfo(guildId), [guildId]);
+  const enabled = authStatus === "authenticated" && Boolean(guildId);
+
+  const guildQuery = useQuery({
+    ...dashboardQueryOptions.guild(guildId),
+    enabled,
   });
-  const [availableGuilds, setAvailableGuilds] = useState<GuildInfo[]>([]);
+
+  const guildsQuery = useQuery({
+    ...dashboardQueryOptions.guilds(),
+    enabled,
+  });
 
   useEffect(() => {
-    if (authStatus === "restoring") return;
+    const guild = guildQuery.data;
+    if (!guild) return;
+    const icon = guild.icon?.startsWith("https") ? guild.icon : undefined;
+    sessionStorage.setItem("selected_guild", JSON.stringify({
+      id: guildId,
+      name: guild.name || "My Server",
+      icon,
+    }));
+  }, [guildId, guildQuery.data]);
 
-    async function fetchServerInfo() {
-      try {
-        const storedGuild = getStoredGuildInfo(guildId);
-        if (storedGuild) {
-          setServerInfo({
-            name: storedGuild.name,
-            icon: storedGuild.icon,
-          });
-          setIsLoading(false);
-        }
+  useEffect(() => {
+    if (guildQuery.error) console.error("Failed to fetch server info:", { guildId, error: guildQuery.error });
+  }, [guildId, guildQuery.error]);
 
-        if (authStatus !== "authenticated") {
-          setIsLoading(false);
-          return;
-        }
-        // Only cache successful guild responses; ApiResponse errors are resolved values.
-        const guild = await apiCache.get(
-          getGuildInfoCacheKey(guildId),
-          async () => {
-            const response = await apiClient.servers.getGuild(guildId);
+  useEffect(() => {
+    if (guildsQuery.error) console.error("Failed to fetch available guilds:", { guildId, error: guildsQuery.error });
+  }, [guildId, guildsQuery.error]);
 
-            if (response.error || !response.data) {
-              throw new Error(response.error || `Failed to fetch guild info (${response.status})`);
-            }
+  const value = useMemo<SidebarData>(() => {
+    const guild = guildQuery.data;
+    const icon = guild?.icon?.startsWith("https") ? guild.icon : storedGuild?.icon;
+    return {
+      isLoading: !storedGuild && guildQuery.isPending,
+      serverInfo: {
+        name: guild?.name || storedGuild?.name || "My Server",
+        icon,
+      },
+      availableGuilds: (guildsQuery.data ?? [])
+        .filter((candidate: GuildInfo) => candidate.has_bot)
+        .toSorted((a: GuildInfo, b: GuildInfo) => a.name.localeCompare(b.name)),
+    };
+  }, [guildQuery.data, guildQuery.isPending, guildsQuery.data, storedGuild]);
+  return <SidebarDataContext.Provider value={value}>{children}</SidebarDataContext.Provider>;
+}
 
-            return response.data;
-          },
-          GUILD_INFO_CACHE_TTL
-        );
-
-        // Icon URL is already provided by the backend as a full URL
-        const iconUrl = guild.icon?.startsWith('https')
-          ? guild.icon
-          : undefined;
-
-        setServerInfo({
-          name: guild.name || "My Server",
-          icon: iconUrl,
-        });
-
-        sessionStorage.setItem(
-          "selected_guild",
-          JSON.stringify({
-            id: guildId,
-            name: guild.name || "My Server",
-            icon: iconUrl,
-          })
-        );
-
-        try {
-          const guilds = await apiCache.get(
-            GUILD_LIST_CACHE_KEY,
-            async () => {
-              const response = await apiClient.servers.getGuilds();
-              if (response.error || !response.data) {
-                throw new Error(response.error || `Failed to fetch guilds (${response.status})`);
-              }
-              return response.data;
-            },
-            GUILD_INFO_CACHE_TTL
-          );
-          setAvailableGuilds(
-            guilds
-              .filter((candidate) => candidate.has_bot)
-              .toSorted((a, b) => a.name.localeCompare(b.name))
-          );
-        } catch (error) {
-          console.error("Failed to fetch available guilds:", { guildId, error });
-        }
-      } catch (error) {
-        console.error("Failed to fetch server info:", { guildId, error });
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    fetchServerInfo();
-  }, [authStatus, guildId]);
+export function SidebarWrapper({ guildId, locale, variant = "sidebar" }: SidebarWrapperProps) {
+  const data = useContext(SidebarDataContext);
+  if (!data) throw new Error("SidebarWrapper must be used inside SidebarDataProvider");
+  const { isLoading, serverInfo, availableGuilds } = data;
 
   if (variant === "mobile-header") {
     return (

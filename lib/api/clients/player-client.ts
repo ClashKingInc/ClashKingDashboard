@@ -43,26 +43,6 @@ export class PlayerClient extends BaseApiClient {
   }
 
   /**
-   * POST /v2/tracking/players/add
-   */
-  async addToTracking(tags: string[]): Promise<ApiResponse<{ status: string; players_added: string[]; players_already_tracked: string[] }>> {
-    return this.request('/v2/tracking/players/add', {
-      method: 'POST',
-      body: JSON.stringify({ tags }),
-    });
-  }
-
-  /**
-   * POST /v2/tracking/players/remove
-   */
-  async removeFromTracking(tags: string[]): Promise<ApiResponse<{ status: string; players_removed: string[] }>> {
-    return this.request('/v2/tracking/players/remove', {
-      method: 'POST',
-      body: JSON.stringify({ tags }),
-    });
-  }
-
-  /**
    * GET /proxy/v1/players/{player_tag}
    * Get player information from COC wrapper
    */

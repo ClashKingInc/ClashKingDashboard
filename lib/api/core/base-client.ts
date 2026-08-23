@@ -19,7 +19,7 @@ function extractErrorMessage(data: any, status: number): string {
   const detail = data?.detail;
   if (Array.isArray(detail)) return detail.map((e: any) => e.msg ?? String(e)).join(', ');
   if (typeof detail === 'string') return detail;
-  return data?.message || `HTTP ${status}`;
+  return data?.message || data?.error || `HTTP ${status}`;
 }
 
 function canRetryTransientError(method: string, status: number): boolean {

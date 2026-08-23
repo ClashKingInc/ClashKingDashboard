@@ -1,8 +1,9 @@
 "use client";
 
 import { useGuildId } from "@/lib/dashboard-route";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   ChevronDown,
   FileText,
@@ -13,7 +14,6 @@ import {
 } from "lucide-react";
 
 import { apiClient } from "@/lib/api/client";
-import { apiCache } from "@/lib/api-cache";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -28,10 +28,13 @@ import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
-import { EmbedEditor } from "@/components/dashboard/embed-editor";
 import { DiscordMessagePreview, extractEmbeds, extractMessageContent, extractMessageProfile, isV2Payload, extractComponents, type PreviewDiscordChannel, type PreviewDiscordRole } from "@/components/dashboard/discord-embed-preview";
-import { dashboardCacheKeys, normalizeChannelsPayload, normalizeDiscordRolesPayload } from "@/lib/dashboard-cache";
+import { normalizeChannelsPayload, normalizeDiscordRolesPayload } from "@/lib/dashboard-cache";
+import { dashboardQueryKeys } from "@/lib/dashboard-query";
+import { dashboardQueryOptions } from "@/lib/dashboard-query-options";
 import type { ServerEmbed } from "@/lib/api/types/tickets";
+
+const EmbedEditor = lazy(() => import("@/components/dashboard/embed-editor").then((module) => ({ default: module.EmbedEditor })));
 
 function normalizeEmbedsPayload(payload: unknown): ServerEmbed[] {
   if (Array.isArray(payload)) return payload as ServerEmbed[];
@@ -52,6 +55,7 @@ export default function EmbedsPage() {
   const tPage = useTranslations("EmbedsPage");
   const tCommon = useTranslations("Common");
   const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   const [embeds, setEmbeds] = useState<ServerEmbed[]>([]);
   const [channels, setChannels] = useState<PreviewDiscordChannel[]>([]);
@@ -73,53 +77,44 @@ export default function EmbedsPage() {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const loaded = useRef(false);
-  const embedsCacheKey = `tickets-embeds-list-${guildId}`;
-  const channelsCacheKey = dashboardCacheKeys.channels(guildId);
-  const rolesCacheKey = dashboardCacheKeys.discordRoles(guildId);
+  const mentionMetadataLoaded = useRef(false);
+
+  const loadMentionMetadata = useCallback(async () => {
+    if (mentionMetadataLoaded.current) return;
+    mentionMetadataLoaded.current = true;
+    const [channelsResult, rolesResult] = await Promise.allSettled([
+      queryClient.fetchQuery(dashboardQueryOptions.channels(guildId)),
+      queryClient.fetchQuery(dashboardQueryOptions.roles(guildId)),
+    ]);
+    if (channelsResult.status === "fulfilled") {
+      setChannels(normalizeChannelsPayload(channelsResult.value).map((channel) => ({ id: channel.id, name: channel.name })));
+    }
+    if (rolesResult.status === "fulfilled") {
+      setRoles(normalizeDiscordRolesPayload(rolesResult.value).map((role) => ({ id: role.id, name: role.name })));
+    }
+  }, [guildId, queryClient]);
 
   const load = useCallback(async (forceRefresh = false) => {
     if (forceRefresh) {
-      apiCache.invalidate(embedsCacheKey);
+      await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.route("embeds", guildId), exact: true });
     }
 
     try {
-      const embedsData = await apiCache.get(embedsCacheKey, async () => {
-        const res = await apiClient.tickets.getEmbeds(guildId);
-        if (res.error) throw new Error(res.error);
-        return res.data?.items ?? [];
+      const embedsData = await queryClient.fetchQuery({
+        queryKey: dashboardQueryKeys.route("embeds", guildId),
+        queryFn: async () => {
+          const res = await apiClient.tickets.getEmbeds(guildId);
+          if (res.error) throw new Error(res.error);
+          return res.data?.items ?? [];
+        },
       });
       setEmbeds(normalizeEmbedsPayload(embedsData));
-
-      const [channelsResult, rolesResult] = await Promise.allSettled([
-        apiCache.get(channelsCacheKey, async () => {
-          const res = await apiClient.servers.getChannels(guildId);
-          if (res.error) throw new Error(res.error);
-          return res.data;
-        }),
-        apiCache.get(rolesCacheKey, async () => {
-          const res = await apiClient.servers.getDiscordRoles(guildId);
-          if (res.error) throw new Error(res.error);
-          return res.data;
-        }),
-      ]);
-
-      if (channelsResult.status === "fulfilled") {
-        setChannels(normalizeChannelsPayload(channelsResult.value).map((channel) => ({ id: channel.id, name: channel.name })));
-      } else {
-        setChannels([]);
-      }
-
-      if (rolesResult.status === "fulfilled") {
-        setRoles(normalizeDiscordRolesPayload(rolesResult.value).map((role) => ({ id: role.id, name: role.name })));
-      } else {
-        setRoles([]);
-      }
     } catch (err) {
       toast({ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
     } finally {
       setIsLoading(false);
     }
-  }, [channelsCacheKey, embedsCacheKey, guildId, rolesCacheKey, toast, tCommon]);
+  }, [guildId, queryClient, toast, tCommon]);
 
   useEffect(() => {
     if (loaded.current) return;
@@ -139,12 +134,14 @@ export default function EmbedsPage() {
     setNameDialogOpen(false);
     setEditingEmbed(null);
     setEditorOpen(true);
+    void loadMentionMetadata();
   };
 
   // Open editor for existing embed
   const openEdit = (embed: ServerEmbed) => {
     setEditingEmbed(embed);
     setEditorOpen(true);
+    void loadMentionMetadata();
   };
 
   const handleSave = async (data: Record<string, unknown>) => {
@@ -231,7 +228,10 @@ export default function EmbedsPage() {
                 <div key={embed.name} className="rounded-xl border border-border/60 bg-card overflow-hidden">
                   <div className="flex items-center gap-3 px-4 py-3">
                     <button
-                      onClick={() => setExpandedName(isExpanded ? null : embed.name)}
+                      onClick={() => {
+                        setExpandedName(isExpanded ? null : embed.name);
+                        if (!isExpanded) void loadMentionMetadata();
+                      }}
                       className={cn("flex items-center gap-2 flex-1 min-w-0 text-left", !hasPreview && "cursor-default")}
                       disabled={!hasPreview}
                     >
@@ -299,7 +299,7 @@ export default function EmbedsPage() {
 
       {/* Step 2: Editor dialog */}
       <Dialog open={editorOpen} onOpenChange={open => { if (!open && !isSaving) setEditorOpen(false); }}>
-        <DialogContent className="bg-card border-border max-w-6xl w-[97vw] h-[92vh] flex flex-col gap-0 p-0 overflow-hidden">
+        <DialogContent variant="workspace" className="flex flex-col gap-0 overflow-hidden bg-card">
           <DialogHeader className="bg-card px-6 pt-5 pb-4 border-b border-border shrink-0">
             <DialogTitle>
               {editingEmbed ? t("editEmbed") : t("newEmbed")}
@@ -311,14 +311,16 @@ export default function EmbedsPage() {
             </DialogDescription>
           </DialogHeader>
           <div className="flex-1 min-h-0">
-            <EmbedEditor
-              initialData={editingEmbed?.data ?? null}
-              onSave={handleSave}
-              isSaving={isSaving}
-              onCancel={() => setEditorOpen(false)}
-              channels={channels}
-              roles={roles}
-            />
+            <Suspense fallback={<Skeleton className="h-full w-full rounded-none" />}>
+              <EmbedEditor
+                initialData={editingEmbed?.data ?? null}
+                onSave={handleSave}
+                isSaving={isSaving}
+                onCancel={() => setEditorOpen(false)}
+                channels={channels}
+                roles={roles}
+              />
+            </Suspense>
           </div>
         </DialogContent>
       </Dialog>

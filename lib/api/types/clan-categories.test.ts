@@ -10,6 +10,7 @@ const category = {
   id: "category-1",
   serverId: "123",
   name: "Competitive",
+  position: 0,
   clanCount: 2,
 };
 
@@ -32,6 +33,10 @@ describe("clan category response guards", () => {
   it("rejects stale snake_case and missing count models", () => {
     expect(isClanCategoriesResponse({
       items: [{ ...category, serverId: undefined, server_id: "123" }],
+      total: 1,
+    })).toBe(false);
+    expect(isClanCategoriesResponse({
+      items: [{ ...category, position: undefined }],
       total: 1,
     })).toBe(false);
     expect(isClanCategoryDeletePreview({ category })).toBe(false);

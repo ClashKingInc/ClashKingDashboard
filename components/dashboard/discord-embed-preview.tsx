@@ -7,7 +7,6 @@ import { ChevronDown, ExternalLink, Paperclip } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { clashKingAssets } from "@/lib/theme";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import emojiDataset from "emoji-datasource-twitter/emoji.json";
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 
@@ -210,13 +209,6 @@ type MarkdownParseResult = {
 
 type MarkdownParser = (text: string, start: number, key: number) => MarkdownParseResult | null;
 
-function unifiedToEmoji(unified: string): string {
-  return unified
-    .split("-")
-    .map((hex) => String.fromCodePoint(Number.parseInt(hex, 16)))
-    .join("");
-}
-
 function emojiToTwemojiUrl(emoji: string): string {
   const codePoints = Array.from(emoji)
     .map((char) => char.codePointAt(0))
@@ -225,51 +217,30 @@ function emojiToTwemojiUrl(emoji: string): string {
   return `https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/${codePoints.join("-")}.png`;
 }
 
-const EMOJI_TOKENS = Array.from(
-  new Set(
-    (emojiDataset as Array<{ unified: string; emoji?: string }>)
-      .map((entry) => entry.emoji ?? unifiedToEmoji(entry.unified))
-      .filter(Boolean),
-  ),
-).sort((a, b) => b.length - a.length);
-
-const EMOJI_TOKENS_BY_PREFIX = new Map<string, string[]>();
-for (const token of EMOJI_TOKENS) {
-  const prefix = Array.from(token)[0];
-  if (prefix === undefined) continue;
-  const existing = EMOJI_TOKENS_BY_PREFIX.get(prefix);
-  if (existing) {
-    existing.push(token);
-  } else {
-    EMOJI_TOKENS_BY_PREFIX.set(prefix, [token]);
-  }
-}
+// Match one Unicode emoji grapheme without shipping the full emoji metadata
+// catalog in every read-only Discord preview. The editor keeps that catalog
+// in its own lazy chunk because it needs names, categories, and search terms.
+const EMOJI_GRAPHEME = /^(?:\p{Regional_Indicator}{2}|[#*0-9]\uFE0F?\u20E3|\p{Extended_Pictographic}(?:\uFE0E|\uFE0F)?(?:[\u{1F3FB}-\u{1F3FF}])?(?:\u200D\p{Extended_Pictographic}(?:\uFE0E|\uFE0F)?(?:[\u{1F3FB}-\u{1F3FF}])?)*)/u;
 
 const parseUnicodeEmoji: MarkdownParser = (text, start, key) => {
   const remaining = text.slice(start);
-  const prefix = Array.from(remaining)[0];
-  if (prefix === undefined) return null;
-  const candidates = EMOJI_TOKENS_BY_PREFIX.get(prefix);
-  if (!candidates) return null;
-  for (const token of candidates) {
-    if (!remaining.startsWith(token)) continue;
-    return {
-      node: (
-        <Image
-          key={key}
-          src={emojiToTwemojiUrl(token)}
-          alt={token}
-          width={18}
-          height={18}
-          unoptimized
-          className="mx-[1px] inline-block h-[1.1em] w-[1.1em] align-[-0.12em]"
-          draggable={false}
-        />
-      ),
-      nextIndex: start + token.length,
-    };
-  }
-  return null;
+  const token = remaining.match(EMOJI_GRAPHEME)?.[0];
+  if (!token) return null;
+  return {
+    node: (
+      <Image
+        key={key}
+        src={emojiToTwemojiUrl(token)}
+        alt={token}
+        width={18}
+        height={18}
+        unoptimized
+        className="mx-[1px] inline-block h-[1.1em] w-[1.1em] align-[-0.12em]"
+        draggable={false}
+      />
+    ),
+    nextIndex: start + token.length,
+  };
 };
 
 function roleMentionClassName() {

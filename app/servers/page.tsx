@@ -10,11 +10,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Users } from "lucide-react";
+import { TriangleAlert, Users } from "lucide-react";
 import { apiClient } from "@/lib/api/client";
 import type { GuildInfo } from "@/lib/api/types/server";
 import { ServersHeader } from "@/components/servers-header";
 import { useAuthSession } from "@/components/auth-session-provider";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { InactiveServerDialog } from "@/components/dashboard/inactive-server-dialog";
 
 const ROLE_STYLES: Record<string, string> = {
   Owner: "bg-green-500/20 text-green-600 dark:text-green-400",
@@ -43,6 +45,7 @@ export default function ServersPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [permissionMessage, setPermissionMessage] = useState<string | null>(null);
+  const [inactiveGuild, setInactiveGuild] = useState<GuildInfo | null>(null);
   const { status: authStatus } = useAuthSession();
 
   useEffect(() => {
@@ -132,6 +135,10 @@ export default function ServersPage() {
 
   const handleGuildClick = (guild: GuildInfo) => {
     if (guild.has_bot) {
+      if (guild.inactive) {
+        setInactiveGuild(guild);
+        return;
+      }
       sessionStorage.setItem(
         "selected_guild",
         JSON.stringify({
@@ -142,6 +149,15 @@ export default function ServersPage() {
       );
       router.push(dashboardHref("", guild.id));
     }
+  };
+
+  const openDashboard = (guild: GuildInfo) => {
+    sessionStorage.setItem("selected_guild", JSON.stringify({
+      id: guild.id,
+      name: guild.name,
+      icon: getGuildIconUrl(guild) || undefined,
+    }));
+    router.push(dashboardHref("", guild.id));
   };
 
   if (loading) {
@@ -246,9 +262,21 @@ export default function ServersPage() {
                     </Avatar>
 
                     <div className="flex-1 min-w-0">
-                      <CardTitle className="text-lg sm:text-xl text-foreground truncate">
-                        {guild.name}
-                      </CardTitle>
+                      <div className="flex items-center gap-2">
+                        <CardTitle className="text-lg sm:text-xl text-foreground truncate">
+                          {guild.name}
+                        </CardTitle>
+                        {guild.inactive && (
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <TriangleAlert className="h-4 w-4 shrink-0 text-amber-500" aria-label={t("inactive.tooltip")} />
+                              </TooltipTrigger>
+                              <TooltipContent>{t("inactive.tooltip")}</TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        )}
+                      </div>
 
                       <CardDescription className="text-muted-foreground flex items-center gap-1 text-xs sm:text-sm">
                         <Users className="w-3 h-3" />
@@ -310,6 +338,15 @@ export default function ServersPage() {
           )}
         </div>
       </div>
+      <InactiveServerDialog
+        guild={inactiveGuild}
+        onClose={() => setInactiveGuild(null)}
+        onReactivated={(reactivated) => {
+          setGuilds((current) => current.map((guild) => guild.id === reactivated.id ? reactivated : guild));
+          setInactiveGuild(null);
+          openDashboard(reactivated);
+        }}
+      />
     </div>
   );
 }

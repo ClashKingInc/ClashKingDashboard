@@ -4,11 +4,12 @@ import { useGuildId } from "@/lib/dashboard-route";
 import { getAccessToken } from "@/lib/auth/session";
 import { apiFetch } from "@/lib/api/fetch";
 
-
-import { useState, useEffect } from "react";
+import Image from "next/image";
+import { useState, useEffect, useRef, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
-import { apiCache } from "@/lib/api-cache";
-import { dashboardCacheKeys } from "@/lib/dashboard-cache";
+import { useQueryClient } from "@tanstack/react-query";
+import { dashboardQueryKeys } from "@/lib/dashboard-query";
+import { dashboardQueryOptions } from "@/lib/dashboard-query-options";
 import {
   destinationNeedsThread,
   isDestinationValid,
@@ -17,26 +18,25 @@ import {
   type DiscordDestinationChannel,
   type DiscordDestinationThread,
 } from "@/lib/discord-destinations";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { DashboardTabsList, DashboardTabTrigger } from "@/components/ui/dashboard-tabs";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ChannelCombobox } from "@/components/ui/channel-combobox";
 import { ClanCombobox } from "@/components/ui/clan-combobox";
+import { JoinPanelSettings } from "@/components/dashboard/join-panel-settings";
 import {
-  FileText,
   Users,
   Gift,
   Swords,
   Castle,
   TrendingUp,
   Trophy,
-  Activity,
-  Hash,
   Loader2,
   Shield,
   Star,
@@ -50,7 +50,11 @@ import {
   BarChart,
   UserCog,
   AlertCircle,
+  ChevronDown,
+  Clock3,
+  LayoutTemplate,
 } from "lucide-react";
+import { clashKingAssets } from "@/lib/theme";
 
 type Channel = DiscordDestinationChannel;
 type Thread = DiscordDestinationThread;
@@ -84,6 +88,38 @@ interface LogTypeDefinition {
   exampleLink?: string;
 }
 
+type ClanLogTab = "clan" | "war" | "capital" | "player" | "countdowns";
+type LogScope = "clan" | "server";
+type ServerTab = "logs" | "countdowns" | "join-panel";
+const SERVER_SCOPE_VALUE = "__server__";
+
+interface ServerIdentity {
+  name: string;
+  icon: string | null;
+}
+
+interface CountdownStatus {
+  type: string;
+  name: string;
+  enabled: boolean;
+  channel_id: string | null;
+}
+
+const WAR_LOG_TYPES = new Set(["war_log", "war_panel", "cwl_lineup_change_log"]);
+const CAPITAL_LOG_TYPES = new Set(["capital_donations", "capital_attacks", "raid_panel", "capital_weekly_summary"]);
+const PLAYER_LOG_TYPES = new Set([
+  "role_change", "troop_upgrade", "super_troop_boost", "th_upgrade", "league_change",
+  "spell_upgrade", "hero_upgrade", "hero_equipment_upgrade", "name_change",
+  "legend_log_attacks", "legend_log_defenses",
+]);
+
+function clanTabForLogType(logType: string): ClanLogTab {
+  if (WAR_LOG_TYPES.has(logType)) return "war";
+  if (CAPITAL_LOG_TYPES.has(logType)) return "capital";
+  if (PLAYER_LOG_TYPES.has(logType)) return "player";
+  return "clan";
+}
+
 const LOG_COLOR_MAP: Record<string, { bg: string; text: string }> = {
   green: { bg: 'bg-green-500/10', text: 'text-green-500' },
   red: { bg: 'bg-red-500/10', text: 'text-red-500' },
@@ -98,8 +134,104 @@ function getLogColorClasses(color: string): { bg: string; text: string } {
   return LOG_COLOR_MAP[color] ?? LOG_COLOR_MAP.gray;
 }
 
+function CountdownsPanel({ serverId, clanTag }: Readonly<{ serverId: string; clanTag?: string }>) {
+  const t = useTranslations("LogsPage.countdowns");
+  const [items, setItems] = useState<CountdownStatus[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [pendingType, setPendingType] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const endpoint = clanTag
+    ? `/v2/server/${serverId}/clan/${encodeURIComponent(clanTag)}/countdowns`
+    : `/v2/server/${serverId}/countdowns`;
+
+  const loadCountdowns = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await apiFetch(endpoint, { cache: "no-store" });
+      const body = await response.json() as { countdowns?: CountdownStatus[]; message?: string; error?: string };
+      if (!response.ok) throw new Error(body.message || body.error || t("loadError"));
+      setItems(body.countdowns ?? []);
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : t("loadError"));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    void loadCountdowns();
+    // Reload whenever the selected clan or server changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [endpoint]);
+
+  const toggleCountdown = async (item: CountdownStatus, enabled: boolean) => {
+    setPendingType(item.type);
+    setError(null);
+    try {
+      const response = await apiFetch(`/v2/server/${serverId}/countdowns`, {
+        method: enabled ? "POST" : "DELETE",
+        body: JSON.stringify({
+          countdown_type: item.type,
+          ...(clanTag ? { clan_tag: clanTag } : {}),
+        }),
+      });
+      const body = await response.json() as { channel_id?: string; message?: string; error?: string; detail?: string };
+      if (!response.ok) throw new Error(body.detail || body.message || body.error || t("updateError"));
+      setItems((current) => current.map((countdown) => countdown.type === item.type
+        ? { ...countdown, enabled, channel_id: enabled ? body.channel_id ?? countdown.channel_id : null }
+        : countdown));
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : t("updateError"));
+    } finally {
+      setPendingType(null);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="space-y-3">
+        {[0, 1, 2].map((item) => <Skeleton key={item} className="h-20 w-full rounded-[20px]" />)}
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-3">
+      {error && (
+        <div role="alert" className="rounded-[20px] bg-destructive/10 px-4 py-3 text-sm text-destructive">{error}</div>
+      )}
+      {items.map((item) => (
+        <div key={item.type} className="flex items-center gap-4 rounded-[20px] bg-card px-4 py-4 shadow-sm shadow-black/5 sm:px-5">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+            <Clock3 className="h-5 w-5" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <h3 className="font-medium text-foreground">{t(`types.${item.type}.label`)}</h3>
+            <p className="mt-0.5 text-sm text-muted-foreground">{t(`types.${item.type}.description`)}</p>
+          </div>
+          {pendingType === item.type ? (
+            <Loader2 className="h-5 w-5 shrink-0 animate-spin text-muted-foreground" />
+          ) : (
+            <Switch
+              checked={item.enabled}
+              onCheckedChange={(checked) => void toggleCountdown(item, checked)}
+              aria-label={t("toggle", { name: t(`types.${item.type}.label`) })}
+            />
+          )}
+        </div>
+      ))}
+      {items.length === 0 && (
+        <div className="rounded-[20px] bg-muted/45 px-5 py-8 text-center text-sm text-muted-foreground">{t("empty")}</div>
+      )}
+    </div>
+  );
+}
+
 export default function LogsPage() {
   const guildId = useGuildId();
+  const queryClient = useQueryClient();
   const t = useTranslations("LogsPage");
   const CLAN_LOGS: LogTypeDefinition[] = [
     { keys: ['join_log'], label: t('clanLogs.joinLog.label'), description: t('clanLogs.joinLog.description'), icon: Users, color: 'green', exampleLink: 'https://discord.com/channels/923764211845312533/1128182552121839648' },
@@ -148,9 +280,20 @@ export default function LogsPage() {
   const [serverLogs, setServerLogs] = useState<ServerLog[]>([]);
   const [selectedClan, setSelectedClan] = useState<string>("");
   const [mounted, setMounted] = useState(false);
+  const [activeScope, setActiveScope] = useState<LogScope>("clan");
+  const [activeClanTab, setActiveClanTab] = useState<ClanLogTab>("clan");
+  const [activeServerTab, setActiveServerTab] = useState<ServerTab>("logs");
+  const [serverIdentity, setServerIdentity] = useState<ServerIdentity>({ name: t("source.serverFallback"), icon: null });
+  const focusedFromUrl = useRef(false);
 
   useEffect(() => {
     setMounted(true);
+    const params = new URLSearchParams(globalThis.location.search);
+    if (params.get("scope") === "server") setActiveScope("server");
+    const requestedServerTab = params.get("tab");
+    if (requestedServerTab === "logs" || requestedServerTab === "countdowns" || requestedServerTab === "join-panel") {
+      setActiveServerTab(requestedServerTab);
+    }
   }, []);
 
   useEffect(() => {
@@ -159,51 +302,36 @@ export default function LogsPage() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const token = getAccessToken();
-
-        // Use cache to prevent duplicate requests
-        const [channelsData, threadsData, clansData, logsData] = await Promise.all([
-          apiCache.get(dashboardCacheKeys.channels(guildId), async () => {
-            const res = await apiFetch(`/v2/server/${guildId}/channels`, {
-              headers: { 'Authorization': `Bearer ${token}` }
-            });
-            if (!res.ok) throw new Error('Failed to fetch channels');
-            return res.json();
-          }),
-          apiCache.get(`threads-${guildId}`, async () => {
-            const res = await apiFetch(`/v2/server/${guildId}/threads`, {
-              headers: { 'Authorization': `Bearer ${token}` }
-            });
-            if (!res.ok) throw new Error('Failed to fetch threads');
-            return res.json();
-          }).catch((error) => {
-            console.error("Failed to fetch threads:", error);
-            return [];
-          }),
-          apiCache.get(`server-clans-${guildId}`, async () => {
-            const res = await apiFetch(`/v2/server/${guildId}/clans`, {
-              headers: { 'Authorization': `Bearer ${token}` }
-            });
-            if (!res.ok) throw new Error('Failed to fetch clans');
-            return res.json();
-          }),
-          apiCache.get(`server-logs-${guildId}`, async () => {
+        const threadsPromise = queryClient.fetchQuery(dashboardQueryOptions.threads(guildId)).catch((error) => {
+          console.error("Failed to fetch threads:", error);
+          return [];
+        });
+        const [channelsData, clansData, logsData, guildData] = await Promise.all([
+          queryClient.fetchQuery(dashboardQueryOptions.channels(guildId)),
+          queryClient.fetchQuery(dashboardQueryOptions.clans(guildId)),
+          queryClient.fetchQuery({
+            queryKey: dashboardQueryKeys.route("logs", guildId),
+            staleTime: 30_000,
+            queryFn: async () => {
             const res = await apiFetch(`/v2/server/${guildId}/logs`, {
-              headers: { 'Authorization': `Bearer ${token}` }
+              headers: { 'Authorization': `Bearer ${getAccessToken()}` }
             });
             if (!res.ok) throw new Error('Failed to fetch logs');
             return res.json();
-          })
+            },
+          }),
+          queryClient.fetchQuery(dashboardQueryOptions.guild(guildId)).catch(() => null),
         ]);
 
         setChannels(normalizeDestinationChannels(channelsData));
-        setThreads(normalizeDestinationThreads(threadsData));
         setClans(clansData);
         setServerLogs((logsData as ServerLogsResponse).logs ?? []);
+        if (guildData) setServerIdentity({ name: guildData.name, icon: guildData.icon });
 
         if (clansData.length > 0) {
           setSelectedClan((current) => current || clansData[0].tag);
         }
+        void threadsPromise.then((threadsData) => setThreads(normalizeDestinationThreads(threadsData)));
       } catch (error) {
         console.error("Failed to fetch logs data:", error);
       } finally {
@@ -212,7 +340,42 @@ export default function LogsPage() {
     };
 
     fetchData();
-  }, [guildId, mounted]);
+  }, [guildId, mounted, queryClient]);
+
+  const focusLog = (log: ServerLog) => {
+    const serverScoped = !log.clan_tag;
+    setActiveScope(serverScoped ? "server" : "clan");
+    if (log.clan_tag) {
+      setSelectedClan(log.clan_tag);
+      setActiveClanTab(clanTabForLogType(log.type));
+    }
+    globalThis.setTimeout(() => {
+      const card = document.getElementById(`log-${log.type}`);
+      card?.focus({ preventScroll: true });
+      card?.scrollIntoView?.({ behavior: "smooth", block: "center" });
+    }, 0);
+  };
+
+  useEffect(() => {
+    if (loading || focusedFromUrl.current || globalThis.window === undefined) return;
+    const focusedLog = new URLSearchParams(globalThis.location.search).get("focus");
+    if (!focusedLog) return;
+    const log = serverLogs.find((item) => item.type === focusedLog);
+    if (!log) return;
+    focusedFromUrl.current = true;
+    const serverScoped = !log.clan_tag;
+    setActiveScope(serverScoped ? "server" : "clan");
+    if (log.clan_tag) {
+      setSelectedClan(log.clan_tag);
+      setActiveClanTab(clanTabForLogType(log.type));
+    }
+    const timeoutId = globalThis.setTimeout(() => {
+      const card = document.getElementById(`log-${log.type}`);
+      card?.focus({ preventScroll: true });
+      card?.scrollIntoView?.({ behavior: "smooth", block: "center" });
+    }, 0);
+    return () => globalThis.clearTimeout(timeoutId);
+  }, [loading, serverLogs]);
 
   const handleDestinationChange = async (
     logKeys: string[],
@@ -247,8 +410,6 @@ export default function LogsPage() {
         throw new Error('Failed to update clan logs');
       }
 
-      apiCache.invalidate(`server-logs-${guildId}`);
-
       const logsRes = await apiFetch(`/v2/server/${guildId}/logs`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -256,6 +417,7 @@ export default function LogsPage() {
       if (logsRes.ok) {
         const data = await logsRes.json() as ServerLogsResponse;
         setServerLogs(data.logs ?? []);
+        queryClient.setQueryData(dashboardQueryKeys.route("logs", guildId), data);
       }
     } catch (error) {
       console.error("Failed to update clan logs:", error);
@@ -287,13 +449,13 @@ export default function LogsPage() {
         throw new Error('Failed to change clan log state');
       }
 
-      apiCache.invalidate(`server-logs-${guildId}`);
       const logsRes = await apiFetch(`/v2/server/${guildId}/logs`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (logsRes.ok) {
         const data = await logsRes.json() as ServerLogsResponse;
         setServerLogs(data.logs ?? []);
+        queryClient.setQueryData(dashboardQueryKeys.route("logs", guildId), data);
       }
     } catch (error) {
       console.error("Failed to change clan log state:", error);
@@ -330,19 +492,14 @@ export default function LogsPage() {
     return Boolean(log?.webhook_id) && !log?.disabled;
   };
 
-  const countActiveLogs = () => {
-    return serverLogs.filter(log => log.webhook_id && !log.disabled).length;
-  };
-
-  const countLogsWithIssues = () => {
-    return serverLogs.filter(log => {
+  const logsWithIssues = serverLogs.filter(log => {
       if (!log.webhook_id || log.disabled) return false;
       return !isDestinationValid(log.channel_id, log.thread_id, channels, threads);
-    }).length;
-  };
+    });
 
-  const countActiveLogsByDefinitions = (logDefinitions: LogTypeDefinition[]) => {
-    return logDefinitions.filter(definition => isLogEnabled(definition.keys, definition.scope === "server")).length;
+  const getDefinitionForLog = (logType: string) => {
+    return [...CLAN_LOGS, ...WAR_LOGS, ...CAPITAL_LOGS, ...PLAYER_LOGS, ...SERVER_LOGS]
+      .find((definition) => definition.keys.includes(logType));
   };
 
 
@@ -392,16 +549,21 @@ export default function LogsPage() {
     };
 
     return (
-      <Card key={logDef.keys[0]} className="bg-card border-border hover:border-border/80 transition-colors min-h-[220px]">
-        <CardHeader className="min-h-[96px]">
+      <div
+        id={`log-${logDef.keys[0]}`}
+        key={logDef.keys[0]}
+        tabIndex={-1}
+        className="min-h-[220px] scroll-mt-24 rounded-[24px] bg-card p-5 shadow-sm shadow-black/5 outline-none transition-shadow focus:ring-2 focus:ring-primary/50 md:p-6"
+      >
+        <div className="min-h-[72px]">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className={`p-2 rounded-lg ${colors.bg}`}>
                 <Icon className={`h-4 w-4 ${colors.text}`} />
               </div>
               <div>
-                <CardTitle className="text-base text-foreground">{logDef.label}</CardTitle>
-                <CardDescription className="text-xs">
+                <h3 className="text-base font-semibold leading-tight text-foreground">{logDef.label}</h3>
+                <p className="mt-1 text-xs text-muted-foreground">
                   {logDef.description}
                   {logDef.exampleLink && (
                     <>
@@ -417,7 +579,7 @@ export default function LogsPage() {
                       {')'}
                     </>
                   )}
-                </CardDescription>
+                </p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -474,8 +636,8 @@ export default function LogsPage() {
               )}
             </div>
           </div>
-        </CardHeader>
-        <CardContent className="space-y-3 min-h-[92px]">
+        </div>
+        <div className="mt-4 min-h-[92px] space-y-3">
           {isStatusLoading ? (
             <div className="space-y-1.5">
               <Skeleton className="h-4 w-20 animate-pulse" />
@@ -500,7 +662,9 @@ export default function LogsPage() {
                   }}
                   placeholder={t('logCard.channelPlaceholder')}
                   disabled={isSaving || (isConfigured && !isEnabled)}
-                  className={!channelExists && isEnabled ? 'border-orange-500/50' : ''}
+                  className={!channelExists && isEnabled
+                    ? 'border-0 bg-orange-500/10 shadow-sm shadow-black/5 ring-1 ring-orange-500/35'
+                    : 'border-0 bg-muted/55 shadow-sm shadow-black/5'}
                   showDisabled={false}
                 />
                 {!channelExists && isEnabled && !isSaving && (
@@ -521,7 +685,7 @@ export default function LogsPage() {
                     onValueChange={(value) => setPendingThread(value === "none" ? "" : value)}
                     disabled={isSaving || (isConfigured && !isEnabled)}
                   >
-                    <SelectTrigger className="bg-secondary border-border">
+                    <SelectTrigger className="border-0 bg-muted/55 shadow-sm shadow-black/5 focus:ring-ring/35">
                       <SelectValue placeholder={
                         draftNeedsThread ? t('logCard.forumPostPlaceholder') : t('logCard.threadPlaceholder')
                       } />
@@ -561,241 +725,171 @@ export default function LogsPage() {
               </Button>
             </div>
           )}
-        </CardContent>
-      </Card>
-    );
-  };
-
-  if (!mounted) {
-    return (
-      <div className="min-h-screen bg-background p-4 md:p-6">
-        <div className="max-w-7xl mx-auto space-y-8">
-          <div className="flex flex-col md:flex-row md:items-center gap-4">
-            <div className="p-3 rounded-lg bg-blue-500/10 w-fit">
-              <FileText className="h-8 w-8 text-blue-500" />
-            </div>
-            <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t('title')}</h1>
-              <p className="text-muted-foreground mt-1">{t('description')}</p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4 md:gap-6 lg:grid-cols-4 mb-8">
-            {[1, 2, 3, 4].map((i) => (
-              <Card key={i} className="bg-card border-border/50">
-                <CardHeader className="pb-3">
-                  <Skeleton className="h-4 w-24 animate-pulse" />
-                </CardHeader>
-                <CardContent className="h-[96px] flex flex-col justify-between">
-                  <div className="flex items-center justify-between">
-                    <Skeleton className="h-9 w-12 animate-pulse" />
-                    <Skeleton className="h-8 w-8 animate-pulse rounded-full" />
-                  </div>
-                  <Skeleton className="h-3 w-28 animate-pulse" />
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-
-          <div className="flex flex-col md:flex-row md:items-center gap-2 min-h-[58px]">
-            <Label className="text-sm text-muted-foreground">{t('clanSelector.label')}</Label>
-            <div className="w-full md:w-[300px] h-10">
-              <Skeleton className="h-10 w-full rounded-md border border-border animate-pulse" />
-            </div>
-          </div>
         </div>
       </div>
     );
-  }
+  };
 
+  if (!mounted) return null;
+
+  const clanLogTabs: Array<{
+    value: ClanLogTab;
+    label: string;
+    definitions?: LogTypeDefinition[];
+    artwork: ReactNode;
+  }> = [
+    { value: "clan", label: t("tabs.clan"), definitions: CLAN_LOGS, artwork: <Users /> },
+    { value: "war", label: t("tabs.war"), definitions: WAR_LOGS, artwork: <Image src={clashKingAssets.icons.dc.war} alt="" width={22} height={22} unoptimized /> },
+    { value: "capital", label: t("tabs.capital"), definitions: CAPITAL_LOGS, artwork: <Image src={clashKingAssets.resources.capitalGold} alt="" width={22} height={22} unoptimized /> },
+    { value: "player", label: t("tabs.player"), definitions: PLAYER_LOGS, artwork: <Image src={clashKingAssets.icons.hv.xp} alt="" width={22} height={22} unoptimized /> },
+    { value: "countdowns", label: t("tabs.countdowns"), artwork: <Clock3 /> },
+  ];
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
-      <div className="max-w-7xl mx-auto space-y-8">
-        {/* Header */}
-        <div className="flex items-start gap-3">
-          <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
-            <FileText className="h-8 w-8 text-primary" />
-          </div>
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t("title")}</h1>
-            <p className="text-muted-foreground mt-1">
-              {t("description")}
-            </p>
-          </div>
-        </div>
-        {/* Statistics Overview */}
-        <div className="grid grid-cols-2 gap-4 md:gap-6 lg:grid-cols-4 mb-8">
-          <Card className="bg-card border-blue-500/30 bg-blue-500/5">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">{t('stats.activeLogs')}</CardTitle>
-            </CardHeader>
-            <CardContent className="h-[96px] flex flex-col justify-between">
-              <div className="flex items-center justify-between">
-                {loading ? (
-                  <Skeleton className="h-9 w-12 animate-pulse" />
-                ) : (
-                  <div className="h-9 flex items-center text-3xl font-bold text-blue-500">{countActiveLogs()}</div>
-                )}
-                <Activity className="h-8 w-8 text-blue-500/50" />
-              </div>
-              <p className="text-xs text-muted-foreground">
-                {t('stats.activeLogsDesc')}
-              </p>
-            </CardContent>
-          </Card>
+      <div className="mx-auto max-w-7xl space-y-8">
+        <header>
+          <h1 className="text-2xl font-bold text-foreground md:text-3xl">{t("title")}</h1>
+          <p className="mt-1 text-muted-foreground">{t("description")}</p>
+        </header>
 
-          <Card className="bg-card border-green-500/30 bg-green-500/5">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">{t('stats.logChannels')}</CardTitle>
-            </CardHeader>
-            <CardContent className="h-[96px] flex flex-col justify-between">
-              <div className="flex items-center justify-between">
-                {loading ? (
-                  <Skeleton className="h-9 w-12 animate-pulse" />
-                ) : (
-                  <div className="h-9 flex items-center text-3xl font-bold text-green-500">{channels.length}</div>
-                )}
-                <Hash className="h-8 w-8 text-green-500/50" />
-              </div>
-              <p className="text-xs text-muted-foreground">
-                {t('stats.logChannelsDesc')}
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-card border-yellow-500/30 bg-yellow-500/5">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">{t('stats.trackedClans')}</CardTitle>
-            </CardHeader>
-            <CardContent className="h-[96px] flex flex-col justify-between">
-              <div className="flex items-center justify-between">
-                {loading ? (
-                  <Skeleton className="h-9 w-12 animate-pulse" />
-                ) : (
-                  <div className="h-9 flex items-center text-3xl font-bold text-yellow-500">{clans.length}</div>
-                )}
-                <Users className="h-8 w-8 text-yellow-500/50" />
-              </div>
-              <p className="text-xs text-muted-foreground">
-                {t('stats.trackedClansDesc')}
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-card border-orange-500/30 bg-orange-500/5">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">{t('stats.issues')}</CardTitle>
-            </CardHeader>
-            <CardContent className="h-[96px] flex flex-col justify-between">
-              <div className="flex items-center justify-between">
-                {loading ? (
-                  <Skeleton className="h-9 w-12 animate-pulse" />
-                ) : (
-                  <div className="h-9 flex items-center text-3xl font-bold text-orange-500">{countLogsWithIssues()}</div>
-                )}
-                <AlertCircle className="h-8 w-8 text-orange-500/50" />
-              </div>
-              <p className="text-xs text-muted-foreground">
-                {t('stats.issuesDesc')}
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Clan Selector */}
-        {(loading || clans.length > 0) && (
-          <div className="flex flex-col md:flex-row md:items-center gap-2 min-h-[58px]">
-            <Label className="text-sm text-muted-foreground">{t('clanSelector.label')}</Label>
-            {loading ? (
-              <div className="w-full md:w-[300px] h-10">
-                <Skeleton className="h-10 w-full rounded-md border border-border animate-pulse" />
-              </div>
-            ) : (
-              <ClanCombobox
-                clans={clans}
-                value={selectedClan}
-                onValueChange={setSelectedClan}
-                placeholder={t('clanSelector.placeholder')}
-                className="md:w-[300px]"
-              />
-            )}
-          </div>
+        {!loading && logsWithIssues.length > 0 && (
+          <Collapsible>
+            <section className="rounded-[20px] bg-orange-500/10 p-4 shadow-sm shadow-black/5 md:px-5" aria-labelledby="log-issues-title">
+              <CollapsibleTrigger asChild>
+                <button type="button" className="group flex w-full items-center gap-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/35">
+                  <AlertCircle className="h-5 w-5 shrink-0 text-orange-600" />
+                  <h2 id="log-issues-title" className="min-w-0 flex-1 font-semibold text-foreground">
+                    {t("issues.title", { count: logsWithIssues.length })}
+                  </h2>
+                  <span className="text-xs font-medium text-muted-foreground group-data-[state=open]:hidden">{t("issues.showDetails")}</span>
+                  <span className="hidden text-xs font-medium text-muted-foreground group-data-[state=open]:inline">{t("issues.hideDetails")}</span>
+                  <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-150 group-data-[state=open]:rotate-180" />
+                </button>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <div className="pl-8 pt-3">
+                  <p className="text-sm text-muted-foreground">{t("issues.description")}</p>
+                  <div className="mt-4 space-y-2">
+                    {logsWithIssues.map((log) => {
+                      const definition = getDefinitionForLog(log.type);
+                      const clan = clans.find((item) => item.tag === log.clan_tag);
+                      const channelExists = channels.some((channel) => channel.id === log.channel_id);
+                      return (
+                        <div key={`${log.clan_tag ?? "server"}-${log.type}`} className="flex flex-col gap-2 rounded-2xl bg-background/65 px-3 py-2.5 sm:flex-row sm:items-center">
+                          <div className="min-w-0 flex-1">
+                            <p className="truncate text-sm font-medium text-foreground">{definition?.label ?? log.type}</p>
+                            <p className="truncate text-xs text-muted-foreground">
+                              {log.clan_tag ? `${clan?.name ?? log.clan_tag} · ${log.clan_tag}` : t("issues.serverScope")}
+                              {" · "}
+                              {channelExists ? t("issues.threadMissing") : t("issues.channelMissing", { channelId: log.channel_id ?? "—" })}
+                            </p>
+                          </div>
+                          <Button type="button" size="sm" variant="secondary" className="border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted" onClick={() => focusLog(log)}>
+                            {t("issues.review")}
+                          </Button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </CollapsibleContent>
+            </section>
+          </Collapsible>
         )}
 
-        <Tabs defaultValue="clan" className="space-y-6">
-          <TabsList className="grid h-auto w-full grid-cols-1 gap-1 rounded-lg border border-border bg-muted p-1 sm:grid-cols-2 lg:grid-cols-5 sm:gap-0">
-            <TabsTrigger value="clan" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
-              <Users className="h-3.5 w-3.5 shrink-0 text-blue-500" />
-              <span className="truncate">{t('tabs.clan')}</span>
-              <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-blue-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
-                {loading ? <Skeleton className="h-2.5 w-2.5 rounded-[2px]" /> : countActiveLogsByDefinitions(CLAN_LOGS)}
-              </span>
-            </TabsTrigger>
-            <TabsTrigger value="war" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
-              <Swords className="h-3.5 w-3.5 shrink-0 text-red-500" />
-              <span className="truncate">{t('tabs.war')}</span>
-              <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-red-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
-                {loading ? <Skeleton className="h-2.5 w-2.5 rounded-[2px]" /> : countActiveLogsByDefinitions(WAR_LOGS)}
-              </span>
-            </TabsTrigger>
-            <TabsTrigger value="capital" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
-              <Castle className="h-3.5 w-3.5 shrink-0 text-purple-500" />
-              <span className="truncate">{t('tabs.capital')}</span>
-              <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-purple-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
-                {loading ? <Skeleton className="h-2.5 w-2.5 rounded-[2px]" /> : countActiveLogsByDefinitions(CAPITAL_LOGS)}
-              </span>
-            </TabsTrigger>
-            <TabsTrigger value="player" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
-              <TrendingUp className="h-3.5 w-3.5 shrink-0 text-orange-500" />
-              <span className="truncate">{t('tabs.player')}</span>
-              <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-orange-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
-                {loading ? <Skeleton className="h-2.5 w-2.5 rounded-[2px]" /> : countActiveLogsByDefinitions(PLAYER_LOGS)}
-              </span>
-            </TabsTrigger>
-            <TabsTrigger value="server" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
-              <ScrollText className="h-3.5 w-3.5 shrink-0 text-amber-500" />
-              <span className="truncate">{t('tabs.server')}</span>
-              <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-amber-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
-                {loading ? <Skeleton className="h-2.5 w-2.5 rounded-[2px]" /> : countActiveLogsByDefinitions(SERVER_LOGS)}
-              </span>
-            </TabsTrigger>
-          </TabsList>
-
-          {/* CLAN LOGS TAB */}
-          <TabsContent value="clan" className="space-y-4">
-            <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
-              {CLAN_LOGS.map(logDef => <LogCard key={logDef.keys[0]} logDef={logDef} statusLoading={loading} />)}
+        <section className="space-y-6">
+          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div>
+              <h2 className="text-lg font-semibold text-foreground">{t("source.title")}</h2>
+              <p className="mt-1 text-sm text-muted-foreground">{t("source.description")}</p>
             </div>
-          </TabsContent>
+            {loading ? (
+              <Skeleton className="h-12 w-full rounded-xl md:w-[340px]" />
+            ) : (
+              <div className="w-full md:w-[340px]">
+                <Label htmlFor="logs-source" className="mb-1.5 block text-xs font-medium text-muted-foreground">{t("source.label")}</Label>
+                <ClanCombobox
+                  id="logs-source"
+                  clans={clans}
+                  value={activeScope === "server" ? SERVER_SCOPE_VALUE : selectedClan}
+                  onValueChange={(value) => {
+                    if (value === SERVER_SCOPE_VALUE) {
+                      setActiveScope("server");
+                    } else {
+                      setSelectedClan(value);
+                      setActiveScope("clan");
+                    }
+                  }}
+                  placeholder={t("source.placeholder")}
+                  searchPlaceholder={t("source.searchPlaceholder")}
+                  specialOptions={[{
+                    value: SERVER_SCOPE_VALUE,
+                    label: serverIdentity.name,
+                    description: t("source.serverDescription"),
+                    imageUrl: serverIdentity.icon,
+                    fallback: serverIdentity.name.slice(0, 2).toUpperCase(),
+                  }]}
+                  className="border-0 bg-muted/55 shadow-sm shadow-black/5 focus-visible:ring-ring/35"
+                />
+              </div>
+            )}
+          </div>
 
-          {/* WAR LOGS TAB */}
-          <TabsContent value="war" className="space-y-4">
-            <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
-              {WAR_LOGS.map(logDef => <LogCard key={logDef.keys[0]} logDef={logDef} statusLoading={loading} />)}
-            </div>
-          </TabsContent>
-
-          {/* CAPITAL LOGS TAB */}
-          <TabsContent value="capital" className="space-y-4">
-            <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
-              {CAPITAL_LOGS.map(logDef => <LogCard key={logDef.keys[0]} logDef={logDef} statusLoading={loading} />)}
-            </div>
-          </TabsContent>
-
-          {/* PLAYER LOGS TAB */}
-          <TabsContent value="player" className="space-y-4">
-            <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
-              {PLAYER_LOGS.map(logDef => <LogCard key={logDef.keys[0]} logDef={logDef} statusLoading={loading} />)}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="server" className="space-y-4">
-            <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
-              {SERVER_LOGS.map(logDef => <LogCard key={logDef.keys[0]} logDef={logDef} statusLoading={loading} />)}
-            </div>
-          </TabsContent>
-        </Tabs>
+          {activeScope === "clan" ? (
+            <section className="space-y-5">
+              {!loading && clans.length === 0 ? (
+                <div className="rounded-[20px] bg-muted/45 px-5 py-8 text-center text-sm text-muted-foreground">
+                  {t("emptyClans")}
+                </div>
+              ) : (
+                <Tabs value={activeClanTab} onValueChange={(value) => setActiveClanTab(value as ClanLogTab)} className="space-y-5">
+                  <DashboardTabsList className="grid-cols-2 lg:grid-cols-5">
+                    {clanLogTabs.map((tab) => (
+                      <DashboardTabTrigger key={tab.value} value={tab.value} artwork={tab.artwork}>{tab.label}</DashboardTabTrigger>
+                    ))}
+                  </DashboardTabsList>
+                  {clanLogTabs.map((tab) => (
+                    <TabsContent key={tab.value} value={tab.value} className="mt-0">
+                      {tab.value === "countdowns" ? (
+                        selectedClan && <CountdownsPanel serverId={guildId} clanTag={selectedClan} />
+                      ) : (
+                        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+                          {tab.definitions?.map((logDef) => <LogCard key={logDef.keys[0]} logDef={logDef} statusLoading={loading} />)}
+                        </div>
+                      )}
+                    </TabsContent>
+                  ))}
+                </Tabs>
+              )}
+            </section>
+          ) : (
+            <section className="space-y-5">
+              <div>
+                <h2 className="text-lg font-semibold text-foreground">{t("scope.serverTitle")}</h2>
+                <p className="mt-1 text-sm text-muted-foreground">{t("scope.serverDescription")}</p>
+              </div>
+              <Tabs value={activeServerTab} onValueChange={(value) => setActiveServerTab(value as ServerTab)} className="space-y-5">
+                <DashboardTabsList className="grid-cols-3">
+                  <DashboardTabTrigger value="logs" artwork={<ScrollText />}>{t("serverTabs.logs")}</DashboardTabTrigger>
+                  <DashboardTabTrigger value="countdowns" artwork={<Clock3 />}>{t("serverTabs.countdowns")}</DashboardTabTrigger>
+                  <DashboardTabTrigger value="join-panel" artwork={<LayoutTemplate />}>{t("serverTabs.joinPanel")}</DashboardTabTrigger>
+                </DashboardTabsList>
+                <TabsContent value="logs" className="mt-0">
+                  <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+                    {SERVER_LOGS.map((logDef) => <LogCard key={logDef.keys[0]} logDef={logDef} statusLoading={loading} />)}
+                  </div>
+                </TabsContent>
+                <TabsContent value="countdowns" className="mt-0">
+                  <CountdownsPanel serverId={guildId} />
+                </TabsContent>
+                <TabsContent value="join-panel" className="mt-0">
+                  <JoinPanelSettings embedded />
+                </TabsContent>
+              </Tabs>
+            </section>
+          )}
+        </section>
       </div>
     </div>
   );

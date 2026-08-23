@@ -8,6 +8,7 @@ import {
   getAccessToken,
   getCachedUser,
   restoreAccessToken,
+  startAccessTokenRefresh,
   subscribeSession,
 } from "@/lib/auth/session";
 
@@ -24,16 +25,19 @@ const AuthSessionContext = createContext<AuthSessionValue>({
 
 export function AuthSessionProvider({ children }: { children: React.ReactNode }) {
   const [status, setStatus] = useState<AuthStatus>("restoring");
-  const [user, setUser] = useState<UserInfo | undefined>(() => getCachedUser());
+  const [user, setUser] = useState<UserInfo | undefined>();
 
   useEffect(
     () =>
-      subscribeSession(() => {
-        setStatus(getAccessToken() ? "authenticated" : "anonymous");
+      subscribeSession((event) => {
+        if (event === "authenticated") setStatus("authenticated");
+        if (event === "anonymous") setStatus("anonymous");
         setUser(getCachedUser());
       }),
     [],
   );
+
+  useEffect(() => startAccessTokenRefresh(getDefaultBaseUrl()), []);
 
   useEffect(() => {
     let active = true;
@@ -41,7 +45,10 @@ export function AuthSessionProvider({ children }: { children: React.ReactNode })
     let retryDelay = 5_000;
 
     const restore = async () => {
-      const result = await restoreAccessToken(getDefaultBaseUrl());
+      setUser((current) => current ?? getCachedUser());
+      const result = getAccessToken()
+        ? "restored"
+        : await restoreAccessToken(getDefaultBaseUrl());
       if (!active) return;
       if (result === "unavailable") {
         setStatus("restoring");
@@ -61,7 +68,10 @@ export function AuthSessionProvider({ children }: { children: React.ReactNode })
         cacheUser(current.data);
         setUser(current.data);
       }
-      setStatus(getAccessToken() ? "authenticated" : "anonymous");
+      // A restored result means the credentialed endpoint issued and installed
+      // an access token. Do not re-infer auth from a second module snapshot;
+      // Vinext can replace client modules while preserving this provider.
+      setStatus("authenticated");
     };
 
     void restore();

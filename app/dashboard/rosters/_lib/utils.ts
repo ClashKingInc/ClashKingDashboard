@@ -139,7 +139,6 @@ export function calculateRosterStats(
       inClan: 0,
       inFamily: 0,
       external: 0,
-      subs: 0,
       thDistribution: {},
     };
   }
@@ -150,7 +149,6 @@ export function calculateRosterStats(
   let inClan = 0;
   let inFamily = 0;
   let external = 0;
-  let subs = 0;
   const thDistribution: Record<number, number> = {};
 
   for (const member of members) {
@@ -170,10 +168,6 @@ export function calculateRosterStats(
     else if (loc === "inFamily") inFamily++;
     else external++;
 
-    // Sub count
-    if (member.sub) {
-      subs++;
-    }
   }
 
   return {
@@ -183,7 +177,6 @@ export function calculateRosterStats(
     inClan,
     inFamily,
     external,
-    subs,
     thDistribution,
   };
 }
@@ -233,7 +226,6 @@ const COLUMN_LABELS: Record<string, string> = {
   hero_lvs: 'Heroes',
   trophies: 'Trophies',
   war_pref: 'War Pref',
-  signup_group: 'Group',
 };
 
 const COLUMN_INTERNAL: Record<string, string> = {
@@ -255,8 +247,6 @@ const COLUMN_INTERNAL: Record<string, string> = {
   'Trophies': 'trophies',
   'War Pref': 'war_pref',
   'War Preference': 'war_pref',
-  'Group': 'signup_group',
-  'Signup Group': 'signup_group',
 };
 
 export function getColumnLabel(internal: string): string {

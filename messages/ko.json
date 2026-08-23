@@ -79,7 +79,8 @@
     "lightTheme": "라이트 테마",
     "darkTheme": "다크 테마",
     "language": "언어",
-    "browserLanguage": "브라우저 언어"
+    "browserLanguage": "브라우저 언어",
+    "accountSettings": "Account settings"
   },
   "HomePage": {
     "badge": "이미 {serverCount}개 이상의 서버에서 ClashKing을 사용 중입니다",
@@ -271,10 +272,17 @@
       "clanManagement": "클랜 관리",
       "playerManagement": "플레이어 관리",
       "automation": "자동화",
-      "statistics": "통계"
+      "statistics": "통계",
+      "general": "General",
+      "serverManagement": "Server Management"
     },
     "switchServer": "서버 전환",
-    "goHome": "홈페이지"
+    "goHome": "홈페이지",
+    "graphics": {
+      "name": "Graphics",
+      "description": "Dynamic image templates"
+    },
+    "inactiveServer": "Tracking is disabled for this server"
   },
   "BasesPage": {
     "eyebrow": "클랜 관리",
@@ -545,6 +553,24 @@
       "errorAddingStrike": "경고를 추가하지 못했습니다",
       "errorRemovingBan": "차단을 제거하지 못했습니다",
       "errorRemovingStrike": "경고를 제거하지 못했습니다"
+    },
+    "image": {
+      "label": "Evidence image URL (optional)",
+      "placeholder": "https://example.com/evidence.png",
+      "help": "Attach one publicly accessible image to this record.",
+      "invalid": "Enter a valid http or https image URL.",
+      "view": "View evidence"
+    },
+    "sort": {
+      "label": "Sort records",
+      "newest": "Newest first",
+      "oldest": "Oldest first",
+      "player": "Player name",
+      "reason": "Reason",
+      "moderator": "Moderator",
+      "weight": "Highest weight",
+      "count": "Most strikes",
+      "recent": "Most recent strike"
     }
   },
   "RostersPage": {
@@ -674,7 +700,13 @@
       "moveToGroup": "그룹으로 이동",
       "clone": "복제",
       "allRosters": "모든 로스터",
-      "manageRosters": "클랜전 로스터와 라인업을 관리하세요"
+      "manageRosters": "클랜전 로스터와 라인업을 관리하세요",
+      "rename": "Rename {name}",
+      "actions": "Actions for {name}",
+      "renameInput": "Roster name",
+      "renameSave": "Save roster name",
+      "renameCancel": "Cancel rename",
+      "renameSuccess": "Renamed roster to {name}"
     },
     "memberColumns": {
       "name": "이름",
@@ -759,7 +791,8 @@
       "cancel": "취소",
       "cloning": "복제 중...",
       "clone": "로스터 복제",
-      "copyMembersHint": "원본 로스터의 멤버를 복사합니다"
+      "copyMembersHint": "원본 로스터의 멤버를 복사합니다",
+      "successDesc": "Roster “{name}” was created."
     },
     "missingMembers": {
       "title": "누락 멤버",
@@ -906,7 +939,20 @@
       "dragToMoveCategory": "멤버를 로스터와 카테고리 사이로 드래그하세요",
       "categoryChanged": "카테고리를 변경했습니다",
       "categoryChangedDesc": "{name}님의 카테고리를 변경했습니다: {category}",
-      "uncategorized": "미분류"
+      "uncategorized": "미분류",
+      "description": "Drag players between rosters to move them.",
+      "back": "Back to rosters",
+      "unknownError": "An unknown error occurred",
+      "memberCount": "{count, plural, one {# member} other {# members}}",
+      "dragPlayer": "Drag {name}",
+      "townHallAlt": "Town Hall {level}",
+      "duplicate": "This player appears in multiple rosters",
+      "dropHere": "Drop a player here",
+      "status": {
+        "clan": "Clan",
+        "family": "Family",
+        "external": "External"
+      }
     },
     "ungrouped": "그룹 미지정",
     "automations": {
@@ -970,7 +1016,9 @@
         "roster_clear": "로스터를 삭제하지 않고 모든 멤버를 제거합니다",
         "roster_archive": "로스터를 읽기 전용으로 보관합니다"
       },
-      "infoBox": "자동화는 이벤트 시작 시간을 기준으로 실행됩니다. 시작 전 3일과 같이 시간 차이를 지정하면 반복 이벤트를 포함해 해당 시점에 봇이 작업을 자동으로 실행합니다."
+      "infoBox": "자동화는 이벤트 시작 시간을 기준으로 실행됩니다. 시작 전 3일과 같이 시간 차이를 지정하면 반복 이벤트를 포함해 해당 시점에 봇이 작업을 자동으로 실행합니다.",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time."
     },
     "groups": {
       "title": "로스터 그룹",
@@ -1065,6 +1113,52 @@
       "categoriesManagedByGroup": "신청 카테고리는 그룹 단위로 관리됩니다. 로스터 페이지에서 그룹 설정을 열어 이 그룹의 모든 로스터에서 사용할 카테고리를 구성하세요.",
       "saving": "저장 중...",
       "save": "설정 저장"
+    },
+    "aiBuilder": {
+      "button": "Roster Assistant",
+      "new": "New",
+      "title": "Roster Assistant",
+      "description": "Build and save reusable roster views with natural language."
+    },
+    "cwlBonuses": {
+      "button": "CWL Bonuses",
+      "title": "CWL Bonuses",
+      "description": "Calculate and assign the available seasonal bonus awards.",
+      "back": "Back to rosters",
+      "clan": "Clan",
+      "selectClan": "Select a clan",
+      "searchClans": "Search clans",
+      "noClanFound": "No clan found",
+      "season": "Season",
+      "noStoredSeasons": "No stored seasons",
+      "unknownLeague": "Unknown league",
+      "unrankedLeague": "Unranked CWL league",
+      "loading": "Loading stored CWL data…",
+      "loadClansError": "Failed to load configured clans.",
+      "loadMedalRulesError": "Failed to load CWL medal rules.",
+      "loadDataError": "Failed to load CWL data.",
+      "league": "League",
+      "rank": "Rank",
+      "warsWon": "Wars won",
+      "leagueMedals": "League medals",
+      "bonusSlots": "Bonus slots",
+      "movement": {
+        "promoted": "Promotion position",
+        "demoted": "Demotion position",
+        "unchanged": "League unchanged"
+      },
+      "incomplete": "The stored group is incomplete. Every war must be stored and ended before bonuses can be assigned.",
+      "awardBonuses": "Award bonuses",
+      "selectionSummary": "{selected}/{total} selected · {medals} medals each",
+      "selectionLocked": "Selection unlocks when the stored group is complete.",
+      "ready": "Ready to save",
+      "chooseMore": "{count, plural, one {Choose # more recipient.} other {Choose # more recipients.}}",
+      "save": "Save bonuses",
+      "saved": "CWL bonus recipients saved",
+      "townHallAlt": "Town Hall {level}",
+      "stars": "{count, plural, one {# star} other {# stars}}",
+      "attacks": "{count, plural, one {# attack} other {# attacks}}",
+      "noPlayers": "No players are available for this CWL season."
     }
   },
   "LinksPage": {
@@ -1439,8 +1533,14 @@
         "preview": "삭제 미리보기를 불러오지 못했습니다.",
         "delete": "클랜 카테고리를 삭제하지 못했습니다.",
         "refresh": "카테고리는 변경되었지만 최신 카테고리 또는 클랜 상태를 불러오지 못했습니다.",
-        "invalidName": "제어 문자가 없는 1~64자의 이름을 입력하세요."
-      }
+        "invalidName": "제어 문자가 없는 1~64자의 이름을 입력하세요.",
+        "reorder": "Failed to save the category order."
+      },
+      "manage": "Manage categories",
+      "uncategorized": "Uncategorized",
+      "sectionCount": "{count, plural, one {# clan} other {# clans}}",
+      "reorderAction": "Reorder {name}",
+      "reordered": "Category order saved."
     },
     "fieldHelp": {
       "infoButtonLabel": "자세한 정보 표시",
@@ -1469,7 +1569,19 @@
       "countdownEnabled": "카운트다운 음성 채널을 생성했습니다",
       "countdownDisabled": "카운트다운 음성 채널을 제거했습니다",
       "errorTogglingCountdown": "카운트다운 설정을 변경하지 못했습니다"
-    }
+    },
+    "listTitle": "Connected clans",
+    "memberSummary": "{count, plural, one {# member} other {# members}}",
+    "memberCount": "{count}/50 members",
+    "searchLabel": "Search clans",
+    "searchPlaceholder": "Search by name, tag, or category",
+    "noSearchResults": "No clans match this search.",
+    "unknownClan": "Unknown clan",
+    "badgeAlt": "{name} clan badge",
+    "addedOn": "Added to this server {date}",
+    "addedOnLabel": "Show when {name} was added",
+    "configureClanLabel": "Configure {name}",
+    "deleteClan": "Delete clan"
   },
   "RolesPage": {
     "title": "역할 관리",
@@ -1504,7 +1616,8 @@
       "builderLeague": "장인 리그",
       "achievement": "업적",
       "status": "Discord 가입 기간",
-      "familyPosition": "패밀리 직책"
+      "familyPosition": "패밀리 직책",
+      "clanCategory": "Clan Category"
     },
     "familyPositions": {
       "member": "멤버",
@@ -1712,7 +1825,11 @@
       "addCapitalReminder": "클랜 캐피탈 알림 추가",
       "addClanGamesReminder": "클랜 게임 알림 추가",
       "addInactivityReminder": "비활동 알림 추가",
-      "retry": "다시 시도"
+      "retry": "다시 시도",
+      "clone": "Clone reminder",
+      "edit": "Edit reminder",
+      "delete": "Delete reminder",
+      "more": "Reminder actions"
     },
     "clanSelector": {
       "label": "클랜",
@@ -1759,7 +1876,11 @@
       "attackThreshold": "남은 공격 횟수 기준",
       "attackThresholdPlaceholder": "1",
       "attackThresholdHelp": "남은 공격 횟수가 {threshold}회 이상인 사용자를 멘션합니다.",
-      "notSet": "설정되지 않음"
+      "notSet": "설정되지 않음",
+      "pointsValue": "{count} points",
+      "attacksValue": "{count, plural, one {1 attack remaining} other {# attacks remaining}}",
+      "customImageAlt": "Custom reminder image",
+      "customGifTitle": "Custom reminder GIF"
     },
     "dialog": {
       "addTitle": "새 알림 추가",
@@ -1788,7 +1909,31 @@
       "invalidDestination": "선택한 스레드가 이 채널에 속하지 않습니다.",
       "timeExceedsLimit": "남은 시간은 {min}~{max}시간 사이여야 합니다",
       "pointThresholdInvalid": "포인트 기준은 {min}~{max} 사이여야 합니다",
-      "attackThresholdInvalid": "공격 기준은 {min}~{max} 사이여야 합니다"
+      "attackThresholdInvalid": "공격 기준은 {min}~{max} 사이여야 합니다",
+      "reminderCloned": "Reminder cloned successfully",
+      "failedToClone": "Failed to clone reminder"
+    },
+    "section": {
+      "title": "Configured reminders",
+      "description": "Filter by clan, then choose a reminder type to review or change its delivery."
+    },
+    "issues": {
+      "title": "{count, plural, one {1 reminder needs attention} other {# reminders need attention}}",
+      "description": "These reminders point to a channel, thread, or forum post that is no longer available.",
+      "channelMissing": "Channel {channelId} was deleted or is unavailable",
+      "threadMissing": "Thread or forum post was deleted or is unavailable",
+      "showDetails": "Show details",
+      "hideDetails": "Hide details",
+      "review": "Review"
+    },
+    "clone": {
+      "title": "Clone reminder",
+      "description": "Choose a different clan. The time, channel, message, and all other settings will stay the same.",
+      "targetClan": "New clan",
+      "selectClan": "Select a different clan",
+      "noOtherClans": "Add another clan to this server before cloning this reminder.",
+      "action": "Clone reminder",
+      "cloning": "Cloning..."
     }
   },
   "LogsPage": {
@@ -1813,7 +1958,8 @@
       "war": "클랜전",
       "capital": "클랜 캐피탈",
       "player": "플레이어",
-      "server": "서버"
+      "server": "서버",
+      "countdowns": "Countdowns"
     },
     "clanLogs": {
       "joinLog": {
@@ -1951,6 +2097,73 @@
       "on": "켜짐",
       "off": "꺼짐",
       "example": "예시"
+    },
+    "source": {
+      "title": "Choose what you're configuring",
+      "description": "Select a Clan for clan-specific logs & setup or the server for server-wide logs & setup",
+      "label": "Server or clan",
+      "placeholder": "Select a server or clan",
+      "searchPlaceholder": "Search server or clans",
+      "serverDescription": "Logs, countdowns, and join panel",
+      "serverFallback": "This server"
+    },
+    "scope": {
+      "clan": "Clan",
+      "server": "Server",
+      "serverTitle": "Server logs",
+      "serverDescription": "These feeds apply to the whole Discord server and do not change with the selected clan."
+    },
+    "issues": {
+      "title": "{count, plural, one {1 destination needs attention} other {# destinations need attention}}",
+      "description": "These enabled logs point to a channel, thread, or forum post that is no longer available.",
+      "serverScope": "Server-wide",
+      "channelMissing": "Channel {channelId} was deleted or is unavailable",
+      "threadMissing": "Thread or forum post was deleted or is unavailable",
+      "showDetails": "Show details",
+      "hideDetails": "Hide details",
+      "review": "Review"
+    },
+    "emptyClans": "Add a clan to this server before configuring clan logs.",
+    "serverTabs": {
+      "logs": "Logs",
+      "countdowns": "Countdowns",
+      "joinPanel": "Join panel"
+    },
+    "countdowns": {
+      "loadError": "Failed to load countdowns.",
+      "updateError": "Failed to update the countdown.",
+      "empty": "No countdown types are available.",
+      "toggle": "Toggle {name}",
+      "types": {
+        "clan_games_timer": {
+          "label": "Clan Games",
+          "description": "Show the time remaining in Clan Games in a voice channel."
+        },
+        "cwl_timer": {
+          "label": "Clan War League",
+          "description": "Show the time remaining in Clan War League in a voice channel."
+        },
+        "raid_weekend_timer": {
+          "label": "Raid Weekend",
+          "description": "Show the time remaining in Raid Weekend in a voice channel."
+        },
+        "season_end_timer": {
+          "label": "Season end",
+          "description": "Show the time remaining in the current season in a voice channel."
+        },
+        "season_day_timer": {
+          "label": "Season day",
+          "description": "Show the current season day in a voice channel."
+        },
+        "war_score": {
+          "label": "War score",
+          "description": "Show this clan's current war score in a voice channel."
+        },
+        "war_timer": {
+          "label": "War timer",
+          "description": "Show the time remaining in this clan's current war in a voice channel."
+        }
+      }
     }
   },
   "GeneralPage": {
@@ -2005,7 +2218,28 @@
       "description": "접근 권한과 인증을 관리합니다",
       "fullWhitelistRole": "전체 허용 목록 역할",
       "fullWhitelistRoleDesc": "모든 봇 명령어에 전체 접근 권한을 가지며 모든 권한 확인을 건너뛰는 Discord 역할",
-      "noRole": "역할 없음"
+      "noRole": "역할 없음",
+      "dashboardAccess": {
+        "title": "Dashboard access",
+        "description": "Give Discord roles view or management access to specific dashboard sections. Multiple roles combine.",
+        "loadError": "Could not load dashboard access",
+        "retry": "Retry",
+        "selectRole": "Select a Discord role",
+        "addRole": "Add role",
+        "empty": "No dashboard roles have been added.",
+        "removeRole": "Remove {role}",
+        "levels": {
+          "none": "No access",
+          "view": "View",
+          "manage": "Manage"
+        },
+        "status": {
+          "saving": "Saving",
+          "saved": "Saved",
+          "pending": "Pending changes",
+          "error": "Not saved"
+        }
+      }
     },
     "familyRoles": {
       "title": "패밀리 역할",
@@ -2085,7 +2319,10 @@
         "playerClan": "클랜 이름",
         "playerLeague": "리그",
         "playerClanAbbr": "클랜 약어"
-      }
+      },
+      "autocompleteHint": "Type an opening brace to insert a placeholder",
+      "pending": "Waiting to save",
+      "saved": "Saved"
     },
     "familyRoles": {
       "title": "패밀리 역할",
@@ -2140,7 +2377,21 @@
     "loadingWarStats": "거의 준비되었습니다..."
   },
   "LoginPage": {
-    "redirecting": "Discord로 이동 중..."
+    "redirecting": "Discord로 이동 중...",
+    "dashboardLabel": "Dashboard",
+    "eyebrow": "ClashKing Dashboard",
+    "title": "Welcome, Chief.",
+    "subtitle": "Sign in to manage your Discord servers, configure ClashKing, and keep your clan running smoothly.",
+    "continueWithDiscord": "Continue with Discord",
+    "checkingSession": "Checking your session...",
+    "openingDiscord": "Opening Discord...",
+    "helper": "Discord confirms who you are. ClashKing never sees or stores your Discord password.",
+    "artCaption": "Your command center awaits",
+    "backToHome": "Back to ClashKing",
+    "footer": "Built for clans that mean business.",
+    "legalLabel": "Legal links",
+    "privacy": "Privacy",
+    "terms": "Terms"
   },
   "FeaturesPage": {
     "hero": {
@@ -2257,6 +2508,19 @@
     "whySupport": {
       "title": "왜 후원이 필요한가요?",
       "description": "금액에 관계없이 모든 후원금은 서버 비용과 API 요금에 직접 사용됩니다. 크리에이터 코드는 추가 비용 없이 ClashKing에 큰 도움을 줄 수 있습니다!"
+    },
+    "subscription": {
+      "title": "Support the project and unlock more",
+      "price": "$6.99 / month",
+      "perks": {
+        "notifications": "Notifications for up to 10 bookmarked players",
+        "credit": "$5 of AI assistant usage every month",
+        "botProfile": "Customize the bot's name and profile picture",
+        "autoBoards": "Increase a server from {freeLimit} to {paidLimit} AutoBoards",
+        "crossPlatform": "One subscription across dashboard and mobile"
+      },
+      "cta": "Sign in to subscribe",
+      "ctaDashboard": "View subscription"
     }
   },
   "ServersPage": {
@@ -2277,6 +2541,16 @@
     "noServers": {
       "title": "서버를 찾을 수 없음",
       "description": "관리자 또는 소유자로 있는 Discord 서버를 찾을 수 없습니다."
+    },
+    "inactive": {
+      "tooltip": "Tracking disabled after 90 days of inactivity",
+      "title": "Re-enable server tracking?",
+      "description": "Automations and server tracking were disabled because this server has been inactive for more than 90 days.",
+      "lastUsed": "Last command: {date}",
+      "unknown": "No command history",
+      "cancel": "Not now",
+      "confirm": "Re-enable",
+      "reactivating": "Re-enabling..."
     }
   },
   "AutoboardsPage": {
@@ -2293,7 +2567,8 @@
     "metrics": {
       "total": "설정됨",
       "refresh": "보드 새로고침",
-      "send": "예약 전송"
+      "send": "예약 전송",
+      "remaining": "available"
     },
     "filters": {
       "all": "전체"
@@ -2412,6 +2687,11 @@
       "load": "자동 보드를 불러오지 못했습니다.",
       "save": "자동 보드를 저장하지 못했습니다.",
       "delete": "자동 보드를 삭제하지 못했습니다."
+    },
+    "entitlement": {
+      "title": "Every server includes {freeLimit} AutoBoards",
+      "description": "Assign a subscription to this server to unlock up to {paidLimit}. Multiple subscriptions do not increase that limit.",
+      "current": "This server currently allows {limit} AutoBoards."
     }
   },
   "TicketsSettingsPage": {
@@ -2557,7 +2837,13 @@
     "noEmbedsHint": "여기서 임베드를 생성한 다음 패널이나 버튼에 지정하세요.",
     "legacyEmbed": "봇에서 생성됨 — 수정하려면 Discohook URL을 붙여 넣으세요.",
     "invalidDiscohookUrl": "잘못된 URL입니다. Discohook 페이지 URL(discohook.app/?data=... 또는 discohook.app/?share=...)을 붙여 넣으세요.",
-    "tabEmbeds": "임베드"
+    "tabEmbeds": "임베드",
+    "configurePanel": "Configure",
+    "configurePanelDescription": "Manage the panel message, buttons, pre-written messages, categories, and logs.",
+    "categoryCoverage": "{configured}/{total} categories",
+    "logCoverage": "{configured}/{total} logs",
+    "panelPreview": "Discord preview",
+    "panelPreviewHint": "This combines the selected panel embed and ticket buttons so you can review what members will see before configuring it."
   },
   "EmbedsPage": {
     "title": "임베드",
@@ -2735,7 +3021,9 @@
       "Green": "초록색",
       "Grey": "회색",
       "Red": "빨간색"
-    }
+    },
+    "joinPanelTitle": "Join panel",
+    "enabled": "Enable join panel"
   },
   "GiveawaysPage": {
     "title": "경품 이벤트",
@@ -2753,7 +3041,8 @@
       "general": "일반",
       "messages": "메시지",
       "restrictions": "제한",
-      "advanced": "고급"
+      "advanced": "고급",
+      "winners": "Winners"
     },
     "tabs": {
       "ongoing": "진행 중",
@@ -2808,7 +3097,10 @@
       "viewInDiscord": "Discord에서 보기",
       "reroll": "당첨자 재추첨",
       "rerolledCount": "{count, plural, one {#회 재추첨} other {#회 재추첨}}",
-      "viewEntries": "참가자 보기"
+      "viewEntries": "참가자 보기",
+      "viewGiveaway": "View giveaway",
+      "editGiveaway": "Edit giveaway",
+      "moreActions": "More giveaway actions"
     },
     "entries": {
       "description": "참가자 목록과 각 참가자의 당첨 확률입니다.",
@@ -2925,6 +3217,14 @@
       "description": "교체할 당첨자를 선택하세요. 참가 자격이 있는 참가자 중에서 새 당첨자를 추첨합니다.",
       "selectWinners": "교체할 당첨자 선택:",
       "confirm": "{count, plural, one {당첨자 #명 재추첨} other {당첨자 #명 재추첨}}"
+    },
+    "winners": {
+      "description": "Select a winner to copy their Discord ID or open their Discord profile.",
+      "current": "Current winners",
+      "rerolled": "Rerolled winners",
+      "onServer": "On server",
+      "notOnServer": "Not on server",
+      "none": "No winners have been recorded."
     }
   },
   "OverviewPage": {
@@ -3016,7 +3316,12 @@
       "addClashKing": "ClashKing 추가",
       "openDashboard": "대시보드 열기",
       "joinTestFlight": "TestFlight 참여",
-      "getAndroidApp": "Android 앱 받기"
+      "getAndroidApp": "Android 앱 받기",
+      "login": "Log in",
+      "dashboard": "Dashboard",
+      "iosApp": "iOS app",
+      "androidApp": "Android app",
+      "addDiscordBot": "Add Discord bot"
     },
     "hero": {
       "phrases": {
@@ -3134,5 +3439,76 @@
       "heading": "서비스 이용약관",
       "eyebrow": "ClashKing 법률 정보"
     }
+  },
+  "AccountSettings": {
+    "title": "Account settings",
+    "description": "Manage your ClashKing profile, preferences, usage, and subscription.",
+    "retry": "Retry",
+    "profile": {
+      "title": "Profile",
+      "description": "The identity attached to your ClashKing account.",
+      "discord": "Discord",
+      "account": "ClashKing",
+      "synced": "Your name and profile picture are synced from Discord.",
+      "local": "This profile is managed by your ClashKing account."
+    },
+    "appearance": {
+      "title": "Appearance & language",
+      "description": "Choose how the dashboard looks and which language it uses.",
+      "theme": "Theme",
+      "themes": {
+        "system": "System",
+        "light": "Light",
+        "dark": "Dark"
+      },
+      "language": "Language",
+      "browserLanguage": "Use browser language"
+    },
+    "usage": {
+      "title": "AI assistant usage",
+      "serverDescription": "Usage for the selected Discord server this month.",
+      "serverName": "Usage for {name} this month.",
+      "accountDescription": "Usage across your subscribed account this month.",
+      "used": "used this month",
+      "of": "of {limit}",
+      "available": "Usage available",
+      "freePoolUsed": "Shared free usage is currently unavailable",
+      "resets": "Resets {date}",
+      "progressLabel": "{percent}% of monthly usage used",
+      "infoLabel": "How free usage works",
+      "freePoolInfo": "Free server usage is available while ClashKing's shared monthly free allowance still has capacity. It can pause before your server reaches its own limit and resets at the start of each UTC month.",
+      "subscribers": "Credit from {count, plural, one {# subscription} other {# subscriptions}}"
+    },
+    "billing": {
+      "active": "Active",
+      "free": "Free plan",
+      "currentPlan": "ClashKing subscription",
+      "supportTitle": "Support ClashKing ❤️",
+      "price": "$6.99 per month",
+      "activeDescription": "Your Stripe subscription is active.",
+      "description": "Assign one subscription to one Discord server. Account features work across the dashboard and mobile app.",
+      "notifications": "Notifications for up to {limit} bookmarked players",
+      "credit": "{credit} of AI assistant usage each month",
+      "crossPlatform": "Available on the dashboard and mobile app",
+      "manage": "Manage subscription in Stripe",
+      "subscribe": "$6.99/month",
+      "learnMore": "Learn more",
+      "secure": "Secure checkout and billing management are handled by Stripe.",
+      "stripeUnavailable": "Stripe is not available right now.",
+      "checkoutUnavailable": "Subscriptions are not available yet. Every server currently uses the $0.05 monthly AI allowance.",
+      "checkoutSuccess": "Checkout completed. Your subscription will update as soon as Stripe confirms it.",
+      "checkoutCancelled": "Checkout was cancelled. Nothing was charged.",
+      "compactDescription": "$6.99 per month, including server perks and $5.00 of AI assistant usage.",
+      "assignServer": "Subscription server",
+      "selectServer": "Select a server",
+      "assignmentHelp": "Server perks follow this selection. Moving it can disable AutoBoards above the free limit on the previous server; AI usage already spent stays with your account.",
+      "checkoutAssignmentHelp": "Choose which server receives the subscription perks and included $5.00 monthly AI credit.",
+      "subscriptionRequired": "Subscribe to choose which server receives subscription perks.",
+      "selectServerFirst": "Choose a server before starting checkout."
+    }
+  },
+  "GraphicsPage": {
+    "desktopOnlyTitle": "Graphics is available on desktop",
+    "desktopOnlyDescription": "The graphics editor needs a desktop-sized workspace. Open this page on a screen at least 1024 pixels wide."
   }
 }

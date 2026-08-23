@@ -3,13 +3,29 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import {
+  closestCenter,
+  DndContext,
+  type DragEndEvent,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  sortableKeyboardCoordinates,
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import {
   AlertCircle,
   CheckCircle2,
-  FolderTree,
   Loader2,
   Pencil,
   Plus,
-  RefreshCw,
+  GripVertical,
   Trash2,
   TriangleAlert,
 } from "lucide-react";
@@ -25,7 +41,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -38,6 +53,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
+import { cn } from "@/lib/utils";
 import { apiClient } from "@/lib/api/client";
 import {
   isClanCategoriesResponse,
@@ -61,6 +77,20 @@ export function validateClanCategoryName(value: string): boolean {
     && Array.from(normalized).length <= MAX_CATEGORY_NAME_RUNES;
 }
 
+export function moveClanCategory(
+  categories: ClanCategory[],
+  activeId: string,
+  overId: string,
+): ClanCategory[] {
+  const oldIndex = categories.findIndex(({ id }) => id === activeId);
+  const newIndex = categories.findIndex(({ id }) => id === overId);
+  if (oldIndex < 0 || newIndex < 0 || oldIndex === newIndex) return categories;
+  return arrayMove(categories, oldIndex, newIndex).map((category, position) => ({
+    ...category,
+    position,
+  }));
+}
+
 interface ClanCategoryManagerProps {
   serverId: string;
   refreshVersion: number;
@@ -71,6 +101,76 @@ interface ClanCategoryManagerProps {
 interface DeleteSuccess {
   name: string;
   uncategorizedClanCount: number;
+}
+
+interface SortableCategoryRowProps {
+  readonly category: ClanCategory;
+  readonly disabled: boolean;
+  readonly previewing: boolean;
+  readonly onRename: () => void;
+  readonly onDelete: () => void;
+}
+
+function SortableCategoryRow({
+  category,
+  disabled,
+  previewing,
+  onRename,
+  onDelete,
+}: SortableCategoryRowProps) {
+  const t = useTranslations("ClansPage.categories");
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: category.id,
+    disabled,
+  });
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={{ transform: CSS.Transform.toString(transform), transition }}
+      className={cn(
+        "flex items-center justify-between gap-2 rounded-[20px] bg-muted/45 px-2.5 py-2.5 transition-[opacity,transform,box-shadow]",
+        isDragging && "relative z-10 opacity-60 shadow-lg",
+      )}
+    >
+      <button
+        type="button"
+        {...attributes}
+        {...listeners}
+        disabled={disabled}
+        className="touch-none cursor-grab rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-background/70 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 active:cursor-grabbing"
+        aria-label={t("reorderAction", { name: category.name })}
+      >
+        <GripVertical className="h-4 w-4" />
+      </button>
+      <p className="min-w-0 flex-1 truncate text-sm font-medium">{category.name}</p>
+      <div className="flex shrink-0 items-center gap-1.5">
+        <Badge variant="secondary" className="border-0 bg-background/70 shadow-none">
+          {t("clanCount", { count: category.clanCount })}
+        </Badge>
+        <Button
+          variant="secondary"
+          size="icon"
+          className="h-8 w-8 border-0 bg-background/70 shadow-none"
+          aria-label={t("renameAction", { name: category.name })}
+          onClick={onRename}
+          disabled={disabled}
+        >
+          <Pencil className="h-4 w-4" />
+        </Button>
+        <Button
+          variant="destructive"
+          size="icon"
+          className="h-8 w-8"
+          aria-label={t("deleteAction", { name: category.name })}
+          onClick={onDelete}
+          disabled={disabled}
+        >
+          {previewing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+        </Button>
+      </div>
+    </div>
+  );
 }
 
 export function ClanCategoryManager({
@@ -94,6 +194,11 @@ export function ClanCategoryManager({
   const [deletePreview, setDeletePreview] = useState<ClanCategoryDeletePreview | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [deleteSuccess, setDeleteSuccess] = useState<DeleteSuccess | null>(null);
+  const [reordering, setReordering] = useState(false);
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+  );
 
   const loadCategories = async () => {
     setLoading(true);
@@ -228,27 +333,32 @@ export function ClanCategoryManager({
     }
   };
 
+  const reorderCategories = async ({ active, over }: DragEndEvent) => {
+    if (!over || active.id === over.id || reordering) return;
+    const previous = categories;
+    const next = moveClanCategory(previous, String(active.id), String(over.id));
+    if (next === previous) return;
+
+    setCategories(next);
+    onCategoriesChange(next);
+    setReordering(true);
+    const response = await apiClient.clanCategories.reorder(serverId, next.map(({ id }) => id));
+    if (!isClanCategoriesResponse(response.data)) {
+      setCategories(previous);
+      onCategoriesChange(previous);
+      showError(response.error || t("errors.reorder"));
+      setReordering(false);
+      return;
+    }
+    setCategories(response.data.items);
+    onCategoriesChange(response.data.items);
+    toast({ title: tCommon("success"), description: t("reordered") });
+    setReordering(false);
+  };
+
   return (
-    <Card className="border-border bg-card">
-      <CardHeader className="gap-3 sm:flex-row sm:items-start sm:justify-between">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <FolderTree className="h-4 w-4 text-primary" />
-            <CardTitle className="text-base">{t("title")}</CardTitle>
-          </div>
-          <CardDescription>{t("description")}</CardDescription>
-        </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => void loadCategories()}
-          disabled={loading}
-        >
-          <RefreshCw className={loading ? "animate-spin" : ""} />
-          {t("refresh")}
-        </Button>
-      </CardHeader>
-      <CardContent className="space-y-4">
+    <>
+      <div className="space-y-4">
         <div className="flex flex-col gap-2 sm:flex-row">
           <div className="flex-1 space-y-1.5">
             <Label htmlFor="new-clan-category">{t("createLabel")}</Label>
@@ -304,51 +414,28 @@ export function ClanCategoryManager({
             {[0, 1].map((item) => <Skeleton key={item} className="h-12 w-full" />)}
           </div>
         ) : categories.length === 0 ? (
-          <div className="rounded-lg border border-dashed border-border px-4 py-6 text-center text-sm text-muted-foreground">
+          <div className="rounded-[20px] bg-muted/45 px-4 py-6 text-center text-sm text-muted-foreground">
             {t("empty")}
           </div>
         ) : (
-          <div className="divide-y divide-border rounded-lg border border-border">
-            {categories.map((category) => (
-              <div
-                key={category.id}
-                className="flex items-center justify-between gap-3 px-3 py-2.5"
-              >
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-medium">{category.name}</p>
-                  <p className="font-mono text-[11px] text-muted-foreground">{category.id}</p>
-                </div>
-                <div className="flex shrink-0 items-center gap-1.5">
-                  <Badge variant="secondary">
-                    {t("clanCount", { count: category.clanCount })}
-                  </Badge>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8"
-                    aria-label={t("renameAction", { name: category.name })}
-                    onClick={() => openRename(category)}
-                  >
-                    <Pencil className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 text-destructive hover:bg-destructive/10 hover:text-destructive"
-                    aria-label={t("deleteAction", { name: category.name })}
-                    onClick={() => void previewDelete(category)}
-                    disabled={previewingId !== null}
-                  >
-                    {previewingId === category.id
-                      ? <Loader2 className="h-4 w-4 animate-spin" />
-                      : <Trash2 className="h-4 w-4" />}
-                  </Button>
-                </div>
+          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={(event) => void reorderCategories(event)}>
+            <SortableContext items={categories.map(({ id }) => id)} strategy={verticalListSortingStrategy}>
+              <div className="space-y-2">
+                {categories.map((category) => (
+                  <SortableCategoryRow
+                    key={category.id}
+                    category={category}
+                    disabled={reordering || previewingId !== null}
+                    previewing={previewingId === category.id}
+                    onRename={() => openRename(category)}
+                    onDelete={() => void previewDelete(category)}
+                  />
+                ))}
               </div>
-            ))}
-          </div>
+            </SortableContext>
+          </DndContext>
         )}
-      </CardContent>
+      </div>
 
       <Dialog
         open={renameTarget !== null}
@@ -356,7 +443,7 @@ export function ClanCategoryManager({
           if (!open && !renaming) setRenameTarget(null);
         }}
       >
-        <DialogContent>
+        <DialogContent variant="form">
           <DialogHeader>
             <DialogTitle>{t("renameTitle")}</DialogTitle>
             <DialogDescription>{t("renameDescription")}</DialogDescription>
@@ -423,6 +510,6 @@ export function ClanCategoryManager({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </Card>
+    </>
   );
 }

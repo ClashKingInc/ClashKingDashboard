@@ -8,7 +8,6 @@ import type {
   RosterMember,
   RosterAutomation,
   RosterGroup,
-  SignupCategory,
   Clan,
   ClanMember,
   MissingMembersResult,
@@ -57,7 +56,7 @@ export async function fetchRosters(serverId: string, groupId?: string): Promise<
 }
 
 export async function fetchRoster(rosterId: string, serverId: string): Promise<Roster> {
-  const response = await apiFetch(`/v2/roster/${rosterId}?server_id=${serverId}`, {
+  const response = await apiFetch(`/v2/roster/${encodeURIComponent(rosterId)}?server_id=${encodeURIComponent(serverId)}`, {
     headers: getAuthHeaders(),
   });
   const data = await handleResponse<{ roster?: Roster } | Roster>(response);
@@ -179,25 +178,6 @@ export async function removeRosterMember(
   }
 }
 
-export async function updateMemberCategory(
-  rosterId: string,
-  serverId: string,
-  memberTag: string,
-  categoryId: string | null
-): Promise<void> {
-  const response = await apiFetch(
-    `/v2/roster/${rosterId}/members/${encodeURIComponent(memberTag)}?server_id=${serverId}`,
-    {
-      method: 'PATCH',
-      headers: getAuthHeaders(),
-      body: JSON.stringify({ signup_group: categoryId }),
-    }
-  );
-  if (!response.ok) {
-    throw new Error('Failed to update member category');
-  }
-}
-
 export async function refreshRosterMember(
   rosterId: string,
   serverId: string,
@@ -213,6 +193,28 @@ export async function refreshRosterMember(
   if (!response.ok) throw new Error('Failed to refresh member');
   const data = await response.json();
   return data.member;
+}
+
+export async function refreshRosterDiscordIdentity(
+	rosterId: string,
+	serverId: string,
+	memberTag: string,
+): Promise<Pick<RosterMember, "discord" | "discord_username" | "discord_avatar_url">> {
+	const response = await apiFetch(
+		`/v2/server/${encodeURIComponent(serverId)}/rosters/${encodeURIComponent(rosterId)}/discord-identity/refresh`,
+		{
+			method: "POST",
+			headers: getAuthHeaders(),
+			body: JSON.stringify({ playerTag: memberTag }),
+		},
+	);
+	if (!response.ok) throw new Error("Failed to refresh Discord identity");
+	const data = await response.json();
+	return {
+		discord: data.discordUserId,
+		discord_username: data.discordUsername,
+		discord_avatar_url: data.discordAvatarUrl,
+	};
 }
 
 export async function fetchMissingMembers(
@@ -364,62 +366,6 @@ export async function deleteGroup(groupId: string, serverId: string): Promise<vo
   });
   if (!response.ok) {
     throw new Error('Failed to delete group');
-  }
-}
-
-// ============================================
-// Categories API
-// ============================================
-
-export async function fetchCategories(serverId: string): Promise<SignupCategory[]> {
-  const response = await apiFetch(`/v2/roster-signup-category/list?server_id=${serverId}`, {
-    headers: getAuthHeaders(),
-  });
-  const data = await handleResponse<{ items?: SignupCategory[] } | SignupCategory[]>(response);
-  return Array.isArray(data) ? data : data.items || [];
-}
-
-export async function createCategory(
-  serverId: string,
-  alias: string
-): Promise<SignupCategory> {
-  const response = await apiFetch(`/v2/roster-signup-category?server_id=${serverId}`, {
-    method: 'POST',
-    headers: getAuthHeaders(),
-    body: JSON.stringify({
-      server_id: serverId,
-      alias,
-    }),
-  });
-  return handleResponse<SignupCategory>(response);
-}
-
-export async function updateCategory(
-  categoryId: string,
-  serverId: string,
-  data: Partial<SignupCategory>
-): Promise<SignupCategory> {
-  const response = await apiFetch(
-    `/v2/roster-signup-category/${categoryId}?server_id=${serverId}`,
-    {
-      method: 'PATCH',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(data),
-    }
-  );
-  return handleResponse<SignupCategory>(response);
-}
-
-export async function deleteCategory(categoryId: string, serverId: string): Promise<void> {
-  const response = await apiFetch(
-    `/v2/roster-signup-category/${categoryId}?server_id=${serverId}`,
-    {
-      method: 'DELETE',
-      headers: getAuthHeaders(),
-    }
-  );
-  if (!response.ok) {
-    throw new Error('Failed to delete category');
   }
 }
 

@@ -4,23 +4,24 @@ import { beforeEach } from "vitest";
 import { AuthSessionProvider, useAuthSession } from "./auth-session-provider";
 
 const authMock = vi.hoisted(() => {
-  let listener: (() => void) | undefined;
+  let listener: ((event: "authenticated" | "anonymous" | "user") => void) | undefined;
   let token: string | undefined;
   return {
     getAccessToken: () => token,
     getCachedUser: () => undefined,
     restoreAccessToken: vi.fn(() => new Promise<"restored" | "anonymous" | "unavailable">(() => undefined)),
-    subscribeSession: vi.fn((next: () => void) => {
+    subscribeSession: vi.fn((next: (event: "authenticated" | "anonymous" | "user") => void) => {
       listener = next;
       return () => {
         listener = undefined;
       };
     }),
     cacheUser: vi.fn(),
+    startAccessTokenRefresh: vi.fn(() => vi.fn()),
     setToken: (next: string | undefined) => {
       token = next;
     },
-    notify: () => listener?.(),
+    notify: (event: "authenticated" | "anonymous" | "user") => listener?.(event),
   };
 });
 
@@ -29,12 +30,13 @@ vi.mock("@/lib/auth/session", () => ({
   getAccessToken: authMock.getAccessToken,
   getCachedUser: authMock.getCachedUser,
   restoreAccessToken: authMock.restoreAccessToken,
+  startAccessTokenRefresh: authMock.startAccessTokenRefresh,
   subscribeSession: authMock.subscribeSession,
 }));
 
 vi.mock("@/lib/api/client", () => ({
-  apiClient: { auth: { getCurrentUser: vi.fn() } },
-  getDefaultBaseUrl: () => "https://local-api.clashk.ing",
+  apiClient: { auth: { getCurrentUser: vi.fn().mockResolvedValue({}) } },
+  getDefaultBaseUrl: () => "https://dev-api.clashk.ing",
 }));
 
 function SessionStatus() {
@@ -61,13 +63,18 @@ describe("AuthSessionProvider", () => {
 
     act(() => {
       authMock.setToken("access-token");
-      authMock.notify();
+      authMock.notify("authenticated");
     });
     expect(screen.getByText("authenticated")).toBeInTheDocument();
 
     act(() => {
       authMock.setToken(undefined);
-      authMock.notify();
+      authMock.notify("user");
+    });
+    expect(screen.getByText("authenticated")).toBeInTheDocument();
+
+    act(() => {
+      authMock.notify("anonymous");
     });
     expect(screen.getByText("anonymous")).toBeInTheDocument();
   });
@@ -92,5 +99,32 @@ describe("AuthSessionProvider", () => {
     });
     expect(screen.getByText("anonymous")).toBeInTheDocument();
     vi.useRealTimers();
+  });
+
+  it("reuses an in-memory token when the provider remounts", async () => {
+    authMock.setToken("existing-token");
+
+    render(
+      <AuthSessionProvider>
+        <SessionStatus />
+      </AuthSessionProvider>,
+    );
+
+    await act(async () => Promise.resolve());
+    expect(authMock.restoreAccessToken).not.toHaveBeenCalled();
+    expect(screen.getByText("authenticated")).toBeInTheDocument();
+  });
+
+  it("trusts a successful cookie restoration instead of a second token snapshot", async () => {
+    authMock.restoreAccessToken.mockResolvedValueOnce("restored");
+
+    render(
+      <AuthSessionProvider>
+        <SessionStatus />
+      </AuthSessionProvider>,
+    );
+
+    await act(async () => Promise.resolve());
+    expect(screen.getByText("authenticated")).toBeInTheDocument();
   });
 });

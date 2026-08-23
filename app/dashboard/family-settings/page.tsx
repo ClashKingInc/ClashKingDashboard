@@ -3,31 +3,30 @@
 import { useGuildId } from "@/lib/dashboard-route";
 
 
-import React, { useState, useEffect, useEffectEvent } from "react";
+import React, { useRef, useState, useEffect, useEffectEvent } from "react";
 import { useTranslations } from "next-intl";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { useQueryClient } from "@tanstack/react-query";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
-import { Save, RotateCcw, AlertCircle, Loader2, User, Shield, Eye, ChevronDown, ChevronRight, Trash2, Users, Settings2 } from "lucide-react";
+import { Check, RotateCcw, AlertCircle, Loader2, Shield, Trash2, Users } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { apiClient } from "@/lib/api/client";
-import { apiCache } from "@/lib/api-cache";
 import {
-  dashboardCacheKeys,
   normalizeDiscordRolesPayload,
   normalizeServerSettingsPayload,
 } from "@/lib/dashboard-cache";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { dashboardQueryKeys } from "@/lib/dashboard-query";
+import { dashboardQueryOptions } from "@/lib/dashboard-query-options";
 import { Skeleton } from "@/components/ui/skeleton";
 import { RoleCombobox } from "@/components/ui/role-combobox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 import type { FamilyRole, FamilyRolesResponse, FamilyRoleType } from "@/lib/api/types/family-roles";
 import type { RoleMode } from "@/lib/api/types/roles";
+import { NicknameFormatInput } from "./nickname-format-input";
+import type { PlaceholderOption } from "./nickname-format";
+import { InfoPopover } from "@/components/ui/info-popover";
+import { presentFamilyRoles } from "./family-role-presentation";
 
 interface NicknameSettings {
   change_nickname: boolean;
@@ -36,14 +35,14 @@ interface NicknameSettings {
 }
 
 // Color classes for role type cards
-const colorClasses: Record<string, { bg: string; text: string; border: string }> = {
-  green: { bg: "bg-green-500/10", text: "text-green-500", border: "border-green-500/30" },
-  red: { bg: "bg-red-500/10", text: "text-red-500", border: "border-red-500/30" },
-  blue: { bg: "bg-blue-500/10", text: "text-blue-500", border: "border-blue-500/30" },
-  yellow: { bg: "bg-yellow-500/10", text: "text-yellow-500", border: "border-yellow-500/30" },
-  orange: { bg: "bg-orange-500/10", text: "text-orange-500", border: "border-orange-500/30" },
-  purple: { bg: "bg-purple-500/10", text: "text-purple-500", border: "border-purple-500/30" },
-  gray: { bg: "bg-gray-500/10", text: "text-gray-500", border: "border-gray-500/30" },
+const colorClasses: Record<string, { bg: string; text: string }> = {
+  green: { bg: "bg-green-500/10", text: "text-green-500" },
+  red: { bg: "bg-red-500/10", text: "text-red-500" },
+  blue: { bg: "bg-blue-500/10", text: "text-blue-500" },
+  yellow: { bg: "bg-yellow-500/10", text: "text-yellow-500" },
+  orange: { bg: "bg-orange-500/10", text: "text-orange-500" },
+  purple: { bg: "bg-purple-500/10", text: "text-purple-500" },
+  gray: { bg: "bg-gray-500/10", text: "text-gray-500" },
 };
 
 // FamilyRoleCard component - supports multiple roles per type
@@ -56,6 +55,7 @@ interface FamilyRoleCardProps {
   readonly discordRoles: Array<{ id: string; name: string; color?: number }>;
   readonly isRoleDataLoading: boolean;
   readonly isLoading: boolean;
+  readonly removeLabel: string;
   readonly onAdd: (roleId: string) => Promise<void>;
   readonly onRemove: (id: string, roleId: string) => Promise<void>;
   readonly onModeChange: (id: string, mode: RoleMode) => Promise<void>;
@@ -76,6 +76,7 @@ function FamilyRoleCard({
   discordRoles,
   isRoleDataLoading,
   isLoading,
+  removeLabel,
   onAdd,
   onRemove,
   onModeChange,
@@ -84,25 +85,16 @@ function FamilyRoleCard({
   const colors = colorClasses[color] || colorClasses.gray;
   const hasRoles = !isRoleDataLoading && roles.length > 0;
 
-  // Get role details with existence check
-  const assignedRoles = roles.map((role) => {
-    const discordRole = discordRoles.find((r) => r.id === role.role_id);
-    return {
-      ...role,
-      name: discordRole?.name || null,
-      color: discordRole?.color || 0,
-      exists: discordRole !== undefined,
-    };
-  });
+  const assignedRoles = presentFamilyRoles(roles, discordRoles, t("familyRoles.deletedRole"));
 
   const hasDeletedRoles = assignedRoles.some((r) => !r.exists);
 
   return (
-    <div className={`rounded-lg border ${hasRoles ? colors.border : "border-border"} ${hasRoles ? colors.bg : "bg-secondary/20"} transition-all`}>
+    <div className="rounded-[22px] bg-card shadow-sm shadow-black/5">
       {/* Header */}
-      <div className="p-3 flex items-center justify-between">
+      <div className="flex items-center justify-between p-4 pb-3">
         <div className="flex items-center gap-3">
-          <div className={`p-2 rounded-lg ${colors.bg}`}>
+          <div className={`rounded-xl p-2 ${colors.bg}`}>
             <Icon className={`h-4 w-4 ${colors.text}`} />
           </div>
           <div className="flex-1 min-w-0">
@@ -126,7 +118,7 @@ function FamilyRoleCard({
       </div>
 
       {/* Content */}
-      <div className="px-3 pb-3 space-y-3">
+      <div className="space-y-3 px-4 pb-4">
         {isRoleDataLoading ? (
           <div className="space-y-2">
             <Skeleton className="h-10 w-full" />
@@ -144,6 +136,7 @@ function FamilyRoleCard({
               addPlaceholder={t("familyRoles.addRole")}
               disabled={isLoading}
               showDisabled={false}
+              className="h-10 rounded-xl border-0 bg-muted/55 shadow-sm shadow-black/5 hover:bg-muted"
             />
 
             {/* Assigned roles list */}
@@ -152,25 +145,23 @@ function FamilyRoleCard({
                 {assignedRoles.map((role) => (
                   <div
                     key={role.id}
-                    className={`flex items-center justify-between p-2 rounded-md ${
-                      role.exists ? "bg-background/60" : "bg-orange-500/5 border border-orange-500/20"
+                    data-slot="family-role-row"
+                    className={`flex min-w-0 flex-col gap-3 rounded-xl p-3 sm:flex-row sm:items-center sm:justify-between sm:gap-2 sm:p-2.5 ${
+                      role.exists ? "bg-muted/45" : "bg-orange-500/10"
                     }`}
                   >
-                    <div className="flex items-center gap-2 min-w-0">
+                    <div className="flex min-w-0 w-full items-center gap-2 sm:flex-1">
                       <div
                         className="w-3 h-3 rounded-full shrink-0"
                         style={{ backgroundColor: role.exists ? intToHexColor(role.color) : "#f97316" }}
                       />
-                      <span className={`text-sm truncate ${role.exists ? "text-foreground" : "text-orange-600"}`}>
-                        {role.exists ? `@${role.name}` : t("familyRoles.deletedRole")}
+                      <span className={`min-w-0 flex-1 truncate text-sm ${role.exists ? "text-foreground" : "text-orange-600"}`}>
+                        {role.displayName}
                       </span>
-                      {role.exists ? null : (
-                        <span className="text-xs text-orange-500">({role.role_id})</span>
-                      )}
                     </div>
-                    <div className="flex items-center gap-1.5">
+                    <div data-slot="family-role-actions" className="flex w-full min-w-0 items-center gap-2 sm:w-auto sm:shrink-0 sm:gap-1.5">
                       <Select value={role.mode} onValueChange={(mode) => void onModeChange(role.id, mode as RoleMode)} disabled={isLoading}>
-                        <SelectTrigger className="h-8 w-[8.5rem] text-xs">
+                        <SelectTrigger className="h-10 min-w-0 flex-1 border-0 bg-background/70 text-xs shadow-sm shadow-black/5 sm:h-8 sm:w-[8.5rem] sm:flex-none">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -183,7 +174,8 @@ function FamilyRoleCard({
                         type="button"
                         onClick={() => onRemove(role.id, role.role_id)}
                         disabled={isLoading}
-                        className="p-1 rounded hover:bg-red-500/10 text-muted-foreground hover:text-red-500 transition-colors shrink-0"
+                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-muted-foreground transition-colors hover:bg-red-500/10 hover:text-red-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:h-8 sm:w-8 sm:rounded-lg"
+                        aria-label={`${removeLabel} ${role.displayName}`}
                       >
                         <Trash2 className="h-3.5 w-3.5" />
                       </button>
@@ -208,23 +200,23 @@ function FamilyRoleCard({
 
 export default function FamilySettingsPage() {
   const guildId = useGuildId();
+  const queryClient = useQueryClient();
   const t = useTranslations("FamilySettingsPage");
   const tCommon = useTranslations("Common");
   const { toast } = useToast();
 
-  // Placeholder descriptions from translations
-  const PLACEHOLDERS = [
-    { key: "{discord_name}", desc: t("nickname.placeholders.discordName"), example: "JohnDoe#1234" },
-    { key: "{discord_display_name}", desc: t("nickname.placeholders.discordDisplayName"), example: "John" },
-    { key: "{player_name}", desc: t("nickname.placeholders.playerName"), example: "Chief John" },
-    { key: "{player_tag}", desc: t("nickname.placeholders.playerTag"), example: "#2PP" },
-    { key: "{player_townhall}", desc: t("nickname.placeholders.playerTownhall"), example: "16" },
-    { key: "{player_townhall_small}", desc: t("nickname.placeholders.playerTownhallSmall"), example: "¹⁶" },
-    { key: "{player_warstars}", desc: t("nickname.placeholders.playerWarstars"), example: "1234" },
-    { key: "{player_role}", desc: t("nickname.placeholders.playerRole"), example: "Leader" },
-    { key: "{player_clan}", desc: t("nickname.placeholders.playerClan"), example: "RCS Clan" },
-    { key: "{player_league}", desc: t("nickname.placeholders.playerLeague"), example: "Legend" },
-    { key: "{player_clan_abbreviation}", desc: t("nickname.placeholders.playerClanAbbr"), example: "RCS" },
+  const placeholders: PlaceholderOption[] = [
+    { key: "{discord_name}", description: t("nickname.placeholders.discordName"), example: "JohnDoe#1234" },
+    { key: "{discord_display_name}", description: t("nickname.placeholders.discordDisplayName"), example: "John" },
+    { key: "{player_name}", description: t("nickname.placeholders.playerName"), example: "Chief John" },
+    { key: "{player_tag}", description: t("nickname.placeholders.playerTag"), example: "#2PP" },
+    { key: "{player_townhall}", description: t("nickname.placeholders.playerTownhall"), example: "16" },
+    { key: "{player_townhall_small}", description: t("nickname.placeholders.playerTownhallSmall"), example: "¹⁶" },
+    { key: "{player_warstars}", description: t("nickname.placeholders.playerWarstars"), example: "1234" },
+    { key: "{player_role}", description: t("nickname.placeholders.playerRole"), example: "Leader" },
+    { key: "{player_clan}", description: t("nickname.placeholders.playerClan"), example: "RCS Clan" },
+    { key: "{player_league}", description: t("nickname.placeholders.playerLeague"), example: "Legend" },
+    { key: "{player_clan_abbreviation}", description: t("nickname.placeholders.playerClanAbbr"), example: "RCS" },
   ];
 
   const [settings, setSettings] = useState<NicknameSettings>({
@@ -237,18 +229,17 @@ export default function FamilySettingsPage() {
   const [discordRoles, setDiscordRoles] = useState<Array<{ id: string; name: string; color?: number }>>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [showSaved, setShowSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [isFamilyPlaceholdersOpen, setIsFamilyPlaceholdersOpen] = useState(false);
-  const [isNonFamilyPlaceholdersOpen, setIsNonFamilyPlaceholdersOpen] = useState(false);
+  const settingsRef = useRef(settings);
+  const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const savedIndicatorTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const saveQueueRef = useRef<Promise<void>>(Promise.resolve());
 
   // Family Roles state
   const [familyRoles, setFamilyRoles] = useState<FamilyRolesResponse | null>(null);
   const [isLoadingFamilyRoles, setIsLoadingFamilyRoles] = useState(true);
   const [familyRolesLoading, setFamilyRolesLoading] = useState(false);
-
-  const settingsCacheKey = dashboardCacheKeys.settings(guildId);
-  const rolesCacheKey = dashboardCacheKeys.discordRoles(guildId);
-  const familyRolesCacheKey = `family-roles-${guildId}`;
 
   const loadSettings = async (forceRefresh = false) => {
     try {
@@ -256,18 +247,10 @@ export default function FamilySettingsPage() {
       setError(null);
 
       if (forceRefresh) {
-        apiCache.invalidate(settingsCacheKey);
+        await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.settings(guildId), exact: true });
       }
 
-      const settingsPayload = await apiCache.get(settingsCacheKey, async () => {
-        const response = await apiClient.servers.getSettings(guildId);
-
-        if (response.error) {
-          throw new Error(response.error);
-        }
-
-        return response.data;
-      });
+      const settingsPayload = await queryClient.fetchQuery(dashboardQueryOptions.settings(guildId));
       const settingsData = normalizeServerSettingsPayload(settingsPayload);
 
       if (settingsData) {
@@ -277,8 +260,10 @@ export default function FamilySettingsPage() {
           non_family_nickname_rule: settingsData.non_family_nickname_rule ?? "{player_name}",
         };
 
+        settingsRef.current = loadedSettings;
         setSettings(loadedSettings);
         setInitialSettings(loadedSettings);
+        setShowSaved(false);
       }
     } catch (err: any) {
       setError(err.message || "Failed to load settings");
@@ -291,17 +276,10 @@ export default function FamilySettingsPage() {
   async function loadDiscordRoles(forceRefresh = false) {
     try {
       if (forceRefresh) {
-        apiCache.invalidate(rolesCacheKey);
+        await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.roles(guildId), exact: true });
       }
 
-      // Use cache to prevent duplicate requests
-      const rolesPayload = await apiCache.get(rolesCacheKey, async () => {
-        const response = await apiClient.roles.getDiscordRoles(guildId);
-        if (response.error) {
-          throw new Error(response.error);
-        }
-        return response.data;
-      });
+      const rolesPayload = await queryClient.fetchQuery(dashboardQueryOptions.roles(guildId));
       setDiscordRoles(normalizeDiscordRolesPayload(rolesPayload));
     } catch (err) {
       console.error("Failed to load Discord roles:", err);
@@ -312,17 +290,16 @@ export default function FamilySettingsPage() {
     try {
       setIsLoadingFamilyRoles(true);
       if (forceRefresh) {
-        apiCache.invalidate(familyRolesCacheKey);
+        await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.route("family-roles", guildId), exact: true });
       }
 
-      const familyRolesData = await apiCache.get(familyRolesCacheKey, async () => {
-        const response = await apiClient.familyRoles.getFamilyRoles(guildId);
-
-        if (response.error) {
-          throw new Error(response.error);
-        }
-
-        return response.data;
+      const familyRolesData = await queryClient.fetchQuery({
+        queryKey: dashboardQueryKeys.route("family-roles", guildId),
+        queryFn: async () => {
+          const response = await apiClient.familyRoles.getFamilyRoles(guildId);
+          if (response.error || !response.data) throw new Error(response.error || "Failed to load family roles");
+          return response.data;
+        },
       });
 
       if (familyRolesData) {
@@ -341,7 +318,13 @@ export default function FamilySettingsPage() {
     void loadFamilyRoles();
   });
 
-  useEffect(() => { loadInitialData(); }, [guildId]);
+  useEffect(() => {
+    loadInitialData();
+    return () => {
+      if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+      if (savedIndicatorTimerRef.current) clearTimeout(savedIndicatorTimerRef.current);
+    };
+  }, [guildId]);
 
   const handleAddFamilyRole = async (roleType: FamilyRoleType, roleId: string) => {
     if (!roleId || !roleType) return;
@@ -417,38 +400,73 @@ export default function FamilySettingsPage() {
     }
   };
 
-  const handleSave = async () => {
-    try {
-      if (!isSettingsDirty) return;
+  const persistSettings = (nextSettings: NicknameSettings) => {
+    saveQueueRef.current = saveQueueRef.current.catch(() => undefined).then(async () => {
+      try {
+        setIsSaving(true);
+        setShowSaved(false);
+        setError(null);
+        const response = await apiClient.servers.updateSettings(guildId, nextSettings);
+        if (response.error) throw new Error(response.error);
 
-      setIsSaving(true);
-      setError(null);
+        await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.settings(guildId), exact: true });
+        setInitialSettings(nextSettings);
+        setShowSaved(true);
+        if (savedIndicatorTimerRef.current) clearTimeout(savedIndicatorTimerRef.current);
+        savedIndicatorTimerRef.current = setTimeout(() => setShowSaved(false), 2400);
+      } catch (err: any) {
+        setError(err.message || "Failed to save settings");
+        console.error("Failed to save settings:", err);
+      } finally {
+        setIsSaving(false);
+      }
+    });
 
-      await apiClient.servers.updateSettings(guildId, {
-        change_nickname: settings.change_nickname,
-        nickname_rule: settings.nickname_rule,
-        non_family_nickname_rule: settings.non_family_nickname_rule,
-      });
+    return saveQueueRef.current;
+  };
 
-      // Invalidate cache after saving
-      apiCache.invalidate(settingsCacheKey);
-
-      setInitialSettings(settings);
-
-      toast({
-        title: tCommon("success"),
-        description: t("settingsSaved"),
-      });
-    } catch (err: any) {
-      setError(err.message || "Failed to save settings");
-      console.error("Failed to save settings:", err);
-    } finally {
-      setIsSaving(false);
+  const cancelPendingSave = () => {
+    if (saveTimerRef.current) {
+      clearTimeout(saveTimerRef.current);
+      saveTimerRef.current = null;
     }
   };
 
-  const handleReset = () => {
-    loadSettings(true);
+  const updateNicknameFormat = (
+    field: "nickname_rule" | "non_family_nickname_rule",
+    value: string,
+  ) => {
+    const nextSettings = { ...settingsRef.current, [field]: value };
+    settingsRef.current = nextSettings;
+    setSettings(nextSettings);
+    setShowSaved(false);
+    cancelPendingSave();
+    saveTimerRef.current = setTimeout(() => {
+      saveTimerRef.current = null;
+      void persistSettings(settingsRef.current);
+    }, 700);
+  };
+
+  const commitNicknameFormats = () => {
+    if (!saveTimerRef.current) return;
+    cancelPendingSave();
+    void persistSettings(settingsRef.current);
+  };
+
+  const handleNicknameToggle = (checked: boolean) => {
+    cancelPendingSave();
+    const nextSettings = { ...settingsRef.current, change_nickname: checked };
+    settingsRef.current = nextSettings;
+    setSettings(nextSettings);
+    setShowSaved(false);
+    void persistSettings(nextSettings);
+  };
+
+  const handleReset = async () => {
+    cancelPendingSave();
+    setShowSaved(false);
+    await saveQueueRef.current;
+    await loadSettings(true);
   };
 
   const isSettingsDirty =
@@ -484,326 +502,154 @@ export default function FamilySettingsPage() {
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        {/* Header */}
-        <div className="flex items-start gap-3">
-          <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
-            <Settings2 className="h-8 w-8 text-primary" />
-          </div>
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t("title")}</h1>
-            <p className="text-muted-foreground mt-1">
-              {t("description")}
-            </p>
-          </div>
+      <div className="mx-auto max-w-7xl space-y-8">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground md:text-3xl">{t("title")}</h1>
+          <p className="mt-1 text-muted-foreground">{t("description")}</p>
         </div>
-        
-        {/* Error Alert */}
+
         {error && (
-          <Alert variant="destructive">
+          <Alert variant="destructive" className="rounded-2xl">
             <AlertCircle className="h-4 w-4" />
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
 
-        {/* Full-width cards (Nickname + Family Roles) */}
-        <div className="space-y-6">
-          {/* Nickname Management */}
-          <Card className="bg-card border-border">
-            <CardHeader>
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex items-center gap-2">
-                  <div className="p-2 bg-primary/10 rounded-lg">
-                    <User className="h-4 w-4 text-primary" />
-                  </div>
-                  <div>
-                    <CardTitle className="text-foreground">{t("nickname.title")}</CardTitle>
-                    <CardDescription className="text-xs">
-                      {t("nickname.description")}
-                    </CardDescription>
-                  </div>
-                </div>
-                {isSettingsDirty && (
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant="outline"
-                      onClick={handleReset}
-                      className="border-border"
-                      size="sm"
-                    >
-                      <RotateCcw className="mr-2 h-4 w-4" />
-                      {t("reset")}
-                    </Button>
-                    <Button
-                      onClick={handleSave}
-                      disabled={isSaving}
-                      className="bg-primary hover:bg-primary/90"
-                      size="sm"
-                    >
-                      {isSaving ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          {t("saving")}
-                        </>
-                      ) : (
-                        <>
-                          <Save className="mr-2 h-4 w-4" />
-                          {t("saveChanges")}
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                )}
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {/* Enable Nickname Changes */}
-              <div className="flex items-start justify-between rounded-lg border border-border bg-secondary/30 p-3">
-                <div className="space-y-0.5 flex-1">
-                  <Label htmlFor="change-nicknames" className="text-sm font-medium">
+        <section className="space-y-4" aria-labelledby="nickname-settings-heading">
+          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div>
+              <h2 id="nickname-settings-heading" className="text-lg font-semibold text-foreground">
+                {t("nickname.title")}
+              </h2>
+              <p className="mt-0.5 text-sm text-muted-foreground">{t("nickname.description")}</p>
+            </div>
+
+            <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center sm:justify-between md:w-auto md:justify-end">
+              <div className="flex min-h-11 w-full items-center justify-between gap-3 rounded-2xl bg-muted/45 px-3 py-2 sm:w-auto">
+                <div className="flex min-w-0 items-center gap-1.5">
+                  <label htmlFor="change-nicknames" className="truncate text-sm font-medium">
                     {t("nickname.automaticChanges")}
-                  </Label>
-                  <p className="text-xs text-muted-foreground">
-                    {t("nickname.automaticChangesDesc")}
-                  </p>
+                  </label>
+                  <InfoPopover content={t("nickname.automaticChangesDesc")} label={t("nickname.automaticChangesDesc")} />
                 </div>
                 {isLoading ? (
-                  <Skeleton className="h-6 w-11 rounded-full animate-pulse" />
+                  <Skeleton className="h-6 w-11 rounded-full" />
                 ) : (
                   <Switch
                     id="change-nicknames"
                     checked={settings.change_nickname}
-                    onCheckedChange={(checked) =>
-                      setSettings({ ...settings, change_nickname: checked })
-                    }
+                    disabled={isSaving}
+                    onCheckedChange={handleNicknameToggle}
                   />
                 )}
               </div>
 
-              <Separator className="bg-border" />
-
-              {/* Family Convention */}
-              <div className="space-y-3">
-                <Label htmlFor="family-convention" className="text-sm font-medium">
-                  {t("nickname.familyFormat")}
-                </Label>
-                {isLoading ? (
-                  <Skeleton className="h-9 w-full animate-pulse" />
-                ) : (
-                  <Input
-                    id="family-convention"
-                    value={settings.nickname_rule}
-                    onChange={(e) =>
-                      setSettings({ ...settings, nickname_rule: e.target.value })
-                    }
-                    placeholder="[{player_clan_abbreviation}] {player_name}"
-                    className="bg-secondary border-border font-mono text-sm"
-                  />
-                )}
-
-                {/* Live Preview */}
-                <div className="bg-primary/5 border border-primary/20 rounded-lg p-3">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Eye className="h-4 w-4 text-primary" />
-                    <p className="text-xs font-medium text-primary">{t("nickname.preview")}</p>
-                  </div>
-                  <div className="h-9 w-full rounded border border-border bg-background/50 px-3">
-                    {isLoading ? (
-                      <div className="flex h-full items-center">
-                        <Skeleton className="h-4 w-2/3 animate-pulse" />
-                      </div>
-                    ) : (
-                      <p className="flex h-full items-center truncate text-sm font-mono">
-                        {generatePreview(settings.nickname_rule)}
-                      </p>
-                    )}
-                  </div>
-                </div>
+              <div className="flex min-h-11 items-center justify-end gap-2">
+                {(isSaving || isSettingsDirty || showSaved) && <span className="flex items-center justify-end gap-1.5 text-xs text-muted-foreground" aria-live="polite">
+                  {isSaving ? (
+                    <><Loader2 className="h-3.5 w-3.5 animate-spin" />{t("saving")}</>
+                  ) : isSettingsDirty ? (
+                    t("nickname.pending")
+                  ) : showSaved ? (
+                    <><Check className="h-3.5 w-3.5 text-green-500" />{t("nickname.saved")}</>
+                  ) : null}
+                </span>}
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="sm"
+                  disabled={isLoading || isSaving}
+                  onClick={() => void handleReset()}
+                  className="border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted"
+                >
+                  <RotateCcw className="mr-2 h-4 w-4" />
+                  {t("reset")}
+                </Button>
               </div>
+            </div>
+          </div>
 
-              {/* Available Placeholders */}
-              <Collapsible open={isFamilyPlaceholdersOpen} onOpenChange={setIsFamilyPlaceholdersOpen}>
-                <CollapsibleTrigger className="w-full text-left">
-                  <div className="px-3 pb-2">
-                    <div className="flex items-center gap-2">
-                      <p className="text-xs font-medium text-[#DC2626]">{t("nickname.availablePlaceholders")}</p>
-                      {isFamilyPlaceholdersOpen ? (
-                        <ChevronDown className="h-4 w-4 text-[#DC2626] transition-transform duration-200" />
-                      ) : (
-                        <ChevronRight className="h-4 w-4 text-[#DC2626] transition-transform duration-200" />
-                      )}
-                    </div>
-                  </div>
-                </CollapsibleTrigger>
-                <CollapsibleContent>
-                  <div className="mt-2 bg-secondary/30 border border-border rounded-lg p-3">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      {PLACEHOLDERS.map((p) => (
-                        <div key={p.key} className="flex items-start gap-2">
-                          <Badge
-                            variant="secondary"
-                            className="text-xs font-mono cursor-pointer hover:bg-primary/20"
-                            onClick={() => {
-                              const input = document.getElementById("family-convention") as HTMLInputElement;
-                              if (input) {
-                                const start = input.selectionStart || 0;
-                                const end = input.selectionEnd || 0;
-                                const newValue =
-                                  settings.nickname_rule.substring(0, start) +
-                                  p.key +
-                                  settings.nickname_rule.substring(end);
-                                setSettings({ ...settings, nickname_rule: newValue });
-                                setTimeout(() => {
-                                  input.focus();
-                                  input.setSelectionRange(start + p.key.length, start + p.key.length);
-                                }, 0);
-                              }
-                            }}
-                          >
-                            {p.key}
-                          </Badge>
-                          <span className="text-xs text-muted-foreground">{p.desc}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </CollapsibleContent>
-              </Collapsible>
+          {isLoading ? (
+            <div className="grid gap-4 lg:grid-cols-2">
+              <Skeleton className="h-36 rounded-[22px]" />
+              <Skeleton className="h-36 rounded-[22px]" />
+            </div>
+          ) : (
+            <div className="grid gap-4 lg:grid-cols-2">
+              <NicknameFormatInput
+                id="family-convention"
+                label={t("nickname.familyFormat")}
+                value={settings.nickname_rule}
+                preview={generatePreview(settings.nickname_rule)}
+                previewLabel={t("nickname.preview")}
+                autocompleteHint={t("nickname.autocompleteHint")}
+                placeholders={placeholders}
+                onChange={(value) => updateNicknameFormat("nickname_rule", value)}
+                onCommit={commitNicknameFormats}
+              />
+              <NicknameFormatInput
+                id="non-family-convention"
+                label={t("nickname.nonFamilyFormat")}
+                value={settings.non_family_nickname_rule}
+                preview={generatePreview(settings.non_family_nickname_rule)}
+                previewLabel={t("nickname.preview")}
+                autocompleteHint={t("nickname.autocompleteHint")}
+                placeholders={placeholders}
+                onChange={(value) => updateNicknameFormat("non_family_nickname_rule", value)}
+                onCommit={commitNicknameFormats}
+              />
+            </div>
+          )}
 
-              {/* Non-Family Convention */}
-              <div className="space-y-3">
-                <Label htmlFor="non-family-convention" className="text-sm font-medium">
-                  {t("nickname.nonFamilyFormat")}
-                </Label>
-                {isLoading ? (
-                  <Skeleton className="h-9 w-full animate-pulse" />
-                ) : (
-                  <Input
-                    id="non-family-convention"
-                    value={settings.non_family_nickname_rule}
-                    onChange={(e) =>
-                      setSettings({ ...settings, non_family_nickname_rule: e.target.value })
-                    }
-                    placeholder="{player_name}"
-                    className="bg-secondary border-border font-mono text-sm"
-                  />
-                )}
-
-                {/* Live Preview */}
-                <div className="bg-primary/5 border border-primary/20 rounded-lg p-3">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Eye className="h-4 w-4 text-primary" />
-                    <p className="text-xs font-medium text-primary">{t("nickname.preview")}</p>
-                  </div>
-                  <div className="h-9 w-full rounded border border-border bg-background/50 px-3">
-                    {isLoading ? (
-                      <div className="flex h-full items-center">
-                        <Skeleton className="h-4 w-2/3 animate-pulse" />
-                      </div>
-                    ) : (
-                      <p className="flex h-full items-center truncate text-sm font-mono">
-                        {generatePreview(settings.non_family_nickname_rule)}
-                      </p>
-                    )}
-                  </div>
+          <details className="group rounded-2xl bg-muted/35 px-4 py-3">
+            <summary className="cursor-pointer select-none text-sm font-medium text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+              {t("nickname.availablePlaceholders")}
+            </summary>
+            <div className="mt-3 grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+              {placeholders.map((placeholder) => (
+                <div key={placeholder.key} className="flex min-w-0 items-center gap-2 rounded-xl bg-background/55 px-3 py-2">
+                  <code className="shrink-0 text-xs font-semibold text-primary">{placeholder.key}</code>
+                  <span className="truncate text-xs text-muted-foreground">{placeholder.description}</span>
                 </div>
-              </div>
+              ))}
+            </div>
+          </details>
+        </section>
 
-              {/* Available Placeholders */}
-              <Collapsible open={isNonFamilyPlaceholdersOpen} onOpenChange={setIsNonFamilyPlaceholdersOpen}>
-                <CollapsibleTrigger className="w-full text-left">
-                  <div className="flex items-center gap-2">
-                    <p className="text-xs font-medium text-[#DC2626]">{t("nickname.availablePlaceholders")}</p>
-                    {isNonFamilyPlaceholdersOpen ? (
-                      <ChevronDown className="h-4 w-4 text-[#DC2626] transition-transform duration-200" />
-                    ) : (
-                      <ChevronRight className="h-4 w-4 text-[#DC2626] transition-transform duration-200" />
-                    )}
-                  </div>
-                </CollapsibleTrigger>
-                <CollapsibleContent>
-                  <div className="mt-2 bg-secondary/30 border border-border rounded-lg p-3">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      {PLACEHOLDERS.map((p) => (
-                        <div key={p.key} className="flex items-start gap-2">
-                          <Badge
-                            variant="secondary"
-                            className="text-xs font-mono cursor-pointer hover:bg-primary/20"
-                            onClick={() => {
-                              const input = document.getElementById("non-family-convention") as HTMLInputElement;
-                              if (input) {
-                                const start = input.selectionStart || 0;
-                                const end = input.selectionEnd || 0;
-                                const newValue =
-                                  settings.non_family_nickname_rule.substring(0, start) +
-                                  p.key +
-                                  settings.non_family_nickname_rule.substring(end);
-                                setSettings({ ...settings, non_family_nickname_rule: newValue });
-                                setTimeout(() => {
-                                  input.focus();
-                                  input.setSelectionRange(start + p.key.length, start + p.key.length);
-                                }, 0);
-                              }
-                            }}
-                          >
-                            {p.key}
-                          </Badge>
-                          <span className="text-xs text-muted-foreground">{p.desc}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </CollapsibleContent>
-              </Collapsible>
-
-            </CardContent>
-          </Card>
-
-          {/* Family Roles */}
-          <Card className="bg-card border-border">
-            <CardHeader>
-              <div className="flex items-center gap-2">
-                <div className="p-2 bg-purple-500/10 rounded-lg">
-                  <Users className="h-4 w-4 text-purple-500" />
-                </div>
-                <div>
-                  <CardTitle className="text-foreground">{t("familyRoles.title")}</CardTitle>
-                  <CardDescription className="text-xs">
-                    {t("familyRoles.description")}
-                  </CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {/* Role Type Cards - Similar to LogCards */}
-              <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
-                {[
-                  { key: "family", label: t("familyRoles.types.family"), description: t("familyRoles.descriptions.family"), roles: familyRoles?.family_roles || [], icon: Users, color: "green" },
-                  { key: "not_family", label: t("familyRoles.types.notFamily"), description: t("familyRoles.descriptions.notFamily"), roles: familyRoles?.not_family_roles || [], icon: Users, color: "red" },
-                  { key: "family_elder", label: t("familyRoles.types.elder"), description: t("familyRoles.descriptions.elder"), roles: familyRoles?.family_elder_roles || [], icon: Shield, color: "yellow" },
-                  { key: "family_coleader", label: t("familyRoles.types.coLeader"), description: t("familyRoles.descriptions.coLeader"), roles: familyRoles?.family_coleader_roles || [], icon: Shield, color: "orange" },
-                  { key: "family_leader", label: t("familyRoles.types.leader"), description: t("familyRoles.descriptions.leader"), roles: familyRoles?.family_leader_roles || [], icon: Shield, color: "purple" },
-                ].map((roleType) => (
-                  <FamilyRoleCard
-                    key={roleType.key}
-                    label={roleType.label}
-                    description={roleType.description}
-                    roles={roleType.roles}
-                    icon={roleType.icon}
-                    color={roleType.color}
-                    discordRoles={discordRoles}
-                    isRoleDataLoading={isLoadingFamilyRoles}
-                    isLoading={familyRolesLoading}
-                    onAdd={(roleId) => handleAddFamilyRole(roleType.key as FamilyRoleType, roleId)}
-                    onRemove={(id, roleId) => handleRemoveFamilyRole(roleType.key as FamilyRoleType, id, roleId)}
-                    onModeChange={handleFamilyRoleModeChange}
-                    t={t}
-                  />
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+        <section className="space-y-4" aria-labelledby="family-roles-heading">
+          <div>
+            <h2 id="family-roles-heading" className="text-lg font-semibold text-foreground">
+              {t("familyRoles.title")}
+            </h2>
+            <p className="mt-0.5 text-sm text-muted-foreground">{t("familyRoles.description")}</p>
+          </div>
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            {[
+              { key: "family", label: t("familyRoles.types.family"), description: t("familyRoles.descriptions.family"), roles: familyRoles?.family_roles || [], icon: Users, color: "green" },
+              { key: "not_family", label: t("familyRoles.types.notFamily"), description: t("familyRoles.descriptions.notFamily"), roles: familyRoles?.not_family_roles || [], icon: Users, color: "red" },
+              { key: "family_elder", label: t("familyRoles.types.elder"), description: t("familyRoles.descriptions.elder"), roles: familyRoles?.family_elder_roles || [], icon: Shield, color: "yellow" },
+              { key: "family_coleader", label: t("familyRoles.types.coLeader"), description: t("familyRoles.descriptions.coLeader"), roles: familyRoles?.family_coleader_roles || [], icon: Shield, color: "orange" },
+              { key: "family_leader", label: t("familyRoles.types.leader"), description: t("familyRoles.descriptions.leader"), roles: familyRoles?.family_leader_roles || [], icon: Shield, color: "purple" },
+            ].map((roleType) => (
+              <FamilyRoleCard
+                key={roleType.key}
+                label={roleType.label}
+                description={roleType.description}
+                roles={roleType.roles}
+                icon={roleType.icon}
+                color={roleType.color}
+                discordRoles={discordRoles}
+                isRoleDataLoading={isLoadingFamilyRoles}
+                isLoading={familyRolesLoading}
+                removeLabel={tCommon("remove")}
+                onAdd={(roleId) => handleAddFamilyRole(roleType.key as FamilyRoleType, roleId)}
+                onRemove={(id, roleId) => handleRemoveFamilyRole(roleType.key as FamilyRoleType, id, roleId)}
+                onModeChange={handleFamilyRoleModeChange}
+                t={t}
+              />
+            ))}
+          </div>
+        </section>
       </div>
     </div>
   );

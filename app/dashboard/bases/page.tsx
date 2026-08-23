@@ -369,14 +369,14 @@ export default function BasesPage() {
     <div className="mx-auto w-full max-w-[1500px] space-y-5 p-4 sm:p-6 lg:p-8">
       <div className="flex flex-col gap-4 border-b border-border pb-5 sm:flex-row sm:items-end sm:justify-between">
         <div className="space-y-1">
-          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-primary">
+          <div className="flex items-center gap-2 text-xs font-semibold text-primary">
             <Map className="h-4 w-4" />
             {t("eyebrow")}
           </div>
           <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">{t("title")}</h1>
           <p className="max-w-2xl text-sm text-muted-foreground">{t("description")}</p>
         </div>
-        <div className="flex gap-2">
+        <div className="grid grid-cols-2 gap-2 sm:flex">
           <Button variant="outline" onClick={() => void loadBases()} disabled={loading}>
             <RefreshCw className={loading ? "animate-spin" : ""} />
             {t("refresh")}
@@ -617,7 +617,7 @@ export default function BasesPage() {
       )}
 
       <Dialog open={createOpen} onOpenChange={(open) => open ? setCreateOpen(true) : closeCreate()}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent variant="form" className="sm:max-w-2xl">
           <DialogHeader>
             <DialogTitle>{t("form.title")}</DialogTitle>
             <DialogDescription>{t("form.description")}</DialogDescription>

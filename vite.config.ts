@@ -4,6 +4,9 @@ import { cloudflare } from "@cloudflare/vite-plugin";
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig(({ command }) => ({
+  server: {
+    allowedHosts: ["dev-dash.clashk.ing"],
+  },
   plugins: [
     vinext(),
     tailwindcss(),

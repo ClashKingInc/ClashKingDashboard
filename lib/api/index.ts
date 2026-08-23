@@ -2,7 +2,7 @@
  * ClashKing API Client - Main Export
  *
  * Modular TypeScript client for ClashKing Dashboard API
- * API Base: https://api.clashk.ing
+ * API Base: https://v2-api.clashk.ing
  */
 
 // Main client
@@ -65,9 +65,18 @@ export type {
   UpdateMemberModel,
   CreateRosterGroupModel,
   UpdateRosterGroupModel,
-  CreateRosterSignupCategoryModel,
   CreateRosterAutomationModel,
   RosterCloneModel,
+  RosterQuestionType,
+  RosterSignupQuestion,
+  RosterViewColumn,
+  RosterViewSpec,
+  RosterView,
+  RosterViewResult,
+  RosterMetricQuery,
+  RosterMetricQueryResult,
+  CreateRosterViewModel,
+  UpdateRosterViewModel,
 } from './types/roster';
 
 // War types
@@ -75,6 +84,14 @@ export type {
   PreviousWarsOptions,
   ClanWarStatsOptions,
   PlayerWarhitsFilter,
+  LeagueReference,
+  CwlSeasonItem,
+  CwlGroupMember,
+  CwlGroupClan,
+  CwlStoredWar,
+  CwlGroupResponse,
+  CwlBonusRecipient,
+  CwlWarLeagueStaticItem,
 } from './types/war';
 
 // Server types

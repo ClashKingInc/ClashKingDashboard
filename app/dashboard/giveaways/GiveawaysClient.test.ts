@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { giveawayToFormState } from "./GiveawaysClient";
+import { giveawayToFormState, sortGiveawaysByRelevance } from "./GiveawaysClient";
 import type { Giveaway } from "@/lib/api/types/server";
 
 const giveaway: Giveaway = {
@@ -8,8 +8,8 @@ const giveaway: Giveaway = {
   prize: "Gold pass",
   channelId: "456",
   status: "ongoing",
-  startTime: "2026-07-24T12:00:00Z",
-  endTime: "2026-07-25T12:00:00Z",
+  start: "2026-07-24T12:00:00Z",
+  end: "2026-07-25T12:00:00Z",
   winners: 2,
   mentions: ["role-1"],
   textAboveEmbed: "Enter now",
@@ -21,7 +21,7 @@ const giveaway: Giveaway = {
   rolesMode: "allow",
   roles: ["role-2"],
   boosters: [{ value: 2, roles: ["role-3"] }],
-  entryCount: 5,
+  entries: ["user-1", "user-1", "user-2", "user-3", "user-4"],
   updated: true,
   messageId: "message-1",
   winnersList: [],
@@ -61,5 +61,26 @@ describe("giveawayToFormState", () => {
     expect(form.endTime).toBe("");
     expect(form.prize).toBe(giveaway.prize);
     expect(form.channelId).toBe(giveaway.channelId);
+  });
+});
+
+describe("sortGiveawaysByRelevance", () => {
+  it("shows live first, scheduled soonest first, and ended most recently first", () => {
+    const items: Giveaway[] = [
+      { ...giveaway, id: "ended-old", status: "ended", end: "2026-07-20T12:00:00Z" },
+      { ...giveaway, id: "scheduled-later", status: "scheduled", start: "2026-07-30T12:00:00Z" },
+      { ...giveaway, id: "live", status: "ongoing", end: "2026-07-25T12:00:00Z" },
+      { ...giveaway, id: "ended-recent", status: "ended", end: "2026-07-24T12:00:00Z" },
+      { ...giveaway, id: "scheduled-sooner", status: "scheduled", start: "2026-07-26T12:00:00Z" },
+    ];
+
+    expect(sortGiveawaysByRelevance(items).map((item) => item.id)).toEqual([
+      "live",
+      "scheduled-sooner",
+      "scheduled-later",
+      "ended-recent",
+      "ended-old",
+    ]);
+    expect(items[0]?.id).toBe("ended-old");
   });
 });

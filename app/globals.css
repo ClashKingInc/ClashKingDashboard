@@ -2,9 +2,9 @@
 
 @font-face {
   font-family: "ClashKing";
-  src: url("https://assets.clashk.ing/fonts/clashking.woff2") format("woff2");
+  src: url("/fonts/clashking.woff2?v=01f23070") format("woff2");
   font-style: normal;
-  font-weight: 100 900;
+  font-weight: 600;
   font-display: swap;
 }
 
@@ -140,8 +140,8 @@ body {
   }
 
   ::selection {
-    color: hsl(var(--primary-foreground));
-    background: hsl(var(--primary) / 0.75);
+    color: HighlightText;
+    background: Highlight;
   }
 }
 
@@ -209,6 +209,8 @@ body {
 
   .dashboard-content {
     background: transparent;
+    container-name: dashboard;
+    container-type: inline-size;
     scrollbar-color: hsl(var(--muted-foreground) / 0.38) transparent;
     scrollbar-width: thin;
   }
@@ -226,6 +228,16 @@ body {
   @media (min-width: 768px) {
     .dashboard-content > [class*="min-h-screen"] {
       padding: 2rem;
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .dashboard-content button:not([role="switch"]):not([role="checkbox"]) {
+      min-height: 2.75rem;
+    }
+
+    .dashboard-content button[aria-label]:not([role="switch"]):not([role="checkbox"]) {
+      min-width: 2.75rem;
     }
   }
 }

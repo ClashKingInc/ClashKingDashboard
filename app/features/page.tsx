@@ -43,7 +43,7 @@ export default function FeaturesPage() {
       items: (t.raw("sections.api.items") as string[]) ?? [],
       cta: {
         text: t("sections.api.ctaPrimary"),
-        link: "https://api.clashk.ing/",
+        link: "https://v2-api.clashk.ing/",
         secondaryText: t("sections.api.ctaSecondary"),
         secondaryLink: "https://github.com/ClashKingInc/ClashKingAPI"
       }

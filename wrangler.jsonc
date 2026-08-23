@@ -1,7 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "clashking-dashboard",
-  "compatibility_date": "2026-07-31",
+  "compatibility_date": "2026-08-10",
   "compatibility_flags": [
     "nodejs_compat"
   ],
@@ -9,5 +9,8 @@
     "directory": "dist/client",
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "single-page-application"
+  },
+  "secrets": {
+    "required": []
   }
 }

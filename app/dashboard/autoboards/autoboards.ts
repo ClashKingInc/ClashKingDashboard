@@ -26,7 +26,6 @@ export interface AutoboardCapabilitiesResponse {
 
 export interface AutoboardSchedule {
   kind: AutoboardScheduleKind;
-  timezone: string;
   timeOfDay: string;
   weekdays: number[] | null;
   dayOfMonth: number | null;
@@ -82,7 +81,6 @@ export interface AutoboardFormState {
   enabled: boolean;
   intervalMinutes: string;
   scheduleKind: AutoboardScheduleKind;
-  timezone: string;
   timeOfDay: string;
   weekdays: number[];
   dayOfMonth: string;
@@ -91,6 +89,21 @@ export interface AutoboardFormState {
 export interface AutoboardValidationIssue {
   field: string;
   message: string;
+}
+
+const AUTOBOARD_ARTWORK_BASE_URL = "https://assets.clashk.ing";
+
+export function autoboardArtworkUrl(boardType: string, targetKind: string): string {
+  const concept = `${boardType} ${targetKind}`.toLowerCase();
+  if (concept.includes("donat")) return `${AUTOBOARD_ARTWORK_BASE_URL}/clan_labels/donations.webp`;
+  if (concept.includes("war")) return `${AUTOBOARD_ARTWORK_BASE_URL}/icons/Icon_HV_Clan_War.png`;
+  if (concept.includes("legend") || concept.includes("player") || concept.includes("location")) {
+    return `${AUTOBOARD_ARTWORK_BASE_URL}/icons/Icon_HV_League_Legend_3_No_Padding.png`;
+  }
+  if (concept.includes("clan") || concept.includes("family")) {
+    return `${AUTOBOARD_ARTWORK_BASE_URL}/icons/Clan_Badge_Border_2.png`;
+  }
+  return `${AUTOBOARD_ARTWORK_BASE_URL}/bot/icons/clock.png`;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -166,7 +179,6 @@ export function parseAutoboardCapabilities(payload: unknown): AutoboardCapabilit
 
 export function createInitialAutoboardForm(
   capability: AutoboardBoardTypeCapability | undefined,
-  timezone: string,
 ): AutoboardFormState {
   const targetScope = capability?.allowedScopes[0] ?? "family";
   const deliveryMode = capability?.allowedModes[0] ?? "refresh";
@@ -182,7 +194,6 @@ export function createInitialAutoboardForm(
     enabled: true,
     intervalMinutes: capability?.refreshInterval?.defaultMinutes.toString() ?? "",
     scheduleKind: "daily",
-    timezone,
     timeOfDay: "09:00",
     weekdays: [],
     dayOfMonth: "1",
@@ -200,7 +211,6 @@ export function createEditAutoboardForm(item: AutoboardItem): AutoboardFormState
     enabled: item.enabled,
     intervalMinutes: item.intervalMinutes?.toString() ?? "",
     scheduleKind: item.schedule?.kind ?? "daily",
-    timezone: item.schedule?.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone,
     timeOfDay: item.schedule?.timeOfDay ?? "09:00",
     weekdays: item.schedule?.weekdays ?? [],
     dayOfMonth: item.schedule?.dayOfMonth?.toString() ?? "1",
@@ -249,7 +259,6 @@ export function validateAutoboardForm(
       issues.push({ field: "intervalMinutes", message: "refreshInterval" });
     }
   } else {
-    if (!form.timezone.trim()) issues.push({ field: "schedule.timezone", message: "timezone" });
     if (!/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(form.timeOfDay)) {
       issues.push({ field: "schedule.timeOfDay", message: "timeOfDay" });
     }
@@ -267,9 +276,8 @@ export function validateAutoboardForm(
 
 export function buildAutoboardRequest(form: AutoboardFormState): AutoboardWriteRequest {
   const schedule: AutoboardSchedule | null = form.deliveryMode === "send"
-    ? {
+      ? {
         kind: form.scheduleKind,
-        timezone: form.timezone.trim(),
         timeOfDay: form.timeOfDay,
         weekdays: form.scheduleKind === "weekdays" ? [...form.weekdays].sort((a, b) => a - b) : null,
         dayOfMonth: form.scheduleKind === "day_of_month" ? Number(form.dayOfMonth) : null,

@@ -6,7 +6,7 @@ Vinext/React dashboard and static ClashKing marketing site.
 
 - `clashk.ing` serves the statically prerendered marketing homepage and legal pages.
 - `dash.clashk.ing` serves the static dashboard application.
-- Browser API calls currently go directly to `https://local-api.clashk.ing`.
+- Production browser API calls go directly to `https://v2-api.clashk.ing`; local development calls the Go API directly on `http://localhost:8000`.
 - Dashboard routes are finite static shells. Guild context is carried as `?guildId=...`; roster detail uses `?guildId=...&rosterId=...`.
 - The Go API owns Discord and email authentication, refresh-cookie rotation, Discohook resolution, uploads, and all application data.
 
@@ -23,7 +23,9 @@ npm install
 npm run dev
 ```
 
-The development server listens on `http://localhost:3002`. Configure `.env.local` from `.env.example`; builds currently default to `https://local-api.clashk.ing`.
+The development server listens on `http://localhost:3002`. Configure `.env.local` from `.env.example`; the Go API listens on `http://localhost:8000`. Those ports are separate origins, so credentialed CORS still applies, but they share the localhost site and its host-only development refresh cookie. Production builds override the local API URL.
+
+The roster AI assistant is a separate Cloudflare Worker. Copy `.dev.vars.example` to the ignored `.dev.vars`, add the OpenAI project key and the same `AI_USAGE_SECRET` used by the Go API, then run `npm run assistant:dev`. The roster builder streams through `http://localhost:8788/chat` and attaches the short-lived web access token. GPT-5.6 Luna runs through the OpenAI Responses API, with server-side compaction for long roster conversations. The graphics editor does not use this Worker or expose an AI assistant.
 
 ## Validation
 
@@ -39,12 +41,17 @@ npm run build
 
 ## Deployment
 
-One Cloudflare Worker serves the static build on `clashk.ing`, `dash.clashk.ing`, and `www.clashk.ing`. The Worker redirects the dashboard hostname root to `/login`, where an existing session continues to `/servers`; it also moves application routes from the marketing hostname to the dashboard hostname and redirects `www` to the apex. `app.clashk.ing` remains a separate Cloudflare Pages application.
+One Cloudflare Worker serves the static build on `clashk.ing`, `dash.clashk.ing`, and `www.clashk.ing`. The Worker redirects the dashboard hostname root to `/login`, where an existing session continues to `/servers`; it also moves application routes from the marketing hostname to the dashboard hostname and redirects `www` to the apex.
+
+A second Worker in `workers/roster-assistant` serves `ai.clashk.ing`. Its `/chat` route asks `https://v2-api.clashk.ing` to authorize and meter roster requests, then exposes only typed roster tools to a network-disabled Dynamic Worker. `OPENAI_API_KEY` and `AI_USAGE_SECRET` must be stored as Cloudflare Worker secrets; `AI_USAGE_SECRET` must exactly match the API value.
 
 Production builds pin the browser API and Discord application configuration before uploading assets, so a developer's `.env.local` cannot leak into a deployment:
 
 ```bash
 npm run build:production
+npm run deploy:assistant
+npm run deploy:dashboard
+# or deploy both Workers in that order
 npm run deploy
 ```
 
