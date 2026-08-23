@@ -971,6 +971,8 @@
       "editTitle": "Automatisierung bearbeiten",
       "createDesc": "Eine automatische Aktion planen",
       "actionType": "Aktionstyp",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "Zeitpunkt relativ zum Ereignis",
       "offsetBefore": "Vor dem Ereignis",
       "offsetAfter": "Nach dem Ereignis",
@@ -1016,9 +1018,7 @@
         "roster_clear": "Entfernt alle Mitglieder aus dem Kader, ohne ihn zu löschen",
         "roster_archive": "Archiviert den Kader und setzt ihn auf schreibgeschützt"
       },
-      "infoBox": "Automatisierungen werden relativ zur Startzeit des Ereignisses ausgelöst. Lege einen Versatz fest (z. B. 3 Tage vorher), dann führt der Bot die Aktion zu diesem Zeitpunkt automatisch aus – auch bei wiederkehrenden Ereignissen.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "Automatisierungen werden relativ zur Startzeit des Ereignisses ausgelöst. Lege einen Versatz fest (z. B. 3 Tage vorher), dann führt der Bot die Aktion zu diesem Zeitpunkt automatisch aus – auch bei wiederkehrenden Ereignissen."
     },
     "groups": {
       "title": "Kadergruppen",
