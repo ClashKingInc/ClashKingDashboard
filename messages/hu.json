@@ -971,6 +971,8 @@
       "editTitle": "Automatizálás szerkesztése",
       "createDesc": "Automatikus művelet ütemezése",
       "actionType": "Művelet típusa",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "Időzítés az eseményhez képest",
       "offsetBefore": "Esemény előtt",
       "offsetAfter": "Esemény után",
@@ -1016,9 +1018,7 @@
         "roster_clear": "Eltávolít minden tagot a keret törlése nélkül",
         "roster_archive": "Archiválja a keretet, és csak olvashatóvá teszi"
       },
-      "infoBox": "Az automatizálások az esemény kezdési idejéhez igazodnak. Adj meg egy időeltolást (például 3 nappal korábban), és a bot automatikusan végrehajtja a műveletet, az ismétlődő eseményeknél is.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "Az automatizálások az esemény kezdési idejéhez igazodnak. Adj meg egy időeltolást (például 3 nappal korábban), és a bot automatikusan végrehajtja a műveletet, az ismétlődő eseményeknél is."
     },
     "groups": {
       "title": "Keretcsoportok",
