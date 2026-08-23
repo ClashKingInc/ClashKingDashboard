@@ -273,7 +273,7 @@
       "playerManagement": "Spilleradministrasjon",
       "automation": "Automatisering",
       "statistics": "Statistikk",
-      "general": "General",
+      "general": "Generelt",
       "serverManagement": "Server Management"
     },
     "switchServer": "Bytt server",
@@ -420,7 +420,7 @@
       },
       "list": {
         "title": "Utestengte spillere",
-        "count": "{count, plural, one {# spiller utestengt} other {# spillere utestengt}}",
+        "count": "{count} player{count, plural, one {} other {s}} banned",
         "searchPlaceholder": "Søk etter navn, tag eller årsak...",
         "noBansFound": "Ingen utestengelser funnet",
         "noBans": "Ingen utestengte spillere",
@@ -490,7 +490,7 @@
       },
       "list": {
         "title": "Spilleradvarsler",
-        "count": "{count, plural, one {# advarsel utstedt} other {# advarsler utstedt}}",
+        "count": "{count} strike{count, plural, one {} other {s}} issued",
         "searchPlaceholder": "Søk etter navn, tag eller årsak...",
         "noStrikesFound": "Ingen advarsler funnet",
         "noStrikes": "Ingen advarsler utstedt",
@@ -566,7 +566,7 @@
       "newest": "Newest first",
       "oldest": "Oldest first",
       "player": "Player name",
-      "reason": "Reason",
+      "reason": "Årsak",
       "moderator": "Moderator",
       "weight": "Highest weight",
       "count": "Most strikes",
@@ -701,7 +701,7 @@
       "clone": "Klon",
       "allRosters": "Alle spillerlister",
       "manageRosters": "Administrer dine krigsoppstillinger og oppstillinger",
-      "rename": "Rename {name}",
+      "rename": "Gi nytt navn til {name}",
       "actions": "Actions for {name}",
       "renameInput": "Roster name",
       "renameSave": "Save roster name",
@@ -715,7 +715,7 @@
       "hitrate": "Treffprosent",
       "current_clan": "Nåværende klan",
       "current_clan_tag": "Klantag",
-      "discord": "Discord",
+      "discord": "Uenighed",
       "hero_lvs": "Heltenivåer",
       "war_pref": "Krigspreferanse",
       "trophies": "Trofeer",
@@ -945,13 +945,13 @@
       "unknownError": "An unknown error occurred",
       "memberCount": "{count, plural, one {# member} other {# members}}",
       "dragPlayer": "Drag {name}",
-      "townHallAlt": "Town Hall {level}",
+      "townHallAlt": "Rådhus {level}",
       "duplicate": "This player appears in multiple rosters",
       "dropHere": "Drop a player here",
       "status": {
-        "clan": "Clan",
-        "family": "Family",
-        "external": "External"
+        "clan": "Klan",
+        "family": "Familie",
+        "external": "Ekstern"
       }
     },
     "ungrouped": "Ikke gruppert",
@@ -971,6 +971,8 @@
       "editTitle": "Rediger automatisering",
       "createDesc": "Planlegg en automatisert handling",
       "actionType": "Handlingstype",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "Tid i forhold til hendelsen",
       "offsetBefore": "Før hendelsen",
       "offsetAfter": "Etter hendelsen",
@@ -1016,9 +1018,7 @@
         "roster_clear": "Fjerner alle medlemmer fra spillerlisten uten å slette den",
         "roster_archive": "Arkiverer spillerlisten og gjør den skrivebeskyttet"
       },
-      "infoBox": "Automatiseringer utløses i forhold til hendelsens starttidspunkt. Angi en forskyvning, f.eks. 3 dager før, så utfører boten automatisk handlingen på det tidspunktet – også ved gjentatte hendelser.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "Automatiseringer utløses i forhold til hendelsens starttidspunkt. Angi en forskyvning, f.eks. 3 dager før, så utfører boten automatisk handlingen på det tidspunktet – også ved gjentatte hendelser."
     },
     "groups": {
       "title": "Spillerlistegrupper",
@@ -1116,7 +1116,7 @@
     },
     "aiBuilder": {
       "button": "Roster Assistant",
-      "new": "New",
+      "new": "Ny",
       "title": "Roster Assistant",
       "description": "Build and save reusable roster views with natural language."
     },
@@ -1125,11 +1125,11 @@
       "title": "CWL Bonuses",
       "description": "Calculate and assign the available seasonal bonus awards.",
       "back": "Back to rosters",
-      "clan": "Clan",
-      "selectClan": "Select a clan",
+      "clan": "Klan",
+      "selectClan": "Velg en klan",
       "searchClans": "Search clans",
       "noClanFound": "No clan found",
-      "season": "Season",
+      "season": "Sesong",
       "noStoredSeasons": "No stored seasons",
       "unknownLeague": "Unknown league",
       "unrankedLeague": "Unranked CWL league",
@@ -1137,8 +1137,8 @@
       "loadClansError": "Failed to load configured clans.",
       "loadMedalRulesError": "Failed to load CWL medal rules.",
       "loadDataError": "Failed to load CWL data.",
-      "league": "League",
-      "rank": "Rank",
+      "league": "Liga",
+      "rank": "Rang",
       "warsWon": "Wars won",
       "leagueMedals": "League medals",
       "bonusSlots": "Bonus slots",
@@ -1155,7 +1155,7 @@
       "chooseMore": "{count, plural, one {Choose # more recipient.} other {Choose # more recipients.}}",
       "save": "Save bonuses",
       "saved": "CWL bonus recipients saved",
-      "townHallAlt": "Town Hall {level}",
+      "townHallAlt": "Rådhus {level}",
       "stars": "{count, plural, one {# star} other {# stars}}",
       "attacks": "{count, plural, one {# attack} other {# attacks}}",
       "noPlayers": "No players are available for this CWL season."
@@ -1537,8 +1537,8 @@
         "reorder": "Failed to save the category order."
       },
       "manage": "Manage categories",
-      "uncategorized": "Uncategorized",
-      "sectionCount": "{count, plural, one {# clan} other {# clans}}",
+      "uncategorized": "Uten kategori",
+      "sectionCount": "{count, plural, one {# klan} other {# klaner}}",
       "reorderAction": "Reorder {name}",
       "reordered": "Category order saved."
     },
@@ -1933,7 +1933,7 @@
       "selectClan": "Select a different clan",
       "noOtherClans": "Add another clan to this server before cloning this reminder.",
       "action": "Clone reminder",
-      "cloning": "Cloning..."
+      "cloning": "Kloner..."
     }
   },
   "LogsPage": {
@@ -2108,7 +2108,7 @@
       "serverFallback": "This server"
     },
     "scope": {
-      "clan": "Clan",
+      "clan": "Klan",
       "server": "Server",
       "serverTitle": "Server logs",
       "serverDescription": "These feeds apply to the whole Discord server and do not change with the selected clan."
@@ -2125,7 +2125,7 @@
     },
     "emptyClans": "Add a clan to this server before configuring clan logs.",
     "serverTabs": {
-      "logs": "Logs",
+      "logs": "Logger",
       "countdowns": "Countdowns",
       "joinPanel": "Join panel"
     },
@@ -2136,15 +2136,15 @@
       "toggle": "Toggle {name}",
       "types": {
         "clan_games_timer": {
-          "label": "Clan Games",
+          "label": "Klanleker",
           "description": "Show the time remaining in Clan Games in a voice channel."
         },
         "cwl_timer": {
-          "label": "Clan War League",
+          "label": "Klan-krigsliga",
           "description": "Show the time remaining in Clan War League in a voice channel."
         },
         "raid_weekend_timer": {
-          "label": "Raid Weekend",
+          "label": "Raid helg",
           "description": "Show the time remaining in Raid Weekend in a voice channel."
         },
         "season_end_timer": {
@@ -2223,19 +2223,19 @@
         "title": "Dashboard access",
         "description": "Give Discord roles view or management access to specific dashboard sections. Multiple roles combine.",
         "loadError": "Could not load dashboard access",
-        "retry": "Retry",
+        "retry": "Prøv igjen",
         "selectRole": "Select a Discord role",
         "addRole": "Add role",
         "empty": "No dashboard roles have been added.",
         "removeRole": "Remove {role}",
         "levels": {
           "none": "No access",
-          "view": "View",
-          "manage": "Manage"
+          "view": "Vis",
+          "manage": "Administrer"
         },
         "status": {
           "saving": "Saving",
-          "saved": "Saved",
+          "saved": "Lagret",
           "pending": "Pending changes",
           "error": "Not saved"
         }
@@ -2322,7 +2322,7 @@
       },
       "autocompleteHint": "Type an opening brace to insert a placeholder",
       "pending": "Waiting to save",
-      "saved": "Saved"
+      "saved": "Lagret"
     },
     "familyRoles": {
       "title": "Familieroller",
@@ -2378,11 +2378,11 @@
   },
   "LoginPage": {
     "redirecting": "Sender deg videre til Discord...",
-    "dashboardLabel": "Dashboard",
+    "dashboardLabel": "Dashbord",
     "eyebrow": "ClashKing Dashboard",
     "title": "Welcome, Chief.",
     "subtitle": "Sign in to manage your Discord servers, configure ClashKing, and keep your clan running smoothly.",
-    "continueWithDiscord": "Continue with Discord",
+    "continueWithDiscord": "Fortsett med Discord",
     "checkingSession": "Checking your session...",
     "openingDiscord": "Opening Discord...",
     "helper": "Discord confirms who you are. ClashKing never sees or stores your Discord password.",
@@ -2838,11 +2838,11 @@
     "legacyEmbed": "Opprettet via boten – lim inn en Discohook-URL for å aktivere redigering.",
     "invalidDiscohookUrl": "Ugyldig URL. Lim inn en Discohook-sideadresse (discohook.app/?data=... eller discohook.app/?share=...).",
     "tabEmbeds": "Embeds",
-    "configurePanel": "Configure",
+    "configurePanel": "Konfigurer",
     "configurePanelDescription": "Manage the panel message, buttons, pre-written messages, categories, and logs.",
     "categoryCoverage": "{configured}/{total} categories",
     "logCoverage": "{configured}/{total} logs",
-    "panelPreview": "Discord preview",
+    "panelPreview": "Forhåndsvisning i Discord",
     "panelPreviewHint": "This combines the selected panel embed and ticket buttons so you can review what members will see before configuring it."
   },
   "EmbedsPage": {
@@ -3042,7 +3042,7 @@
       "messages": "Meldinger",
       "restrictions": "Begrensninger",
       "advanced": "Avansert",
-      "winners": "Winners"
+      "winners": "Vinnere"
     },
     "tabs": {
       "ongoing": "Løpende",
@@ -3082,8 +3082,8 @@
       "start": "Starter",
       "end": "Slutter",
       "winnersHeader": "Vinnere",
-      "winners": "{count, plural, one {# vinner} other {# vinnere}}",
-      "boosters": "{count, plural, one {# booster} other {# boostere}}",
+      "winners": "{count} winner{count, plural, one {} other {s}}",
+      "boosters": "{count} booster{count, plural, one {} other {s}}",
       "noChannel": "Ingen kanal",
       "noChannelHelp": "Ingen kanal tildelt. Rediger giveawayen for å rette det.",
       "endsAt": "Slutter kl.",
@@ -3099,7 +3099,7 @@
       "rerolledCount": "{count, plural, one {# vinner trukket på nytt} other {# vinnere trukket på nytt}}",
       "viewEntries": "Vis deltakelser",
       "viewGiveaway": "View giveaway",
-      "editGiveaway": "Edit giveaway",
+      "editGiveaway": "Rediger giveaway",
       "moreActions": "More giveaway actions"
     },
     "entries": {
@@ -3195,7 +3195,7 @@
       "notScheduled": "Ikke planlagt",
       "schedule": "Tidsplan",
       "endMessage": "Vinnermelding",
-      "endSummary": "{winners, plural, one {# vinner blir kunngjort her.} other {# vinnere blir kunngjort her.}}",
+      "endSummary": "{winners} winner{winners, plural, one {} other {s}} will be announced here.",
       "totalParticipants": "Deltakere totalt: {count}",
       "participate": "Bli med",
       "buttonHint": "Den primære handlingsknappen vises under Discord-innlegget."
@@ -3222,8 +3222,8 @@
       "description": "Select a winner to copy their Discord ID or open their Discord profile.",
       "current": "Current winners",
       "rerolled": "Rerolled winners",
-      "onServer": "On server",
-      "notOnServer": "Not on server",
+      "onServer": "På serveren",
+      "notOnServer": "Ikke på serveren",
       "none": "No winners have been recorded."
     }
   },
@@ -3318,7 +3318,7 @@
       "joinTestFlight": "Bli med på TestFlight",
       "getAndroidApp": "Hent Android-appen",
       "login": "Log in",
-      "dashboard": "Dashboard",
+      "dashboard": "Dashbord",
       "iosApp": "iOS app",
       "androidApp": "Android app",
       "addDiscordBot": "Add Discord bot"
@@ -3443,11 +3443,11 @@
   "AccountSettings": {
     "title": "Account settings",
     "description": "Manage your ClashKing profile, preferences, usage, and subscription.",
-    "retry": "Retry",
+    "retry": "Prøv igjen",
     "profile": {
-      "title": "Profile",
+      "title": "Profil",
       "description": "The identity attached to your ClashKing account.",
-      "discord": "Discord",
+      "discord": "Uenighed",
       "account": "ClashKing",
       "synced": "Your name and profile picture are synced from Discord.",
       "local": "This profile is managed by your ClashKing account."
@@ -3455,13 +3455,13 @@
     "appearance": {
       "title": "Appearance & language",
       "description": "Choose how the dashboard looks and which language it uses.",
-      "theme": "Theme",
+      "theme": "Tema",
       "themes": {
-        "system": "System",
-        "light": "Light",
-        "dark": "Dark"
+        "system": "Systemstandard",
+        "light": "Lys",
+        "dark": "Mørk"
       },
-      "language": "Language",
+      "language": "Språk",
       "browserLanguage": "Use browser language"
     },
     "usage": {
@@ -3480,7 +3480,7 @@
       "subscribers": "Credit from {count, plural, one {# subscription} other {# subscriptions}}"
     },
     "billing": {
-      "active": "Active",
+      "active": "Aktiv",
       "free": "Free plan",
       "currentPlan": "ClashKing subscription",
       "supportTitle": "Support ClashKing ❤️",
