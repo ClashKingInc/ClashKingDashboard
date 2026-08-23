@@ -41,7 +41,7 @@
     "description": "Descrizione",
     "createdAt": "Creato il",
     "updatedAt": "Aggiornato il",
-    "dashboard": "Dashboard",
+    "dashboard": "Cruscotto",
     "loadError": "Impossibile caricare i dati.",
     "tryAgain": "Riprova",
     "create": "Crea",
@@ -155,7 +155,7 @@
       },
       "bot": {
         "title": "Bot",
-        "dashboard": "Dashboard",
+        "dashboard": "Cruscotto",
         "inviteBot": "Invita il bot"
       },
       "resources": {
@@ -3301,7 +3301,7 @@
       "homeLabel": "Home di ClashKing",
       "mobileApp": "App mobile",
       "discordBot": "Bot Discord",
-      "dashboard": "Dashboard"
+      "dashboard": "Cruscotto"
     },
     "language": {
       "label": "Lingua"
@@ -3389,7 +3389,7 @@
       }
     },
     "dashboard": {
-      "title": "Dashboard",
+      "title": "Cruscotto",
       "intro": "Gestisci roster, promemoria e impostazioni del server da un unico posto.",
       "imageLabel": "Capanna del costruttore che rappresenta gli strumenti di gestione del clan",
       "imageAlt": "Capanna del costruttore livello 8",

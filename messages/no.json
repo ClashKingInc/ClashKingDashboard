@@ -593,7 +593,7 @@
     },
     "filters": {
       "search": "Søk spillerlister...",
-      "type": "Type",
+      "type": "Klantype",
       "all": "Alle",
       "clan": "Klan",
       "family": "Familie",
@@ -1399,14 +1399,14 @@
     "comingSoon": "Denne funksjonen kommer snart. Kom tilbake igjen senere!",
     "stats": {
       "totalEntries": "Deltakelser totalt",
-      "type": "Type",
+      "type": "Klantype",
       "league": "Liga",
       "weekend": "Helg"
     },
     "filters": {
       "title": "Filtre",
       "description": "Tilpass topplistevisningen",
-      "type": "Type",
+      "type": "Klantype",
       "metric": "Måling",
       "league": "Liga",
       "weekend": "Helg"
