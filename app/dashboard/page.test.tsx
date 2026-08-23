@@ -8,6 +8,7 @@ const testState = vi.hoisted(() => ({
   guildId: "123456789",
   replace: vi.fn(),
   getServerClans: vi.fn(),
+  getDashboardCapabilities: vi.fn(),
 }));
 
 vi.mock("next/navigation", () => ({
@@ -21,13 +22,20 @@ vi.mock("@/lib/dashboard-route", () => ({
 
 vi.mock("@/lib/api/client", () => ({
   apiClient: {
-    servers: { getServerClans: testState.getServerClans },
+    servers: {
+      getServerClans: testState.getServerClans,
+      getDashboardCapabilities: testState.getDashboardCapabilities,
+    },
   },
 }));
 
 describe("DashboardEntryPage", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    testState.getDashboardCapabilities.mockResolvedValue({
+      data: { server_id: "123456789", full_access: true, sections: {} },
+      status: 200,
+    });
   });
 
   const renderPage = () => {
@@ -83,5 +91,19 @@ describe("DashboardEntryPage", () => {
     await waitFor(() => {
       expect(testState.replace).toHaveBeenCalledWith("/dashboard/general?guildId=123456789");
     });
+  });
+
+  it("routes delegated users to their first authorized section without querying clans", async () => {
+    testState.getDashboardCapabilities.mockResolvedValue({
+      data: { server_id: "123456789", full_access: false, sections: { roles: "view" } },
+      status: 200,
+    });
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(testState.replace).toHaveBeenCalledWith("/dashboard/roles?guildId=123456789");
+    });
+    expect(testState.getServerClans).not.toHaveBeenCalled();
   });
 });

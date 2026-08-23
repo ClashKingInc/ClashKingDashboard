@@ -1,9 +1,17 @@
 import { describe, expect, it, vi } from "vitest";
 import {
   embeddedImageValidationError,
+  graphicProjectsStorageKey,
   MAX_EMBEDDED_IMAGE_BYTES,
   storeGraphicProjects,
 } from "./graphic-project-storage";
+
+describe("graphicProjectsStorageKey", () => {
+  it("isolates drafts by authenticated user and server", () => {
+    expect(graphicProjectsStorageKey("user/one", "guild:123")).toBe("graphic-projects:user%2Fone:guild%3A123");
+    expect(graphicProjectsStorageKey("user/two", "guild:123")).not.toBe(graphicProjectsStorageKey("user/one", "guild:123"));
+  });
+});
 
 describe("embeddedImageValidationError", () => {
   it("accepts images within the browser-storage budget", () => {

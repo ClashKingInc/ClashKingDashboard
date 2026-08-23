@@ -1,4 +1,4 @@
-import { dashboardNavigationSections } from "./dashboard-navigation";
+import { dashboardNavigationSections, firstViewableDashboardPath } from "./dashboard-navigation";
 
 describe("dashboardNavigationSections", () => {
   it("keeps the first navigation group unlabeled and server automation under Server Management", () => {
@@ -47,5 +47,21 @@ describe("dashboardNavigationSections", () => {
       .find((item) => item.path === "graphics");
 
     expect(graphics?.desktopOnly).toBe(true);
+  });
+
+  it("chooses the first section a delegated user can view", () => {
+    expect(firstViewableDashboardPath({
+      server_id: "1",
+      full_access: false,
+      sections: { roles: "view", rosters: "manage" },
+    })).toBe("roles");
+  });
+
+  it("keeps legacy panel-only grants routable", () => {
+    expect(firstViewableDashboardPath({
+      server_id: "1",
+      full_access: false,
+      sections: { panels: "view" },
+    })).toBe("panels");
   });
 });

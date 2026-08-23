@@ -28,6 +28,7 @@ import {
   rosterMembersOutputSchema,
   savedViewProgramGuidance,
 } from "./view-program-contract";
+import { resolveAssistantSecrets } from "./runtime-secrets";
 
 const MODEL = ROSTER_ASSISTANT_MODEL;
 const MAX_ROSTERS = 25;
@@ -294,11 +295,7 @@ const rosterAssistantWorker = {
     }
     let env: RosterAssistantRuntimeEnv;
     try {
-      const [openAIAPIKey, aiUsageSecret] = await Promise.all([
-        bindings.OPENAI_API_KEY_SECRET.get(),
-        bindings.AI_USAGE_SECRET_SECRET.get(),
-      ]);
-      if (!openAIAPIKey.trim() || !aiUsageSecret.trim()) throw new Error("required secret is empty");
+      const { openAIAPIKey, aiUsageSecret } = await resolveAssistantSecrets(bindings);
       env = {
         LOADER: bindings.LOADER,
         CLASHKING_API_ORIGIN: bindings.CLASHKING_API_ORIGIN,

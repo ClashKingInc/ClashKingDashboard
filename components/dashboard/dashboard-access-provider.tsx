@@ -2,7 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { ShieldAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { DashboardCapabilities, DashboardSection } from "@/lib/api/types/dashboard-access";
@@ -46,9 +46,21 @@ const pathSections: Array<[string, DashboardSection]> = [
   ["/family-settings", "family_settings"], ["/logs", "logs"], ["/clans", "clans"],
   ["/rosters", "rosters"], ["/links", "links"], ["/bans-and-strikes", "moderation"],
   ["/roles", "roles"], ["/reminders", "reminders"], ["/autoboards", "autoboards"],
-  ["/giveaways", "giveaways"], ["/panels", "logs"], ["/tickets", "tickets"],
+  ["/giveaways", "giveaways"], ["/panels", "panels"], ["/tickets", "tickets"],
   ["/embeds", "embeds"], ["/graphics", "embeds"], ["/general", "settings"],
 ];
+
+export function canAccessDashboardPath(
+  capabilities: DashboardCapabilities | null,
+  pathname: string,
+  tab?: string | null,
+): boolean {
+  if (pathname.includes("/bases")) return capabilities?.full_access === true;
+  const section = pathSections.find(([path]) => pathname.includes(path))?.[1];
+  if (!section) return true;
+  if (capabilities?.full_access === true || Boolean(capabilities?.sections[section])) return true;
+  return section === "logs" && tab === "join-panel" && Boolean(capabilities?.sections.panels);
+}
 
 export function DashboardAccessProvider({ guildId, children }: { guildId: string; children: React.ReactNode }) {
   const cached = useMemo(() => readCachedCapabilities(guildId), [guildId]);
@@ -89,10 +101,9 @@ export function useDashboardAccess() {
 
 export function DashboardRouteAccess({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const { capabilities, loading, canView } = useDashboardAccess();
-  const section = pathSections.find(([path]) => pathname.includes(path))?.[1];
-  const isFullAccessOnly = pathname.includes("/bases");
-  const allowed = isFullAccessOnly ? capabilities?.full_access === true : !section || canView(section);
+  const searchParams = useSearchParams();
+  const { capabilities, loading } = useDashboardAccess();
+  const allowed = canAccessDashboardPath(capabilities, pathname, searchParams.get("tab"));
 
   if (loading) return <div className="p-6 text-sm text-muted-foreground">Loading dashboard access…</div>;
   if (allowed) return children;

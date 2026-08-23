@@ -2,6 +2,10 @@ import type { GraphicProjectRecord } from "./graphic-projects";
 
 export const MAX_EMBEDDED_IMAGE_BYTES = 2 * 1024 * 1024;
 
+export function graphicProjectsStorageKey(userId: string, guildId: string): string {
+  return `graphic-projects:${encodeURIComponent(userId)}:${encodeURIComponent(guildId)}`;
+}
+
 export function embeddedImageValidationError(file: Pick<File, "size" | "type">): string | null {
   if (!file.type.startsWith("image/")) return "Choose an image file.";
   if (file.size > MAX_EMBEDDED_IMAGE_BYTES) return "Images must be 2 MB or smaller.";

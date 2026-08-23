@@ -3,4 +3,4 @@ OPENAI_API_KEY=replace_with_openai_project_key
 AI_USAGE_SECRET=clashking-local-ai-metering
 
 # Local Worker tools call the local Go API.
-CLASHKING_API_URL=http://127.0.0.1:8000
+CLASHKING_API_ORIGIN=http://127.0.0.1:8000

@@ -47,6 +47,7 @@ import {
 import { apiClient } from "@/lib/api/client";
 import { useGuildId } from "@/lib/dashboard-route";
 import { cn } from "@/lib/utils";
+import { useAuthSession } from "@/components/auth-session-provider";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -113,7 +114,7 @@ import { rasterizeGraphicText } from "./text-rasterizer";
 import { resizeTextElement, withAutoTextHeight } from "./text-layout";
 import { GraphicProjectHub } from "./graphic-project-hub";
 import { PositionPanel, type PositionPanelTab } from "./position-panel";
-import { embeddedImageValidationError, storeGraphicProjects } from "./graphic-project-storage";
+import { embeddedImageValidationError, graphicProjectsStorageKey, storeGraphicProjects } from "./graphic-project-storage";
 import { createGraphicProject, parseGraphicProjects, type GraphicProjectRecord } from "./graphic-projects";
 import { proxyClashApiAssetUrl } from "./asset-url";
 import { dispatchGraphicsEditorMode } from "@/lib/graphics-editor-shell";
@@ -265,7 +266,8 @@ function isTypingTarget(target: EventTarget | null): boolean {
 
 export function GraphicEditor() {
   const guildId = useGuildId();
-  const projectStorageKey = `graphic-projects:${guildId}`;
+  const { user } = useAuthSession();
+  const projectStorageKey = user?.user_id ? graphicProjectsStorageKey(user.user_id, guildId) : null;
   const [projects, setProjects] = useState<GraphicProjectRecord[]>([]);
   const projectsRef = useRef<GraphicProjectRecord[]>([]);
   const [projectsLoaded, setProjectsLoaded] = useState(false);
@@ -338,6 +340,11 @@ export function GraphicEditor() {
   }, []);
 
   useEffect(() => {
+    if (!projectStorageKey) return;
+    setProjectsLoaded(false);
+    projectsRef.current = [];
+    setProjects([]);
+    setActiveProjectId(null);
     const storedProjects = localStorage.getItem(projectStorageKey);
     try {
       const parsedProjects = storedProjects ? parseGraphicProjects(JSON.parse(storedProjects) as unknown) : [];
@@ -347,15 +354,6 @@ export function GraphicEditor() {
         setProjectsLoaded(true);
         return;
       }
-      const legacy = localStorage.getItem(`graphic-editor:${guildId}`);
-      const parsed: unknown = legacy ? JSON.parse(legacy) : null;
-      if (validateGraphicDocument(parsed)) {
-        const migrated: GraphicProjectRecord = { id: createElementId(), kind: parsed.kind ?? "player", updatedAt: new Date().toISOString(), document: parsed };
-        projectsRef.current = [migrated];
-        setProjects([migrated]);
-        const storageError = storeGraphicProjects(localStorage, projectStorageKey, [migrated]);
-        if (storageError) setStatus(storageError);
-      }
     } catch {
       // A malformed local draft should never prevent the projects page opening.
     } finally {
@@ -364,6 +362,10 @@ export function GraphicEditor() {
   }, [guildId, projectStorageKey]);
 
   const persistProjects = useCallback((next: GraphicProjectRecord[]): boolean => {
+    if (!projectStorageKey) {
+      setStatus("Sign in again before saving this graphic.");
+      return false;
+    }
     const storageError = storeGraphicProjects(localStorage, projectStorageKey, next);
     if (storageError) {
       setStatus(storageError);
@@ -375,7 +377,7 @@ export function GraphicEditor() {
   }, [projectStorageKey]);
 
   useEffect(() => {
-    if (!activeProjectId || !projectsLoaded) return;
+    if (!activeProjectId || !projectsLoaded || !projectStorageKey) return;
     const timeout = window.setTimeout(() => {
       const next = projectsRef.current.map((project) => project.id === activeProjectId
         ? { ...project, kind: document.kind ?? project.kind, updatedAt: new Date().toISOString(), document }

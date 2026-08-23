@@ -16,7 +16,7 @@ import {
   UserCog,
   Users,
 } from "lucide-react";
-import type { DashboardSection } from "@/lib/api/types/dashboard-access";
+import type { DashboardCapabilities, DashboardSection } from "@/lib/api/types/dashboard-access";
 
 export interface DashboardNavigationItem {
   nameKey: string;
@@ -69,3 +69,15 @@ export const dashboardNavigationSections: DashboardNavigationSection[] = [
     ],
   },
 ];
+
+export function firstViewableDashboardPath(capabilities: DashboardCapabilities): string | undefined {
+  if (capabilities.full_access) return "general";
+  for (const section of dashboardNavigationSections) {
+    for (const item of section.items) {
+      if (item.fullAccess ? capabilities.full_access : item.capability && capabilities.sections[item.capability]) {
+        return item.path;
+      }
+    }
+  }
+  return capabilities.sections.panels ? "panels" : undefined;
+}

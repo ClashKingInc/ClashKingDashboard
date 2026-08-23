@@ -22,7 +22,7 @@
     "preview": "wrangler dev",
     "worker:types": "wrangler types --config wrangler.deploy.jsonc",
     "assistant:config": "node scripts/prepare-assistant-wrangler-config.mjs",
-    "assistant:dev": "npm run assistant:config && wrangler dev --config .wrangler/wrangler.assistant.generated.jsonc --port 8788",
+    "assistant:dev": "node scripts/prepare-assistant-wrangler-config.mjs --local && wrangler dev --config .wrangler/wrangler.assistant.generated.jsonc --port 8788",
     "assistant:types": "npm run assistant:config && wrangler types workers/roster-assistant/bindings.d.ts --config .wrangler/wrangler.assistant.generated.jsonc --env-interface RosterAssistantBindings --include-runtime false",
     "assistant:check": "tsc --noEmit -p workers/roster-assistant/tsconfig.json",
     "deploy:dashboard": "npm run build:production && wrangler deploy --config wrangler.deploy.jsonc",

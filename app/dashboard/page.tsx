@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { dashboardHref, useGuildId } from "@/lib/dashboard-route";
 import { dashboardQueryOptions } from "@/lib/dashboard-query-options";
+import { firstViewableDashboardPath } from "@/components/dashboard/dashboard-navigation";
 
 function hasNoConfiguredClans(payload: unknown): boolean {
   if (Array.isArray(payload)) return payload.length === 0;
@@ -26,10 +27,18 @@ export default function DashboardEntryPage() {
 
     let active = true;
 
-    void queryClient.fetchQuery(dashboardQueryOptions.clans(guildId))
-      .then((clans) => {
+    void queryClient.fetchQuery(dashboardQueryOptions.capabilities(guildId))
+      .then(async (capabilities) => {
         if (!active) return;
 
+        if (!capabilities.full_access) {
+          const destination = firstViewableDashboardPath(capabilities) ?? "general";
+          router.replace(dashboardHref(destination, guildId));
+          return;
+        }
+
+        const clans = await queryClient.fetchQuery(dashboardQueryOptions.clans(guildId));
+        if (!active) return;
         const destination = hasNoConfiguredClans(clans) ? "clans" : "general";
         router.replace(dashboardHref(destination, guildId));
       })

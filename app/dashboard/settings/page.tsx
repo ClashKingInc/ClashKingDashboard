@@ -124,22 +124,34 @@ export default function AccountSettingsPage() {
   const changeServer = async (serverId: string) => {
     if (!subscription?.active) return;
 
+    const previousServerId = selectedServerId;
     setSelectedServerId(serverId);
     setSavingAssignment(true);
     setError(null);
-    const response = await apiClient.billing.updateAssignment(serverId);
-    if (response.error) {
-      setError(response.error);
-    } else {
+    try {
+      const response = await apiClient.billing.updateAssignment(serverId);
+      if (response.error) {
+        setSelectedServerId(previousServerId);
+        setError(response.error);
+        return;
+      }
       const [subscriptionResponse, usageResponse] = await Promise.all([
         apiClient.billing.getSubscription(),
         apiClient.billing.getUsage(serverId),
       ]);
-      if (subscriptionResponse.data) setSubscription(subscriptionResponse.data);
+      if (subscriptionResponse.data) {
+        setSubscription(subscriptionResponse.data);
+      } else {
+        setSubscription((current) => current ? { ...current, assignedServerId: serverId } : current);
+      }
       if (usageResponse.data) setUsage(usageResponse.data);
       setError(subscriptionResponse.error ?? usageResponse.error ?? null);
+    } catch (assignmentError) {
+      setSelectedServerId(previousServerId);
+      setError(assignmentError instanceof Error ? assignmentError.message : String(assignmentError));
+    } finally {
+      setSavingAssignment(false);
     }
-    setSavingAssignment(false);
   };
 
   const openStripe = async () => {
