@@ -273,7 +273,7 @@
       "playerManagement": "ניהול שחקנים",
       "automation": "אוטומציה",
       "statistics": "סטטיסטיקות",
-      "general": "General",
+      "general": "כללי",
       "serverManagement": "Server Management"
     },
     "switchServer": "החלפת שרת",
@@ -420,7 +420,7 @@
       },
       "list": {
         "title": "שחקנים חסומים",
-        "count": "{count, plural, one {שחקן אחד חסום} two {שני שחקנים חסומים} other {# שחקנים חסומים}}",
+        "count": "{count} player{count, plural, one {} other {s}} banned",
         "searchPlaceholder": "חיפוש לפי שם, תג או סיבה...",
         "noBansFound": "לא נמצאו חסימות",
         "noBans": "אין שחקנים חסומים",
@@ -490,7 +490,7 @@
       },
       "list": {
         "title": "אזהרות שחקנים",
-        "count": "{count, plural, one {ניתנה אזהרה אחת} two {ניתנו שתי אזהרות} other {ניתנו # אזהרות}}",
+        "count": "{count} strike{count, plural, one {} other {s}} issued",
         "searchPlaceholder": "חיפוש לפי שם, תג או סיבה...",
         "noStrikesFound": "לא נמצאו אזהרות",
         "noStrikes": "לא ניתנו אזהרות",
@@ -566,7 +566,7 @@
       "newest": "Newest first",
       "oldest": "Oldest first",
       "player": "Player name",
-      "reason": "Reason",
+      "reason": "סיבה",
       "moderator": "Moderator",
       "weight": "Highest weight",
       "count": "Most strikes",
@@ -701,7 +701,7 @@
       "clone": "שכפול",
       "allRosters": "כל הסגלים",
       "manageRosters": "ניהול סגלי המלחמה וההרכבים",
-      "rename": "Rename {name}",
+      "rename": "שינוי השם של {name}",
       "actions": "Actions for {name}",
       "renameInput": "Roster name",
       "renameSave": "Save roster name",
@@ -945,13 +945,13 @@
       "unknownError": "An unknown error occurred",
       "memberCount": "{count, plural, one {# member} other {# members}}",
       "dragPlayer": "Drag {name}",
-      "townHallAlt": "Town Hall {level}",
+      "townHallAlt": "בית עירייה {level}",
       "duplicate": "This player appears in multiple rosters",
       "dropHere": "Drop a player here",
       "status": {
-        "clan": "Clan",
-        "family": "Family",
-        "external": "External"
+        "clan": "קלאן",
+        "family": "משפחה",
+        "external": "חיצוני"
       }
     },
     "ungrouped": "ללא קבוצה",
@@ -971,6 +971,8 @@
       "editTitle": "עריכת אוטומציה",
       "createDesc": "תזמון פעולה אוטומטית",
       "actionType": "סוג פעולה",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "תזמון ביחס לאירוע",
       "offsetBefore": "לפני האירוע",
       "offsetAfter": "אחרי האירוע",
@@ -1016,9 +1018,7 @@
         "roster_clear": "מסירה את כל החברים מהסגל בלי למחוק אותו",
         "roster_archive": "מעבירה את הסגל לארכיון והופכת אותו לקריאה בלבד"
       },
-      "infoBox": "אוטומציות מופעלות ביחס לשעת התחלת האירוע. הגדירו הפרש זמן, למשל שלושה ימים לפני, והבוט יבצע את הפעולה אוטומטית גם באירועים חוזרים.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "אוטומציות מופעלות ביחס לשעת התחלת האירוע. הגדירו הפרש זמן, למשל שלושה ימים לפני, והבוט יבצע את הפעולה אוטומטית גם באירועים חוזרים."
     },
     "groups": {
       "title": "קבוצות סגלים",
@@ -1116,7 +1116,7 @@
     },
     "aiBuilder": {
       "button": "Roster Assistant",
-      "new": "New",
+      "new": "חדש",
       "title": "Roster Assistant",
       "description": "Build and save reusable roster views with natural language."
     },
@@ -1125,11 +1125,11 @@
       "title": "CWL Bonuses",
       "description": "Calculate and assign the available seasonal bonus awards.",
       "back": "Back to rosters",
-      "clan": "Clan",
-      "selectClan": "Select a clan",
+      "clan": "קלאן",
+      "selectClan": "בחירת שבט",
       "searchClans": "Search clans",
       "noClanFound": "No clan found",
-      "season": "Season",
+      "season": "עונה",
       "noStoredSeasons": "No stored seasons",
       "unknownLeague": "Unknown league",
       "unrankedLeague": "Unranked CWL league",
@@ -1137,8 +1137,8 @@
       "loadClansError": "Failed to load configured clans.",
       "loadMedalRulesError": "Failed to load CWL medal rules.",
       "loadDataError": "Failed to load CWL data.",
-      "league": "League",
-      "rank": "Rank",
+      "league": "לִיגָה",
+      "rank": "דַרגָה",
       "warsWon": "Wars won",
       "leagueMedals": "League medals",
       "bonusSlots": "Bonus slots",
@@ -1155,7 +1155,7 @@
       "chooseMore": "{count, plural, one {Choose # more recipient.} other {Choose # more recipients.}}",
       "save": "Save bonuses",
       "saved": "CWL bonus recipients saved",
-      "townHallAlt": "Town Hall {level}",
+      "townHallAlt": "בית עירייה {level}",
       "stars": "{count, plural, one {# star} other {# stars}}",
       "attacks": "{count, plural, one {# attack} other {# attacks}}",
       "noPlayers": "No players are available for this CWL season."
@@ -1537,8 +1537,8 @@
         "reorder": "Failed to save the category order."
       },
       "manage": "Manage categories",
-      "uncategorized": "Uncategorized",
-      "sectionCount": "{count, plural, one {# clan} other {# clans}}",
+      "uncategorized": "ללא קטגוריה",
+      "sectionCount": "{count, plural, one {שבט אחד} two {שני שבטים} other {# שבטים}}",
       "reorderAction": "Reorder {name}",
       "reordered": "Category order saved."
     },
@@ -1933,7 +1933,7 @@
       "selectClan": "Select a different clan",
       "noOtherClans": "Add another clan to this server before cloning this reminder.",
       "action": "Clone reminder",
-      "cloning": "Cloning..."
+      "cloning": "משכפל..."
     }
   },
   "LogsPage": {
@@ -2108,8 +2108,8 @@
       "serverFallback": "This server"
     },
     "scope": {
-      "clan": "Clan",
-      "server": "Server",
+      "clan": "קלאן",
+      "server": "שרת",
       "serverTitle": "Server logs",
       "serverDescription": "These feeds apply to the whole Discord server and do not change with the selected clan."
     },
@@ -2125,7 +2125,7 @@
     },
     "emptyClans": "Add a clan to this server before configuring clan logs.",
     "serverTabs": {
-      "logs": "Logs",
+      "logs": "יומנים",
       "countdowns": "Countdowns",
       "joinPanel": "Join panel"
     },
@@ -2136,15 +2136,15 @@
       "toggle": "Toggle {name}",
       "types": {
         "clan_games_timer": {
-          "label": "Clan Games",
+          "label": "משחקי הקלאן",
           "description": "Show the time remaining in Clan Games in a voice channel."
         },
         "cwl_timer": {
-          "label": "Clan War League",
+          "label": "ליגת מלחמות הקלאנים",
           "description": "Show the time remaining in Clan War League in a voice channel."
         },
         "raid_weekend_timer": {
-          "label": "Raid Weekend",
+          "label": "סוף שבוע פשיטה",
           "description": "Show the time remaining in Raid Weekend in a voice channel."
         },
         "season_end_timer": {
@@ -2223,19 +2223,19 @@
         "title": "Dashboard access",
         "description": "Give Discord roles view or management access to specific dashboard sections. Multiple roles combine.",
         "loadError": "Could not load dashboard access",
-        "retry": "Retry",
+        "retry": "נסה שוב",
         "selectRole": "Select a Discord role",
         "addRole": "Add role",
         "empty": "No dashboard roles have been added.",
         "removeRole": "Remove {role}",
         "levels": {
           "none": "No access",
-          "view": "View",
-          "manage": "Manage"
+          "view": "הצגה",
+          "manage": "ניהול"
         },
         "status": {
           "saving": "Saving",
-          "saved": "Saved",
+          "saved": "נשמר",
           "pending": "Pending changes",
           "error": "Not saved"
         }
@@ -2322,7 +2322,7 @@
       },
       "autocompleteHint": "Type an opening brace to insert a placeholder",
       "pending": "Waiting to save",
-      "saved": "Saved"
+      "saved": "נשמר"
     },
     "familyRoles": {
       "title": "תפקידי משפחה",
@@ -2378,11 +2378,11 @@
   },
   "LoginPage": {
     "redirecting": "מעביר ל-Discord...",
-    "dashboardLabel": "Dashboard",
+    "dashboardLabel": "לוח בקרה",
     "eyebrow": "ClashKing Dashboard",
     "title": "Welcome, Chief.",
     "subtitle": "Sign in to manage your Discord servers, configure ClashKing, and keep your clan running smoothly.",
-    "continueWithDiscord": "Continue with Discord",
+    "continueWithDiscord": "המשך עם Discord",
     "checkingSession": "Checking your session...",
     "openingDiscord": "Opening Discord...",
     "helper": "Discord confirms who you are. ClashKing never sees or stores your Discord password.",
@@ -2838,11 +2838,11 @@
     "legacyEmbed": "נוצר באמצעות הבוט — הדביקו כתובת Discohook כדי לאפשר עריכה.",
     "invalidDiscohookUrl": "כתובת לא תקינה. הדביקו כתובת דף Discohook (discohook.app/?data=... או discohook.app/?share=...).",
     "tabEmbeds": "הודעות מוטמעות",
-    "configurePanel": "Configure",
+    "configurePanel": "הגדרה",
     "configurePanelDescription": "Manage the panel message, buttons, pre-written messages, categories, and logs.",
     "categoryCoverage": "{configured}/{total} categories",
     "logCoverage": "{configured}/{total} logs",
-    "panelPreview": "Discord preview",
+    "panelPreview": "תצוגה מקדימה ב-Discord",
     "panelPreviewHint": "This combines the selected panel embed and ticket buttons so you can review what members will see before configuring it."
   },
   "EmbedsPage": {
@@ -3042,7 +3042,7 @@
       "messages": "הודעות",
       "restrictions": "הגבלות",
       "advanced": "מתקדם",
-      "winners": "Winners"
+      "winners": "זוכים"
     },
     "tabs": {
       "ongoing": "פעילות",
@@ -3082,8 +3082,8 @@
       "start": "מתחילה",
       "end": "מסתיימת",
       "winnersHeader": "זוכים",
-      "winners": "{count, plural, one {זוכה אחד} two {שני זוכים} other {# זוכים}}",
-      "boosters": "{count, plural, one {מאיץ אחד} two {שני מאיצים} other {# מאיצים}}",
+      "winners": "{count} winner{count, plural, one {} other {s}}",
+      "boosters": "{count} booster{count, plural, one {} other {s}}",
       "noChannel": "ללא ערוץ",
       "noChannelHelp": "לא הוקצה ערוץ. ערכו את ההגרלה כדי לתקן זאת.",
       "endsAt": "מסתיימת בשעה",
@@ -3099,7 +3099,7 @@
       "rerolledCount": "{count, plural, one {זוכה אחד הוגרל מחדש} two {שני זוכים הוגרלו מחדש} other {# זוכים הוגרלו מחדש}}",
       "viewEntries": "הצגת משתתפים",
       "viewGiveaway": "View giveaway",
-      "editGiveaway": "Edit giveaway",
+      "editGiveaway": "עריכת הגרלה",
       "moreActions": "More giveaway actions"
     },
     "entries": {
@@ -3195,7 +3195,7 @@
       "notScheduled": "לא מתוזמנת",
       "schedule": "לוח זמנים",
       "endMessage": "הודעת זכייה",
-      "endSummary": "{winners, plural, one {זוכה אחד יוכרז כאן.} two {שני זוכים יוכרזו כאן.} other {# זוכים יוכרזו כאן.}}",
+      "endSummary": "{winners} winner{winners, plural, one {} other {s}} will be announced here.",
       "totalParticipants": "סך המשתתפים: {count}",
       "participate": "השתתפות",
       "buttonHint": "כפתור הפעולה הראשי שמוצג מתחת לפרסום ב-Discord."
@@ -3222,8 +3222,8 @@
       "description": "Select a winner to copy their Discord ID or open their Discord profile.",
       "current": "Current winners",
       "rerolled": "Rerolled winners",
-      "onServer": "On server",
-      "notOnServer": "Not on server",
+      "onServer": "בשרת",
+      "notOnServer": "לא בשרת",
       "none": "No winners have been recorded."
     }
   },
@@ -3318,7 +3318,7 @@
       "joinTestFlight": "הצטרפות ל-TestFlight",
       "getAndroidApp": "הורדת אפליקציית Android",
       "login": "Log in",
-      "dashboard": "Dashboard",
+      "dashboard": "לוח בקרה",
       "iosApp": "iOS app",
       "androidApp": "Android app",
       "addDiscordBot": "Add Discord bot"
@@ -3443,9 +3443,9 @@
   "AccountSettings": {
     "title": "Account settings",
     "description": "Manage your ClashKing profile, preferences, usage, and subscription.",
-    "retry": "Retry",
+    "retry": "נסה שוב",
     "profile": {
-      "title": "Profile",
+      "title": "פרופיל",
       "description": "The identity attached to your ClashKing account.",
       "discord": "Discord",
       "account": "ClashKing",
@@ -3455,13 +3455,13 @@
     "appearance": {
       "title": "Appearance & language",
       "description": "Choose how the dashboard looks and which language it uses.",
-      "theme": "Theme",
+      "theme": "ערכת נושא",
       "themes": {
-        "system": "System",
-        "light": "Light",
-        "dark": "Dark"
+        "system": "מַעֲרֶכֶת",
+        "light": "אוֹר",
+        "dark": "כֵּהֶה"
       },
-      "language": "Language",
+      "language": "שפה",
       "browserLanguage": "Use browser language"
     },
     "usage": {
@@ -3480,7 +3480,7 @@
       "subscribers": "Credit from {count, plural, one {# subscription} other {# subscriptions}}"
     },
     "billing": {
-      "active": "Active",
+      "active": "פעיל",
       "free": "Free plan",
       "currentPlan": "ClashKing subscription",
       "supportTitle": "Support ClashKing ❤️",
