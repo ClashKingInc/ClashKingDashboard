@@ -412,7 +412,7 @@
       },
       "list": {
         "title": "Avstängda spelare",
-        "count": "{count} player{count, plural, one {} other {s}} banned",
+        "count": "{count, plural, one {# avstängd spelare} other {# avstängda spelare}}",
         "searchPlaceholder": "Sök efter namn, tagg eller orsak...",
         "noBansFound": "Inga avstängningar hittades",
         "noBans": "Inga avstängda spelare",
@@ -482,7 +482,7 @@
       },
       "list": {
         "title": "Spelarvarningar",
-        "count": "{count} strike{count, plural, one {} other {s}} issued",
+        "count": "{count, plural, one {# utfärdad varning} other {# utfärdade varningar}}",
         "searchPlaceholder": "Sök efter namn, tagg eller orsak...",
         "noStrikesFound": "Inga varningar hittades",
         "noStrikes": "Inga varningar utfärdade",
@@ -2793,8 +2793,8 @@
       "start": "Startar",
       "end": "Slutar",
       "winnersHeader": "Vinnare",
-      "winners": "{count} winner{count, plural, one {} other {s}}",
-      "boosters": "{count} booster{count, plural, one {} other {s}}",
+      "winners": "{count, plural, one {# vinnare} other {# vinnare}}",
+      "boosters": "{count, plural, one {# bonus} other {# bonusar}}",
       "noChannel": "Ingen kanal",
       "noChannelHelp": "Ingen kanal har tilldelats. Redigera utlottningen för att rätta till det.",
       "endsAt": "Slutar",
@@ -2903,7 +2903,7 @@
       "notScheduled": "Inte schemalagd",
       "schedule": "Schema",
       "endMessage": "Vinnarmeddelande",
-      "endSummary": "{winners} winner{winners, plural, one {} other {s}} will be announced here.",
+      "endSummary": "{winners, plural, one {# vinnare meddelas här.} other {# vinnare meddelas här.}}",
       "totalParticipants": "Totalt antal deltagare: {count}",
       "participate": "Delta",
       "buttonHint": "Primär åtgärdsknapp som visas under Discord-inlägget."

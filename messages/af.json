@@ -207,7 +207,7 @@
       "description": "Familierolle en byname"
     },
     "clans": {
-      "name": "Stamme",
+      "name": "Klans",
       "description": "Bestuur jou clans"
     },
     "logs": {
@@ -1319,7 +1319,7 @@
     },
     "types": {
       "player": "Spelers",
-      "clan": "Stamme"
+      "clan": "Klans"
     },
     "metrics": {
       "capital": {

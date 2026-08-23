@@ -207,7 +207,7 @@
       "description": "Clanfamilierollen en bijnamen"
     },
     "clans": {
-      "name": "Clans zoeken",
+      "name": "Clans",
       "description": "Beheer je clans"
     },
     "logs": {
@@ -679,7 +679,7 @@
     "memberColumns": {
       "name": "Naam",
       "townhall": "Stadhuis",
-      "tag": "Label",
+      "tag": "Tag",
       "hitrate": "Trefferpercentage over 30 dagen",
       "current_clan": "Huidige clan",
       "current_clan_tag": "Clantag",
@@ -701,7 +701,7 @@
     "sortFields": {
       "townhall": "Stadhuisniveau",
       "name": "Naam",
-      "tag": "Label",
+      "tag": "Tag",
       "heroLvs": "Helden",
       "trophies": "Trofeeën",
       "hitrate": "Trefferpercentage over 30 dagen",
@@ -1319,7 +1319,7 @@
     },
     "types": {
       "player": "Spelers",
-      "clan": "Clans zoeken"
+      "clan": "Clans"
     },
     "metrics": {
       "capital": {
@@ -2528,7 +2528,7 @@
     "rolesToRemoveHint": "Rollen die automatisch worden verwijderd van de gebruiker bij het openen van een ticket.",
     "applyClans": "Toegestane clans",
     "applyClansHint": "Alleen leden van deze clans kunnen dit ticket openen. Laat leeg om iedereen toe te staan.",
-    "clanTagPlaceholder": "#CLANLABEL",
+    "clanTagPlaceholder": "#CLANTAG",
     "thRequirements": "Vereisten per stadhuisniveau",
     "thRequirementsHint": "Minimale heldenniveaus per stadhuisniveau om dit ticket te kunnen openen.",
     "thHeroLegend": "BK = Barbaarse Koning · AQ = Boogschutter Koningin · GW = Grote Wachter · RC = Koninklijke Kampioene · WARST = Oorlogsterren",

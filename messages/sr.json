@@ -412,7 +412,7 @@
       },
       "list": {
         "title": "Zabranjeni igrači",
-        "count": "{count} player{count, plural, one {} other {s}} banned",
+        "count": "{count, plural, one {# igrač je zabranjen} few {# igrača su zabranjena} other {# igrača je zabranjeno}}",
         "searchPlaceholder": "Pretraži po imenu, oznaci ili razlogu...",
         "noBansFound": "Zabrane nisu pronađene",
         "noBans": "Nema zabranjenih igrača",
@@ -482,7 +482,7 @@
       },
       "list": {
         "title": "Opomene igrača",
-        "count": "{count} strike{count, plural, one {} other {s}} issued",
+        "count": "{count, plural, one {Izdana je # opomena} few {Izdane su # opomene} other {Izdano je # opomena}}",
         "searchPlaceholder": "Pretraži po imenu, oznaci ili razlogu...",
         "noStrikesFound": "Opomene nisu pronađene",
         "noStrikes": "Nema izdatih opomena",
@@ -2793,8 +2793,8 @@
       "start": "Počinje",
       "end": "Završava se",
       "winnersHeader": "Dobitnici",
-      "winners": "{count} winner{count, plural, one {} other {s}}",
-      "boosters": "{count} booster{count, plural, one {} other {s}}",
+      "winners": "{count, plural, one {# dobitnik} few {# dobitnika} other {# dobitnika}}",
+      "boosters": "{count, plural, one {# pojačivač} few {# pojačivača} other {# pojačivača}}",
       "noChannel": "Bez kanala",
       "noChannelHelp": "Kanal nije dodeljen. Izmenite nagradnu igru da biste to ispravili.",
       "endsAt": "Završava se",
@@ -2903,7 +2903,7 @@
       "notScheduled": "Nije zakazano",
       "schedule": "Raspored",
       "endMessage": "Poruka dobitnicima",
-      "endSummary": "{winners} winner{winners, plural, one {} other {s}} will be announced here.",
+      "endSummary": "{winners, plural, one {Ovde će biti objavljen # dobitnik.} few {Ovde će biti objavljena # dobitnika.} other {Ovde će biti objavljeno # dobitnika.}}",
       "totalParticipants": "Ukupno učesnika: {count}",
       "participate": "Učestvuj",
       "buttonHint": "Glavno dugme radnje prikazano ispod Discord objave."

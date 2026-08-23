@@ -3022,17 +3022,17 @@
       "phrases": {
         "run": {
           "first": "Klanınızı",
-          "second": "your",
+          "second": "",
           "third": "yönetin."
         },
         "accounts": {
           "first": "Hesaplarınızı",
-          "second": "your",
+          "second": "",
           "third": "yönetin."
         },
         "stats": {
           "first": "İstatistikleri",
-          "second": "the",
+          "second": "",
           "third": "keşfedin."
         }
       },

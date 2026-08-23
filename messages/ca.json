@@ -207,7 +207,7 @@
       "description": "Rols i sobrenoms de la família"
     },
     "clans": {
-      "name": "Cerca de clans",
+      "name": "Clans",
       "description": "Gestiona els teus clans"
     },
     "logs": {
@@ -1319,7 +1319,7 @@
     },
     "types": {
       "player": "Jugadors",
-      "clan": "Cerca de clans"
+      "clan": "Clans"
     },
     "metrics": {
       "capital": {
@@ -2793,8 +2793,8 @@
       "start": "Comença",
       "end": "Acaba",
       "winnersHeader": "Guanyadors",
-      "winners": "{count} winner{count, plural, one {} other {s}}",
-      "boosters": "{count} booster{count, plural, one {} other {s}}",
+      "winners": "{count, plural, one {# guanyador} other {# guanyadors}}",
+      "boosters": "{count, plural, one {# multiplicador} other {# multiplicadors}}",
       "noChannel": "Sense canal",
       "noChannelHelp": "No hi ha cap canal assignat. Edita el sorteig per corregir-ho.",
       "endsAt": "Acaba a les",
@@ -2903,7 +2903,7 @@
       "notScheduled": "Sense programar",
       "schedule": "Programació",
       "endMessage": "Missatge per als guanyadors",
-      "endSummary": "{winners} winner{winners, plural, one {} other {s}} will be announced here.",
+      "endSummary": "{winners, plural, one {Aquí s’anunciarà # guanyador.} other {Aquí s’anunciaran # guanyadors.}}",
       "totalParticipants": "Total de participants: {count}",
       "participate": "Participa",
       "buttonHint": "Botó d’acció principal sota la publicació de Discord."
