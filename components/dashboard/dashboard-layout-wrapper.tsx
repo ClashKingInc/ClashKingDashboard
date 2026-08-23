@@ -4,8 +4,9 @@ import { useState, useEffect, useRef } from "react";
 import { ChevronDown, LogOut, Menu, PanelLeftClose } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePathname, useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { SettingsDropdown } from "@/components/settings-dropdown";
 import { logout } from "@/lib/auth/logout";
 import { useAuthSession } from "@/components/auth-session-provider";
 import Link from "next/link";
@@ -29,6 +30,7 @@ export function DashboardLayoutWrapper({
   const mainContentRef = useRef<HTMLElement | null>(null);
   const pathname = usePathname();
   const router = useRouter();
+  const locale = useLocale();
   const tCommon = useTranslations("Common");
   const tNavigation = useTranslations("Navigation");
   const { user } = useAuthSession();
@@ -126,7 +128,14 @@ export function DashboardLayoutWrapper({
             )}
           </div>
           {!usesContextualHeader && (
-            <div className="ml-1 shrink-0">{accountLink}</div>
+            <div className="ml-1 flex shrink-0 items-center gap-1">
+              <SettingsDropdown
+                locale={locale}
+                triggerButtonClassName="h-10 w-10 text-muted-foreground hover:bg-accent/60 hover:text-foreground"
+                menuClassName="w-48"
+              />
+              {accountLink}
+            </div>
           )}
         </div>}
 
@@ -134,6 +143,11 @@ export function DashboardLayoutWrapper({
           <div id="dashboard-header-actions" className="min-w-0 flex-1" />
           {!usesContextualHeader && (
             <>
+              <SettingsDropdown
+                locale={locale}
+                triggerButtonClassName="h-9 w-9 text-muted-foreground hover:bg-accent/60 hover:text-foreground"
+                menuClassName="w-48"
+              />
               {accountLink}
               {logoutControl}
             </>
