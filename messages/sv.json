@@ -273,7 +273,7 @@
       "playerManagement": "Spelarhantering",
       "automation": "Automatisering",
       "statistics": "Statistik",
-      "general": "General",
+      "general": "Allmänt",
       "serverManagement": "Server Management"
     },
     "switchServer": "Byt server",
@@ -420,7 +420,7 @@
       },
       "list": {
         "title": "Avstängda spelare",
-        "count": "{count, plural, one {# avstängd spelare} other {# avstängda spelare}}",
+        "count": "{count} player{count, plural, one {} other {s}} banned",
         "searchPlaceholder": "Sök efter namn, tagg eller orsak...",
         "noBansFound": "Inga avstängningar hittades",
         "noBans": "Inga avstängda spelare",
@@ -490,7 +490,7 @@
       },
       "list": {
         "title": "Spelarvarningar",
-        "count": "{count, plural, one {# utfärdad varning} other {# utfärdade varningar}}",
+        "count": "{count} strike{count, plural, one {} other {s}} issued",
         "searchPlaceholder": "Sök efter namn, tagg eller orsak...",
         "noStrikesFound": "Inga varningar hittades",
         "noStrikes": "Inga varningar utfärdade",
@@ -566,7 +566,7 @@
       "newest": "Newest first",
       "oldest": "Oldest first",
       "player": "Player name",
-      "reason": "Reason",
+      "reason": "Orsak",
       "moderator": "Moderator",
       "weight": "Highest weight",
       "count": "Most strikes",
@@ -701,7 +701,7 @@
       "clone": "Klona",
       "allRosters": "Alla laguppställningar",
       "manageRosters": "Hantera dina krigsuppställningar",
-      "rename": "Rename {name}",
+      "rename": "Byt namn på {name}",
       "actions": "Actions for {name}",
       "renameInput": "Roster name",
       "renameSave": "Save roster name",
@@ -945,13 +945,13 @@
       "unknownError": "An unknown error occurred",
       "memberCount": "{count, plural, one {# member} other {# members}}",
       "dragPlayer": "Drag {name}",
-      "townHallAlt": "Town Hall {level}",
+      "townHallAlt": "Rådhus {level}",
       "duplicate": "This player appears in multiple rosters",
       "dropHere": "Drop a player here",
       "status": {
-        "clan": "Clan",
-        "family": "Family",
-        "external": "External"
+        "clan": "Klan",
+        "family": "Familj",
+        "external": "Extern"
       }
     },
     "ungrouped": "Utan grupp",
@@ -971,6 +971,8 @@
       "editTitle": "Redigera automatisering",
       "createDesc": "Schemalägg en automatisk åtgärd",
       "actionType": "Åtgärdstyp",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "Tid i förhållande till evenemanget",
       "offsetBefore": "Före evenemanget",
       "offsetAfter": "Efter evenemanget",
@@ -1016,9 +1018,7 @@
         "roster_clear": "Tar bort alla medlemmar från laguppställningen utan att radera den",
         "roster_archive": "Arkiverar laguppställningen och gör den skrivskyddad"
       },
-      "infoBox": "Automatiseringar utlöses i förhållande till evenemangets starttid. Ange en förskjutning (t.ex. tre dagar före), så utför boten åtgärden automatiskt vid den tiden, även för återkommande evenemang.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "Automatiseringar utlöses i förhållande till evenemangets starttid. Ange en förskjutning (t.ex. tre dagar före), så utför boten åtgärden automatiskt vid den tiden, även för återkommande evenemang."
     },
     "groups": {
       "title": "Grupper för laguppställningar",
@@ -1116,7 +1116,7 @@
     },
     "aiBuilder": {
       "button": "Roster Assistant",
-      "new": "New",
+      "new": "Ny",
       "title": "Roster Assistant",
       "description": "Build and save reusable roster views with natural language."
     },
@@ -1125,11 +1125,11 @@
       "title": "CWL Bonuses",
       "description": "Calculate and assign the available seasonal bonus awards.",
       "back": "Back to rosters",
-      "clan": "Clan",
-      "selectClan": "Select a clan",
+      "clan": "Klan",
+      "selectClan": "Välj en klan",
       "searchClans": "Search clans",
       "noClanFound": "No clan found",
-      "season": "Season",
+      "season": "Säsong",
       "noStoredSeasons": "No stored seasons",
       "unknownLeague": "Unknown league",
       "unrankedLeague": "Unranked CWL league",
@@ -1137,8 +1137,8 @@
       "loadClansError": "Failed to load configured clans.",
       "loadMedalRulesError": "Failed to load CWL medal rules.",
       "loadDataError": "Failed to load CWL data.",
-      "league": "League",
-      "rank": "Rank",
+      "league": "Liga",
+      "rank": "Rang",
       "warsWon": "Wars won",
       "leagueMedals": "League medals",
       "bonusSlots": "Bonus slots",
@@ -1155,7 +1155,7 @@
       "chooseMore": "{count, plural, one {Choose # more recipient.} other {Choose # more recipients.}}",
       "save": "Save bonuses",
       "saved": "CWL bonus recipients saved",
-      "townHallAlt": "Town Hall {level}",
+      "townHallAlt": "Rådhus {level}",
       "stars": "{count, plural, one {# star} other {# stars}}",
       "attacks": "{count, plural, one {# attack} other {# attacks}}",
       "noPlayers": "No players are available for this CWL season."
@@ -1537,8 +1537,8 @@
         "reorder": "Failed to save the category order."
       },
       "manage": "Manage categories",
-      "uncategorized": "Uncategorized",
-      "sectionCount": "{count, plural, one {# clan} other {# clans}}",
+      "uncategorized": "Utan kategori",
+      "sectionCount": "{count, plural, one {# klan} other {# klaner}}",
       "reorderAction": "Reorder {name}",
       "reordered": "Category order saved."
     },
@@ -1933,7 +1933,7 @@
       "selectClan": "Select a different clan",
       "noOtherClans": "Add another clan to this server before cloning this reminder.",
       "action": "Clone reminder",
-      "cloning": "Cloning..."
+      "cloning": "Klonar..."
     }
   },
   "LogsPage": {
@@ -2108,7 +2108,7 @@
       "serverFallback": "This server"
     },
     "scope": {
-      "clan": "Clan",
+      "clan": "Klan",
       "server": "Server",
       "serverTitle": "Server logs",
       "serverDescription": "These feeds apply to the whole Discord server and do not change with the selected clan."
@@ -2125,7 +2125,7 @@
     },
     "emptyClans": "Add a clan to this server before configuring clan logs.",
     "serverTabs": {
-      "logs": "Logs",
+      "logs": "Loggar",
       "countdowns": "Countdowns",
       "joinPanel": "Join panel"
     },
@@ -2136,15 +2136,15 @@
       "toggle": "Toggle {name}",
       "types": {
         "clan_games_timer": {
-          "label": "Clan Games",
+          "label": "Klanlekar",
           "description": "Show the time remaining in Clan Games in a voice channel."
         },
         "cwl_timer": {
-          "label": "Clan War League",
+          "label": "Klan-krigsliga",
           "description": "Show the time remaining in Clan War League in a voice channel."
         },
         "raid_weekend_timer": {
-          "label": "Raid Weekend",
+          "label": "Raid helg",
           "description": "Show the time remaining in Raid Weekend in a voice channel."
         },
         "season_end_timer": {
@@ -2223,19 +2223,19 @@
         "title": "Dashboard access",
         "description": "Give Discord roles view or management access to specific dashboard sections. Multiple roles combine.",
         "loadError": "Could not load dashboard access",
-        "retry": "Retry",
+        "retry": "Försök igen",
         "selectRole": "Select a Discord role",
         "addRole": "Add role",
         "empty": "No dashboard roles have been added.",
         "removeRole": "Remove {role}",
         "levels": {
           "none": "No access",
-          "view": "View",
-          "manage": "Manage"
+          "view": "Visa",
+          "manage": "Hantera"
         },
         "status": {
           "saving": "Saving",
-          "saved": "Saved",
+          "saved": "Sparat",
           "pending": "Pending changes",
           "error": "Not saved"
         }
@@ -2322,7 +2322,7 @@
       },
       "autocompleteHint": "Type an opening brace to insert a placeholder",
       "pending": "Waiting to save",
-      "saved": "Saved"
+      "saved": "Sparat"
     },
     "familyRoles": {
       "title": "Familjeroller",
@@ -2378,11 +2378,11 @@
   },
   "LoginPage": {
     "redirecting": "Omdirigerar till Discord...",
-    "dashboardLabel": "Dashboard",
+    "dashboardLabel": "Instrumentpanel",
     "eyebrow": "ClashKing Dashboard",
     "title": "Welcome, Chief.",
     "subtitle": "Sign in to manage your Discord servers, configure ClashKing, and keep your clan running smoothly.",
-    "continueWithDiscord": "Continue with Discord",
+    "continueWithDiscord": "Fortsätt med Discord",
     "checkingSession": "Checking your session...",
     "openingDiscord": "Opening Discord...",
     "helper": "Discord confirms who you are. ClashKing never sees or stores your Discord password.",
@@ -2838,11 +2838,11 @@
     "legacyEmbed": "Skapad via boten – klistra in en Discohook-webbadress för att aktivera redigering.",
     "invalidDiscohookUrl": "Ogiltig webbadress. Klistra in en webbadress till en Discohook-sida (discohook.app/?data=... eller discohook.app/?share=...).",
     "tabEmbeds": "Inbäddningar",
-    "configurePanel": "Configure",
+    "configurePanel": "Konfigurera",
     "configurePanelDescription": "Manage the panel message, buttons, pre-written messages, categories, and logs.",
     "categoryCoverage": "{configured}/{total} categories",
     "logCoverage": "{configured}/{total} logs",
-    "panelPreview": "Discord preview",
+    "panelPreview": "Förhandsgranskning i Discord",
     "panelPreviewHint": "This combines the selected panel embed and ticket buttons so you can review what members will see before configuring it."
   },
   "EmbedsPage": {
@@ -3042,7 +3042,7 @@
       "messages": "Meddelanden",
       "restrictions": "Begränsningar",
       "advanced": "Avancerat",
-      "winners": "Winners"
+      "winners": "Vinnare"
     },
     "tabs": {
       "ongoing": "Pågående",
@@ -3082,8 +3082,8 @@
       "start": "Startar",
       "end": "Slutar",
       "winnersHeader": "Vinnare",
-      "winners": "{count, plural, one {# vinnare} other {# vinnare}}",
-      "boosters": "{count, plural, one {# bonus} other {# bonusar}}",
+      "winners": "{count} winner{count, plural, one {} other {s}}",
+      "boosters": "{count} booster{count, plural, one {} other {s}}",
       "noChannel": "Ingen kanal",
       "noChannelHelp": "Ingen kanal har tilldelats. Redigera utlottningen för att rätta till det.",
       "endsAt": "Slutar",
@@ -3099,7 +3099,7 @@
       "rerolledCount": "{count, plural, one {# vinnare har dragits om} other {# vinnare har dragits om}}",
       "viewEntries": "Visa lotter",
       "viewGiveaway": "View giveaway",
-      "editGiveaway": "Edit giveaway",
+      "editGiveaway": "Redigera utlottning",
       "moreActions": "More giveaway actions"
     },
     "entries": {
@@ -3195,7 +3195,7 @@
       "notScheduled": "Inte schemalagd",
       "schedule": "Schema",
       "endMessage": "Vinnarmeddelande",
-      "endSummary": "{winners, plural, one {# vinnare meddelas här.} other {# vinnare meddelas här.}}",
+      "endSummary": "{winners} winner{winners, plural, one {} other {s}} will be announced here.",
       "totalParticipants": "Totalt antal deltagare: {count}",
       "participate": "Delta",
       "buttonHint": "Primär åtgärdsknapp som visas under Discord-inlägget."
@@ -3222,8 +3222,8 @@
       "description": "Select a winner to copy their Discord ID or open their Discord profile.",
       "current": "Current winners",
       "rerolled": "Rerolled winners",
-      "onServer": "On server",
-      "notOnServer": "Not on server",
+      "onServer": "På servern",
+      "notOnServer": "Inte på servern",
       "none": "No winners have been recorded."
     }
   },
@@ -3318,7 +3318,7 @@
       "joinTestFlight": "Gå med i TestFlight",
       "getAndroidApp": "Hämta Android-appen",
       "login": "Log in",
-      "dashboard": "Dashboard",
+      "dashboard": "Instrumentpanel",
       "iosApp": "iOS app",
       "androidApp": "Android app",
       "addDiscordBot": "Add Discord bot"
@@ -3443,9 +3443,9 @@
   "AccountSettings": {
     "title": "Account settings",
     "description": "Manage your ClashKing profile, preferences, usage, and subscription.",
-    "retry": "Retry",
+    "retry": "Försök igen",
     "profile": {
-      "title": "Profile",
+      "title": "Profil",
       "description": "The identity attached to your ClashKing account.",
       "discord": "Discord",
       "account": "ClashKing",
@@ -3455,13 +3455,13 @@
     "appearance": {
       "title": "Appearance & language",
       "description": "Choose how the dashboard looks and which language it uses.",
-      "theme": "Theme",
+      "theme": "Tema",
       "themes": {
-        "system": "System",
-        "light": "Light",
-        "dark": "Dark"
+        "system": "Systemstandard",
+        "light": "Ljus",
+        "dark": "Mörk"
       },
-      "language": "Language",
+      "language": "Språk",
       "browserLanguage": "Use browser language"
     },
     "usage": {
@@ -3480,7 +3480,7 @@
       "subscribers": "Credit from {count, plural, one {# subscription} other {# subscriptions}}"
     },
     "billing": {
-      "active": "Active",
+      "active": "Aktiv",
       "free": "Free plan",
       "currentPlan": "ClashKing subscription",
       "supportTitle": "Support ClashKing ❤️",
