@@ -264,6 +264,12 @@ function isTypingTarget(target: EventTarget | null): boolean {
   return target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement || (target instanceof HTMLElement && target.isContentEditable);
 }
 
+interface PendingProjectSave {
+  storageKey: string;
+  projectId: string;
+  projects: GraphicProjectRecord[];
+}
+
 export function GraphicEditor() {
   const guildId = useGuildId();
   const { user } = useAuthSession();
@@ -304,6 +310,8 @@ export function GraphicEditor() {
   const uploadRef = useRef<HTMLInputElement>(null);
   const backgroundUploadRef = useRef<HTMLInputElement>(null);
   const marqueeRef = useRef<MarqueeInteraction | null>(null);
+  const pendingProjectSaveRef = useRef<PendingProjectSave | null>(null);
+  const projectSaveTimerRef = useRef<number | null>(null);
   const selected = document.elements.find((element) => element.id === selectedId) ?? null;
   const selectedElements = document.elements.filter((element) => selectedIds.includes(element.id));
   const allSelectedLocked = selectedElements.length > 0 && selectedElements.every((element) => element.locked);
@@ -339,8 +347,48 @@ export function GraphicEditor() {
     });
   }, []);
 
+  const persistProjects = useCallback((next: GraphicProjectRecord[]): boolean => {
+    if (!projectStorageKey) {
+      setStatus("Sign in again before saving this graphic.");
+      return false;
+    }
+    const storageError = storeGraphicProjects(localStorage, projectStorageKey, next);
+    if (storageError) {
+      setStatus(storageError);
+      return false;
+    }
+    projectsRef.current = next;
+    setProjects(next);
+    return true;
+  }, [projectStorageKey]);
+
+  const flushPendingProjectSave = useCallback((updateEditorState = true): boolean => {
+    if (projectSaveTimerRef.current !== null) {
+      window.clearTimeout(projectSaveTimerRef.current);
+      projectSaveTimerRef.current = null;
+    }
+    const pending = pendingProjectSaveRef.current;
+    if (!pending) return true;
+    pendingProjectSaveRef.current = null;
+    const storageError = storeGraphicProjects(localStorage, pending.storageKey, pending.projects);
+    if (storageError) {
+      if (updateEditorState) setStatus(storageError);
+      return false;
+    }
+    if (updateEditorState) {
+      projectsRef.current = pending.projects;
+      setProjects(pending.projects);
+    }
+    return true;
+  }, []);
+
+  useEffect(() => () => {
+    flushPendingProjectSave(false);
+  }, [flushPendingProjectSave]);
+
   useEffect(() => {
     if (!projectStorageKey) return;
+    flushPendingProjectSave(false);
     setProjectsLoaded(false);
     projectsRef.current = [];
     setProjects([]);
@@ -359,64 +407,59 @@ export function GraphicEditor() {
     } finally {
       setProjectsLoaded(true);
     }
-  }, [guildId, projectStorageKey]);
-
-  const persistProjects = useCallback((next: GraphicProjectRecord[]): boolean => {
-    if (!projectStorageKey) {
-      setStatus("Sign in again before saving this graphic.");
-      return false;
-    }
-    const storageError = storeGraphicProjects(localStorage, projectStorageKey, next);
-    if (storageError) {
-      setStatus(storageError);
-      return false;
-    }
-    projectsRef.current = next;
-    setProjects(next);
-    return true;
-  }, [projectStorageKey]);
+  }, [flushPendingProjectSave, guildId, projectStorageKey]);
 
   useEffect(() => {
     if (!activeProjectId || !projectsLoaded || !projectStorageKey) return;
-    const timeout = window.setTimeout(() => {
-      const next = projectsRef.current.map((project) => project.id === activeProjectId
+    const existingPending = pendingProjectSaveRef.current;
+    if (existingPending && (existingPending.projectId !== activeProjectId || existingPending.storageKey !== projectStorageKey)) {
+      flushPendingProjectSave(existingPending.storageKey === projectStorageKey);
+    }
+    if (!projectsRef.current.some((project) => project.id === activeProjectId)) return;
+    pendingProjectSaveRef.current = {
+      storageKey: projectStorageKey,
+      projectId: activeProjectId,
+      projects: projectsRef.current.map((project) => project.id === activeProjectId
         ? { ...project, kind: document.kind ?? project.kind, updatedAt: new Date().toISOString(), document }
-        : project);
-      const storageError = storeGraphicProjects(localStorage, projectStorageKey, next);
-      if (storageError) {
-        setStatus(storageError);
-        return;
+        : project),
+    };
+    if (projectSaveTimerRef.current !== null) window.clearTimeout(projectSaveTimerRef.current);
+    projectSaveTimerRef.current = window.setTimeout(() => flushPendingProjectSave(), 600);
+    return () => {
+      if (projectSaveTimerRef.current !== null) {
+        window.clearTimeout(projectSaveTimerRef.current);
+        projectSaveTimerRef.current = null;
       }
-      projectsRef.current = next;
-      setProjects(next);
-    }, 600);
-    return () => window.clearTimeout(timeout);
-  }, [activeProjectId, document, projectStorageKey, projectsLoaded]);
+    };
+  }, [activeProjectId, document, flushPendingProjectSave, projectStorageKey, projectsLoaded]);
 
   const openProject = useCallback((id: string) => {
-    const project = projects.find((candidate) => candidate.id === id);
+    if (!flushPendingProjectSave()) return;
+    const project = projectsRef.current.find((candidate) => candidate.id === id);
     if (!project) return;
     setHistory({ past: [], present: structuredClone(project.document), future: [] });
     setSelectedIds([]);
     setZoom(1);
     setPan({ x: 0, y: 0 });
     setActiveProjectId(id);
-  }, [projects]);
+  }, [flushPendingProjectSave]);
 
   const createProject = useCallback((kind: GraphicProjectRecord["kind"], warSize?: number) => {
+    if (!flushPendingProjectSave()) return;
     const project = createGraphicProject(kind, warSize);
-    const next = [project, ...projects];
+    const next = [project, ...projectsRef.current];
     if (!persistProjects(next)) return;
     setHistory({ past: [], present: structuredClone(project.document), future: [] });
     setSelectedIds([]);
     setZoom(1);
     setPan({ x: 0, y: 0 });
     setActiveProjectId(project.id);
-  }, [persistProjects, projects]);
+  }, [flushPendingProjectSave, persistProjects]);
 
   const deleteProject = useCallback((id: string) => {
-    persistProjects(projects.filter((project) => project.id !== id));
-  }, [persistProjects, projects]);
+    if (!flushPendingProjectSave()) return;
+    persistProjects(projectsRef.current.filter((project) => project.id !== id));
+  }, [flushPendingProjectSave, persistProjects]);
 
   useEffect(() => {
     const area = canvasAreaRef.current;
@@ -819,11 +862,12 @@ export function GraphicEditor() {
   };
 
   const saveDraft = (): boolean => {
-    if (!activeProjectId) return false;
-    const next = projects.map((project) => project.id === activeProjectId
+    if (!activeProjectId || !projectStorageKey) return false;
+    const next = projectsRef.current.map((project) => project.id === activeProjectId
       ? { ...project, kind: document.kind ?? project.kind, updatedAt: new Date().toISOString(), document }
       : project);
-    if (!persistProjects(next)) return false;
+    pendingProjectSaveRef.current = { storageKey: projectStorageKey, projectId: activeProjectId, projects: next };
+    if (!flushPendingProjectSave()) return false;
     setStatus("Saved in this browser");
     window.setTimeout(() => setStatus(null), 2200);
     return true;
