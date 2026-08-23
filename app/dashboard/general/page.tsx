@@ -289,7 +289,7 @@ export default function GeneralSettingsPage() {
 
         <div className="grid min-w-0 items-start gap-6 lg:grid-cols-2">
           <section className="min-w-0 space-y-3">
-            <div><h2 className="text-lg font-semibold">{t("security.title")}</h2><p className="mt-1 text-sm text-muted-foreground">{t("security.description")}</p></div>
+            <div className="lg:min-h-[4.5rem]"><h2 className="text-lg font-semibold">{t("security.title")}</h2><p className="mt-1 text-sm text-muted-foreground">{t("security.description")}</p></div>
             <div className="space-y-4 rounded-[24px] bg-card p-4 shadow-sm shadow-black/5 sm:p-5">
               <div><Label htmlFor="whitelist-role" className="text-sm font-medium">{t("security.fullWhitelistRole")}</Label><p className="mt-1 text-xs text-muted-foreground">{t("security.fullWhitelistRoleDesc")}</p></div>
               <Select value={settings.full_whitelist_role || "none"} onValueChange={(value) => void applySettingsChange({ full_whitelist_role: value === "none" ? undefined : value })}>
