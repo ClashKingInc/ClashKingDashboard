@@ -971,6 +971,8 @@
       "editTitle": "Otomasyonu düzenle",
       "createDesc": "Otomatik bir işlem planlayın",
       "actionType": "İşlem türü",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "Etkinliğe göre zamanlama",
       "offsetBefore": "Etkinlikten önce",
       "offsetAfter": "Etkinlikten sonra",
@@ -1016,9 +1018,7 @@
         "roster_clear": "Listeyi silmeden tüm üyeleri kaldırır",
         "roster_archive": "Listeyi arşivleyip salt okunur hâle getirir"
       },
-      "infoBox": "Otomasyonlar etkinliğin başlangıç zamanına göre tetiklenir. Bir zaman farkı belirlediğinizde (ör. 3 gün önce) bot, yinelenen etkinlikler de dâhil olmak üzere işlemi o anda otomatik olarak yürütür.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "Otomasyonlar etkinliğin başlangıç zamanına göre tetiklenir. Bir zaman farkı belirlediğinizde (ör. 3 gün önce) bot, yinelenen etkinlikler de dâhil olmak üzere işlemi o anda otomatik olarak yürütür."
     },
     "groups": {
       "title": "Liste grupları",
@@ -3327,17 +3327,17 @@
       "phrases": {
         "run": {
           "first": "Klanınızı",
-          "second": "",
+          "second": "your",
           "third": "yönetin."
         },
         "accounts": {
           "first": "Hesaplarınızı",
-          "second": "",
+          "second": "your",
           "third": "yönetin."
         },
         "stats": {
           "first": "İstatistikleri",
-          "second": "",
+          "second": "the",
           "third": "keşfedin."
         }
       },
