@@ -176,4 +176,20 @@ describe("createAutomation", () => {
       active: true,
     });
   });
+
+  it("returns a direct automation response for legacy API compatibility", async () => {
+    const rule = { automation_id: "automation-2", server_id: "123", action_type: "roster_signup" };
+    fetchMock.mockResolvedValue(new Response(
+      JSON.stringify(rule),
+      { status: 201, headers: { "Content-Type": "application/json" } },
+    ));
+
+    await expect(createAutomation({
+      server_id: "123",
+      roster_id: "roster-1",
+      action_type: "roster_signup",
+      scheduled_at: "2026-08-24T20:00:00.000Z",
+      active: true,
+    })).resolves.toEqual(rule);
+  });
 });
