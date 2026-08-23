@@ -420,7 +420,7 @@
       },
       "list": {
         "title": "Người chơi bị cấm",
-        "count": "{count, plural, one {# người chơi bị cấm} other {# người chơi bị cấm}}",
+        "count": "{count} player{count, plural, one {} other {s}} banned",
         "searchPlaceholder": "Tìm theo tên, mã hoặc lý do...",
         "noBansFound": "Không tìm thấy lệnh cấm",
         "noBans": "Không có người chơi bị cấm",
@@ -490,7 +490,7 @@
       },
       "list": {
         "title": "Cảnh cáo người chơi",
-        "count": "{count, plural, one {# cảnh cáo đã được đưa ra} other {# cảnh cáo đã được đưa ra}}",
+        "count": "{count} strike{count, plural, one {} other {s}} issued",
         "searchPlaceholder": "Tìm theo tên, mã hoặc lý do...",
         "noStrikesFound": "Không tìm thấy cảnh cáo",
         "noStrikes": "Chưa ban hành cảnh cáo",
@@ -971,6 +971,8 @@
       "editTitle": "Chỉnh sửa tự động hóa",
       "createDesc": "Lên lịch một thao tác tự động",
       "actionType": "Loại thao tác",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "Thời điểm so với sự kiện",
       "offsetBefore": "Trước sự kiện",
       "offsetAfter": "Sau sự kiện",
@@ -1016,9 +1018,7 @@
         "roster_clear": "Xóa toàn bộ thành viên nhưng vẫn giữ danh sách",
         "roster_archive": "Lưu trữ danh sách và chuyển sang chế độ chỉ đọc"
       },
-      "infoBox": "Tự động hóa được kích hoạt theo thời gian bắt đầu sự kiện. Hãy đặt khoảng chênh lệch (VD: trước 3 ngày), bot sẽ tự động thực hiện thao tác vào thời điểm đó, kể cả với sự kiện lặp lại.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "Tự động hóa được kích hoạt theo thời gian bắt đầu sự kiện. Hãy đặt khoảng chênh lệch (VD: trước 3 ngày), bot sẽ tự động thực hiện thao tác vào thời điểm đó, kể cả với sự kiện lặp lại."
     },
     "groups": {
       "title": "Nhóm danh sách",
@@ -3082,8 +3082,8 @@
       "start": "Bắt đầu",
       "end": "Kết thúc",
       "winnersHeader": "Người trúng thưởng",
-      "winners": "{count, plural, one {# người trúng thưởng} other {# người trúng thưởng}}",
-      "boosters": "{count, plural, one {# hệ số tăng} other {# hệ số tăng}}",
+      "winners": "{count} winner{count, plural, one {} other {s}}",
+      "boosters": "{count} booster{count, plural, one {} other {s}}",
       "noChannel": "Không có kênh",
       "noChannelHelp": "Chưa gán kênh. Hãy chỉnh sửa chương trình để khắc phục.",
       "endsAt": "Kết thúc lúc",
@@ -3195,7 +3195,7 @@
       "notScheduled": "Chưa lên lịch",
       "schedule": "Lịch",
       "endMessage": "Tin nhắn cho người trúng thưởng",
-      "endSummary": "{winners, plural, one {# người trúng thưởng} other {# người trúng thưởng}} sẽ được công bố tại đây.",
+      "endSummary": "{winners} winner{winners, plural, one {} other {s}} will be announced here.",
       "totalParticipants": "Tổng người tham gia: {count}",
       "participate": "Tham gia",
       "buttonHint": "Nút thao tác chính hiển thị dưới bài đăng Discord."
@@ -3327,17 +3327,17 @@
       "phrases": {
         "run": {
           "first": "Điều hành",
-          "second": "",
+          "second": "your",
           "third": "bang hội."
         },
         "accounts": {
           "first": "Quản lý",
-          "second": "",
+          "second": "your",
           "third": "tài khoản."
         },
         "stats": {
           "first": "Khám phá",
-          "second": "",
+          "second": "the",
           "third": "thống kê."
         }
       },
