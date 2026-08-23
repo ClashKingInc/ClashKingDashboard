@@ -139,7 +139,7 @@ export function LandingLanguageSwitcher({
                 height={14}
               />
             </span>
-            <span>{language.name}</span>
+            <span lang={language.code}>{language.name}</span>
             <span className="cs-language-code">{language.code.toUpperCase()}</span>
           </DropdownMenuItem>
         ))}
