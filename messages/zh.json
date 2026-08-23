@@ -273,7 +273,7 @@
       "playerManagement": "玩家管理",
       "automation": "自动化操作",
       "statistics": "统计数据",
-      "general": "General",
+      "general": "常规",
       "serverManagement": "Server Management"
     },
     "switchServer": "切换服务器",
@@ -566,7 +566,7 @@
       "newest": "Newest first",
       "oldest": "Oldest first",
       "player": "Player name",
-      "reason": "Reason",
+      "reason": "原因",
       "moderator": "Moderator",
       "weight": "Highest weight",
       "count": "Most strikes",
@@ -701,7 +701,7 @@
       "clone": "复制",
       "allRosters": "所有阵容",
       "manageRosters": "管理部落战阵容和成员",
-      "rename": "Rename {name}",
+      "rename": "重命名{name}",
       "actions": "Actions for {name}",
       "renameInput": "Roster name",
       "renameSave": "Save roster name",
@@ -945,13 +945,13 @@
       "unknownError": "An unknown error occurred",
       "memberCount": "{count, plural, one {# member} other {# members}}",
       "dragPlayer": "Drag {name}",
-      "townHallAlt": "Town Hall {level}",
+      "townHallAlt": "大本营 {level}",
       "duplicate": "This player appears in multiple rosters",
       "dropHere": "Drop a player here",
       "status": {
-        "clan": "Clan",
-        "family": "Family",
-        "external": "External"
+        "clan": "部落",
+        "family": "家族",
+        "external": "外部"
       }
     },
     "ungrouped": "未分组",
@@ -971,6 +971,8 @@
       "editTitle": "编辑自动化操作",
       "createDesc": "计划自动操作",
       "actionType": "操作类型",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "相对于活动的时间",
       "offsetBefore": "之前活动",
       "offsetAfter": "之后活动",
@@ -1016,9 +1018,7 @@
         "roster_clear": "移除所有成员从阵容没有正在删除它",
         "roster_archive": "归档阵容并设为只读"
       },
-      "infoBox": "自动化操作会根据活动开始时间触发。设置时间偏移（例如提前3天），机器人便会在对应时间自动执行操作，重复活动也同样适用。",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "自动化操作会根据活动开始时间触发。设置时间偏移（例如提前3天），机器人便会在对应时间自动执行操作，重复活动也同样适用。"
     },
     "groups": {
       "title": "阵容分组",
@@ -1116,7 +1116,7 @@
     },
     "aiBuilder": {
       "button": "Roster Assistant",
-      "new": "New",
+      "new": "新",
       "title": "Roster Assistant",
       "description": "Build and save reusable roster views with natural language."
     },
@@ -1125,11 +1125,11 @@
       "title": "CWL Bonuses",
       "description": "Calculate and assign the available seasonal bonus awards.",
       "back": "Back to rosters",
-      "clan": "Clan",
-      "selectClan": "Select a clan",
+      "clan": "部落",
+      "selectClan": "选择部落",
       "searchClans": "Search clans",
       "noClanFound": "No clan found",
-      "season": "Season",
+      "season": "赛季",
       "noStoredSeasons": "No stored seasons",
       "unknownLeague": "Unknown league",
       "unrankedLeague": "Unranked CWL league",
@@ -1137,8 +1137,8 @@
       "loadClansError": "Failed to load configured clans.",
       "loadMedalRulesError": "Failed to load CWL medal rules.",
       "loadDataError": "Failed to load CWL data.",
-      "league": "League",
-      "rank": "Rank",
+      "league": "联盟",
+      "rank": "秩",
       "warsWon": "Wars won",
       "leagueMedals": "League medals",
       "bonusSlots": "Bonus slots",
@@ -1155,7 +1155,7 @@
       "chooseMore": "{count, plural, one {Choose # more recipient.} other {Choose # more recipients.}}",
       "save": "Save bonuses",
       "saved": "CWL bonus recipients saved",
-      "townHallAlt": "Town Hall {level}",
+      "townHallAlt": "大本营 {level}",
       "stars": "{count, plural, one {# star} other {# stars}}",
       "attacks": "{count, plural, one {# attack} other {# attacks}}",
       "noPlayers": "No players are available for this CWL season."
@@ -1537,8 +1537,8 @@
         "reorder": "Failed to save the category order."
       },
       "manage": "Manage categories",
-      "uncategorized": "Uncategorized",
-      "sectionCount": "{count, plural, one {# clan} other {# clans}}",
+      "uncategorized": "未分类",
+      "sectionCount": "{count, plural, one {#个部落} other {#个部落}}",
       "reorderAction": "Reorder {name}",
       "reordered": "Category order saved."
     },
@@ -1933,7 +1933,7 @@
       "selectClan": "Select a different clan",
       "noOtherClans": "Add another clan to this server before cloning this reminder.",
       "action": "Clone reminder",
-      "cloning": "Cloning..."
+      "cloning": "正在复制..."
     }
   },
   "LogsPage": {
@@ -2108,8 +2108,8 @@
       "serverFallback": "This server"
     },
     "scope": {
-      "clan": "Clan",
-      "server": "Server",
+      "clan": "部落",
+      "server": "服务器",
       "serverTitle": "Server logs",
       "serverDescription": "These feeds apply to the whole Discord server and do not change with the selected clan."
     },
@@ -2125,7 +2125,7 @@
     },
     "emptyClans": "Add a clan to this server before configuring clan logs.",
     "serverTabs": {
-      "logs": "Logs",
+      "logs": "日志",
       "countdowns": "Countdowns",
       "joinPanel": "Join panel"
     },
@@ -2136,15 +2136,15 @@
       "toggle": "Toggle {name}",
       "types": {
         "clan_games_timer": {
-          "label": "Clan Games",
+          "label": "部落竞赛",
           "description": "Show the time remaining in Clan Games in a voice channel."
         },
         "cwl_timer": {
-          "label": "Clan War League",
+          "label": "部落战联赛",
           "description": "Show the time remaining in Clan War League in a voice channel."
         },
         "raid_weekend_timer": {
-          "label": "Raid Weekend",
+          "label": "突袭周末",
           "description": "Show the time remaining in Raid Weekend in a voice channel."
         },
         "season_end_timer": {
@@ -2223,19 +2223,19 @@
         "title": "Dashboard access",
         "description": "Give Discord roles view or management access to specific dashboard sections. Multiple roles combine.",
         "loadError": "Could not load dashboard access",
-        "retry": "Retry",
+        "retry": "重试",
         "selectRole": "Select a Discord role",
         "addRole": "Add role",
         "empty": "No dashboard roles have been added.",
         "removeRole": "Remove {role}",
         "levels": {
           "none": "No access",
-          "view": "View",
-          "manage": "Manage"
+          "view": "查看",
+          "manage": "管理"
         },
         "status": {
           "saving": "Saving",
-          "saved": "Saved",
+          "saved": "已保存",
           "pending": "Pending changes",
           "error": "Not saved"
         }
@@ -2322,7 +2322,7 @@
       },
       "autocompleteHint": "Type an opening brace to insert a placeholder",
       "pending": "Waiting to save",
-      "saved": "Saved"
+      "saved": "已保存"
     },
     "familyRoles": {
       "title": "家族身份组",
@@ -2378,11 +2378,11 @@
   },
   "LoginPage": {
     "redirecting": "正在跳转到Discord...",
-    "dashboardLabel": "Dashboard",
+    "dashboardLabel": "主页",
     "eyebrow": "ClashKing Dashboard",
     "title": "Welcome, Chief.",
     "subtitle": "Sign in to manage your Discord servers, configure ClashKing, and keep your clan running smoothly.",
-    "continueWithDiscord": "Continue with Discord",
+    "continueWithDiscord": "使用 Discord 继续",
     "checkingSession": "Checking your session...",
     "openingDiscord": "Opening Discord...",
     "helper": "Discord confirms who you are. ClashKing never sees or stores your Discord password.",
@@ -2838,11 +2838,11 @@
     "legacyEmbed": "由机器人创建——粘贴Discohook URL即可启用编辑。",
     "invalidDiscohookUrl": "URL无效。请粘贴Discohook页面URL（discohook.app/?data=...或discohook.app/?share=...）。",
     "tabEmbeds": "嵌入消息",
-    "configurePanel": "Configure",
+    "configurePanel": "配置",
     "configurePanelDescription": "Manage the panel message, buttons, pre-written messages, categories, and logs.",
     "categoryCoverage": "{configured}/{total} categories",
     "logCoverage": "{configured}/{total} logs",
-    "panelPreview": "Discord preview",
+    "panelPreview": "Discord预览",
     "panelPreviewHint": "This combines the selected panel embed and ticket buttons so you can review what members will see before configuring it."
   },
   "EmbedsPage": {
@@ -3042,7 +3042,7 @@
       "messages": "消息",
       "restrictions": "限制",
       "advanced": "高级",
-      "winners": "Winners"
+      "winners": "获奖者"
     },
     "tabs": {
       "ongoing": "进行中",
@@ -3099,7 +3099,7 @@
       "rerolledCount": "{count, plural, one {#次重新抽取} other {#次重新抽取}}",
       "viewEntries": "查看参与记录",
       "viewGiveaway": "View giveaway",
-      "editGiveaway": "Edit giveaway",
+      "editGiveaway": "编辑抽奖",
       "moreActions": "More giveaway actions"
     },
     "entries": {
@@ -3222,8 +3222,8 @@
       "description": "Select a winner to copy their Discord ID or open their Discord profile.",
       "current": "Current winners",
       "rerolled": "Rerolled winners",
-      "onServer": "On server",
-      "notOnServer": "Not on server",
+      "onServer": "在服务器",
+      "notOnServer": "不在服务器",
       "none": "No winners have been recorded."
     }
   },
@@ -3318,7 +3318,7 @@
       "joinTestFlight": "加入TestFlight",
       "getAndroidApp": "获取Android应用",
       "login": "Log in",
-      "dashboard": "Dashboard",
+      "dashboard": "主页",
       "iosApp": "iOS app",
       "androidApp": "Android app",
       "addDiscordBot": "Add Discord bot"
@@ -3337,7 +3337,7 @@
         },
         "stats": {
           "first": "探索",
-          "second": "",
+          "second": "the",
           "third": "统计"
         }
       },
@@ -3443,9 +3443,9 @@
   "AccountSettings": {
     "title": "Account settings",
     "description": "Manage your ClashKing profile, preferences, usage, and subscription.",
-    "retry": "Retry",
+    "retry": "重试",
     "profile": {
-      "title": "Profile",
+      "title": "资料",
       "description": "The identity attached to your ClashKing account.",
       "discord": "Discord",
       "account": "ClashKing",
@@ -3455,13 +3455,13 @@
     "appearance": {
       "title": "Appearance & language",
       "description": "Choose how the dashboard looks and which language it uses.",
-      "theme": "Theme",
+      "theme": "主题",
       "themes": {
-        "system": "System",
-        "light": "Light",
-        "dark": "Dark"
+        "system": "系统",
+        "light": "光",
+        "dark": "黑暗的"
       },
-      "language": "Language",
+      "language": "语言",
       "browserLanguage": "Use browser language"
     },
     "usage": {
@@ -3480,7 +3480,7 @@
       "subscribers": "Credit from {count, plural, one {# subscription} other {# subscriptions}}"
     },
     "billing": {
-      "active": "Active",
+      "active": "活跃",
       "free": "Free plan",
       "currentPlan": "ClashKing subscription",
       "supportTitle": "Support ClashKing ❤️",
