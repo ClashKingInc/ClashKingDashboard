@@ -86,6 +86,7 @@ export default function BansAndStrikesPage() { // NOSONAR — page coordinates t
   const guildId = useGuildId();
   const locale = useLocale();
   const t = useTranslations("BansPage");
+  const tSidebar = useTranslations("Sidebar");
   const tCommon = useTranslations("Common");
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -349,10 +350,10 @@ export default function BansAndStrikesPage() { // NOSONAR — page coordinates t
   );
 
   return (
-    <div className="min-h-screen bg-background p-4 md:p-6 lg:p-8">
-      <div className="mx-auto max-w-6xl space-y-7">
+    <div className="min-h-screen bg-background p-4 md:p-6">
+      <div className="mx-auto max-w-7xl space-y-8">
         <header>
-          <h1 className="text-2xl font-bold text-foreground md:text-3xl">{t("title")}</h1>
+          <h1 className="text-2xl font-bold text-foreground md:text-3xl">{tSidebar("bans.name")}</h1>
           <p className="mt-1 text-sm text-muted-foreground">{t("description")}</p>
         </header>
 
@@ -363,7 +364,7 @@ export default function BansAndStrikesPage() { // NOSONAR — page coordinates t
             void fetchStrikes();
           }
         }}>
-          <DashboardTabsList className="max-w-md grid-cols-2">
+          <DashboardTabsList overflow="wrap" className="w-fit max-w-full">
             <DashboardTabTrigger value="bans" artwork={<UserX />} count={bans.length}>{t("tabs.bans")}</DashboardTabTrigger>
             <DashboardTabTrigger value="strikes" artwork={<AlertTriangle />} count={strikes.length}>{t("tabs.strikes")}</DashboardTabTrigger>
           </DashboardTabsList>
