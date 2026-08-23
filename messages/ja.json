@@ -971,6 +971,8 @@
       "editTitle": "自動処理を編集",
       "createDesc": "自動処理をスケジュールします",
       "actionType": "操作の種類",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "イベントを基準にしたタイミング",
       "offsetBefore": "イベント前",
       "offsetAfter": "イベント後",
@@ -1016,9 +1018,7 @@
         "roster_clear": "ロスターを削除せずにすべてのメンバーを外します",
         "roster_archive": "ロスターをアーカイブして読み取り専用にします"
       },
-      "infoBox": "自動処理はイベント開始時刻を基準に実行されます。オフセット（例：3日前）を設定すると、繰り返しイベントを含め、その時刻にボットが自動実行します。",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "自動処理はイベント開始時刻を基準に実行されます。オフセット（例：3日前）を設定すると、繰り返しイベントを含め、その時刻にボットが自動実行します。"
     },
     "groups": {
       "title": "ロスターグループ",
@@ -3337,7 +3337,7 @@
         },
         "stats": {
           "first": "見る",
-          "second": "",
+          "second": "the",
           "third": "統計"
         }
       },
