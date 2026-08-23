@@ -97,15 +97,15 @@
     },
     "stats": {
       "servers": "خوادم Discord",
-      "users": "المستخدمون النشطون",
-      "clans": "القبائل المتتبَّعة"
+      "users": "المستخدمين النشطين",
+      "clans": "القبائل المتابعة"
     },
     "features": {
-      "title": "كل ما تحتاجه لإدارة قبيلتك",
+      "title": "كل ما تريده لإدارة عشيرتك",
       "subtitle": "ميزات قوية مصممة خصيصًا لمجتمعات Clash of Clans",
       "autoRoles": {
         "title": "إدارة الرتب تلقائيًا",
-        "description": "عيّن الرتب تلقائيًا حسب حالة اللاعب وموقعه في القبيلة وإنجازاته، وحافظ على تنظيم خادمك."
+        "description": "تعديل وتعيين الرتب تلقائياً بناءً على حالة اللاعب، وموقعه في القبيلة، وإنجازاته. حافظ على تنظيم الخادم بكل سهولة."
       },
       "playerStats": {
         "title": "إحصاءات اللاعب",
@@ -113,18 +113,18 @@
       },
       "leaderboards": {
         "title": "قوائم المتصدرين",
-        "description": "أنشئ لوحات منافسة للتبرعات والكؤوس ونجوم الحرب والمقاييس المخصصة."
+        "description": "أنشئ لوحات صدارة للتبرعات والجوائز ونجوم الحرب لتحفيز المشاركة والتنافس."
       },
       "warTracking": {
         "title": "متابعة الحرب",
         "description": "راقب تشكيلات الحروب وتتبع الهجمات بالوقت الفعلي واستخرج تحليلات مفصلة لتضمن متابعة كل دقيقة."
       },
       "smartReminders": {
-        "title": "تنبيهات ذكية",
+        "title": "​تنبيهات ذكية",
         "description": "تنبيهات تلقائية لألعاب القبيلة وهجمات الحرب ودوري الحروب والفعاليات المخصصة ليكون الجميع على علم بكل جديد."
       },
       "customization": {
-        "title": "تخصيص كامل",
+        "title": "​تعديل كامل",
         "description": "تحكّم بالأوامر، ألوان الرسائل المدمجة، الألقاب، والصلاحيات. اجعل البوت يعبر عن قبيلتك."
       },
       "familyManagement": {
@@ -137,7 +137,7 @@
       },
       "performance": {
         "title": "سرعة فائقة",
-        "description": "أداء سريع مع استجابات فورية للأوامر وتحديثات مباشرة، دون تأخير."
+        "description": "​أداء فائق السرعة مع استجابة أوتوماتيكية وتحديثات لحظية بلا أي تعليق أو تأخير."
       },
       "security": {
         "title": "آمن وموثوق",
@@ -161,15 +161,15 @@
       "resources": {
         "title": "الموارد",
         "documentation": "الوثائق",
-        "quickStart": "دليل البدء السريع",
-        "github": "GitHub"
+        "quickStart": "دليل التشغيل السريع",
+        "github": ""
       },
       "community": {
         "title": "المجتمع",
         "discord": "خادم Discord",
-        "twitter": "X (Twitter)",
+        "twitter": "إكس (تويتر)",
         "reportBug": "الإبلاغ عن خلل",
-        "requestFeature": "طلب ميزة"
+        "requestFeature": "طلب ميزه"
       },
       "legal": {
         "copyright": "ClashKing. جميع الحقوق محفوظة.",
@@ -236,8 +236,8 @@
       "description": "لوحات متصدرين آلية"
     },
     "giveaways": {
-      "name": "السحوبات",
-      "description": "إدارة حملات السحوبات"
+      "name": "الجوائز",
+      "description": "إدارة حملات الجوائز"
     },
     "panels": {
       "name": "اللوحات",
@@ -273,11 +273,11 @@
       "playerManagement": "إدارة اللاعبين",
       "automation": "المهام التلقائية",
       "statistics": "الإحصائيات",
-      "general": "General",
+      "general": "عام",
       "serverManagement": "Server Management"
     },
     "switchServer": "تبديل الخادم",
-    "goHome": "الصفحة الرئيسية",
+    "goHome": "واجهة الموقع",
     "graphics": {
       "name": "Graphics",
       "description": "Dynamic image templates"
@@ -439,7 +439,7 @@
         "title": "حظر لاعب",
         "description": "أضف لاعبًا إلى قائمة الحظر لتلقي تحذير إذا انضم إلى أي قبيلة في هذا الخادم.",
         "playerTagLabel": "وسم اللاعب",
-        "playerTagPlaceholder": "#ABC123DEF",
+        "playerTagPlaceholder": "#رمز اللاعب",
         "playerNameLabel": "اسم اللاعب (اختياري)",
         "playerNamePlaceholder": "أدخل اسم اللاعب",
         "reasonLabel": "سبب الحظر",
@@ -471,7 +471,7 @@
       "playerTag": "وسم اللاعب",
       "reason": "السبب",
       "weight": "الوزن",
-      "rolloverDays": "مدة الصلاحية بالأيام",
+      "rolloverDays": "أيام التجديد",
       "createdAt": "تاريخ الإنشاء",
       "search": "البحث بوسم اللاعب...",
       "howItWorks": {
@@ -517,7 +517,7 @@
         "title": "إضافة مخالفة",
         "description": "أصدر مخالفة للاعب. يمكن أن تختلف أوزان المخالفات وتواريخ انتهائها.",
         "playerTagLabel": "وسم اللاعب",
-        "playerTagPlaceholder": "#ABC123DEF",
+        "playerTagPlaceholder": "#رمز اللاعب",
         "reasonLabel": "السبب",
         "reasonPlaceholder": "اشرح سبب إصدار هذه المخالفة...",
         "weightLabel": "وزن المخالفة",
@@ -566,7 +566,7 @@
       "newest": "Newest first",
       "oldest": "Oldest first",
       "player": "Player name",
-      "reason": "Reason",
+      "reason": "السبب",
       "moderator": "Moderator",
       "weight": "Highest weight",
       "count": "Most strikes",
@@ -604,7 +604,7 @@
       "compare": "مقارنة",
       "compareRosters": "مقارنة القوائم",
       "selectRosters": "اختر القوائم",
-      "selectRostersDesc": "اختر قائمتين على الأقل للمقارنة",
+      "selectRostersDesc": "يرجى تحديد تشكيلتين 2 كحد أدنى للمقارنة",
       "maxReached": "بلغت الحد الأقصى",
       "maxReachedDesc": "يمكنك مقارنة حتى 4 تشكيلات في المرة الواحدة"
     },
@@ -701,7 +701,7 @@
       "clone": "نسخ",
       "allRosters": "جميع القوائم",
       "manageRosters": "إدارة قوائم الحرب والتشكيلات",
-      "rename": "Rename {name}",
+      "rename": "إعادة تسمية {name}",
       "actions": "Actions for {name}",
       "renameInput": "Roster name",
       "renameSave": "Save roster name",
@@ -945,13 +945,13 @@
       "unknownError": "An unknown error occurred",
       "memberCount": "{count, plural, one {# member} other {# members}}",
       "dragPlayer": "Drag {name}",
-      "townHallAlt": "Town Hall {level}",
+      "townHallAlt": "قاعة المدينة {level}",
       "duplicate": "This player appears in multiple rosters",
       "dropHere": "Drop a player here",
       "status": {
-        "clan": "Clan",
-        "family": "Family",
-        "external": "External"
+        "clan": "القبيلة",
+        "family": "العائلة",
+        "external": "خارجي"
       }
     },
     "ungrouped": "بلا مجموعة",
@@ -971,6 +971,8 @@
       "editTitle": "تعديل الأتمتة",
       "createDesc": "جدولة إجراء آلي",
       "actionType": "نوع الإجراء",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "التوقيت بالنسبة إلى الحدث",
       "offsetBefore": "قبل الحدث",
       "offsetAfter": "بعد الحدث",
@@ -1016,9 +1018,7 @@
         "roster_clear": "يزيل جميع الأعضاء دون حذف القائمة",
         "roster_archive": "يؤرشف القائمة ويجعلها للقراءة فقط"
       },
-      "infoBox": "تُشغّل الأتمتة نسبةً إلى وقت بدء الحدث. حدّد فارقًا زمنيًا، مثل ثلاثة أيام قبل الحدث، وسينفذ البوت الإجراء تلقائيًا، بما في ذلك الأحداث المتكررة.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "تُشغّل الأتمتة نسبةً إلى وقت بدء الحدث. حدّد فارقًا زمنيًا، مثل ثلاثة أيام قبل الحدث، وسينفذ البوت الإجراء تلقائيًا، بما في ذلك الأحداث المتكررة."
     },
     "groups": {
       "title": "مجموعات القوائم",
@@ -1116,7 +1116,7 @@
     },
     "aiBuilder": {
       "button": "Roster Assistant",
-      "new": "New",
+      "new": "جديد",
       "title": "Roster Assistant",
       "description": "Build and save reusable roster views with natural language."
     },
@@ -1125,11 +1125,11 @@
       "title": "CWL Bonuses",
       "description": "Calculate and assign the available seasonal bonus awards.",
       "back": "Back to rosters",
-      "clan": "Clan",
-      "selectClan": "Select a clan",
+      "clan": "القبيلة",
+      "selectClan": "اختر قبيلة",
       "searchClans": "Search clans",
       "noClanFound": "No clan found",
-      "season": "Season",
+      "season": "الموسم",
       "noStoredSeasons": "No stored seasons",
       "unknownLeague": "Unknown league",
       "unrankedLeague": "Unranked CWL league",
@@ -1137,8 +1137,8 @@
       "loadClansError": "Failed to load configured clans.",
       "loadMedalRulesError": "Failed to load CWL medal rules.",
       "loadDataError": "Failed to load CWL data.",
-      "league": "League",
-      "rank": "Rank",
+      "league": "الدوري",
+      "rank": "رتبة",
       "warsWon": "Wars won",
       "leagueMedals": "League medals",
       "bonusSlots": "Bonus slots",
@@ -1155,7 +1155,7 @@
       "chooseMore": "{count, plural, one {Choose # more recipient.} other {Choose # more recipients.}}",
       "save": "Save bonuses",
       "saved": "CWL bonus recipients saved",
-      "townHallAlt": "Town Hall {level}",
+      "townHallAlt": "قاعة المدينة {level}",
       "stars": "{count, plural, one {# star} other {# stars}}",
       "attacks": "{count, plural, one {# attack} other {# attacks}}",
       "noPlayers": "No players are available for this CWL season."
@@ -1537,8 +1537,8 @@
         "reorder": "Failed to save the category order."
       },
       "manage": "Manage categories",
-      "uncategorized": "Uncategorized",
-      "sectionCount": "{count, plural, one {# clan} other {# clans}}",
+      "uncategorized": "بلا فئة",
+      "sectionCount": "{count, plural, one {قبيلة واحدة} other {# قبائل}}",
       "reorderAction": "Reorder {name}",
       "reordered": "Category order saved."
     },
@@ -1745,7 +1745,7 @@
       "selectLeague": "اختر الدوري",
       "builderHallLevel": "مستوى قاعة البناء",
       "selectBhLevel": "اختر مستوى قاعة البناء",
-      "bhPrefix": "قاعة البنّاء",
+      "bhPrefix": "قاعدة البناء",
       "builderLeague": "دوري البناء",
       "selectBuilderLeague": "اختر دوري البناء",
       "achievementName": "الإنجاز",
@@ -1933,7 +1933,7 @@
       "selectClan": "Select a different clan",
       "noOtherClans": "Add another clan to this server before cloning this reminder.",
       "action": "Clone reminder",
-      "cloning": "Cloning..."
+      "cloning": "جارٍ النسخ..."
     }
   },
   "LogsPage": {
@@ -2108,8 +2108,8 @@
       "serverFallback": "This server"
     },
     "scope": {
-      "clan": "Clan",
-      "server": "Server",
+      "clan": "القبيلة",
+      "server": "الخادم",
       "serverTitle": "Server logs",
       "serverDescription": "These feeds apply to the whole Discord server and do not change with the selected clan."
     },
@@ -2125,7 +2125,7 @@
     },
     "emptyClans": "Add a clan to this server before configuring clan logs.",
     "serverTabs": {
-      "logs": "Logs",
+      "logs": "السجلات",
       "countdowns": "Countdowns",
       "joinPanel": "Join panel"
     },
@@ -2136,15 +2136,15 @@
       "toggle": "Toggle {name}",
       "types": {
         "clan_games_timer": {
-          "label": "Clan Games",
+          "label": "ألعاب القبيلة",
           "description": "Show the time remaining in Clan Games in a voice channel."
         },
         "cwl_timer": {
-          "label": "Clan War League",
+          "label": "دوري حروب القبائل",
           "description": "Show the time remaining in Clan War League in a voice channel."
         },
         "raid_weekend_timer": {
-          "label": "Raid Weekend",
+          "label": "غارة عطلة نهاية الأسبوع",
           "description": "Show the time remaining in Raid Weekend in a voice channel."
         },
         "season_end_timer": {
@@ -2223,19 +2223,19 @@
         "title": "Dashboard access",
         "description": "Give Discord roles view or management access to specific dashboard sections. Multiple roles combine.",
         "loadError": "Could not load dashboard access",
-        "retry": "Retry",
+        "retry": "إعادة المحاولة",
         "selectRole": "Select a Discord role",
         "addRole": "Add role",
         "empty": "No dashboard roles have been added.",
         "removeRole": "Remove {role}",
         "levels": {
           "none": "No access",
-          "view": "View",
-          "manage": "Manage"
+          "view": "عرض",
+          "manage": "إدارة"
         },
         "status": {
           "saving": "Saving",
-          "saved": "Saved",
+          "saved": "تم الحفظ",
           "pending": "Pending changes",
           "error": "Not saved"
         }
@@ -2322,7 +2322,7 @@
       },
       "autocompleteHint": "Type an opening brace to insert a placeholder",
       "pending": "Waiting to save",
-      "saved": "Saved"
+      "saved": "تم الحفظ"
     },
     "familyRoles": {
       "title": "رتب العائلة",
@@ -2378,11 +2378,11 @@
   },
   "LoginPage": {
     "redirecting": "جارٍ التوجيه إلى Discord...",
-    "dashboardLabel": "Dashboard",
+    "dashboardLabel": "لوحة التحكم",
     "eyebrow": "ClashKing Dashboard",
     "title": "Welcome, Chief.",
     "subtitle": "Sign in to manage your Discord servers, configure ClashKing, and keep your clan running smoothly.",
-    "continueWithDiscord": "Continue with Discord",
+    "continueWithDiscord": "المتابعة باستخدام Discord",
     "checkingSession": "Checking your session...",
     "openingDiscord": "Opening Discord...",
     "helper": "Discord confirms who you are. ClashKing never sees or stores your Discord password.",
@@ -2808,7 +2808,7 @@
     "rolesToRemoveHint": "رتب تُسحب من المستخدم تلقائيًا عند فتح تذكرة.",
     "applyClans": "القبائل المسموح لها",
     "applyClansHint": "لا يمكن فتح هذه التذكرة إلا لأعضاء هذه القبائل. اترك الحقل فارغًا للسماح للجميع.",
-    "clanTagPlaceholder": "#CLANTAG",
+    "clanTagPlaceholder": "#رمز_القبيلة",
     "thRequirements": "متطلبات قاعة المدينة",
     "thRequirementsHint": "الحد الأدنى المطلوب لمستويات الأبطال لكل مستوى قاعة مدينة لفتح هذه التذكرة.",
     "thHeroLegend": "BK = الملك البربري · AQ = ملكة رماة السهام · GW = الحارس الكبير · RC = البطلة الملكية · WARST = نجوم الحرب",
@@ -2838,11 +2838,11 @@
     "legacyEmbed": "أُنشئت بواسطة البوت — الصق رابط Discohook لتفعيل التعديل.",
     "invalidDiscohookUrl": "رابط غير صالح. الصق رابط صفحة Discohook (discohook.app/?data=... أو discohook.app/?share=...).",
     "tabEmbeds": "التضمينات",
-    "configurePanel": "Configure",
+    "configurePanel": "إعداد",
     "configurePanelDescription": "Manage the panel message, buttons, pre-written messages, categories, and logs.",
     "categoryCoverage": "{configured}/{total} categories",
     "logCoverage": "{configured}/{total} logs",
-    "panelPreview": "Discord preview",
+    "panelPreview": "معاينة Discord",
     "panelPreviewHint": "This combines the selected panel embed and ticket buttons so you can review what members will see before configuring it."
   },
   "EmbedsPage": {
@@ -3042,7 +3042,7 @@
       "messages": "الرسائل",
       "restrictions": "القيود",
       "advanced": "متقدم",
-      "winners": "Winners"
+      "winners": "الفائزون"
     },
     "tabs": {
       "ongoing": "مستمر",
@@ -3099,7 +3099,7 @@
       "rerolledCount": "{count, plural, one {أُعيد سحب فائز واحد} other {أُعيد سحب # فائزين}}",
       "viewEntries": "عرض المشاركات",
       "viewGiveaway": "View giveaway",
-      "editGiveaway": "Edit giveaway",
+      "editGiveaway": "تعديل السحب",
       "moreActions": "More giveaway actions"
     },
     "entries": {
@@ -3222,8 +3222,8 @@
       "description": "Select a winner to copy their Discord ID or open their Discord profile.",
       "current": "Current winners",
       "rerolled": "Rerolled winners",
-      "onServer": "On server",
-      "notOnServer": "Not on server",
+      "onServer": "في الخادم",
+      "notOnServer": "ليس في الخادم",
       "none": "No winners have been recorded."
     }
   },
@@ -3318,7 +3318,7 @@
       "joinTestFlight": "الانضمام إلى TestFlight",
       "getAndroidApp": "تنزيل تطبيق Android",
       "login": "Log in",
-      "dashboard": "Dashboard",
+      "dashboard": "لوحة التحكم",
       "iosApp": "iOS app",
       "androidApp": "Android app",
       "addDiscordBot": "Add Discord bot"
@@ -3443,9 +3443,9 @@
   "AccountSettings": {
     "title": "Account settings",
     "description": "Manage your ClashKing profile, preferences, usage, and subscription.",
-    "retry": "Retry",
+    "retry": "إعادة المحاولة",
     "profile": {
-      "title": "Profile",
+      "title": "الملف الشخصي",
       "description": "The identity attached to your ClashKing account.",
       "discord": "Discord",
       "account": "ClashKing",
@@ -3455,13 +3455,13 @@
     "appearance": {
       "title": "Appearance & language",
       "description": "Choose how the dashboard looks and which language it uses.",
-      "theme": "Theme",
+      "theme": "السمة",
       "themes": {
-        "system": "System",
-        "light": "Light",
-        "dark": "Dark"
+        "system": "نظام",
+        "light": "ضوء",
+        "dark": "مظلم"
       },
-      "language": "Language",
+      "language": "اللغة",
       "browserLanguage": "Use browser language"
     },
     "usage": {
@@ -3480,7 +3480,7 @@
       "subscribers": "Credit from {count, plural, one {# subscription} other {# subscriptions}}"
     },
     "billing": {
-      "active": "Active",
+      "active": "نشط",
       "free": "Free plan",
       "currentPlan": "ClashKing subscription",
       "supportTitle": "Support ClashKing ❤️",
