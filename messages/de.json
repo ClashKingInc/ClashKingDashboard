@@ -37,7 +37,7 @@
     "status": "Status",
     "retry": "Wiederholen",
     "disabled": "Deaktiviert",
-    "name": "Name",
+    "name": "Name des Angriffs",
     "description": "Beschreibung",
     "createdAt": "Erstellt am",
     "updatedAt": "Aktualisiert am",
@@ -49,7 +49,7 @@
     "openInGame": "Im Spiel öffnen",
     "openChannelInDiscord": "Diesen Kanal in Discord öffnen",
     "playerProfile": {
-      "clan": "Clan",
+      "clan": "Klan",
       "townHallLevel": "Rathauslevel",
       "trophies": "Trophäen",
       "warPreference": "Kriegsteilnahme",
@@ -273,7 +273,7 @@
       "playerManagement": "Spielerverwaltung",
       "automation": "Automatisierung",
       "statistics": "Statistiken",
-      "general": "General",
+      "general": "Allgemein",
       "serverManagement": "Server Management"
     },
     "switchServer": "Server wechseln",
@@ -566,7 +566,7 @@
       "newest": "Newest first",
       "oldest": "Oldest first",
       "player": "Player name",
-      "reason": "Reason",
+      "reason": "Grund",
       "moderator": "Moderator",
       "weight": "Highest weight",
       "count": "Most strikes",
@@ -585,7 +585,7 @@
       "avgTh": "Durchschn. RH",
       "avgHitrate": "Durchschn. Trefferquote",
       "distribution": "Verteilung",
-      "clan": "Clan",
+      "clan": "Klan",
       "family": "Familie",
       "external": "Extern",
       "thDistribution": "RH-Verteilung",
@@ -595,7 +595,7 @@
       "search": "Kader suchen...",
       "type": "Typ",
       "all": "Alle",
-      "clan": "Clan",
+      "clan": "Klan",
       "family": "Familie",
       "clear": "Zurücksetzen"
     },
@@ -614,12 +614,12 @@
       "aliasLabel": "Kadername",
       "aliasPlaceholder": "z. B. CWL-Kader",
       "typeLabel": "Kadertyp",
-      "typeClan": "Clan",
+      "typeClan": "Klan",
       "typeFamily": "Familie",
       "signupScopeLabel": "Anmeldebereich",
       "scopeClanOnly": "Nur Clan",
       "scopeFamilyWide": "Familienweit",
-      "clanLabel": "Clan",
+      "clanLabel": "Klan",
       "clanPlaceholder": "Clan auswählen",
       "descriptionLabel": "Beschreibung (optional)",
       "descriptionPlaceholder": "Kaderbeschreibung...",
@@ -678,7 +678,7 @@
       "thRestriction": "RH-Level",
       "avgTh": "Durchschn. RH",
       "avgHitrate": "Durchschn. Trefferquote",
-      "clan": "Clan",
+      "clan": "Klan",
       "family": "Familie",
       "external": "Extern",
       "substitute": "ERSATZ",
@@ -689,7 +689,7 @@
       "thLevel": "RH-Level",
       "avgTh": "Durchschn. RH",
       "avgHitrate": "Durchschn. Trefferquote",
-      "clan": "Clan",
+      "clan": "Klan",
       "family": "Familie",
       "external": "Extern",
       "noRestriction": "Keine Einschränkung",
@@ -701,7 +701,7 @@
       "clone": "Klonen",
       "allRosters": "Alle Kader",
       "manageRosters": "Deine Kriegskader und Aufstellungen verwalten",
-      "rename": "Rename {name}",
+      "rename": "{name} umbenennen",
       "actions": "Actions for {name}",
       "renameInput": "Roster name",
       "renameSave": "Save roster name",
@@ -709,7 +709,7 @@
       "renameSuccess": "Renamed roster to {name}"
     },
     "memberColumns": {
-      "name": "Name",
+      "name": "Name des Angriffs",
       "townhall": "Rathaus",
       "tag": "Kürzel",
       "hitrate": "Trefferquote",
@@ -732,7 +732,7 @@
     },
     "sortFields": {
       "townhall": "Rathauslevel",
-      "name": "Name",
+      "name": "Name des Angriffs",
       "tag": "Kürzel",
       "heroLvs": "Helden",
       "trophies": "Trophäen",
@@ -945,13 +945,13 @@
       "unknownError": "An unknown error occurred",
       "memberCount": "{count, plural, one {# member} other {# members}}",
       "dragPlayer": "Drag {name}",
-      "townHallAlt": "Town Hall {level}",
+      "townHallAlt": "Rathaus {level}",
       "duplicate": "This player appears in multiple rosters",
       "dropHere": "Drop a player here",
       "status": {
-        "clan": "Clan",
-        "family": "Family",
-        "external": "External"
+        "clan": "Klan",
+        "family": "Familie",
+        "external": "Extern"
       }
     },
     "ungrouped": "Ohne Gruppe",
@@ -971,6 +971,8 @@
       "editTitle": "Automatisierung bearbeiten",
       "createDesc": "Eine automatische Aktion planen",
       "actionType": "Aktionstyp",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "Zeitpunkt relativ zum Ereignis",
       "offsetBefore": "Vor dem Ereignis",
       "offsetAfter": "Nach dem Ereignis",
@@ -1016,9 +1018,7 @@
         "roster_clear": "Entfernt alle Mitglieder aus dem Kader, ohne ihn zu löschen",
         "roster_archive": "Archiviert den Kader und setzt ihn auf schreibgeschützt"
       },
-      "infoBox": "Automatisierungen werden relativ zur Startzeit des Ereignisses ausgelöst. Lege einen Versatz fest (z. B. 3 Tage vorher), dann führt der Bot die Aktion zu diesem Zeitpunkt automatisch aus – auch bei wiederkehrenden Ereignissen.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "Automatisierungen werden relativ zur Startzeit des Ereignisses ausgelöst. Lege einen Versatz fest (z. B. 3 Tage vorher), dann führt der Bot die Aktion zu diesem Zeitpunkt automatisch aus – auch bei wiederkehrenden Ereignissen."
     },
     "groups": {
       "title": "Kadergruppen",
@@ -1073,12 +1073,12 @@
       "restrictions": "Einschränkungen und Limits",
       "name": "Kadername",
       "rosterType": "Kadertyp",
-      "typeClan": "Clan",
+      "typeClan": "Klan",
       "typeFamily": "Familie",
       "signupScope": "Anmeldebereich",
       "scopeClanOnly": "Nur Clan",
       "scopeFamilyWide": "Familienweit",
-      "clan": "Clan",
+      "clan": "Klan",
       "selectClan": "Clan auswählen",
       "description": "Beschreibung",
       "descriptionPlaceholder": "Beschreibung für diesen Kader eingeben...",
@@ -1116,7 +1116,7 @@
     },
     "aiBuilder": {
       "button": "Roster Assistant",
-      "new": "New",
+      "new": "Neu",
       "title": "Roster Assistant",
       "description": "Build and save reusable roster views with natural language."
     },
@@ -1125,11 +1125,11 @@
       "title": "CWL Bonuses",
       "description": "Calculate and assign the available seasonal bonus awards.",
       "back": "Back to rosters",
-      "clan": "Clan",
-      "selectClan": "Select a clan",
+      "clan": "Klan",
+      "selectClan": "Clan auswählen",
       "searchClans": "Search clans",
       "noClanFound": "No clan found",
-      "season": "Season",
+      "season": "Saison",
       "noStoredSeasons": "No stored seasons",
       "unknownLeague": "Unknown league",
       "unrankedLeague": "Unranked CWL league",
@@ -1137,8 +1137,8 @@
       "loadClansError": "Failed to load configured clans.",
       "loadMedalRulesError": "Failed to load CWL medal rules.",
       "loadDataError": "Failed to load CWL data.",
-      "league": "League",
-      "rank": "Rank",
+      "league": "Liga",
+      "rank": "Rang",
       "warsWon": "Wars won",
       "leagueMedals": "League medals",
       "bonusSlots": "Bonus slots",
@@ -1155,7 +1155,7 @@
       "chooseMore": "{count, plural, one {Choose # more recipient.} other {Choose # more recipients.}}",
       "save": "Save bonuses",
       "saved": "CWL bonus recipients saved",
-      "townHallAlt": "Town Hall {level}",
+      "townHallAlt": "Rathaus {level}",
       "stars": "{count, plural, one {# star} other {# stars}}",
       "attacks": "{count, plural, one {# attack} other {# attacks}}",
       "noPlayers": "No players are available for this CWL season."
@@ -1287,7 +1287,7 @@
     "filters": {
       "title": "Filter",
       "description": "Kriegsstatistiken nach verschiedenen Kriterien filtern",
-      "clan": "Clan",
+      "clan": "Klan",
       "allClans": "Alle Clans",
       "townHall": "Rathaus",
       "townHallShort": "RH",
@@ -1369,7 +1369,7 @@
       "title": "Clankriegsstatistiken",
       "description": "Detaillierte Statistiken für jeden Clan",
       "headers": {
-        "clan": "Clan",
+        "clan": "Klan",
         "status": "Status",
         "wars": "Kriege",
         "record": "S/N/U",
@@ -1413,7 +1413,7 @@
     },
     "types": {
       "player": "Spieler",
-      "clan": "Clans"
+      "clan": "Clanliste"
     },
     "metrics": {
       "capital": {
@@ -1537,8 +1537,8 @@
         "reorder": "Failed to save the category order."
       },
       "manage": "Manage categories",
-      "uncategorized": "Uncategorized",
-      "sectionCount": "{count, plural, one {# clan} other {# clans}}",
+      "uncategorized": "Ohne Kategorie",
+      "sectionCount": "{count, plural, one {# Clan} other {# Clans}}",
       "reorderAction": "Reorder {name}",
       "reordered": "Category order saved."
     },
@@ -1860,7 +1860,7 @@
       "forumPost": "Forenbeitrag",
       "forumPostPlaceholder": "Forenbeitrag auswählen",
       "forumPostRequired": "Für Forenkanäle ist ein Forenbeitrag erforderlich.",
-      "clan": "Clan",
+      "clan": "Klan",
       "clanPlaceholder": "Clan auswählen",
       "customMessage": "Benutzerdefinierte Nachricht",
       "customMessagePlaceholder": "Vergiss nicht, deine Angriffe zu nutzen!",
@@ -1933,7 +1933,7 @@
       "selectClan": "Select a different clan",
       "noOtherClans": "Add another clan to this server before cloning this reminder.",
       "action": "Clone reminder",
-      "cloning": "Cloning..."
+      "cloning": "Wird geklont..."
     }
   },
   "LogsPage": {
@@ -1954,7 +1954,7 @@
       "placeholder": "Clan auswählen"
     },
     "tabs": {
-      "clan": "Clan",
+      "clan": "Klan",
       "war": "Krieg",
       "capital": "Clanstadt",
       "player": "Spieler",
@@ -2108,7 +2108,7 @@
       "serverFallback": "This server"
     },
     "scope": {
-      "clan": "Clan",
+      "clan": "Klan",
       "server": "Server",
       "serverTitle": "Server logs",
       "serverDescription": "These feeds apply to the whole Discord server and do not change with the selected clan."
@@ -2125,7 +2125,7 @@
     },
     "emptyClans": "Add a clan to this server before configuring clan logs.",
     "serverTabs": {
-      "logs": "Logs",
+      "logs": "Protokolle",
       "countdowns": "Countdowns",
       "joinPanel": "Join panel"
     },
@@ -2136,15 +2136,15 @@
       "toggle": "Toggle {name}",
       "types": {
         "clan_games_timer": {
-          "label": "Clan Games",
+          "label": "Clanspiele",
           "description": "Show the time remaining in Clan Games in a voice channel."
         },
         "cwl_timer": {
-          "label": "Clan War League",
+          "label": "Clankriegsliga",
           "description": "Show the time remaining in Clan War League in a voice channel."
         },
         "raid_weekend_timer": {
-          "label": "Raid Weekend",
+          "label": "Raid-Wochenende",
           "description": "Show the time remaining in Raid Weekend in a voice channel."
         },
         "season_end_timer": {
@@ -2223,19 +2223,19 @@
         "title": "Dashboard access",
         "description": "Give Discord roles view or management access to specific dashboard sections. Multiple roles combine.",
         "loadError": "Could not load dashboard access",
-        "retry": "Retry",
+        "retry": "Wiederholen",
         "selectRole": "Select a Discord role",
         "addRole": "Add role",
         "empty": "No dashboard roles have been added.",
         "removeRole": "Remove {role}",
         "levels": {
           "none": "No access",
-          "view": "View",
-          "manage": "Manage"
+          "view": "Anzeigen",
+          "manage": "Verwalten"
         },
         "status": {
           "saving": "Saving",
-          "saved": "Saved",
+          "saved": "Gespeichert",
           "pending": "Pending changes",
           "error": "Not saved"
         }
@@ -2322,7 +2322,7 @@
       },
       "autocompleteHint": "Type an opening brace to insert a placeholder",
       "pending": "Waiting to save",
-      "saved": "Saved"
+      "saved": "Gespeichert"
     },
     "familyRoles": {
       "title": "Familienrollen",
@@ -2378,11 +2378,11 @@
   },
   "LoginPage": {
     "redirecting": "Weiterleitung zu Discord...",
-    "dashboardLabel": "Dashboard",
+    "dashboardLabel": "Übersicht",
     "eyebrow": "ClashKing Dashboard",
     "title": "Welcome, Chief.",
     "subtitle": "Sign in to manage your Discord servers, configure ClashKing, and keep your clan running smoothly.",
-    "continueWithDiscord": "Continue with Discord",
+    "continueWithDiscord": "Mit Discord fortfahren",
     "checkingSession": "Checking your session...",
     "openingDiscord": "Opening Discord...",
     "helper": "Discord confirms who you are. ClashKing never sees or stores your Discord password.",
@@ -2838,11 +2838,11 @@
     "legacyEmbed": "Über den Bot erstellt – füge eine Discohook-URL ein, um die Bearbeitung zu ermöglichen.",
     "invalidDiscohookUrl": "Ungültige URL. Füge eine Discohook-Seiten-URL ein (discohook.app/?data=... oder discohook.app/?share=...).",
     "tabEmbeds": "Embeds",
-    "configurePanel": "Configure",
+    "configurePanel": "Konfigurieren",
     "configurePanelDescription": "Manage the panel message, buttons, pre-written messages, categories, and logs.",
     "categoryCoverage": "{configured}/{total} categories",
     "logCoverage": "{configured}/{total} logs",
-    "panelPreview": "Discord preview",
+    "panelPreview": "Discord-Vorschau",
     "panelPreviewHint": "This combines the selected panel embed and ticket buttons so you can review what members will see before configuring it."
   },
   "EmbedsPage": {
@@ -2868,7 +2868,7 @@
     "content": "Inhalt",
     "contentPlaceholder": "Nachrichteninhalt über den Embeds...",
     "profileSection": "Profil",
-    "profileName": "Name",
+    "profileName": "Name des Angriffs",
     "profileAvatarUrl": "Avatar-URL",
     "profileUnsupportedWarning": "Warnung: Der Bot unterstützt derzeit keine Aktualisierung dieses Profils.",
     "import": "Importieren",
@@ -2876,7 +2876,7 @@
     "importMultipleMessagesWarning": "Dieser Link enthält mehrere Nachrichten. Nur die erste wurde importiert – der Bot unterstützt eine Nachricht pro Embed.",
     "colorSection": "Farbe",
     "authorSection": "Autor",
-    "authorName": "Name",
+    "authorName": "Name des Angriffs",
     "authorIconUrl": "Symbol-URL",
     "authorUrl": "Autoren-URL",
     "bodySection": "Inhalt",
@@ -2888,7 +2888,7 @@
     "fieldsSection": "Felder",
     "addField": "Feld hinzufügen",
     "field": "Feld",
-    "fieldName": "Name",
+    "fieldName": "Name des Angriffs",
     "fieldValue": "Wert",
     "fieldInline": "Inline",
     "imagesSection": "Bilder",
@@ -3042,7 +3042,7 @@
       "messages": "Nachrichten",
       "restrictions": "Einschränkungen",
       "advanced": "Fortgeschritten",
-      "winners": "Winners"
+      "winners": "Gewinner"
     },
     "tabs": {
       "ongoing": "Laufend",
@@ -3099,7 +3099,7 @@
       "rerolledCount": "{count, plural, one {# neu ausgelost} other {# neu ausgelost}}",
       "viewEntries": "Teilnahmen anzeigen",
       "viewGiveaway": "View giveaway",
-      "editGiveaway": "Edit giveaway",
+      "editGiveaway": "Gewinnspiel bearbeiten",
       "moreActions": "More giveaway actions"
     },
     "entries": {
@@ -3222,8 +3222,8 @@
       "description": "Select a winner to copy their Discord ID or open their Discord profile.",
       "current": "Current winners",
       "rerolled": "Rerolled winners",
-      "onServer": "On server",
-      "notOnServer": "Not on server",
+      "onServer": "Auf dem Server",
+      "notOnServer": "Nicht auf dem Server",
       "none": "No winners have been recorded."
     }
   },
@@ -3318,7 +3318,7 @@
       "joinTestFlight": "TestFlight beitreten",
       "getAndroidApp": "Android-App herunterladen",
       "login": "Log in",
-      "dashboard": "Dashboard",
+      "dashboard": "Übersicht",
       "iosApp": "iOS app",
       "androidApp": "Android app",
       "addDiscordBot": "Add Discord bot"
@@ -3443,9 +3443,9 @@
   "AccountSettings": {
     "title": "Account settings",
     "description": "Manage your ClashKing profile, preferences, usage, and subscription.",
-    "retry": "Retry",
+    "retry": "Wiederholen",
     "profile": {
-      "title": "Profile",
+      "title": "Profil",
       "description": "The identity attached to your ClashKing account.",
       "discord": "Discord",
       "account": "ClashKing",
@@ -3455,13 +3455,13 @@
     "appearance": {
       "title": "Appearance & language",
       "description": "Choose how the dashboard looks and which language it uses.",
-      "theme": "Theme",
+      "theme": "Design",
       "themes": {
-        "system": "System",
-        "light": "Light",
-        "dark": "Dark"
+        "system": "Systemstandard",
+        "light": "Licht",
+        "dark": "Dunkel"
       },
-      "language": "Language",
+      "language": "Sprache",
       "browserLanguage": "Use browser language"
     },
     "usage": {
@@ -3480,7 +3480,7 @@
       "subscribers": "Credit from {count, plural, one {# subscription} other {# subscriptions}}"
     },
     "billing": {
-      "active": "Active",
+      "active": "Aktiv",
       "free": "Free plan",
       "currentPlan": "ClashKing subscription",
       "supportTitle": "Support ClashKing ❤️",
