@@ -1319,7 +1319,7 @@
     },
     "types": {
       "player": "Spieler",
-      "clan": "Clanliste"
+      "clan": "Clans"
     },
     "metrics": {
       "capital": {
