@@ -52,6 +52,7 @@ import {
   AlertCircle,
   ChevronDown,
   Clock3,
+  ExternalLink,
   LayoutTemplate,
 } from "lucide-react";
 import { clashKingAssets } from "@/lib/theme";
@@ -707,10 +708,16 @@ export default function LogsPage() {
                     </p>
                   )}
                   {draftThreadMismatch && (
-                    <p className="text-xs text-destructive flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" />
-                      {t('logCard.invalidThread')}
-                    </p>
+                    <a
+                      href={`https://discord.com/channels/${guildId}/${draftThread}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex items-start gap-1.5 text-xs text-destructive hover:underline"
+                    >
+                      <AlertCircle className="mt-0.5 h-3 w-3 shrink-0" />
+                      <span>{t('logCard.invalidThread')}</span>
+                      <ExternalLink className="mt-0.5 h-3 w-3 shrink-0" />
+                    </a>
                   )}
                 </div>
               )}

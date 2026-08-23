@@ -2089,7 +2089,7 @@
       "forumPost": "Publication du forum",
       "forumPostPlaceholder": "Sélectionner une publication du forum",
       "forumPostRequired": "Sélectionnez une publication du forum avant d’enregistrer ce journal.",
-      "invalidThread": "Le fil sélectionné n’appartient pas à ce salon.",
+      "invalidThread": "ClashKing ne trouve pas cette publication parmi les publications actives du forum. Si elle existe encore, rouvrez-la dans Discord puis actualisez cette page. Sinon, créez ou sélectionnez une autre publication.",
       "saveDestination": "Enregistrer la destination",
       "channelDeleted": "Ce salon n’existe plus. Sélectionnez-en un nouveau ou désactivez le journal.",
       "enableToConfig": "Activez ce journal pour le configurer",

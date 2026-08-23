@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from "@testing-library/react";
 
-import { BotProfileCard } from "./bot-profile-card";
+import { BotProfileBio, BotProfileCard } from "./bot-profile-card";
 
 const apiMocks = vi.hoisted(() => ({
   getBotGuildProfile: vi.fn(),
@@ -79,5 +79,22 @@ describe("BotProfileCard subscription access", () => {
     expect(container.querySelector("[data-slot='bot-profile-body']")).toHaveClass("flex-col", "sm:flex-row");
     expect(bio).toHaveClass("break-words", "[overflow-wrap:anywhere]");
     expect(screen.getByText("Unlock profile customization").closest("a")).toHaveClass("max-w-full", "flex-wrap");
+  });
+});
+
+describe("BotProfileBio", () => {
+  it("renders saved Markdown formatting and links", () => {
+    render(<BotProfileBio>{"**ClashKing**\n[Docs](https://docs.clashk.ing)"}</BotProfileBio>);
+
+    expect(screen.getByText("ClashKing").tagName).toBe("STRONG");
+    expect(screen.getByRole("link", { name: "Docs" })).toHaveAttribute("href", "https://docs.clashk.ing");
+    expect(screen.getByRole("link", { name: "Docs" })).toHaveAttribute("target", "_blank");
+  });
+
+  it("does not interpret raw HTML", () => {
+    const { container } = render(<BotProfileBio>{"<script>alert('nope')</script>"}</BotProfileBio>);
+
+    expect(container.querySelector("script")).not.toBeInTheDocument();
+    expect(screen.getByText("<script>alert('nope')</script>")).toBeInTheDocument();
   });
 });

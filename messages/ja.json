@@ -2089,7 +2089,7 @@
       "forumPost": "フォーラム投稿",
       "forumPostPlaceholder": "フォーラム投稿を選択",
       "forumPostRequired": "このログを保存する前にフォーラム投稿を選択してください。",
-      "invalidThread": "選択したスレッドはこのチャンネルに属していません。",
+      "invalidThread": "ClashKing はこの投稿をフォーラムのアクティブな投稿から見つけられません。まだ存在する場合は Discord で再度開き、このページを更新してください。それ以外の場合は、別の投稿を作成または選択してください。",
       "saveDestination": "保存先を保存",
       "channelDeleted": "このチャンネルは存在しません。新しいチャンネルを選ぶか、ログを無効にしてください。",
       "enableToConfig": "設定するにはこのログを有効にしてください",

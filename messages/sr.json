@@ -2089,7 +2089,7 @@
       "forumPost": "Objava na forumu",
       "forumPostPlaceholder": "Izaberite objavu na forumu",
       "forumPostRequired": "Izaberite objavu na forumu pre čuvanja evidencije.",
-      "invalidThread": "Izabrana nit ne pripada ovom kanalu.",
+      "invalidThread": "ClashKing ne može da pronađe ovu objavu među aktivnim objavama na forumu. Ako još postoji, ponovo je otvorite u Discordu i osvežite ovu stranicu. U suprotnom, napravite ili izaberite drugu objavu.",
       "saveDestination": "Sačuvaj odredište",
       "channelDeleted": "Ovaj kanal više ne postoji. Izaberite novi ili onemogućite evidenciju.",
       "enableToConfig": "Omogućite ovu evidenciju da biste je podesili",

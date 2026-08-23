@@ -2089,7 +2089,7 @@
       "forumPost": "Forumbericht",
       "forumPostPlaceholder": "Selecteer een forumbericht",
       "forumPostRequired": "Selecteer een forumbericht voordat je dit logboek opslaat.",
-      "invalidThread": "De geselecteerde thread hoort niet bij dit kanaal.",
+      "invalidThread": "ClashKing kan dit bericht niet vinden tussen de actieve forumberichten. Als het nog bestaat, open het dan opnieuw in Discord en vernieuw deze pagina. Maak of selecteer anders een ander bericht.",
       "saveDestination": "Bestemming opslaan",
       "channelDeleted": "Dit kanaal bestaat niet meer. Selecteer een nieuw kanaal of schakel het logboek uit.",
       "enableToConfig": "Schakel dit logboek in om het te configureren",

@@ -2089,7 +2089,7 @@
       "forumPost": "Post na forum",
       "forumPostPlaceholder": "Wybierz post na forum",
       "forumPostRequired": "Wybierz post na forum przed zapisaniem tego dziennika.",
-      "invalidThread": "Wybrany wątek nie należy do tego kanału.",
+      "invalidThread": "ClashKing nie może znaleźć tego wpisu wśród aktywnych wpisów na forum. Jeśli nadal istnieje, otwórz go ponownie w Discordzie i odśwież tę stronę. W przeciwnym razie utwórz lub wybierz inny wpis.",
       "saveDestination": "Zapisz miejsce docelowe",
       "channelDeleted": "Ten kanał już nie istnieje. Wybierz nowy lub wyłącz dziennik.",
       "enableToConfig": "Włącz ten dziennik, aby go skonfigurować",

@@ -2089,7 +2089,7 @@
       "forumPost": "论坛帖子",
       "forumPostPlaceholder": "选择论坛帖子",
       "forumPostRequired": "保存此日志前请选择论坛帖子。",
-      "invalidThread": "所选讨论串不属于该频道。",
+      "invalidThread": "ClashKing 无法在论坛的活跃帖子中找到此帖子。如果帖子仍然存在，请在 Discord 中重新打开，然后刷新此页面。否则，请创建或选择其他帖子。",
       "saveDestination": "保存目标",
       "channelDeleted": "此频道已不存在，请选择新频道或禁用日志。",
       "enableToConfig": "启用此日志后即可配置",

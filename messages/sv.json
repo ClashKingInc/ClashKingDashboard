@@ -2089,7 +2089,7 @@
       "forumPost": "Foruminlägg",
       "forumPostPlaceholder": "Välj ett foruminlägg",
       "forumPostRequired": "Välj ett foruminlägg innan du sparar loggen.",
-      "invalidThread": "Den valda tråden tillhör inte den här kanalen.",
+      "invalidThread": "ClashKing hittar inte det här inlägget bland forumets aktiva inlägg. Om det fortfarande finns kvar öppnar du det igen i Discord och uppdaterar den här sidan. Annars skapar eller väljer du ett annat inlägg.",
       "saveDestination": "Spara mål",
       "channelDeleted": "Kanalen finns inte längre. Välj en ny kanal eller inaktivera loggen.",
       "enableToConfig": "Aktivera loggen för att konfigurera den",

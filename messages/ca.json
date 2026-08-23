@@ -2089,7 +2089,7 @@
       "forumPost": "Publicació del fòrum",
       "forumPostPlaceholder": "Selecciona una publicació del fòrum",
       "forumPostRequired": "Selecciona una publicació del fòrum abans de desar aquest registre.",
-      "invalidThread": "El fil seleccionat no pertany a aquest canal.",
+      "invalidThread": "ClashKing no troba aquesta publicació entre les publicacions actives del fòrum. Si encara existeix, torna-la a obrir a Discord i actualitza aquesta pàgina. Si no, crea o selecciona una altra publicació.",
       "saveDestination": "Desa la destinació",
       "channelDeleted": "Aquest canal ja no existeix. Selecciona’n un altre o desactiva el registre.",
       "enableToConfig": "Activa aquest registre per configurar-lo",

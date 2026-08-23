@@ -358,8 +358,8 @@ export default function AutoboardsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background p-4 md:p-6 lg:p-8">
-        <div className="mx-auto max-w-6xl space-y-7">
+      <div className="min-h-screen bg-background p-4 md:p-6">
+        <div className="mx-auto max-w-7xl space-y-7">
           <div className="space-y-2">
             <Skeleton className="h-9 w-52" />
             <Skeleton className="h-4 w-full max-w-lg" />
@@ -379,8 +379,8 @@ export default function AutoboardsPage() {
   const usagePercent = limit > 0 ? Math.min(100, (total / limit) * 100) : 0;
 
   return (
-    <div className="min-h-screen bg-background p-4 md:p-6 lg:p-8">
-      <div className="mx-auto max-w-6xl space-y-8">
+    <div className="min-h-screen bg-background p-4 md:p-6">
+      <div className="mx-auto max-w-7xl space-y-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0">
             <h1 className="text-2xl font-bold sm:text-3xl">{t("title")}</h1>

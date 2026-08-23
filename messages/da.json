@@ -2089,7 +2089,7 @@
       "forumPost": "Forumindlæg",
       "forumPostPlaceholder": "Vælg et forumindlæg",
       "forumPostRequired": "Vælg et forumindlæg, før loggen gemmes.",
-      "invalidThread": "Den valgte tråd tilhører ikke denne kanal.",
+      "invalidThread": "ClashKing kan ikke finde dette opslag blandt forumets aktive opslag. Hvis det stadig findes, skal du genåbne det i Discord og opdatere denne side. Ellers skal du oprette eller vælge et andet opslag.",
       "saveDestination": "Gem destination",
       "channelDeleted": "Denne kanal findes ikke længere. Vælg en ny eller deaktiver loggen.",
       "enableToConfig": "Aktivér loggen for at konfigurere den",

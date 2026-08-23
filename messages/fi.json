@@ -2089,7 +2089,7 @@
       "forumPost": "Foorumijulkaisu",
       "forumPostPlaceholder": "Valitse foorumijulkaisu",
       "forumPostRequired": "Valitse foorumijulkaisu ennen lokin tallentamista.",
-      "invalidThread": "Valittu ketju ei kuulu tähän kanavaan.",
+      "invalidThread": "ClashKing ei löydä tätä julkaisua foorumin aktiivisista julkaisuista. Jos se on yhä olemassa, avaa se uudelleen Discordissa ja päivitä tämä sivu. Muussa tapauksessa luo tai valitse toinen julkaisu.",
       "saveDestination": "Tallenna kohde",
       "channelDeleted": "Kanavaa ei enää ole. Valitse uusi kanava tai poista loki käytöstä.",
       "enableToConfig": "Määritä loki ottamalla se käyttöön",

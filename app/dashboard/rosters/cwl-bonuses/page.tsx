@@ -210,7 +210,7 @@ export default function CwlBonusesPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-background px-4 py-5 md:px-6 md:py-7">
+    <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="mx-auto max-w-7xl space-y-6">
         <header className="flex items-start gap-3">
           <Button variant="ghost" size="icon" className="h-10 w-10 shrink-0 rounded-xl" aria-label={t("back")} onClick={() => router.push(dashboardHref("rosters", guildId))}>

@@ -350,6 +350,32 @@ function resolveChannelName(id: string, mentionContext?: DiscordPreviewMentionCo
   return mentionContext?.channels?.find((channel) => channel.id === id)?.name ?? "channel";
 }
 
+export interface ResolvedDiscordChannelUrl {
+  href: string;
+  channelId: string;
+  channelName: string;
+  length: number;
+}
+
+export function resolveDiscordChannelUrl(
+  text: string,
+  start: number,
+  mentionContext?: DiscordPreviewMentionContext,
+): ResolvedDiscordChannelUrl | null {
+  if (start > 0 && /[\w]/.test(text[start - 1])) return null;
+  const match = /^https:\/\/discord\.com\/channels\/(\d+)\/(\d+)(?:\/(\d+))?/.exec(text.slice(start));
+  if (!match) return null;
+
+  const channel = mentionContext?.channels?.find((item) => item.id === match[2]);
+  if (!channel) return null;
+  return {
+    href: match[0],
+    channelId: channel.id,
+    channelName: channel.name,
+    length: match[0].length,
+  };
+}
+
 function resolveRoleName(id: string, mentionContext?: DiscordPreviewMentionContext): string {
   return mentionContext?.roles?.find((role) => role.id === id)?.name ?? "role";
 }
@@ -415,6 +441,27 @@ const parseLink: MarkdownParser = (text, start, key) => {
     nextIndex: urlEnd + 1,
   };
 };
+
+function createDiscordChannelUrlParser(mentionContext?: DiscordPreviewMentionContext): MarkdownParser {
+  return (text, start, key) => {
+    const resolved = resolveDiscordChannelUrl(text, start, mentionContext);
+    if (!resolved) return null;
+    return {
+      node: (
+        <a
+          key={key}
+          href={resolved.href}
+          target="_blank"
+          rel="noreferrer"
+          className={`${channelMentionClassName()} hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5865f2]`}
+        >
+          {`#${resolved.channelName}`}
+        </a>
+      ),
+      nextIndex: start + resolved.length,
+    };
+  };
+}
 
 function createTimestampParser(locale: string): MarkdownParser {
   return (text, start, key) => {
@@ -541,11 +588,31 @@ const parseBroadcastMention: MarkdownParser = (text, start, key) => {
   return null;
 };
 
+export function discordCustomEmojiUrl(id: string, animated: boolean): string | null {
+  if (!/^\d+$/.test(id)) return null;
+  const extension = animated ? "gif" : "webp";
+  return `https://cdn.discordapp.com/emojis/${id}.${extension}?size=48&quality=lossless`;
+}
+
 const parseCustomEmoji: MarkdownParser = (text, start, key) => {
   const match = /^<(a?):(\w+):(\d+)>/.exec(text.slice(start));
   if (!match) return null;
+  const emojiUrl = discordCustomEmojiUrl(match[3], match[1] === "a");
+  if (!emojiUrl) return null;
   return {
-    node: <span key={key} className="font-medium text-[#f0b232]">{`:${match[2]}:`}</span>,
+    node: (
+      <Image
+        key={key}
+        src={emojiUrl}
+        alt={`:${match[2]}:`}
+        title={`:${match[2]}:`}
+        width={22}
+        height={22}
+        unoptimized
+        className="mx-[1px] inline-block h-[1.375em] w-[1.375em] object-contain align-[-0.3em]"
+        draggable={false}
+      />
+    ),
     nextIndex: start + match[0].length,
   };
 };
@@ -570,7 +637,7 @@ function renderMarkdown(
     parseCode,
   ];
   if (options?.allowLinks !== false) {
-    MARKDOWN_PARSERS.unshift(parseLink);
+    MARKDOWN_PARSERS.unshift(createDiscordChannelUrlParser(mentionContext), parseLink);
   }
   if (allowSpecialMentions) {
     MARKDOWN_PARSERS.splice(1, 0, createSpecialIdMentionParser(locale));

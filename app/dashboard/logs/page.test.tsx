@@ -208,6 +208,24 @@ describe("LogsPage Discord destinations and family summaries", () => {
     expect(screen.queryByText("logCard.channelDeleted")).not.toBeInTheDocument();
   });
 
+  it("links an unavailable saved forum post to Discord with recovery guidance", async () => {
+    fixtures.channels = [{ id: "300", name: "forum", type: "forum" }];
+    fixtures.logs = [{
+      clan_tag: "#ABC",
+      type: "join_log",
+      webhook_id: "1",
+      channel_id: "300",
+      thread_id: "301",
+      disabled: false,
+    }];
+
+    const screen = renderLogsPage();
+    const warning = await screen.findByRole("link", { name: "logCard.invalidThread" });
+
+    expect(warning).toHaveAttribute("href", "https://discord.com/channels/123/301");
+    expect(warning).toHaveAttribute("target", "_blank");
+  });
+
   it("blocks a forum parent until a child post is selected", async () => {
     fixtures.channels = [{ id: "300", name: "forum", type: "forum" }];
     fixtures.threads = [{ id: "301", name: "forum post", parent_channel_id: "300" }];

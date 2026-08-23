@@ -2089,7 +2089,7 @@
       "forumPost": "Příspěvek ve fóru",
       "forumPostPlaceholder": "Vybrat příspěvek ve fóru",
       "forumPostRequired": "Před uložením protokolu vyberte příspěvek ve fóru.",
-      "invalidThread": "Vybrané vlákno nepatří do tohoto kanálu.",
+      "invalidThread": "ClashKing nemůže tento příspěvek najít mezi aktivními příspěvky fóra. Pokud stále existuje, znovu ho otevřete v Discordu a obnovte tuto stránku. Jinak vytvořte nebo vyberte jiný příspěvek.",
       "saveDestination": "Uložit cíl",
       "channelDeleted": "Tento kanál již neexistuje. Vyberte nový nebo protokol vypněte.",
       "enableToConfig": "Zapněte tento protokol, abyste ho mohli nastavit",

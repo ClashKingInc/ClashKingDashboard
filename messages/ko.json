@@ -2089,7 +2089,7 @@
       "forumPost": "포럼 게시물",
       "forumPostPlaceholder": "포럼 게시물 선택",
       "forumPostRequired": "로그를 저장하기 전에 포럼 게시물을 선택하세요.",
-      "invalidThread": "선택한 스레드가 이 채널에 속하지 않습니다.",
+      "invalidThread": "ClashKing이 포럼의 활성 게시물에서 이 게시물을 찾을 수 없습니다. 게시물이 아직 존재한다면 Discord에서 다시 열고 이 페이지를 새로고침하세요. 그렇지 않으면 다른 게시물을 만들거나 선택하세요.",
       "saveDestination": "대상 저장",
       "channelDeleted": "이 채널은 더 이상 존재하지 않습니다. 새 채널을 선택하거나 로그를 비활성화하세요.",
       "enableToConfig": "설정하려면 이 로그를 활성화하세요",

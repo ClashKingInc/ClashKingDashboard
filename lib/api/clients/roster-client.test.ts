@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import type { RosterViewSpec } from "../types/roster";
+import type { CreateRosterAutomationModel, RosterViewSpec } from "../types/roster";
 import { RosterClient } from "./roster-client";
 
 describe("RosterClient saved view contract", () => {
@@ -74,5 +74,36 @@ describe("RosterClient saved view contract", () => {
       method: "POST",
       body: JSON.stringify({ rosterIds: ["roster-1"], metricId: "war.hit_rate", parameters: { windowDays: 15 }, force: false }),
     }));
+  });
+});
+
+describe("RosterClient automation contract", () => {
+  const fetchMock = vi.fn();
+  const client = new RosterClient({ baseUrl: "", accessToken: "token" });
+
+  beforeEach(() => {
+    fetchMock.mockReset();
+    vi.stubGlobal("fetch", fetchMock);
+  });
+
+  afterEach(() => vi.unstubAllGlobals());
+
+  it("places server_id in the create query instead of the request body", async () => {
+    fetchMock.mockResolvedValue(new Response(JSON.stringify({ message: "created", automation_id: "automation-1" }), { status: 201 }));
+    const automation: CreateRosterAutomationModel = {
+      server_id: "server-1",
+      roster_id: "roster-1",
+      action_type: "roster_signup",
+      scheduled_at: "2026-08-24T20:00:00.000Z",
+    };
+
+    await client.createAutomation(automation);
+
+    expect(fetchMock.mock.calls[0][0]).toBe("/v2/roster-automation?server_id=server-1");
+    expect(JSON.parse(String(fetchMock.mock.calls[0][1].body))).toEqual({
+      roster_id: "roster-1",
+      action_type: "roster_signup",
+      scheduled_at: "2026-08-24T20:00:00.000Z",
+    });
   });
 });

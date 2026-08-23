@@ -2089,7 +2089,7 @@
       "forumPost": "Forenbeitrag",
       "forumPostPlaceholder": "Forenbeitrag auswählen",
       "forumPostRequired": "Wähle vor dem Speichern dieses Protokolls einen Forenbeitrag aus.",
-      "invalidThread": "Der ausgewählte Thread gehört nicht zu diesem Kanal.",
+      "invalidThread": "ClashKing kann diesen Beitrag nicht unter den aktiven Forumsbeiträgen finden. Falls er noch existiert, öffne ihn in Discord erneut und aktualisiere diese Seite. Andernfalls erstelle oder wähle einen anderen Beitrag.",
       "saveDestination": "Ziel speichern",
       "channelDeleted": "Dieser Kanal ist nicht mehr vorhanden. Wähle einen neuen aus oder deaktiviere das Protokoll.",
       "enableToConfig": "Aktiviere dieses Protokoll, um es zu konfigurieren",

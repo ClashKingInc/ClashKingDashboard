@@ -88,6 +88,16 @@ describe("DashboardLayoutWrapper", () => {
     expect(queryAllByText("Settings")).toHaveLength(0);
   });
 
+  it("provides theme and language shortcuts in the desktop and mobile headers", () => {
+    const { queryAllByText } = render(
+      <DashboardLayoutWrapper sidebar={<div>Sidebar</div>}>
+        <div>Dashboard</div>
+      </DashboardLayoutWrapper>,
+    );
+
+    expect(queryAllByText("Settings")).toHaveLength(2);
+  });
+
   it("keeps dashboard navigation on the graphics project list and hides it only inside an editor", () => {
     testState.pathname = "/dashboard/graphics";
     const { queryAllByText, container } = render(

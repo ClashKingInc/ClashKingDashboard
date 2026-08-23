@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Camera, Lock, Pencil, RotateCcw } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import type { Components } from "react-markdown";
 import { apiClient } from "@/lib/api/client";
 import { clashKingAssets } from "@/lib/theme";
 import { useDashboardAccess } from "./dashboard-access-provider";
@@ -14,6 +16,26 @@ import { Textarea } from "@/components/ui/textarea";
 import type { BotGuildProfile, BotGuildProfileUpdate } from "@/lib/api/types/dashboard-access";
 
 const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
+
+const BIO_MARKDOWN_COMPONENTS: Components = {
+  p: ({ children }) => <p className="break-words [overflow-wrap:anywhere]">{children}</p>,
+  strong: ({ children }) => <strong className="font-semibold text-foreground">{children}</strong>,
+  em: ({ children }) => <em className="italic">{children}</em>,
+  h1: ({ children }) => <p className="font-semibold text-foreground">{children}</p>,
+  h2: ({ children }) => <p className="font-semibold text-foreground">{children}</p>,
+  h3: ({ children }) => <p className="font-semibold text-foreground">{children}</p>,
+  ul: ({ children }) => <ul className="ml-5 list-disc">{children}</ul>,
+  ol: ({ children }) => <ol className="ml-5 list-decimal">{children}</ol>,
+  blockquote: ({ children }) => <blockquote className="border-l-2 border-muted-foreground/40 pl-2">{children}</blockquote>,
+  a: ({ href, children }) => <a href={href} className="text-primary underline underline-offset-2" target="_blank" rel="noreferrer">{children}</a>,
+  code: ({ children }) => <code className="rounded bg-muted px-1 py-0.5 text-[0.9em] text-foreground">{children}</code>,
+};
+
+export function BotProfileBio({ children }: { children: string }) {
+  return <div data-slot="bot-profile-bio" className="break-words whitespace-pre-wrap text-sm text-muted-foreground [overflow-wrap:anywhere] [&>*:not(:first-child)]:mt-1">
+    <ReactMarkdown components={BIO_MARKDOWN_COMPONENTS}>{children}</ReactMarkdown>
+  </div>;
+}
 
 export function BotProfileCard({ guildId }: { guildId: string }) {
   const { canManage } = useDashboardAccess();
@@ -154,7 +176,7 @@ export function BotProfileCard({ guildId }: { guildId: string }) {
             </div>
             <div className="flex min-h-12 min-w-0 items-start gap-1">
               <div className="min-w-0 flex-1">
-                {editingField === "bio" ? <Textarea autoFocus aria-label="Bot server bio" value={bio} maxLength={190} rows={2} onBlur={() => setEditingField(null)} onChange={(event) => setDraft((current) => ({ ...current, bio: event.target.value, clear_bio: false }))} placeholder="Add a short description for this server." className="min-h-16 w-full resize-none text-sm" /> : <p data-slot="bot-profile-bio" className="whitespace-pre-wrap break-words text-sm text-muted-foreground [overflow-wrap:anywhere]">{bio || "Add a short description for this server."}</p>}
+                {editingField === "bio" ? <Textarea autoFocus aria-label="Bot server bio" value={bio} maxLength={190} rows={2} onBlur={() => setEditingField(null)} onChange={(event) => setDraft((current) => ({ ...current, bio: event.target.value, clear_bio: false }))} placeholder="Add a short description for this server." className="min-h-16 w-full resize-none text-sm" /> : <BotProfileBio>{bio || "Add a short description for this server."}</BotProfileBio>}
               </div>
               {paidEditable && <div className="flex shrink-0 items-center gap-1">
                 <Button type="button" variant="ghost" size="icon" className="h-8 w-8" onMouseDown={(event) => event.preventDefault()} onClick={() => setEditingField("bio")} aria-label="Edit bot server bio"><Pencil className="h-3.5 w-3.5" /></Button>

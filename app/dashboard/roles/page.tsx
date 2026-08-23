@@ -859,7 +859,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
   };
 
   return (
-    <div className="mx-auto max-w-7xl space-y-8 p-4 pb-12 md:p-6 lg:p-8">
+    <div className="mx-auto min-h-screen w-full max-w-[calc(80rem+3rem)] space-y-8 bg-background p-4 pb-12 md:p-6">
         <div>
           <h1 className="text-2xl font-bold tracking-tight md:text-3xl">{t("title")}</h1>
           <p className="mt-1 text-sm text-muted-foreground">{t("description")}</p>

@@ -231,8 +231,8 @@ export default function GeneralSettingsPage() {
   };
 
   return (
-    <div className="min-h-screen min-w-0 overflow-x-clip bg-background p-4 md:p-6 lg:p-8">
-      <div className="mx-auto w-full min-w-0 max-w-6xl space-y-10">
+    <div className="min-h-screen min-w-0 overflow-x-clip bg-background p-4 md:p-6">
+      <div className="mx-auto w-full min-w-0 max-w-7xl space-y-10">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">{t("title")}</h1>
           <p className="mt-1 text-sm text-muted-foreground">{t("description")}</p>
@@ -289,7 +289,7 @@ export default function GeneralSettingsPage() {
 
         <div className="grid min-w-0 items-start gap-6 lg:grid-cols-2">
           <section className="min-w-0 space-y-3">
-            <div><h2 className="text-lg font-semibold">{t("security.title")}</h2><p className="mt-1 text-sm text-muted-foreground">{t("security.description")}</p></div>
+            <div className="lg:min-h-[4.5rem]"><h2 className="text-lg font-semibold">{t("security.title")}</h2><p className="mt-1 text-sm text-muted-foreground">{t("security.description")}</p></div>
             <div className="space-y-4 rounded-[24px] bg-card p-4 shadow-sm shadow-black/5 sm:p-5">
               <div><Label htmlFor="whitelist-role" className="text-sm font-medium">{t("security.fullWhitelistRole")}</Label><p className="mt-1 text-xs text-muted-foreground">{t("security.fullWhitelistRoleDesc")}</p></div>
               <Select value={settings.full_whitelist_role || "none"} onValueChange={(value) => void applySettingsChange({ full_whitelist_role: value === "none" ? undefined : value })}>

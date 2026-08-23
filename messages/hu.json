@@ -2089,7 +2089,7 @@
       "forumPost": "Fórumbejegyzés",
       "forumPostPlaceholder": "Válassz fórumbejegyzést",
       "forumPostRequired": "A napló mentése előtt válassz fórumbejegyzést.",
-      "invalidThread": "A kiválasztott szál nem ehhez a csatornához tartozik.",
+      "invalidThread": "A ClashKing nem találja ezt a bejegyzést a fórum aktív bejegyzései között. Ha még létezik, nyisd meg újra a Discordban, majd frissítsd ezt az oldalt. Ellenkező esetben hozz létre vagy válassz másik bejegyzést.",
       "saveDestination": "Célhely mentése",
       "channelDeleted": "Ez a csatorna már nem létezik. Válassz újat, vagy tiltsd le a naplót.",
       "enableToConfig": "A beállításhoz engedélyezd ezt a naplót",

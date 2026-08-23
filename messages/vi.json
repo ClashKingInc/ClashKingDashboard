@@ -2089,7 +2089,7 @@
       "forumPost": "Bài đăng diễn đàn",
       "forumPostPlaceholder": "Chọn bài đăng diễn đàn",
       "forumPostRequired": "Chọn bài đăng diễn đàn trước khi lưu nhật ký.",
-      "invalidThread": "Luồng đã chọn không thuộc kênh này.",
+      "invalidThread": "ClashKing không tìm thấy bài đăng này trong các bài đăng đang hoạt động của diễn đàn. Nếu bài đăng vẫn tồn tại, hãy mở lại trong Discord rồi làm mới trang này. Nếu không, hãy tạo hoặc chọn một bài đăng khác.",
       "saveDestination": "Lưu đích đến",
       "channelDeleted": "Kênh này không còn tồn tại. Hãy chọn kênh mới hoặc tắt nhật ký.",
       "enableToConfig": "Bật nhật ký này để cấu hình",
