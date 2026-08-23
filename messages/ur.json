@@ -971,6 +971,8 @@
       "editTitle": "خودکاری میں ترمیم کریں",
       "createDesc": "خودکار کارروائی شیڈول کریں",
       "actionType": "کارروائی کی قسم",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "ایونٹ کے لحاظ سے وقت",
       "offsetBefore": "ایونٹ سے پہلے",
       "offsetAfter": "ایونٹ کے بعد",
@@ -1016,9 +1018,7 @@
         "roster_clear": "روسٹر حذف کیے بغیر اس سے تمام ارکان ہٹاتا ہے",
         "roster_archive": "روسٹر محفوظ شدہ میں ڈال کر اسے صرف پڑھنے کے قابل بناتا ہے"
       },
-      "infoBox": "خودکاریاں ایونٹ شروع ہونے کے وقت کے لحاظ سے چلتی ہیں۔ وقفہ مقرر کریں (مثلاً 3 دن پہلے) تو بوٹ اس وقت کارروائی خودکار طور پر انجام دے گا، بار بار ہونے والے ایونٹس کے لیے بھی۔",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "خودکاریاں ایونٹ شروع ہونے کے وقت کے لحاظ سے چلتی ہیں۔ وقفہ مقرر کریں (مثلاً 3 دن پہلے) تو بوٹ اس وقت کارروائی خودکار طور پر انجام دے گا، بار بار ہونے والے ایونٹس کے لیے بھی۔"
     },
     "groups": {
       "title": "روسٹر گروپس",
