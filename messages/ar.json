@@ -1348,19 +1348,19 @@
       },
       "topDefenders": {
         "title": "أفضل المدافعين",
-        "description": "أفضل المدافعين حسب متوسط النجوم التي خسروها",
-        "defensesAndStars": "{defenses} دفاعات • خسر {stars} نجوم",
+        "description": "أفضل المدافعين حسب متوسط النجوم الممنوحة",
+        "defensesAndStars": "{defenses} دفاعات • {stars} نجوم ممنوحة",
         "noData": "لا تتوفر بيانات مدافعين. جرّب تعديل عوامل التصفية."
       },
       "worstAttackers": {
         "title": "أضعف المهاجمين",
-        "description": "اللاعبون ذوو أقل متوسط نجوم لكل هجوم (3 هجمات على الأقل)",
+        "description": "اللاعبون الأقل استقبالاً للنجوم (الحد الأدنى 3 هجمات)",
         "attacksAndStars": "{attacks} هجمات • {stars} نجوم",
         "noData": "لا تتوفر بيانات لاعبين. جرّب تعديل عوامل التصفية."
       },
       "worstDefenders": {
         "title": "أضعف المدافعين",
-        "description": "اللاعبون الذين خسروا أكبر عدد من النجوم في الدفاع (3 دفاعات على الأقل)",
+        "description": "​أكثر اللاعبين استقبالاً للنجوم في الدفاع (3 دفاعات كحد أدنى)",
         "defensesAndStars": "{defenses} دفاعات • خسر {stars} نجوم",
         "noData": "لا تتوفر بيانات مدافعين. جرّب تعديل عوامل التصفية."
       }
@@ -1442,8 +1442,8 @@
       "clans": "القبائل"
     },
     "empty": {
-      "title": "لا توجد بيانات متاحة.",
-      "description": "جرّب اختيار عطلة نهاية أسبوع أو دوري آخر"
+      "title": "لا توجد بيانات متاحة",
+      "description": "جرب اختيار عطلة نهاية أسبوع أو دوري آخر"
     }
   },
   "ClansPage": {
@@ -1455,7 +1455,7 @@
     "clanTag": "وسم القبيلة",
     "totalClans": "إجمالي القبائل",
     "registeredClans": "القبائل المسجلة",
-    "configured": "مُعدّة",
+    "configured": "تهيئة",
     "withSettingsConfigured": "بإعدادات مكتملة",
     "totalMembers": "إجمالي الأعضاء",
     "acrossAllClans": "عبر جميع القبائل",
@@ -1517,33 +1517,33 @@
       "renameTitle": "إعادة تسمية فئة القبيلة",
       "renameDescription": "سيُحدّث الاسم المنسق في كل قبيلة معيّنة.",
       "saveRename": "حفظ الاسم",
-      "deleteTitle": "هل تريد حذف فئة القبيلة؟",
-      "deleteWarning": "سيؤدي حذف «{name}» إلى ترك {count, plural, one {قبيلة واحدة بلا فئة} other {# قبائل بلا فئة}}.",
-      "deleteCountMayChange": "تعكس هذه المعاينة الحالة الحالية. سيعرض الحذف المكتمل العدد الفعلي للقبائل المتأثرة.",
-      "confirmDelete": "حذف الفئة",
-      "deleteSuccessTitle": "حُذفت {name}",
+      "deleteTitle": "هل تريد حذف قسم العشيرة؟",
+      "deleteWarning": "سيؤدي حذف «{name}» إلى ترك {count, plural, one {قبيلة واحدة بلا قسم} other {# قبائل بلا قسم}}.",
+      "deleteCountMayChange": "تظهر هذه المعاينة الحالة الحالية. وستوضح عملية الحذف المكتملة العدد الفعلي للعشائر المتأثرة.",
+      "confirmDelete": "حذف القسم",
+      "deleteSuccessTitle": "تم حذف {name}",
       "deleteSuccessDescription": "{count, plural, =0 {لم تتغير أي قبيلة.} one {أصبحت قبيلة واحدة بلا فئة.} other {أصبحت # قبائل بلا فئة.}}",
-      "created": "أُنشئت {name}.",
-      "renamed": "أُعيدت تسمية الفئة إلى {name}.",
+      "created": "تم إنشاء {name}.",
+      "renamed": "​تم تغيير اسم القسم إلى {name}.",
       "errors": {
-        "title": "الفئات غير متاحة",
-        "load": "فشل تحميل فئات القبائل.",
-        "create": "فشل إنشاء فئة القبيلة.",
+        "title": "الأقسام غير متاحة",
+        "load": "فشل تحميل أقسام العشائر.",
+        "create": "فشل إنشاء قسم العشيرة.",
         "rename": "فشلت إعادة تسمية فئة القبيلة.",
-        "preview": "فشل تحميل معاينة الحذف.",
-        "delete": "فشل حذف فئة القبيلة.",
-        "refresh": "تغيّرت الفئة، لكن تعذّر تحميل حالة الفئة أو القبيلة المحدّثة.",
-        "invalidName": "استخدم اسمًا غير فارغ لا يتجاوز 64 حرفًا ومن دون محارف تحكم.",
-        "reorder": "Failed to save the category order."
+        "preview": "تعذر تحميل معاينة الحذف.",
+        "delete": "فشل حذف قسم العشيرة.",
+        "refresh": "تم تغير الفئة، لكن تعذر تحميل حالة الفئة أو العشيرة المحدثة.",
+        "invalidName": "يرجى إدخال اسم أقصاه 64 حرفاً وبدون أشكال أو رموز تحكم.",
+        "reorder": "تعذر حفظ ترتيب الفئات."
       },
-      "manage": "Manage categories",
-      "uncategorized": "Uncategorized",
+      "manage": "إدارة الفئات",
+      "uncategorized": "غير مصنف",
       "sectionCount": "{count, plural, one {# clan} other {# clans}}",
-      "reorderAction": "Reorder {name}",
-      "reordered": "Category order saved."
+      "reorderAction": "إعادة ترتيب {name}",
+      "reordered": "تم حفظ ترتيب الفئة."
     },
     "fieldHelp": {
-      "infoButtonLabel": "عرض مزيد من المعلومات",
+      "infoButtonLabel": "عرض المزيد من المعلومات",
       "memberRole": "الرتبة التي يحصل عليها أعضاء القبيلة. إذا كان البوت يدير الرتب في Discord، فسيحصل كل عضو في القبيلة عليها. تفيد في القنوات الخاصة بقبيلة معينة.",
       "leaderRole": "الرتبة التي يحصل عليها القائد والقادة المساعدون. تفيد في دردشة قيادة القبيلة أو دردشة مشتركة لقادة جميع القبائل.",
       "clanAbbreviation": "امنح قبيلتك اختصارًا ليظهر في أسماء الأعضاء عند تفعيل إعادة التسمية. يمكنك إعداد الصيغة في <familySettingsLink>إعدادات العائلة</familySettingsLink>.",
