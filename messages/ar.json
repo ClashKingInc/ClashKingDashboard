@@ -1896,17 +1896,17 @@
     },
     "toast": {
       "errorTitle": "خطأ",
-      "errorLoadingReminders": "فشل تحميل التذكيرات. حاول مجددًا.",
-      "reminderAdded": "أُضيف التذكير بنجاح",
-      "reminderAddedDesc": "أُضيف تذكير جديد من نوع {type}. لا تنس الحفظ!",
-      "reminderUpdated": "حُدّث التذكير بنجاح",
-      "successTitle": "نجاح",
-      "reminderDeleted": "حُذف التذكير بنجاح",
+      "errorLoadingReminders": "تعذر تحميل الإشعارات. يرجى إعادة المحاولة.",
+      "reminderAdded": "تم حفظ الإشعارات بنجاح",
+      "reminderAddedDesc": "تمت إضافة تذكير {type} جديد. لا تنسَ الحفظ!",
+      "reminderUpdated": "تم تحديث التذكير بنجاح",
+      "successTitle": "تم بنجاح",
+      "reminderDeleted": "تم حذف التذكير بنجاح",
       "failedToDelete": "فشل حذف التذكير",
-      "allRemindersSaved": "حُفظت جميع التذكيرات بنجاح",
-      "failedToSave": "فشل حفظ التذكيرات",
-      "forumPostRequired": "اختر منشور منتدى قبل حفظ التذكير.",
-      "invalidDestination": "السلسلة المحددة لا تنتمي إلى هذه القناة.",
+      "allRemindersSaved": "تم حفظ جميع الإشعارات بنجاح",
+      "failedToSave": "فشل حفظ الإشعارات",
+      "forumPostRequired": "يرجى تحديد منشور في المنتدى قبل حفظ هذا التذكير.",
+      "invalidDestination": "الموضوع المحدد لا ينتمي إلى هذه القناة.",
       "timeExceedsLimit": "يجب أن يكون الوقت المتبقي بين {min} و{max} ساعة",
       "pointThresholdInvalid": "يجب أن يكون حد النقاط بين {min} و{max}",
       "attackThresholdInvalid": "يجب أن يكون حد الهجمات بين {min} و{max}",
@@ -1963,23 +1963,23 @@
     },
     "clanLogs": {
       "joinLog": {
-        "label": "انضمام عضو",
-        "description": "تتبّع الأعضاء المنضمين إلى القبيلة"
+        "label": "دخول الأعضاء",
+        "description": "​متابعة انضمام الأعضاء للعشيرة"
       },
       "leaveLog": {
         "label": "مغادرة عضو",
-        "description": "تتبّع الأعضاء المغادرين للقبيلة"
+        "description": "متابعة خروج الأعضاء من العشيرة"
       },
       "donationLog": {
-        "label": "تبرعات العضو",
+        "label": "تبرعات الأعضاء",
         "description": "تتبّع تبرعات القوات والتعويذات"
       },
       "clanAchievementLog": {
-        "label": "إنجازات القبيلة",
-        "description": "تتبّع إنجازات القبيلة المكتسبة"
+        "label": "إنجازات العشيرة",
+        "description": "تتبّع إنجازات العشيرة المكتسبة"
       },
       "clanRequirementsLog": {
-        "label": "متطلبات القبيلة",
+        "label": "متطلبات العشيرة",
         "description": "تتبّع تغييرات متطلبات القبيلة"
       },
       "clanDescriptionLog": {
@@ -2004,11 +2004,11 @@
       },
       "warPanel": {
         "label": "لوحة الحرب",
-        "description": "لوحة حرب تفاعلية بتحديثات مباشرة"
+        "description": "لوحة حرب تفاعلية بتحديثات لحظياً"
       },
       "cwlLineupChangeLog": {
-        "label": "تغيير تشكيلة CWL",
-        "description": "تتبّع تغييرات تشكيلة CWL"
+        "label": "تغيير تشكيلة حرب الدوري CWL",
+        "description": "متابعة تعديلات تشكيلة حرب الدوري CWL"
       }
     },
     "capitalLogs": {
@@ -2064,7 +2064,7 @@
       },
       "nameChange": {
         "label": "تغيير الاسم",
-        "description": "تتبّع تغييرات أسماء اللاعبين"
+        "description": "متابعة تغييرات أسماء اللاعبين"
       },
       "legendLogAttacks": {
         "label": "هجمات الأسطورة",
@@ -2099,39 +2099,39 @@
       "example": "مثال"
     },
     "source": {
-      "title": "Choose what you're configuring",
-      "description": "Select a Clan for clan-specific logs & setup or the server for server-wide logs & setup",
-      "label": "Server or clan",
-      "placeholder": "Select a server or clan",
-      "searchPlaceholder": "Search server or clans",
-      "serverDescription": "Logs, countdowns, and join panel",
-      "serverFallback": "This server"
+      "title": "اختر ما تريد إعداده",
+      "description": "اختر عشيرة للسجلات والإعدادات الخاصة بالعشيرة، أو الخادم للسجلات والإعدادات على مستوى الخادم",
+      "label": "الخادم أو العشيرة",
+      "placeholder": "اختر خادمًا أو عشيرة",
+      "searchPlaceholder": "البحث عن خادم أو عشائر",
+      "serverDescription": "السجلات، مؤقتات العد التنازلي، ولوحة الانضمام",
+      "serverFallback": "هذا الخادم"
     },
     "scope": {
-      "clan": "Clan",
-      "server": "Server",
-      "serverTitle": "Server logs",
-      "serverDescription": "These feeds apply to the whole Discord server and do not change with the selected clan."
+      "clan": "العشيرة",
+      "server": "الخادم",
+      "serverTitle": "سجلات الخادم",
+      "serverDescription": "تنطبق هذه الخلاصات على خادم Discord بالكامل ولا تتغير بتغير العشيرة المحدد."
     },
     "issues": {
       "title": "{count, plural, one {1 destination needs attention} other {# destinations need attention}}",
-      "description": "These enabled logs point to a channel, thread, or forum post that is no longer available.",
-      "serverScope": "Server-wide",
-      "channelMissing": "Channel {channelId} was deleted or is unavailable",
-      "threadMissing": "Thread or forum post was deleted or is unavailable",
-      "showDetails": "Show details",
-      "hideDetails": "Hide details",
-      "review": "Review"
+      "description": "تشير هذه السجلات المفعلة إلى قناة أو ثريد أو منشور منتدى لم يعد متاحاً.",
+      "serverScope": "على مستوى الخادم",
+      "channelMissing": "القناة {channelId} تم حذفها أو غير متاحة",
+      "threadMissing": "تم حذف الثريد أو منشور المنتدى أو أنه غير متاح",
+      "showDetails": "عرض التفاصيل",
+      "hideDetails": "إخفاء التفاصيل",
+      "review": "مراجعة"
     },
-    "emptyClans": "Add a clan to this server before configuring clan logs.",
+    "emptyClans": "أضف عشيرة إلى هذا الخادم قبل إعداد سجلات العشيرة.",
     "serverTabs": {
-      "logs": "Logs",
-      "countdowns": "Countdowns",
-      "joinPanel": "Join panel"
+      "logs": "السجلات",
+      "countdowns": "العد التنازلي",
+      "joinPanel": "لوحة الانضمام"
     },
     "countdowns": {
-      "loadError": "Failed to load countdowns.",
-      "updateError": "Failed to update the countdown.",
+      "loadError": "فشل تحميل العد التنازلي.",
+      "updateError": "فشل تحديث العد التنازلي.",
       "empty": "لا تتوفر أي أنواع للعد التنازلي.",
       "toggle": "تبديل {name}",
       "types": {
@@ -2176,13 +2176,13 @@
     "settingsSaved": "تم حفظ الإعدادات بنجاح!",
     "infoBanner": {
       "title": "هل تبحث عن إعدادات أخرى؟",
-      "description": "توجد رتب العائلة وإعدادات الألقاب في صفحة **إعدادات العائلة**، وإدارة الرتب في صفحة **الرتب**، أما رتب القبائل واختصاراتها وفئاتها وقنوات العد التنازلي للحروب فتوجد في صفحة **القبائل**."
+      "description": "توجد إعدادات رتب العائلة والأسماء المستعارة في صفحة **إعدادات العائلة**. وتوجد إعدادات إدارة الرتب في صفحة **الرتب**. بينما توجد رتب العشيرة، الاختصارات، الفئات، وعروض الحرب التنازلية في صفحة **العشائر**."
     },
     "nickname": {
-      "title": "إدارة الألقاب",
-      "description": "التحكم في تنسيق الألقاب",
+      "title": "إدارة الأسماء المستعارة",
+      "description": "التحكم في كيفية تنسيق الأسماء المستعارة",
       "automaticChanges": "التغييرات التلقائية",
-      "automaticChangesDesc": "السماح للبوت بتحديث ألقاب الأعضاء",
+      "automaticChangesDesc": "السماح للبوت بتحديث الأسماء المستعارة للأعضاء",
       "familyFormat": "تنسيق أعضاء العائلة",
       "availablePlaceholders": "العناصر النائبة المتاحة",
       "preview": "معاينة",
