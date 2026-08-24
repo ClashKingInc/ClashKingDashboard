@@ -1773,19 +1773,19 @@
     "categoryRoles": {
       "title": "رتب الفئات",
       "description": "عيّن رتبة Discord لكل فئة قبائل. يحصل أعضاء القبائل في الفئة على الرتبة المقابلة تلقائيًا.",
-      "addButton": "إضافة فئة",
-      "categoryName": "الفئة",
-      "categoryNamePlaceholder": "اسم الفئة",
-      "noCategoryRoles": "لم تُعد رتب للفئات",
-      "noCategoryRolesDesc": "انقر على «إضافة فئة» لإنشاء واحدة",
-      "addTitle": "إضافة رتبة فئة",
+      "addButton": "إضافة قسم",
+      "categoryName": "قسم",
+      "categoryNamePlaceholder": "اسم القسم",
+      "noCategoryRoles": "لم يتم ضبط رتب للقسم",
+      "noCategoryRolesDesc": "انقر على \"إضافة قسم\" لإنشاء قسم جديد",
+      "addTitle": "إضافة رتبة للقسم",
       "addConfirm": "إضافة",
-      "errorCategoryRequired": "اسم الفئة مطلوب",
+      "errorCategoryRequired": "اسم القسم مطلوب",
       "errorRoleRequired": "رتبة Discord مطلوبة",
-      "errorCategoryExists": "هناك رتبة معدّة لهذه الفئة بالفعل"
+      "errorCategoryExists": "توجد رتبة مضافة لهذا القسم مسبقاً"
     },
     "toast": {
-      "changesSaved": "حُفظت التغييرات بنجاح!",
+      "changesSaved": "تم حفظ التغييرات بنجاح!",
       "errorLoading": "فشل تحميل الرتب",
       "errorSaving": "فشل حفظ الإعدادات",
       "errorAdding": "فشلت إضافة الرتبة",
@@ -1793,11 +1793,11 @@
     }
   },
   "RemindersPage": {
-    "title": "التذكيرات",
-    "description": "إعداد تذكيرات تلقائية للحروب والغارات وألعاب القبيلة وعدم النشاط",
+    "title": "التنبيهات",
+    "description": "إعداد التنبيهات تلقائية للحروب والغارات وألعاب القبيلة وعدم النشاط",
     "types": {
-      "war": "تذكيرات الحرب",
-      "capital": "عاصمة القبيلة",
+      "war": "تنبيهات الحرب",
+      "capital": "عاصمة العشيرة",
       "clanGames": "ألعاب القبيلة",
       "inactivity": "عدم النشاط"
     },
@@ -1838,24 +1838,24 @@
     },
     "empty": {
       "noWarReminders": "لا توجد تذكيرات حرب",
-      "noCapitalReminders": "لا توجد تذكيرات عاصمة",
-      "noClanGamesReminders": "لا توجد تذكيرات ألعاب قبيلة",
-      "noInactivityReminders": "لا توجد تذكيرات عدم نشاط",
-      "getStarted": "أنشئ تذكيرك الأول للبدء"
+      "noCapitalReminders": "لا توجد تنبيهات عاصمة",
+      "noClanGamesReminders": "لا توجد تنبيهات ألعاب قبيلة",
+      "noInactivityReminders": "لا توجد تنبيهات عدم نشاط",
+      "getStarted": "ابدأ بإنشاء تذكيرك الأول"
     },
     "card": {
       "new": "جديد",
       "before": "قبل",
       "timeBefore": "الوقت المتبقي",
       "timeBeforePlaceholder": "مثلاً: 6",
-      "timeInactive": "عدم نشاط لمدة",
+      "timeInactive": "​مدة عدم النشاط",
       "timeInactivePlaceholder": "مثلاً: 160",
       "timeUnit": "ساعات",
-      "hoursRemaining": "ساعات متبقية",
+      "hoursRemaining": "الساعات المتبقية",
       "channel": "القناة",
       "channelPlaceholder": "اختر قناة",
-      "threadOptional": "سلسلة المحادثات (اختياري)",
-      "threadPlaceholder": "اختر سلسلة محادثات",
+      "threadOptional": "قناة فرعية (اختياري)",
+      "threadPlaceholder": "اختر قناة فرعية",
       "noThread": "النشر مباشرة في القناة",
       "forumPost": "منشور منتدى",
       "forumPostPlaceholder": "اختر منشور منتدى",
@@ -1865,7 +1865,7 @@
       "customMessage": "رسالة مخصصة",
       "customMessagePlaceholder": "لا تنس استخدام هجماتك!",
       "customMessagePlaceholderClanGames": "حاول جمع المزيد من النقاط في ألعاب القبيلة!",
-      "customMessagePlaceholderInactivity": "لم تنشط في القبيلة منذ فترة :(",
+      "customMessagePlaceholderInactivity": "​مستوى نشاطك في العشيرة منخفض مؤخراً :(",
       "warTypes": "أنواع الحرب",
       "random": "عشوائية",
       "friendly": "ودية",
@@ -1877,10 +1877,10 @@
       "attackThresholdPlaceholder": "1",
       "attackThresholdHelp": "سيشير إلى من تبقى لديهم {threshold} هجمات أو أكثر.",
       "notSet": "غير محدد",
-      "pointsValue": "{count} points",
+      "pointsValue": "{count} نقطة",
       "attacksValue": "{count, plural, one {1 attack remaining} other {# attacks remaining}}",
-      "customImageAlt": "Custom reminder image",
-      "customGifTitle": "Custom reminder GIF"
+      "customImageAlt": "صورة تذكير مخصصة",
+      "customGifTitle": "صورة متحركة GIF مخصصة للتذكير"
     },
     "dialog": {
       "addTitle": "إضافة تذكير جديد",
@@ -1910,35 +1910,35 @@
       "timeExceedsLimit": "يجب أن يكون الوقت المتبقي بين {min} و{max} ساعة",
       "pointThresholdInvalid": "يجب أن يكون حد النقاط بين {min} و{max}",
       "attackThresholdInvalid": "يجب أن يكون حد الهجمات بين {min} و{max}",
-      "reminderCloned": "Reminder cloned successfully",
-      "failedToClone": "Failed to clone reminder"
+      "reminderCloned": "تم نسخ التذكير بنجاح",
+      "failedToClone": "تعذر في نسخ التذكير"
     },
     "section": {
-      "title": "Configured reminders",
-      "description": "Filter by clan, then choose a reminder type to review or change its delivery."
+      "title": "التنبيهات المضافة",
+      "description": "فلتر حسب العشيرة، ثم اختر نوع التذكير لمراجعة طريقه تسليمه أو تعديلها."
     },
     "issues": {
       "title": "{count, plural, one {1 reminder needs attention} other {# reminders need attention}}",
-      "description": "These reminders point to a channel, thread, or forum post that is no longer available.",
-      "channelMissing": "Channel {channelId} was deleted or is unavailable",
-      "threadMissing": "Thread or forum post was deleted or is unavailable",
-      "showDetails": "Show details",
-      "hideDetails": "Hide details",
-      "review": "Review"
+      "description": "تشير هذه الإشعارات إلى قناة أو منشور أو موضوع لم يعد متاحاً.",
+      "channelMissing": "القناة {channelId} محذوفة أو غير متاحة",
+      "threadMissing": "الموضوع أو منشور المنتدى محذوف أو غير متاح",
+      "showDetails": "عرض التفاصيل",
+      "hideDetails": "إخفاء التفاصيل",
+      "review": "مراجعة"
     },
     "clone": {
-      "title": "Clone reminder",
-      "description": "Choose a different clan. The time, channel, message, and all other settings will stay the same.",
-      "targetClan": "New clan",
-      "selectClan": "Select a different clan",
-      "noOtherClans": "Add another clan to this server before cloning this reminder.",
-      "action": "Clone reminder",
-      "cloning": "Cloning..."
+      "title": "نسخ التذكير",
+      "description": "اختر كلاناً آخر. ستبقى المواعيد والقناة والرسالة وكافة الإعدادات الأخرى كما هي.",
+      "targetClan": "كلان جديد",
+      "selectClan": "اختر كلاناً آخر",
+      "noOtherClans": "أضف كلاناً آخر إلى هذا الخادم قبل نسخ هذا التذكير.",
+      "action": "نسخ التذكير",
+      "cloning": "جاري النسخ..."
     }
   },
   "LogsPage": {
     "title": "سجلات النشاط",
-    "description": "إعداد التسجيل التلقائي لأنشطة القبيلة واللاعبين",
+    "description": "إعداد التسجيل التلقائي لأنشطة العشيرة واللاعبين",
     "stats": {
       "activeLogs": "السجلات النشطة",
       "activeLogsDesc": "عبر جميع قبائل العائلة وسجلات الخادم",
@@ -1947,14 +1947,14 @@
       "trackedClans": "القبائل المتتبعة",
       "trackedClansDesc": "القبائل المعدّة",
       "issues": "المشكلات",
-      "issuesDesc": "عبر العائلة بأكملها"
+      "issuesDesc": "العائلة بالكامل"
     },
     "clanSelector": {
-      "label": "القبيلة",
-      "placeholder": "اختر قبيلة"
+      "label": "العشيرة:",
+      "placeholder": "اختر عشيرة"
     },
     "tabs": {
-      "clan": "القبيلة",
+      "clan": "العشيرة",
       "war": "الحرب",
       "capital": "عاصمة",
       "player": "لاعب",
