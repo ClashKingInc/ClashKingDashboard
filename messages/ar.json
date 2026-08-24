@@ -2132,48 +2132,48 @@
     "countdowns": {
       "loadError": "Failed to load countdowns.",
       "updateError": "Failed to update the countdown.",
-      "empty": "No countdown types are available.",
-      "toggle": "Toggle {name}",
+      "empty": "لا تتوفر أي أنواع للعد التنازلي.",
+      "toggle": "تبديل {name}",
       "types": {
         "clan_games_timer": {
-          "label": "Clan Games",
-          "description": "Show the time remaining in Clan Games in a voice channel."
+          "label": "ألعاب القبيلة",
+          "description": "عرض الوقت المتبقي لمباريات القبيلة في قناة صوتية."
         },
         "cwl_timer": {
-          "label": "Clan War League",
-          "description": "Show the time remaining in Clan War League in a voice channel."
+          "label": "دوري حرب القبائل",
+          "description": "عرض الوقت المتبقي لدوري حرب القبائل في قناة صوتية."
         },
         "raid_weekend_timer": {
-          "label": "Raid Weekend",
-          "description": "Show the time remaining in Raid Weekend in a voice channel."
+          "label": "عطلة الهجمات",
+          "description": "عرض الوقت المتبقي لعطلة نهاية الأسبوع للهجمات في قناة صوتية."
         },
         "season_end_timer": {
-          "label": "Season end",
-          "description": "Show the time remaining in the current season in a voice channel."
+          "label": "نهاية الموسم",
+          "description": "عرض الوقت المتبقي للموسم الحالي في قناة صوتية."
         },
         "season_day_timer": {
-          "label": "Season day",
-          "description": "Show the current season day in a voice channel."
+          "label": "يوم الموسم",
+          "description": "عرض يوم الموسم الحالي في قناة صوتية."
         },
         "war_score": {
-          "label": "War score",
-          "description": "Show this clan's current war score in a voice channel."
+          "label": "نتيجة الحرب",
+          "description": "عرض نتيجة الحرب الحالية لهذه القبيلة في قناة صوتية."
         },
         "war_timer": {
-          "label": "War timer",
-          "description": "Show the time remaining in this clan's current war in a voice channel."
+          "label": "مؤقت الحرب",
+          "description": "عرض الوقت المتبقي للحرب الحالية لهذه القبيلة في قناة صوتية."
         }
       }
     }
   },
   "GeneralPage": {
     "title": "الإعدادات العامة",
-    "description": "إعداد سلوك البوت ومظهره على مستوى الخادم",
+    "description": "تكوين سلوك ومظهر البوت على مستوى الخادم",
     "loading": "جارٍ تحميل الإعدادات...",
     "reset": "إعادة تعيين",
     "saving": "جارٍ الحفظ...",
     "saveChanges": "حفظ التغييرات",
-    "settingsSaved": "حُفظت الإعدادات بنجاح!",
+    "settingsSaved": "تم حفظ الإعدادات بنجاح!",
     "infoBanner": {
       "title": "هل تبحث عن إعدادات أخرى؟",
       "description": "توجد رتب العائلة وإعدادات الألقاب في صفحة **إعدادات العائلة**، وإدارة الرتب في صفحة **الرتب**، أما رتب القبائل واختصاراتها وفئاتها وقنوات العد التنازلي للحروب فتوجد في صفحة **القبائل**."
