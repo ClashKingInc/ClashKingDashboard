@@ -1798,7 +1798,7 @@
     "types": {
       "war": "تنبيهات الحرب",
       "capital": "عاصمة العشيرة",
-      "clanGames": "ألعاب القبيلة",
+      "clanGames": "ألعاب العشيرة",
       "inactivity": "عدم النشاط"
     },
     "tabs": {
@@ -1808,13 +1808,13 @@
       "inactivity": "عدم النشاط"
     },
     "stats": {
-      "totalReminders": "إجمالي التذكيرات",
-      "totalRemindersDesc": "التذكيرات النشطة المعدّة",
-      "warReminders": "تذكيرات الحرب",
+      "totalReminders": "إجمالي التنبيهات",
+      "totalRemindersDesc": "تم إعداد تنبيهات نشطة",
+      "warReminders": "تنبيهات الحرب",
       "warRemindersDesc": "الحروب العادية وCWL",
-      "capitalReminders": "تذكيرات العاصمة",
-      "capitalRemindersDesc": "هجمات عطلة الغارات",
-      "otherReminders": "تذكيرات أخرى",
+      "capitalReminders": "تنبيهات العاصمة",
+      "capitalRemindersDesc": "هجمات غارات نهاية الأسبوع",
+      "otherReminders": "تنبيهات أخرى",
       "otherRemindersDesc": "الألعاب وعدم النشاط"
     },
     "actions": {
