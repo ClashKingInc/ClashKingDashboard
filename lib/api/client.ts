@@ -141,7 +141,7 @@ export function getDevelopmentBaseUrl(browserHostname?: string): string {
 
 export function getDefaultBaseUrl(): string {
   if (process.env.NODE_ENV === 'development') return getDevelopmentBaseUrl();
-  return process.env.NEXT_PUBLIC_CLASHKING_API_ORIGIN || 'https://v2-api.clashk.ing';
+  return process.env.NEXT_PUBLIC_CLASHKING_API_ORIGIN || 'https://api.clashk.ing';
 }
 
 /**

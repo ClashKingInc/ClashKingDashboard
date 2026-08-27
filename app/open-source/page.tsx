@@ -83,7 +83,7 @@ export default function OpenSourcePage() {
               {t("api.description")}
             </p>
             <Link
-              href="https://v2-api.clashk.ing/"
+              href="https://api.clashk.ing/"
               target="_blank"
               className="bg-primary text-primary-foreground px-6 py-3 rounded-lg font-bold text-center hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
             >

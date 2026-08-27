@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "vinext dev --hostname 127.0.0.1 --port 3002",
     "build": "npm run validate:messages && vinext build && node scripts/postprocess-static-html.mjs && npm run check:bundles",
-    "build:production": "NEXT_PUBLIC_CLASHKING_API_ORIGIN=https://v2-api.clashk.ing NEXT_PUBLIC_CLASHKING_AI_ORIGIN=https://ai.clashk.ing NEXT_PUBLIC_DISCORD_CLIENT_ID=824653933347209227 npm run build",
+    "build:production": "NEXT_PUBLIC_CLASHKING_API_ORIGIN=https://api.clashk.ing NEXT_PUBLIC_CLASHKING_AI_ORIGIN=https://ai.clashk.ing NEXT_PUBLIC_DISCORD_CLIENT_ID=824653933347209227 npm run build",
     "start": "vinext start --port 3002",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit && tsc --noEmit -p workers/dashboard-edge/tsconfig.json",
