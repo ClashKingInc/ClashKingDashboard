@@ -10,7 +10,7 @@ COPY package.json package-lock.json ./
 RUN --mount=type=cache,target=/root/.npm npm ci
 
 FROM base AS builder
-ARG NEXT_PUBLIC_CLASHKING_API_ORIGIN=https://v2-api.clashk.ing
+ARG NEXT_PUBLIC_CLASHKING_API_ORIGIN=https://api.clashk.ing
 ARG NEXT_PUBLIC_CLASHKING_AI_ORIGIN=https://ai.clashk.ing
 ARG NEXT_PUBLIC_DISCORD_CLIENT_ID=824653933347209227
 ENV NEXT_PUBLIC_CLASHKING_API_ORIGIN=$NEXT_PUBLIC_CLASHKING_API_ORIGIN
