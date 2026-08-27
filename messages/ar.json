@@ -1293,14 +1293,14 @@
       "townHallShort": "TH",
       "allTownHalls": "جميع مستويات قاعة المدينة",
       "townHallLevel": "قاعة المدينة {level}",
-      "period": "الفترة",
+      "period": "المدة",
       "last7Days": "آخر 7 أيام",
       "last30Days": "آخر 30 يومًا",
       "last90Days": "آخر 90 يومًا",
       "last6Months": "آخر 6 أشهر",
       "lastYear": "العام الماضي",
       "custom": "مخصص",
-      "startDate": "تاريخ البدء",
+      "startDate": "تاريخ البداية",
       "endDate": "تاريخ الانتهاء",
       "warTypes": "أنواع الحرب"
     },
@@ -1317,15 +1317,15 @@
     "charts": {
       "dailyPerformance": {
         "title": "أداء الحرب حسب الأسبوع",
-        "description": "الانتصارات والهزائم والتعادلات الأسبوعية خلال الفترة المحددة",
+        "description": "الانتصارات والهزائم والتعادلات الأسبوعية خلال المدة المحددة",
         "wins": "انتصارات",
         "losses": "خسائر",
         "draws": "تعادلات"
       },
       "thSuccessRate": {
         "title": "نسبة نجاح الهجوم حسب قاعة المدينة",
-        "description": "نسبة النجوم الثلاث حسب مستوى قاعة المدينة",
-        "threeStarPercent": "نسبة النجوم الثلاث",
+        "description": "نسبة 3 نجوم لكل مستوى تاون هول",
+        "threeStarPercent": "نسبة 3 نجوم %",
         "otherPercent": "نسبة أخرى"
       },
       "warTypeDistribution": {
