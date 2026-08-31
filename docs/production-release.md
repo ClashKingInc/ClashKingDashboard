@@ -4,7 +4,7 @@ Production uses four public origins:
 
 - `https://clashk.ing` — marketing and legal pages
 - `https://dash.clashk.ing` — authenticated dashboard
-- `https://v2-api.clashk.ing` — Go API
+- `https://api.clashk.ing` — Go API
 - `https://ai.clashk.ing` — roster-assistant Worker
 
 The graphics editor has no AI assistant endpoint.
@@ -12,7 +12,7 @@ The graphics editor has no AI assistant endpoint.
 ## Release order
 
 1. **Create and migrate the target Timescale database.** Apply the authoritative DevKit Goose baseline from `database/timescale`. A fresh database applies `001_initial_stats.sql` and `002_initial_settings.sql` and ends at Goose version 2. Run the DevKit data importers required for the cutover before sending production traffic to the new API.
-2. **Deploy the Go API against the migrated database.** Map its canonical `TIMESCALE_*`, `VALKEY_*`, origin, and trust values from the Coolify server environment, publish it on `v2-api.clashk.ing`, and confirm its health and authentication endpoints before deploying clients.
+2. **Deploy the Go API against the migrated database.** Map its canonical `TIMESCALE_*`, `VALKEY_*`, origin, and trust values from the Coolify server environment, publish it on `api.clashk.ing`, and confirm its health and authentication endpoints before deploying clients.
 3. **Deploy the admin panel.** It uses the same Timescale database. The seeded `subscription_support` flag appears under **Dashboard & billing** and starts disabled.
 4. **Configure and deploy the roster-assistant Worker.** Create both account secrets in Cloudflare Secrets Store, bind them through the generated Wrangler configuration, then deploy to `ai.clashk.ing`.
 5. **Deploy the dashboard Worker.** `npm run deploy:dashboard` builds with the production API and assistant origins before deploying `wrangler.deploy.jsonc` to the marketing and dashboard domains. `npm run deploy` performs steps 4 and 5 together after the API is ready.
@@ -30,7 +30,7 @@ AI_USAGE_SECRET=<same strong secret used by the roster-assistant Worker>
 
 `AI_USAGE_SECRET` is required outside local mode. Keep it out of Wrangler variables and source control. Stripe checkout remains unavailable while `subscription_support` is disabled, even when the three `STRIPE_*` values are configured.
 
-Add `https://dash.clashk.ing/auth/callback` to the Discord application’s allowed OAuth redirect URIs. When Stripe checkout is eventually enabled, configure its webhook destination as `https://v2-api.clashk.ing/v2/billing/stripe/webhook` and use that endpoint’s signing secret as `STRIPE_WEBHOOK_SECRET`.
+Add `https://dash.clashk.ing/auth/callback` to the Discord application’s allowed OAuth redirect URIs. When Stripe checkout is eventually enabled, configure its webhook destination as `https://api.clashk.ing/v2/billing/stripe/webhook` and use that endpoint’s signing secret as `STRIPE_WEBHOOK_SECRET`.
 
 When subscriptions are ready, update `subscription_support` in the admin panel: include the `web` platform, choose the rollout percentage, and enable the flag. Rollout assignment is stable per user, and the API applies its start/end window.
 
@@ -39,7 +39,7 @@ When subscriptions are ready, update `subscription_support` in the admin panel: 
 The dashboard has no runtime secrets; its public API, assistant, and Discord client values are pinned by `build:production`. The roster assistant has one non-secret variable in `wrangler.assistant.jsonc`:
 
 ```text
-CLASHKING_API_ORIGIN=https://v2-api.clashk.ing
+CLASHKING_API_ORIGIN=https://api.clashk.ing
 ```
 
 Create the account-level secrets, then expose the non-secret store ID to the deployment job:

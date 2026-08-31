@@ -9,7 +9,7 @@ import Image from "next/image";
 import { useState, useEffect, useRef, type ReactNode } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getDefaultBaseUrl } from "@/lib/api/client";
+import { clanBadgeUrl } from "@/lib/clash-asset-urls";
 import { dashboardQueryKeys } from "@/lib/dashboard-query";
 import { dashboardQueryOptions } from "@/lib/dashboard-query-options";
 import { clashKingAssets } from "@/lib/theme";
@@ -157,7 +157,7 @@ function getTimeLimit(type: string | undefined): number {
 
 function getClanBadgeUrl(clanTag: string | undefined): string | null {
   if (!clanTag) return null;
-  return `${getDefaultBaseUrl()}/v2/clan/${encodeURIComponent(clanTag)}/badge`;
+  return clanBadgeUrl(clanTag);
 }
 
 export default function RemindersPage() { // NOSONAR — React page component: complexity is aggregate state/handler management, not a single logic unit

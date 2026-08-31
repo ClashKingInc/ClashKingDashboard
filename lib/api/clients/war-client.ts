@@ -46,7 +46,7 @@ export class WarClient extends BaseApiClient {
 
   async getStoredCwl(clanTag: string, season?: string): Promise<ApiResponse<CwlGroupResponse>> {
     const query = this.buildQueryString({ season });
-    return this.request(`/v2/cwl/${encodeURIComponent(clanTag)}${query}`, { method: 'GET' });
+    return this.request(`/v2/cwl/${encodeURIComponent(clanTag)}/group${query}`, { method: 'GET' });
   }
 
   async getCwlBonusRecipients(

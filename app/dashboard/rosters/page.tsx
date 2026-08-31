@@ -39,7 +39,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { apiCache } from "@/lib/api-cache";
 import { useAuthSession } from "@/components/auth-session-provider";
 import { isDeveloperUserId } from "@/lib/internal/developer-access";
-import { getDefaultBaseUrl } from "@/lib/api/client";
+import { clanBadgeUrl } from "@/lib/clash-asset-urls";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -68,7 +68,7 @@ function getChannelsCacheKey(guildId: string): string {
 
 function getClanBadgeUrl(clanTag?: string | null): string | undefined {
   if (!clanTag) return undefined;
-  return `${getDefaultBaseUrl()}/v2/clan/${encodeURIComponent(clanTag)}/badge`;
+  return clanBadgeUrl(clanTag);
 }
 
 // Roster Card Component

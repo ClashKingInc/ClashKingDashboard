@@ -19,7 +19,7 @@ describe("prepareAssistantConfig", () => {
 
     expect(config.secrets_store_secrets).toHaveLength(2);
     expect(config.secrets_store_secrets[0].store_id).toBe("store_123");
-    expect(config.vars.CLASHKING_API_ORIGIN).toBe("https://v2-api.clashk.ing");
+    expect(config.vars.CLASHKING_API_ORIGIN).toBe("https://api.clashk.ing");
   });
 
   it("requires an explicit production store ID", () => {

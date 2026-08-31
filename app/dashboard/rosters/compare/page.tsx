@@ -30,7 +30,7 @@ import { DiscordUserDisplay } from "@/components/ui/discord-user-display";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
-import { getDefaultBaseUrl } from "@/lib/api/client";
+import { clanBadgeUrl } from "@/lib/clash-asset-urls";
 import { useGuildId } from "@/lib/dashboard-route";
 import { townHallImageUrl } from "@/lib/theme";
 import { cn } from "@/lib/utils";
@@ -53,7 +53,7 @@ function memberPlacement(member: RosterMember, roster: Roster): MemberPlacement 
 
 function rosterBadgeUrl(roster: Roster): string | undefined {
   if (roster.clan_tag) {
-    return `${getDefaultBaseUrl()}/v2/clan/${encodeURIComponent(roster.clan_tag)}/badge`;
+    return clanBadgeUrl(roster.clan_tag);
   }
   return roster.clan_badge ?? undefined;
 }

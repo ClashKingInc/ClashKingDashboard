@@ -33,6 +33,6 @@
     }
   ],
   "vars": {
-    "CLASHKING_API_ORIGIN": "https://v2-api.clashk.ing"
+    "CLASHKING_API_ORIGIN": "https://api.clashk.ing"
   }
 }

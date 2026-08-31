@@ -346,13 +346,10 @@ function GiveawaysList({
               const isEnded = g.status === "ended";
               const isOngoing = g.status === "ongoing";
               return (
-                <article key={g.id} className="grid gap-3 rounded-[24px] bg-card px-4 py-4 shadow-sm shadow-black/5 transition-shadow hover:shadow-md hover:shadow-black/5 md:px-5 xl:grid-cols-[minmax(14rem,1.1fr)_minmax(8rem,.55fr)_minmax(8rem,.55fr)_minmax(9rem,.65fr)_auto] xl:items-center xl:gap-4">
-                  <div className="min-w-0">
+                <article key={g.id} className="grid gap-3 rounded-[24px] bg-card px-4 py-4 shadow-sm shadow-black/5 transition-shadow hover:shadow-md hover:shadow-black/5 md:px-5 xl:grid-cols-[minmax(14rem,1.1fr)_auto_minmax(8rem,.55fr)_minmax(8rem,.55fr)_minmax(9rem,.65fr)_auto] xl:items-center xl:gap-4">
+                  <div className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-start gap-3 xl:contents">
                     <div className="min-w-0">
-                        <div className="flex min-w-0 items-start justify-between gap-3">
-                          <span className="min-w-0 break-words text-base font-semibold leading-snug text-foreground">{g.prize}</span>
-                          <Badge className={cn("shrink-0 border-0 px-2.5 py-1 shadow-none", isOngoing && "bg-emerald-500/12 text-emerald-700 hover:bg-emerald-500/12 dark:text-emerald-300", g.status === "scheduled" && "bg-amber-500/12 text-amber-700 hover:bg-amber-500/12 dark:text-amber-300", isEnded && "bg-muted text-muted-foreground hover:bg-muted")}>{t(`status.${g.status}`)}</Badge>
-                        </div>
+                        <span className="min-w-0 break-words text-base font-semibold leading-snug text-foreground">{g.prize}</span>
                         <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                           <span className="flex items-center gap-1"><Trophy className="h-3 w-3" />{t("table.winners", { count: g.winners })}</span>
                           {isOngoing && g.updated && (
@@ -378,6 +375,7 @@ function GiveawaysList({
                           )}
                         </div>
                     </div>
+                    <Badge className={cn("shrink-0 border-0 px-2.5 py-1 shadow-none xl:self-center", isOngoing && "bg-emerald-500/12 text-emerald-700 hover:bg-emerald-500/12 dark:text-emerald-300", g.status === "scheduled" && "bg-amber-500/12 text-amber-700 hover:bg-amber-500/12 dark:text-amber-300", isEnded && "bg-muted text-muted-foreground hover:bg-muted")}>{t(`status.${g.status}`)}</Badge>
                   </div>
                   <div className="flex min-w-0 flex-wrap items-center gap-x-4 gap-y-2 rounded-2xl bg-muted/45 px-3 py-2.5 xl:contents">
                   <div className="min-w-0 text-sm text-muted-foreground">
