@@ -3,7 +3,8 @@
 import { useGuildId } from "@/lib/dashboard-route";
 import { dashboardHref } from "@/lib/dashboard-route";
 import { getAccessToken } from "@/lib/auth/session";
-import { apiFetch, apiUrl } from "@/lib/api/fetch";
+import { apiFetch } from "@/lib/api/fetch";
+import { clanBadgeUrl } from "@/lib/clash-asset-urls";
 
 
 import { useEffect, useMemo, useState } from "react";
@@ -571,7 +572,7 @@ export default function ClansPage() {
                             <Settings className="h-4 w-4" />
                           </Button>
                           <Image
-                            src={apiUrl(`/v2/clan/${encodeURIComponent(clanTag)}/badge`)}
+                            src={clanBadgeUrl(clanTag)}
                             alt={t("badgeAlt", { name: clanName })}
                             width={64}
                             height={64}

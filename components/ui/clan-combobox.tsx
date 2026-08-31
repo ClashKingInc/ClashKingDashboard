@@ -22,7 +22,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { cn } from "@/lib/utils"
-import { getDefaultBaseUrl } from "@/lib/api/client"
+import { clanBadgeUrl } from "@/lib/clash-asset-urls"
 
 interface ClanOption {
   readonly tag: string
@@ -71,8 +71,6 @@ export function ClanCombobox({
   if (selectedSpecial) selectedLabel = selectedSpecial.label
   else if (value && !selectedClan) selectedLabel = value
 
-  const badgeUrl = (tag: string) => `${getDefaultBaseUrl()}/v2/clan/${encodeURIComponent(tag)}/badge`
-
   const selectValue = (nextValue: string) => {
     onValueChange(nextValue)
     setOpen(false)
@@ -97,7 +95,7 @@ export function ClanCombobox({
           {selectedClan ? (
             <span className="flex min-w-0 items-center gap-2.5 text-left">
               <Image
-                src={badgeUrl(selectedClan.tag)}
+                src={clanBadgeUrl(selectedClan.tag)}
                 alt=""
                 width={32}
                 height={32}
@@ -177,7 +175,7 @@ export function ClanCombobox({
                   className="min-h-12 gap-2.5 px-2.5 py-2"
                 >
                   <Image
-                    src={badgeUrl(clan.tag)}
+                    src={clanBadgeUrl(clan.tag)}
                     alt=""
                     width={34}
                     height={34}

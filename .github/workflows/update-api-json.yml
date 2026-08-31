@@ -22,7 +22,7 @@ jobs:
       - name: Fetch API JSON
         run: |
           mkdir -p .github/api-reference
-          curl -fsSL https://v2-api.clashk.ing/openapi.json \
+          curl -fsSL https://api.clashk.ing/openapi.json \
             -o .github/api-reference/openapi-private.json
 
       - name: Validate JSON
@@ -44,7 +44,7 @@ jobs:
           title: "Update API JSON Reference"
           body: |
             Automated update of API reference JSON.
-            Source: https://v2-api.clashk.ing/openapi.json
+            Source: https://api.clashk.ing/openapi.json
 
           labels: |
             documentation

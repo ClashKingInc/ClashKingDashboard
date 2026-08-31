@@ -27,8 +27,8 @@ describe("AI usage reporting", () => {
   });
 
   it("requires a dedicated production settlement secret", () => {
-    expect(() => aiUsageSettlementHeaders({ CLASHKING_API_ORIGIN: "https://v2-api.clashk.ing", AI_USAGE_SECRET: "" } as RosterAssistantRuntimeEnv)).toThrow("not configured");
-    expect(aiUsageSettlementHeaders({ CLASHKING_API_ORIGIN: "https://v2-api.clashk.ing", AI_USAGE_SECRET: "worker-secret" } as RosterAssistantRuntimeEnv)).toMatchObject({
+    expect(() => aiUsageSettlementHeaders({ CLASHKING_API_ORIGIN: "https://api.clashk.ing", AI_USAGE_SECRET: "" } as RosterAssistantRuntimeEnv)).toThrow("not configured");
+    expect(aiUsageSettlementHeaders({ CLASHKING_API_ORIGIN: "https://api.clashk.ing", AI_USAGE_SECRET: "worker-secret" } as RosterAssistantRuntimeEnv)).toMatchObject({
       "x-clashking-ai-metering": "worker-secret",
     });
   });

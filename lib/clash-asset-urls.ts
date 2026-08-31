@@ -1,4 +1,11 @@
 const ASSET_BASE_URL = "https://assets.clashk.ing";
+const CLAN_BADGE_BASE_URL = "https://badges.clashk.ing";
+
+export function clanBadgeUrl(tag: string): string {
+  const trimmed = tag.trim();
+  const normalized = (trimmed.startsWith("#") ? trimmed.slice(1) : trimmed).toUpperCase();
+  return normalized ? `${CLAN_BADGE_BASE_URL}/${encodeURIComponent(normalized)}` : "";
+}
 
 export function townHallImageUrl(level: number): string {
   return `${ASSET_BASE_URL}/buildings/home-village/town_hall/level_${level}.webp`;
