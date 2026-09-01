@@ -971,6 +971,8 @@
       "editTitle": "Edita l’automatització",
       "createDesc": "Programa una acció automàtica",
       "actionType": "Tipus d’acció",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "Moment relatiu a l’esdeveniment",
       "offsetBefore": "Abans de l’esdeveniment",
       "offsetAfter": "Després de l’esdeveniment",
@@ -1016,9 +1018,7 @@
         "roster_clear": "Elimina tots els membres de la llista sense suprimir-la",
         "roster_archive": "Arxiva la llista i la converteix en només lectura"
       },
-      "infoBox": "Les automatitzacions s’activen en relació amb l’hora d’inici de l’esdeveniment. Defineix un interval i el bot executarà automàticament l’acció en el moment establert, també per als esdeveniments recurrents.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "Les automatitzacions s’activen en relació amb l’hora d’inici de l’esdeveniment. Defineix un interval i el bot executarà automàticament l’acció en el moment establert, també per als esdeveniments recurrents."
     },
     "groups": {
       "title": "Grups de llistes",
@@ -3082,8 +3082,8 @@
       "start": "Comença",
       "end": "Acaba",
       "winnersHeader": "Guanyadors",
-      "winners": "{count, plural, one {# guanyador} other {# guanyadors}}",
-      "boosters": "{count, plural, one {# multiplicador} other {# multiplicadors}}",
+      "winners": "{count} winner{count, plural, one {} other {s}}",
+      "boosters": "{count} booster{count, plural, one {} other {s}}",
       "noChannel": "Sense canal",
       "noChannelHelp": "No hi ha cap canal assignat. Edita el sorteig per corregir-ho.",
       "endsAt": "Acaba a les",
@@ -3195,7 +3195,7 @@
       "notScheduled": "Sense programar",
       "schedule": "Programació",
       "endMessage": "Missatge per als guanyadors",
-      "endSummary": "{winners, plural, one {Aquí s’anunciarà # guanyador.} other {Aquí s’anunciaran # guanyadors.}}",
+      "endSummary": "{winners} winner{winners, plural, one {} other {s}} will be announced here.",
       "totalParticipants": "Total de participants: {count}",
       "participate": "Participa",
       "buttonHint": "Botó d’acció principal sota la publicació de Discord."

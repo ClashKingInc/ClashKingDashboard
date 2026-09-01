@@ -971,6 +971,8 @@
       "editTitle": "Wysig outomatisering",
       "createDesc": "Plan 'n outomatiese aksie",
       "actionType": "Aksietipe",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "Skeduleer relatief tot die geleentheid",
       "offsetBefore": "Voor die geleentheid",
       "offsetAfter": "Na die geleentheid",
@@ -1016,9 +1018,7 @@
         "roster_clear": "Verwyder alle lede uit die spanlys sonder om die spanlys te verwyder",
         "roster_archive": "Argiveer die spanlys en maak dit leesalleen"
       },
-      "infoBox": "Outomatiserings word relatief tot die geleentheid se begindatum geaktiveer. Stel ’n verplasing in, byvoorbeeld 3 dae voor, en die bot voer die aksie outomaties uit – ook vir herhalende geleenthede.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "Outomatiserings word relatief tot die geleentheid se begindatum geaktiveer. Stel ’n verplasing in, byvoorbeeld 3 dae voor, en die bot voer die aksie outomaties uit – ook vir herhalende geleenthede."
     },
     "groups": {
       "title": "Spanlysgroepe",

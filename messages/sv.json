@@ -420,7 +420,7 @@
       },
       "list": {
         "title": "Avstängda spelare",
-        "count": "{count, plural, one {# avstängd spelare} other {# avstängda spelare}}",
+        "count": "{count} player{count, plural, one {} other {s}} banned",
         "searchPlaceholder": "Sök efter namn, tagg eller orsak...",
         "noBansFound": "Inga avstängningar hittades",
         "noBans": "Inga avstängda spelare",
@@ -490,7 +490,7 @@
       },
       "list": {
         "title": "Spelarvarningar",
-        "count": "{count, plural, one {# utfärdad varning} other {# utfärdade varningar}}",
+        "count": "{count} strike{count, plural, one {} other {s}} issued",
         "searchPlaceholder": "Sök efter namn, tagg eller orsak...",
         "noStrikesFound": "Inga varningar hittades",
         "noStrikes": "Inga varningar utfärdade",
@@ -971,6 +971,8 @@
       "editTitle": "Redigera automatisering",
       "createDesc": "Schemalägg en automatisk åtgärd",
       "actionType": "Åtgärdstyp",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "Tid i förhållande till evenemanget",
       "offsetBefore": "Före evenemanget",
       "offsetAfter": "Efter evenemanget",
@@ -1016,9 +1018,7 @@
         "roster_clear": "Tar bort alla medlemmar från laguppställningen utan att radera den",
         "roster_archive": "Arkiverar laguppställningen och gör den skrivskyddad"
       },
-      "infoBox": "Automatiseringar utlöses i förhållande till evenemangets starttid. Ange en förskjutning (t.ex. tre dagar före), så utför boten åtgärden automatiskt vid den tiden, även för återkommande evenemang.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "Automatiseringar utlöses i förhållande till evenemangets starttid. Ange en förskjutning (t.ex. tre dagar före), så utför boten åtgärden automatiskt vid den tiden, även för återkommande evenemang."
     },
     "groups": {
       "title": "Grupper för laguppställningar",
@@ -3082,8 +3082,8 @@
       "start": "Startar",
       "end": "Slutar",
       "winnersHeader": "Vinnare",
-      "winners": "{count, plural, one {# vinnare} other {# vinnare}}",
-      "boosters": "{count, plural, one {# bonus} other {# bonusar}}",
+      "winners": "{count} winner{count, plural, one {} other {s}}",
+      "boosters": "{count} booster{count, plural, one {} other {s}}",
       "noChannel": "Ingen kanal",
       "noChannelHelp": "Ingen kanal har tilldelats. Redigera utlottningen för att rätta till det.",
       "endsAt": "Slutar",
@@ -3195,7 +3195,7 @@
       "notScheduled": "Inte schemalagd",
       "schedule": "Schema",
       "endMessage": "Vinnarmeddelande",
-      "endSummary": "{winners, plural, one {# vinnare meddelas här.} other {# vinnare meddelas här.}}",
+      "endSummary": "{winners} winner{winners, plural, one {} other {s}} will be announced here.",
       "totalParticipants": "Totalt antal deltagare: {count}",
       "participate": "Delta",
       "buttonHint": "Primär åtgärdsknapp som visas under Discord-inlägget."

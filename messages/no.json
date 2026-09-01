@@ -420,7 +420,7 @@
       },
       "list": {
         "title": "Utestengte spillere",
-        "count": "{count, plural, one {# spiller utestengt} other {# spillere utestengt}}",
+        "count": "{count} player{count, plural, one {} other {s}} banned",
         "searchPlaceholder": "Søk etter navn, tag eller årsak...",
         "noBansFound": "Ingen utestengelser funnet",
         "noBans": "Ingen utestengte spillere",
@@ -490,7 +490,7 @@
       },
       "list": {
         "title": "Spilleradvarsler",
-        "count": "{count, plural, one {# advarsel utstedt} other {# advarsler utstedt}}",
+        "count": "{count} strike{count, plural, one {} other {s}} issued",
         "searchPlaceholder": "Søk etter navn, tag eller årsak...",
         "noStrikesFound": "Ingen advarsler funnet",
         "noStrikes": "Ingen advarsler utstedt",
@@ -971,6 +971,8 @@
       "editTitle": "Rediger automatisering",
       "createDesc": "Planlegg en automatisert handling",
       "actionType": "Handlingstype",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "Tid i forhold til hendelsen",
       "offsetBefore": "Før hendelsen",
       "offsetAfter": "Etter hendelsen",
@@ -1016,9 +1018,7 @@
         "roster_clear": "Fjerner alle medlemmer fra spillerlisten uten å slette den",
         "roster_archive": "Arkiverer spillerlisten og gjør den skrivebeskyttet"
       },
-      "infoBox": "Automatiseringer utløses i forhold til hendelsens starttidspunkt. Angi en forskyvning, f.eks. 3 dager før, så utfører boten automatisk handlingen på det tidspunktet – også ved gjentatte hendelser.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "Automatiseringer utløses i forhold til hendelsens starttidspunkt. Angi en forskyvning, f.eks. 3 dager før, så utfører boten automatisk handlingen på det tidspunktet – også ved gjentatte hendelser."
     },
     "groups": {
       "title": "Spillerlistegrupper",
@@ -3082,8 +3082,8 @@
       "start": "Starter",
       "end": "Slutter",
       "winnersHeader": "Vinnere",
-      "winners": "{count, plural, one {# vinner} other {# vinnere}}",
-      "boosters": "{count, plural, one {# booster} other {# boostere}}",
+      "winners": "{count} winner{count, plural, one {} other {s}}",
+      "boosters": "{count} booster{count, plural, one {} other {s}}",
       "noChannel": "Ingen kanal",
       "noChannelHelp": "Ingen kanal tildelt. Rediger giveawayen for å rette det.",
       "endsAt": "Slutter kl.",
@@ -3195,7 +3195,7 @@
       "notScheduled": "Ikke planlagt",
       "schedule": "Tidsplan",
       "endMessage": "Vinnermelding",
-      "endSummary": "{winners, plural, one {# vinner blir kunngjort her.} other {# vinnere blir kunngjort her.}}",
+      "endSummary": "{winners} winner{winners, plural, one {} other {s}} will be announced here.",
       "totalParticipants": "Deltakere totalt: {count}",
       "participate": "Bli med",
       "buttonHint": "Den primære handlingsknappen vises under Discord-innlegget."

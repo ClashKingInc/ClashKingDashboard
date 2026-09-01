@@ -711,7 +711,7 @@
     "memberColumns": {
       "name": "Naam",
       "townhall": "Stadhuis",
-      "tag": "Tag",
+      "tag": "Label",
       "hitrate": "Trefferpercentage over 30 dagen",
       "current_clan": "Huidige clan",
       "current_clan_tag": "Clantag",
@@ -2808,7 +2808,7 @@
     "rolesToRemoveHint": "Rollen die automatisch worden verwijderd van de gebruiker bij het openen van een ticket.",
     "applyClans": "Toegestane clans",
     "applyClansHint": "Alleen leden van deze clans kunnen dit ticket openen. Laat leeg om iedereen toe te staan.",
-    "clanTagPlaceholder": "#CLANTAG",
+    "clanTagPlaceholder": "#CLANLABEL",
     "thRequirements": "Vereisten per stadhuisniveau",
     "thRequirementsHint": "Minimale heldenniveaus per stadhuisniveau om dit ticket te kunnen openen.",
     "thHeroLegend": "BK = Barbaarse Koning · AQ = Boogschutter Koningin · GW = Grote Wachter · RC = Koninklijke Kampioene · WARST = Oorlogsterren",

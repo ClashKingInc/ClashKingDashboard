@@ -971,6 +971,8 @@
       "editTitle": "자동화 수정",
       "createDesc": "자동 작업을 예약합니다",
       "actionType": "작업 유형",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "이벤트 기준 실행 시점",
       "offsetBefore": "이벤트 전",
       "offsetAfter": "이벤트 후",
@@ -1016,9 +1018,7 @@
         "roster_clear": "로스터를 삭제하지 않고 모든 멤버를 제거합니다",
         "roster_archive": "로스터를 읽기 전용으로 보관합니다"
       },
-      "infoBox": "자동화는 이벤트 시작 시간을 기준으로 실행됩니다. 시작 전 3일과 같이 시간 차이를 지정하면 반복 이벤트를 포함해 해당 시점에 봇이 작업을 자동으로 실행합니다.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "자동화는 이벤트 시작 시간을 기준으로 실행됩니다. 시작 전 3일과 같이 시간 차이를 지정하면 반복 이벤트를 포함해 해당 시점에 봇이 작업을 자동으로 실행합니다."
     },
     "groups": {
       "title": "로스터 그룹",

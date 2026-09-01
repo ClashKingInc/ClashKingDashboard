@@ -420,7 +420,7 @@
       },
       "list": {
         "title": "Zabranjeni igrači",
-        "count": "{count, plural, one {# igrač je zabranjen} few {# igrača su zabranjena} other {# igrača je zabranjeno}}",
+        "count": "{count} player{count, plural, one {} other {s}} banned",
         "searchPlaceholder": "Pretraži po imenu, oznaci ili razlogu...",
         "noBansFound": "Zabrane nisu pronađene",
         "noBans": "Nema zabranjenih igrača",
@@ -490,7 +490,7 @@
       },
       "list": {
         "title": "Opomene igrača",
-        "count": "{count, plural, one {Izdana je # opomena} few {Izdane su # opomene} other {Izdano je # opomena}}",
+        "count": "{count} strike{count, plural, one {} other {s}} issued",
         "searchPlaceholder": "Pretraži po imenu, oznaci ili razlogu...",
         "noStrikesFound": "Opomene nisu pronađene",
         "noStrikes": "Nema izdatih opomena",
@@ -971,6 +971,8 @@
       "editTitle": "Izmeni automatizaciju",
       "createDesc": "Zakažite automatsku radnju",
       "actionType": "Vrsta radnje",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "Vreme u odnosu na događaj",
       "offsetBefore": "Pre događaja",
       "offsetAfter": "Posle događaja",
@@ -1016,9 +1018,7 @@
         "roster_clear": "Uklanja sve članove iz sastava bez njegovog brisanja",
         "roster_archive": "Arhivira sastav i omogućava samo čitanje"
       },
-      "infoBox": "Automatizacije se pokreću u odnosu na vreme početka događaja. Podesite pomak (npr. tri dana ranije), a bot će tada automatski izvršiti radnju, uključujući događaje koji se ponavljaju.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "Automatizacije se pokreću u odnosu na vreme početka događaja. Podesite pomak (npr. tri dana ranije), a bot će tada automatski izvršiti radnju, uključujući događaje koji se ponavljaju."
     },
     "groups": {
       "title": "Grupe sastava",
@@ -3082,8 +3082,8 @@
       "start": "Počinje",
       "end": "Završava se",
       "winnersHeader": "Dobitnici",
-      "winners": "{count, plural, one {# dobitnik} few {# dobitnika} other {# dobitnika}}",
-      "boosters": "{count, plural, one {# pojačivač} few {# pojačivača} other {# pojačivača}}",
+      "winners": "{count} winner{count, plural, one {} other {s}}",
+      "boosters": "{count} booster{count, plural, one {} other {s}}",
       "noChannel": "Bez kanala",
       "noChannelHelp": "Kanal nije dodeljen. Izmenite nagradnu igru da biste to ispravili.",
       "endsAt": "Završava se",
@@ -3195,7 +3195,7 @@
       "notScheduled": "Nije zakazano",
       "schedule": "Raspored",
       "endMessage": "Poruka dobitnicima",
-      "endSummary": "{winners, plural, one {Ovde će biti objavljen # dobitnik.} few {Ovde će biti objavljena # dobitnika.} other {Ovde će biti objavljeno # dobitnika.}}",
+      "endSummary": "{winners} winner{winners, plural, one {} other {s}} will be announced here.",
       "totalParticipants": "Ukupno učesnika: {count}",
       "participate": "Učestvuj",
       "buttonHint": "Glavno dugme radnje prikazano ispod Discord objave."

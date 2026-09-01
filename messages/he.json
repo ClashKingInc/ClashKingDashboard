@@ -420,7 +420,7 @@
       },
       "list": {
         "title": "שחקנים חסומים",
-        "count": "{count, plural, one {שחקן אחד חסום} two {שני שחקנים חסומים} other {# שחקנים חסומים}}",
+        "count": "{count} player{count, plural, one {} other {s}} banned",
         "searchPlaceholder": "חיפוש לפי שם, תג או סיבה...",
         "noBansFound": "לא נמצאו חסימות",
         "noBans": "אין שחקנים חסומים",
@@ -490,7 +490,7 @@
       },
       "list": {
         "title": "אזהרות שחקנים",
-        "count": "{count, plural, one {ניתנה אזהרה אחת} two {ניתנו שתי אזהרות} other {ניתנו # אזהרות}}",
+        "count": "{count} strike{count, plural, one {} other {s}} issued",
         "searchPlaceholder": "חיפוש לפי שם, תג או סיבה...",
         "noStrikesFound": "לא נמצאו אזהרות",
         "noStrikes": "לא ניתנו אזהרות",
@@ -971,6 +971,8 @@
       "editTitle": "עריכת אוטומציה",
       "createDesc": "תזמון פעולה אוטומטית",
       "actionType": "סוג פעולה",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "תזמון ביחס לאירוע",
       "offsetBefore": "לפני האירוע",
       "offsetAfter": "אחרי האירוע",
@@ -1016,9 +1018,7 @@
         "roster_clear": "מסירה את כל החברים מהסגל בלי למחוק אותו",
         "roster_archive": "מעבירה את הסגל לארכיון והופכת אותו לקריאה בלבד"
       },
-      "infoBox": "אוטומציות מופעלות ביחס לשעת התחלת האירוע. הגדירו הפרש זמן, למשל שלושה ימים לפני, והבוט יבצע את הפעולה אוטומטית גם באירועים חוזרים.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "אוטומציות מופעלות ביחס לשעת התחלת האירוע. הגדירו הפרש זמן, למשל שלושה ימים לפני, והבוט יבצע את הפעולה אוטומטית גם באירועים חוזרים."
     },
     "groups": {
       "title": "קבוצות סגלים",
@@ -3082,8 +3082,8 @@
       "start": "מתחילה",
       "end": "מסתיימת",
       "winnersHeader": "זוכים",
-      "winners": "{count, plural, one {זוכה אחד} two {שני זוכים} other {# זוכים}}",
-      "boosters": "{count, plural, one {מאיץ אחד} two {שני מאיצים} other {# מאיצים}}",
+      "winners": "{count} winner{count, plural, one {} other {s}}",
+      "boosters": "{count} booster{count, plural, one {} other {s}}",
       "noChannel": "ללא ערוץ",
       "noChannelHelp": "לא הוקצה ערוץ. ערכו את ההגרלה כדי לתקן זאת.",
       "endsAt": "מסתיימת בשעה",
@@ -3195,7 +3195,7 @@
       "notScheduled": "לא מתוזמנת",
       "schedule": "לוח זמנים",
       "endMessage": "הודעת זכייה",
-      "endSummary": "{winners, plural, one {זוכה אחד יוכרז כאן.} two {שני זוכים יוכרזו כאן.} other {# זוכים יוכרזו כאן.}}",
+      "endSummary": "{winners} winner{winners, plural, one {} other {s}} will be announced here.",
       "totalParticipants": "סך המשתתפים: {count}",
       "participate": "השתתפות",
       "buttonHint": "כפתור הפעולה הראשי שמוצג מתחת לפרסום ב-Discord."

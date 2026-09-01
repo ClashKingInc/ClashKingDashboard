@@ -420,7 +420,7 @@
       },
       "list": {
         "title": "Zabanovaní hráči",
-        "count": "{count, plural, one {Zabanován # hráč} few {Zabanováni # hráči} other {Zabanováno # hráčů}}",
+        "count": "{count} player{count, plural, one {} other {s}} banned",
         "searchPlaceholder": "Hledat podle jména, tagu nebo důvodu...",
         "noBansFound": "Nebyly nalezeny žádné bany",
         "noBans": "Žádní zabanovaní hráči",
@@ -490,7 +490,7 @@
       },
       "list": {
         "title": "Varování hráčů",
-        "count": "{count, plural, one {Uděleno # varování} few {Udělena # varování} other {Uděleno # varování}}",
+        "count": "{count} strike{count, plural, one {} other {s}} issued",
         "searchPlaceholder": "Hledat podle jména, tagu nebo důvodu...",
         "noStrikesFound": "Nebyla nalezena žádná varování",
         "noStrikes": "Nebyla udělena žádná varování",
@@ -971,6 +971,8 @@
       "editTitle": "Upravit automatizaci",
       "createDesc": "Naplánovat automatickou akci",
       "actionType": "Typ akce",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "Načasování vzhledem k události",
       "offsetBefore": "Před událostí",
       "offsetAfter": "Po události",
@@ -1016,9 +1018,7 @@
         "roster_clear": "Odebere všechny členy bez odstranění soupisky",
         "roster_archive": "Archivuje soupisku a nastaví ji pouze pro čtení"
       },
-      "infoBox": "Automatizace se spouštějí vzhledem k času zahájení události. Nastavte posun (např. 3 dny předem) a bot akci automaticky provede, a to i u opakovaných událostí.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "Automatizace se spouštějí vzhledem k času zahájení události. Nastavte posun (např. 3 dny předem) a bot akci automaticky provede, a to i u opakovaných událostí."
     },
     "groups": {
       "title": "Skupiny soupisek",
@@ -3082,8 +3082,8 @@
       "start": "Začíná",
       "end": "Končí",
       "winnersHeader": "Výherci",
-      "winners": "{count, plural, one {# výherce} few {# výherci} other {# výherců}}",
-      "boosters": "{count, plural, one {# zvýhodnění} few {# zvýhodnění} other {# zvýhodnění}}",
+      "winners": "{count} winner{count, plural, one {} other {s}}",
+      "boosters": "{count} booster{count, plural, one {} other {s}}",
       "noChannel": "Žádný kanál",
       "noChannelHelp": "Není přiřazen žádný kanál. Opravte to úpravou soutěže.",
       "endsAt": "Končí",
@@ -3195,7 +3195,7 @@
       "notScheduled": "Nenaplánováno",
       "schedule": "Plán",
       "endMessage": "Zpráva pro výherce",
-      "endSummary": "{winners, plural, one {Zde bude oznámen # výherce.} few {Zde budou oznámeni # výherci.} other {Zde bude oznámeno # výherců.}}",
+      "endSummary": "{winners} winner{winners, plural, one {} other {s}} will be announced here.",
       "totalParticipants": "Celkem účastníků: {count}",
       "participate": "Zúčastnit se",
       "buttonHint": "Hlavní akční tlačítko zobrazené pod příspěvkem na Discordu."

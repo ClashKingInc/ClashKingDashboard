@@ -971,6 +971,8 @@
       "editTitle": "Editar automação",
       "createDesc": "Programe uma ação automática",
       "actionType": "Tipo de ação",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "Momento relativo ao evento",
       "offsetBefore": "Antes do evento",
       "offsetAfter": "Depois do evento",
@@ -1016,9 +1018,7 @@
         "roster_clear": "Remove todos os membros da escalação sem excluí-la",
         "roster_archive": "Arquiva a escalação e a torna somente leitura"
       },
-      "infoBox": "As automações são executadas em relação ao horário de início do evento. Defina um intervalo, como três dias antes, e o bot executará a ação automaticamente, inclusive em eventos recorrentes.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "As automações são executadas em relação ao horário de início do evento. Defina um intervalo, como três dias antes, e o bot executará a ação automaticamente, inclusive em eventos recorrentes."
     },
     "groups": {
       "title": "Grupos de escalações",

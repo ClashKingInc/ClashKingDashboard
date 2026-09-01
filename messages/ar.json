@@ -97,15 +97,15 @@
     },
     "stats": {
       "servers": "خوادم Discord",
-      "users": "المستخدمون النشطون",
-      "clans": "القبائل المتتبَّعة"
+      "users": "المستخدمين النشطين",
+      "clans": "القبائل المتابعة"
     },
     "features": {
-      "title": "كل ما تحتاجه لإدارة قبيلتك",
+      "title": "كل ما تريده لإدارة عشيرتك",
       "subtitle": "ميزات قوية مصممة خصيصًا لمجتمعات Clash of Clans",
       "autoRoles": {
         "title": "إدارة الرتب تلقائيًا",
-        "description": "عيّن الرتب تلقائيًا حسب حالة اللاعب وموقعه في القبيلة وإنجازاته، وحافظ على تنظيم خادمك."
+        "description": "تعديل وتعيين الرتب تلقائياً بناءً على حالة اللاعب، وموقعه في القبيلة، وإنجازاته. حافظ على تنظيم الخادم بكل سهولة."
       },
       "playerStats": {
         "title": "إحصاءات اللاعب",
@@ -113,7 +113,7 @@
       },
       "leaderboards": {
         "title": "قوائم المتصدرين",
-        "description": "أنشئ لوحات منافسة للتبرعات والكؤوس ونجوم الحرب والمقاييس المخصصة."
+        "description": "أنشئ لوحات صدارة للتبرعات والجوائز ونجوم الحرب لتحفيز المشاركة والتنافس."
       },
       "warTracking": {
         "title": "متابعة الحرب",
@@ -124,7 +124,7 @@
         "description": "تنبيهات تلقائية لألعاب القبيلة وهجمات الحرب ودوري الحروب والفعاليات المخصصة ليكون الجميع على علم بكل جديد."
       },
       "customization": {
-        "title": "تخصيص كامل",
+        "title": "​تعديل كامل",
         "description": "تحكّم بالأوامر، ألوان الرسائل المدمجة، الألقاب، والصلاحيات. اجعل البوت يعبر عن قبيلتك."
       },
       "familyManagement": {
@@ -137,7 +137,7 @@
       },
       "performance": {
         "title": "سرعة فائقة",
-        "description": "أداء سريع مع استجابات فورية للأوامر وتحديثات مباشرة، دون تأخير."
+        "description": "​أداء فائق السرعة مع استجابة أوتوماتيكية وتحديثات لحظية بلا أي تعليق أو تأخير."
       },
       "security": {
         "title": "آمن وموثوق",
@@ -161,7 +161,7 @@
       "resources": {
         "title": "الموارد",
         "documentation": "الوثائق",
-        "quickStart": "دليل البدء السريع",
+        "quickStart": "دليل التشغيل السريع",
         "github": "GitHub"
       },
       "community": {
@@ -169,7 +169,7 @@
         "discord": "خادم Discord",
         "twitter": "X (Twitter)",
         "reportBug": "الإبلاغ عن خلل",
-        "requestFeature": "طلب ميزة"
+        "requestFeature": "طلب ميزه"
       },
       "legal": {
         "copyright": "ClashKing. جميع الحقوق محفوظة.",
@@ -236,8 +236,8 @@
       "description": "لوحات متصدرين آلية"
     },
     "giveaways": {
-      "name": "السحوبات",
-      "description": "إدارة حملات السحوبات"
+      "name": "الجوائز",
+      "description": "إدارة حملات الجوائز"
     },
     "panels": {
       "name": "اللوحات",
@@ -277,7 +277,7 @@
       "serverManagement": "Server Management"
     },
     "switchServer": "تبديل الخادم",
-    "goHome": "الصفحة الرئيسية",
+    "goHome": "واجهة الموقع",
     "graphics": {
       "name": "Graphics",
       "description": "Dynamic image templates"
@@ -471,7 +471,7 @@
       "playerTag": "وسم اللاعب",
       "reason": "السبب",
       "weight": "الوزن",
-      "rolloverDays": "مدة الصلاحية بالأيام",
+      "rolloverDays": "أيام التجديد",
       "createdAt": "تاريخ الإنشاء",
       "search": "البحث بوسم اللاعب...",
       "howItWorks": {
@@ -604,7 +604,7 @@
       "compare": "مقارنة",
       "compareRosters": "مقارنة القوائم",
       "selectRosters": "اختر القوائم",
-      "selectRostersDesc": "اختر قائمتين على الأقل للمقارنة",
+      "selectRostersDesc": "يرجى تحديد تشكيلتين 2 كحد أدنى للمقارنة",
       "maxReached": "بلغت الحد الأقصى",
       "maxReachedDesc": "يمكنك مقارنة حتى 4 تشكيلات في المرة الواحدة"
     },
@@ -971,6 +971,8 @@
       "editTitle": "تعديل الأتمتة",
       "createDesc": "جدولة إجراء آلي",
       "actionType": "نوع الإجراء",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "التوقيت بالنسبة إلى الحدث",
       "offsetBefore": "قبل الحدث",
       "offsetAfter": "بعد الحدث",
@@ -1016,9 +1018,7 @@
         "roster_clear": "يزيل جميع الأعضاء دون حذف القائمة",
         "roster_archive": "يؤرشف القائمة ويجعلها للقراءة فقط"
       },
-      "infoBox": "تُشغّل الأتمتة نسبةً إلى وقت بدء الحدث. حدّد فارقًا زمنيًا، مثل ثلاثة أيام قبل الحدث، وسينفذ البوت الإجراء تلقائيًا، بما في ذلك الأحداث المتكررة.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "تُشغّل الأتمتة نسبةً إلى وقت بدء الحدث. حدّد فارقًا زمنيًا، مثل ثلاثة أيام قبل الحدث، وسينفذ البوت الإجراء تلقائيًا، بما في ذلك الأحداث المتكررة."
     },
     "groups": {
       "title": "مجموعات القوائم",
@@ -1293,14 +1293,14 @@
       "townHallShort": "TH",
       "allTownHalls": "جميع مستويات قاعة المدينة",
       "townHallLevel": "قاعة المدينة {level}",
-      "period": "الفترة",
+      "period": "المدة",
       "last7Days": "آخر 7 أيام",
       "last30Days": "آخر 30 يومًا",
       "last90Days": "آخر 90 يومًا",
       "last6Months": "آخر 6 أشهر",
       "lastYear": "العام الماضي",
       "custom": "مخصص",
-      "startDate": "تاريخ البدء",
+      "startDate": "تاريخ البداية",
       "endDate": "تاريخ الانتهاء",
       "warTypes": "أنواع الحرب"
     },
@@ -1317,15 +1317,15 @@
     "charts": {
       "dailyPerformance": {
         "title": "أداء الحرب حسب الأسبوع",
-        "description": "الانتصارات والهزائم والتعادلات الأسبوعية خلال الفترة المحددة",
+        "description": "الانتصارات والهزائم والتعادلات الأسبوعية خلال المدة المحددة",
         "wins": "انتصارات",
         "losses": "خسائر",
         "draws": "تعادلات"
       },
       "thSuccessRate": {
         "title": "نسبة نجاح الهجوم حسب قاعة المدينة",
-        "description": "نسبة النجوم الثلاث حسب مستوى قاعة المدينة",
-        "threeStarPercent": "نسبة النجوم الثلاث",
+        "description": "نسبة 3 نجوم لكل مستوى تاون هول",
+        "threeStarPercent": "نسبة 3 نجوم %",
         "otherPercent": "نسبة أخرى"
       },
       "warTypeDistribution": {
@@ -1348,31 +1348,31 @@
       },
       "topDefenders": {
         "title": "أفضل المدافعين",
-        "description": "أفضل المدافعين حسب متوسط النجوم التي خسروها",
-        "defensesAndStars": "{defenses} دفاعات • خسر {stars} نجوم",
+        "description": "أفضل المدافعين حسب متوسط النجوم الممنوحة",
+        "defensesAndStars": "{defenses} دفاعات • {stars} نجوم ممنوحة",
         "noData": "لا تتوفر بيانات مدافعين. جرّب تعديل عوامل التصفية."
       },
       "worstAttackers": {
         "title": "أضعف المهاجمين",
-        "description": "اللاعبون ذوو أقل متوسط نجوم لكل هجوم (3 هجمات على الأقل)",
+        "description": "اللاعبون الأقل استقبالاً للنجوم (الحد الأدنى 3 هجمات)",
         "attacksAndStars": "{attacks} هجمات • {stars} نجوم",
         "noData": "لا تتوفر بيانات لاعبين. جرّب تعديل عوامل التصفية."
       },
       "worstDefenders": {
         "title": "أضعف المدافعين",
-        "description": "اللاعبون الذين خسروا أكبر عدد من النجوم في الدفاع (3 دفاعات على الأقل)",
+        "description": "​أكثر اللاعبين استقبالاً للنجوم في الدفاع (3 دفاعات كحد أدنى)",
         "defensesAndStars": "{defenses} دفاعات • خسر {stars} نجوم",
         "noData": "لا تتوفر بيانات مدافعين. جرّب تعديل عوامل التصفية."
       }
     },
     "clanStatsTable": {
-      "title": "إحصاءات حروب القبائل",
-      "description": "إحصاءات مفصلة لكل قبيلة",
+      "title": "إحصاءات حروب العشائر",
+      "description": "إحصاءات مفصلة لكل عشيرة",
       "headers": {
-        "clan": "القبيلة",
+        "clan": "العشيرة",
         "status": "الحالة",
         "wars": "الحروب",
-        "record": "ف/خ/ت",
+        "record": "فوز / خسارة / تعادل",
         "winRate": "نسبة الفوز",
         "avgDestruction": "متوسط الدمار",
         "avgStarsPerAttack": "النجوم لكل هجوم",
@@ -1383,20 +1383,20 @@
         "cwl": "دوري حروب القبائل",
         "peace": "سلام"
       },
-      "noData": "لا تتوفر إحصاءات قبائل. جرّب تطبيق عوامل التصفية أو انتظر تحميل البيانات."
+      "noData": "لا تتوفر إحصاءات عشيرة. جرّب تطبيق عوامل التصفية أو انتظر تحميل البيانات."
     },
     "toast": {
       "errorTitle": "خطأ",
-      "errorLoadingClans": "فشل تحميل القبائل. حاول مجددًا.",
+      "errorLoadingClans": "فشل تحميل العشائر. حاول مجددًا.",
       "errorLoadingWarData": "فشل تحميل بيانات الحرب. حاول مجددًا.",
-      "errorNoClans": "لا توجد قبائل متاحة",
+      "errorNoClans": "لا توجد عشائر متاحة",
       "errorApplyingFilters": "فشل تطبيق عوامل التصفية. حاول مجددًا."
     }
   },
   "LeaderboardsPage": {
     "title": "لوحات المتصدرين",
     "description": "لوحات صدارة عالمية لعاصمة القبيلة والمزيد",
-    "comingSoon": "هذه الميزة قادمة قريبًا. عد لاحقًا!",
+    "comingSoon": "هذه الميزة ستتوفر قريباً، يُرجى التحقق لاحقاً!",
     "stats": {
       "totalEntries": "إجمالي الإدخالات",
       "type": "النوع",
@@ -1442,8 +1442,8 @@
       "clans": "القبائل"
     },
     "empty": {
-      "title": "لا توجد بيانات متاحة.",
-      "description": "جرّب اختيار عطلة نهاية أسبوع أو دوري آخر"
+      "title": "لا توجد بيانات متاحة",
+      "description": "جرب اختيار عطلة نهاية أسبوع أو دوري آخر"
     }
   },
   "ClansPage": {
@@ -1455,7 +1455,7 @@
     "clanTag": "وسم القبيلة",
     "totalClans": "إجمالي القبائل",
     "registeredClans": "القبائل المسجلة",
-    "configured": "مُعدّة",
+    "configured": "تهيئة",
     "withSettingsConfigured": "بإعدادات مكتملة",
     "totalMembers": "إجمالي الأعضاء",
     "acrossAllClans": "عبر جميع القبائل",
@@ -1517,71 +1517,71 @@
       "renameTitle": "إعادة تسمية فئة القبيلة",
       "renameDescription": "سيُحدّث الاسم المنسق في كل قبيلة معيّنة.",
       "saveRename": "حفظ الاسم",
-      "deleteTitle": "هل تريد حذف فئة القبيلة؟",
-      "deleteWarning": "سيؤدي حذف «{name}» إلى ترك {count, plural, one {قبيلة واحدة بلا فئة} other {# قبائل بلا فئة}}.",
-      "deleteCountMayChange": "تعكس هذه المعاينة الحالة الحالية. سيعرض الحذف المكتمل العدد الفعلي للقبائل المتأثرة.",
-      "confirmDelete": "حذف الفئة",
-      "deleteSuccessTitle": "حُذفت {name}",
+      "deleteTitle": "هل تريد حذف قسم العشيرة؟",
+      "deleteWarning": "سيؤدي حذف «{name}» إلى ترك {count, plural, one {قبيلة واحدة بلا قسم} other {# قبائل بلا قسم}}.",
+      "deleteCountMayChange": "تظهر هذه المعاينة الحالة الحالية. وستوضح عملية الحذف المكتملة العدد الفعلي للعشائر المتأثرة.",
+      "confirmDelete": "حذف القسم",
+      "deleteSuccessTitle": "تم حذف {name}",
       "deleteSuccessDescription": "{count, plural, =0 {لم تتغير أي قبيلة.} one {أصبحت قبيلة واحدة بلا فئة.} other {أصبحت # قبائل بلا فئة.}}",
-      "created": "أُنشئت {name}.",
-      "renamed": "أُعيدت تسمية الفئة إلى {name}.",
+      "created": "تم إنشاء {name}.",
+      "renamed": "​تم تغيير اسم القسم إلى {name}.",
       "errors": {
-        "title": "الفئات غير متاحة",
-        "load": "فشل تحميل فئات القبائل.",
-        "create": "فشل إنشاء فئة القبيلة.",
+        "title": "الأقسام غير متاحة",
+        "load": "فشل تحميل أقسام العشائر.",
+        "create": "فشل إنشاء قسم العشيرة.",
         "rename": "فشلت إعادة تسمية فئة القبيلة.",
-        "preview": "فشل تحميل معاينة الحذف.",
-        "delete": "فشل حذف فئة القبيلة.",
-        "refresh": "تغيّرت الفئة، لكن تعذّر تحميل حالة الفئة أو القبيلة المحدّثة.",
-        "invalidName": "استخدم اسمًا غير فارغ لا يتجاوز 64 حرفًا ومن دون محارف تحكم.",
-        "reorder": "Failed to save the category order."
+        "preview": "تعذر تحميل معاينة الحذف.",
+        "delete": "فشل حذف قسم العشيرة.",
+        "refresh": "تم تغير الفئة، لكن تعذر تحميل حالة الفئة أو العشيرة المحدثة.",
+        "invalidName": "يرجى إدخال اسم أقصاه 64 حرفاً وبدون أشكال أو رموز تحكم.",
+        "reorder": "تعذر حفظ ترتيب الفئات."
       },
-      "manage": "Manage categories",
-      "uncategorized": "Uncategorized",
+      "manage": "إدارة الفئات",
+      "uncategorized": "غير مصنف",
       "sectionCount": "{count, plural, one {# clan} other {# clans}}",
-      "reorderAction": "Reorder {name}",
-      "reordered": "Category order saved."
+      "reorderAction": "إعادة ترتيب {name}",
+      "reordered": "تم حفظ ترتيب الفئة."
     },
     "fieldHelp": {
-      "infoButtonLabel": "عرض مزيد من المعلومات",
+      "infoButtonLabel": "عرض المزيد من المعلومات",
       "memberRole": "الرتبة التي يحصل عليها أعضاء القبيلة. إذا كان البوت يدير الرتب في Discord، فسيحصل كل عضو في القبيلة عليها. تفيد في القنوات الخاصة بقبيلة معينة.",
       "leaderRole": "الرتبة التي يحصل عليها القائد والقادة المساعدون. تفيد في دردشة قيادة القبيلة أو دردشة مشتركة لقادة جميع القبائل.",
       "clanAbbreviation": "امنح قبيلتك اختصارًا ليظهر في أسماء الأعضاء عند تفعيل إعادة التسمية. يمكنك إعداد الصيغة في <familySettingsLink>إعدادات العائلة</familySettingsLink>.",
-      "category": "هذه طريقة لتنظيم القبائل. تضم عائلات كثيرة خمس قبائل أو أكثر، وقد تكون بعضها مخصصة لـCWL أو الفعاليات."
+      "category": "تستعمل هذه الميزة لتنظيم وتحالف العشائر المتعددة، حيث تمتلك بعض العائلات 5 عشائر أو أكثر وتخصص بعضها لدوري الحروب CWL أو الأحداث الخاصة."
     },
-    "roleIdPlaceholder": "معرّف الرتبة",
+    "roleIdPlaceholder": "معرف الرتبة",
     "abbreviationPlaceholder": "مثلاً: CK",
-    "categoryPlaceholder": "اسم الفئة",
+    "categoryPlaceholder": "اسم القسم",
     "notAvailable": "غير متاح",
     "saving": "جارٍ الحفظ...",
     "saveChanges": "حفظ التغييرات",
-    "deleteConfirm": "هل تريد إزالة {tag}؟ سيؤدي ذلك أيضًا إلى حذف جميع التذكيرات والسجلات المرتبطة.",
+    "deleteConfirm": "هل تريد إزالة {tag}؟ سيؤدي ذلك أيضا إلى حذف جميع التنبيهات والسجلات المرتبطة.",
     "toast": {
-      "errorLoadingClans": "فشل تحميل القبائل",
-      "errorLoadingSettings": "فشل تحميل إعدادات القبيلة",
-      "errorEmptyClanTag": "أدخل وسم القبيلة",
-      "clanAdded": "أُضيفت القبيلة بنجاح",
-      "errorAddingClan": "فشلت إضافة القبيلة",
-      "clanRemoved": "أُزيلت القبيلة بنجاح",
-      "errorRemovingClan": "فشلت إزالة القبيلة",
-      "settingsSaved": "حُفظت الإعدادات بنجاح",
+      "errorLoadingClans": "تعذر تحميل العشائر",
+      "errorLoadingSettings": "فشل تحميل إعدادات العشيرة",
+      "errorEmptyClanTag": "أدخل وسم العشيرة",
+      "clanAdded": "أُضيفت العشيرة بنجاح",
+      "errorAddingClan": "فشلت إضافة العشيرة",
+      "clanRemoved": "أزيلت العشيرة بنجاح",
+      "errorRemovingClan": "فشلت إزالة العشيرة",
+      "settingsSaved": "تم حفظ الإعدادات بنجاح",
       "errorSavingSettings": "فشل حفظ الإعدادات",
       "countdownEnabled": "أُنشئت قناة العد التنازلي الصوتية",
-      "countdownDisabled": "أُزيلت قناة العد التنازلي الصوتية",
+      "countdownDisabled": "أزيلت قناة العد التنازلي الصوتية",
       "errorTogglingCountdown": "فشل تبديل العد التنازلي"
     },
-    "listTitle": "Connected clans",
+    "listTitle": "العشائر المتصلة",
     "memberSummary": "{count, plural, one {# member} other {# members}}",
-    "memberCount": "{count}/50 members",
-    "searchLabel": "Search clans",
-    "searchPlaceholder": "Search by name, tag, or category",
-    "noSearchResults": "No clans match this search.",
-    "unknownClan": "Unknown clan",
-    "badgeAlt": "{name} clan badge",
-    "addedOn": "Added to this server {date}",
-    "addedOnLabel": "Show when {name} was added",
-    "configureClanLabel": "Configure {name}",
-    "deleteClan": "Delete clan"
+    "memberCount": "{count}/50 عضو",
+    "searchLabel": "البحث عن العشائر",
+    "searchPlaceholder": "البحث باسم العشيرة، التاج، أو القسم",
+    "noSearchResults": "لم يتم العثور على أي عشيرة.",
+    "unknownClan": "عشيرة غير معروفه",
+    "badgeAlt": "شعار عشيرة {name}",
+    "addedOn": "انضم إلى هذا الخادم بتاريخ {date}",
+    "addedOnLabel": "​عرض تاريخ انضمام {name}",
+    "configureClanLabel": "إعداد {name}",
+    "deleteClan": "حذف العشيرة"
   },
   "RolesPage": {
     "title": "إدارة الرتب",
@@ -1617,7 +1617,7 @@
       "achievement": "الإنجاز",
       "status": "مدة العضوية في Discord",
       "familyPosition": "المنصب في العائلة",
-      "clanCategory": "Clan Category"
+      "clanCategory": "قسم العشيرة"
     },
     "familyPositions": {
       "member": "عضو",
@@ -1631,7 +1631,7 @@
       "dragon": "التنين",
       "electroTitan": "التيتان الكهربائي",
       "pekka": "P.E.K.K.A",
-      "golem": "الغولم",
+      "golem": "الغول",
       "witch": "الساحرة",
       "valkyrie": "الفالكيري",
       "wizard": "الساحر",
@@ -1664,14 +1664,14 @@
       "wellSeasoned": "متمرس",
       "niceAndTidy": "جميل ومرتب",
       "empireBuilder": "باني الإمبراطورية",
-      "clanWarWealth": "ثروة حرب القبائل",
-      "friendInNeed": "صديق وقت الحاجة",
-      "sharingIsCaring": "المشاركة اهتمام",
+      "clanWarWealth": "غنائم حروب العشيرة",
+      "friendInNeed": "الصديق وقت الضيق",
+      "sharingIsCaring": "المشاركة هي الاهتمام",
       "siegeSharer": "مشارك آلات الحصار",
       "warHero": "بطل الحرب",
       "warLeagueLegend": "أسطورة دوري الحرب",
-      "gamesChampion": "بطل ألعاب القبيلة",
-      "unbreakable": "لا يُقهر",
+      "gamesChampion": "بطل ألعاب العشيرة",
+      "unbreakable": "غير قابل للكسر",
       "sweetVictory": "نصر رائع!",
       "conqueror": "الفاتح",
       "leagueAllStar": "نجم الدوري",
@@ -1681,10 +1681,10 @@
       "leagueFanatic": "مهووس الدوري",
       "leagueMaster": "سيد الدوري",
       "legendLeague": "دوري الأساطير",
-      "humiliator": "المُذلّ",
-      "notSoEasyThisTime": "لن تكون سهلة هذه المرة",
-      "unionBuster": "محطم الاتحاد",
-      "bustThis": "حطم هذا!",
+      "humiliator": "المذل",
+      "notSoEasyThisTime": "إنجاز ليس بهذه السهولة",
+      "unionBuster": "كاسر التحالفات",
+      "bustThis": "دمر هذا!",
       "wallBuster": "محطم الجدران",
       "mortarMauler": "مدمر الهاون",
       "xBowExterminator": "مبيد القوس-X",
@@ -1698,29 +1698,29 @@
       "firespitterFinisher": "قاضي نافث النار",
       "multiGearTowerTrampler": "مدمر برج التروس المتعدد",
       "craftersNightmare": "كابوس الحرفي",
-      "getThoseGoblins": "اقضِ على أولئك الغوبلن!",
+      "getThoseGoblins": "اقض على أولئك الغيلان!",
       "supercharger": "الشحن الفائق",
       "craftingConnoisseur": "خبير الصناعة",
-      "getThoseOtherGoblins": "اقضِ على أولئك الغوبلن الآخرين!",
-      "getEvenMoreGoblins": "اقضِ على المزيد من الغوبلن!",
+      "getThoseOtherGoblins": "اقض على أولئك الغيلان الآخرين!",
+      "getEvenMoreGoblins": "اقض على المزيد من الغيلان!",
       "dragonSlayer": "قاتل التنين",
-      "ungratefulChild": "الابن الجاحد",
+      "ungratefulChild": "الابن العاق",
       "superbWork": "عمل رائع",
       "masterEngineering": "هندسة متقنة",
       "hiddenTreasures": "كنوز مخفية",
       "highGear": "السرعة القصوى",
       "nextGenerationModel": "طراز الجيل القادم",
-      "unBuildIt": "فكّ البناء",
-      "championBuilder": "البنّاء البطل",
+      "unBuildIt": "فك البناء",
+      "championBuilder": "بطل البناء",
       "aggressiveCapitalism": "رأسمالية شرسة",
       "mostValuableClanmate": "أثمن زميل في القبيلة"
     },
     "configuredRoles": {
-      "title": "الرتب المعدّة",
-      "noRolesConfigured": "لم تُعد رتب من نوع {roleType}",
-      "addRoleToStart": "انقر على «إضافة رتبة» لإنشاء واحدة",
+      "title": "الرتب المهيأة",
+      "noRolesConfigured": "لم يتم تعيين أي رتب من نوع {roleType}",
+      "addRoleToStart": "انقر على \"إضافة رتبة\" لإنشاء واحدة",
       "discordRole": "رتبة Discord",
-      "criteria": "المعيار",
+      "criteria": "المعايير",
       "mode": "الوضع",
       "modeBoth": "إضافة وإزالة",
       "modeAdd": "إضافة فقط",
@@ -1743,7 +1743,7 @@
       "thPrefix": "TH",
       "league": "الدوري",
       "selectLeague": "اختر الدوري",
-      "builderHallLevel": "مستوى قاعة البناء",
+      "builderHallLevel": "مستوى قاعدة البناء",
       "selectBhLevel": "اختر مستوى قاعة البناء",
       "bhPrefix": "قاعة البنّاء",
       "builderLeague": "دوري البناء",
@@ -1773,19 +1773,19 @@
     "categoryRoles": {
       "title": "رتب الفئات",
       "description": "عيّن رتبة Discord لكل فئة قبائل. يحصل أعضاء القبائل في الفئة على الرتبة المقابلة تلقائيًا.",
-      "addButton": "إضافة فئة",
-      "categoryName": "الفئة",
-      "categoryNamePlaceholder": "اسم الفئة",
-      "noCategoryRoles": "لم تُعد رتب للفئات",
-      "noCategoryRolesDesc": "انقر على «إضافة فئة» لإنشاء واحدة",
-      "addTitle": "إضافة رتبة فئة",
+      "addButton": "إضافة قسم",
+      "categoryName": "قسم",
+      "categoryNamePlaceholder": "اسم القسم",
+      "noCategoryRoles": "لم يتم ضبط رتب للقسم",
+      "noCategoryRolesDesc": "انقر على \"إضافة قسم\" لإنشاء قسم جديد",
+      "addTitle": "إضافة رتبة للقسم",
       "addConfirm": "إضافة",
-      "errorCategoryRequired": "اسم الفئة مطلوب",
+      "errorCategoryRequired": "اسم القسم مطلوب",
       "errorRoleRequired": "رتبة Discord مطلوبة",
-      "errorCategoryExists": "هناك رتبة معدّة لهذه الفئة بالفعل"
+      "errorCategoryExists": "توجد رتبة مضافة لهذا القسم مسبقاً"
     },
     "toast": {
-      "changesSaved": "حُفظت التغييرات بنجاح!",
+      "changesSaved": "تم حفظ التغييرات بنجاح!",
       "errorLoading": "فشل تحميل الرتب",
       "errorSaving": "فشل حفظ الإعدادات",
       "errorAdding": "فشلت إضافة الرتبة",
@@ -1793,12 +1793,12 @@
     }
   },
   "RemindersPage": {
-    "title": "التذكيرات",
-    "description": "إعداد تذكيرات تلقائية للحروب والغارات وألعاب القبيلة وعدم النشاط",
+    "title": "التنبيهات",
+    "description": "إعداد التنبيهات تلقائية للحروب والغارات وألعاب القبيلة وعدم النشاط",
     "types": {
-      "war": "تذكيرات الحرب",
-      "capital": "عاصمة القبيلة",
-      "clanGames": "ألعاب القبيلة",
+      "war": "تنبيهات الحرب",
+      "capital": "عاصمة العشيرة",
+      "clanGames": "ألعاب العشيرة",
       "inactivity": "عدم النشاط"
     },
     "tabs": {
@@ -1808,54 +1808,54 @@
       "inactivity": "عدم النشاط"
     },
     "stats": {
-      "totalReminders": "إجمالي التذكيرات",
-      "totalRemindersDesc": "التذكيرات النشطة المعدّة",
-      "warReminders": "تذكيرات الحرب",
-      "warRemindersDesc": "الحروب العادية وCWL",
-      "capitalReminders": "تذكيرات العاصمة",
-      "capitalRemindersDesc": "هجمات عطلة الغارات",
-      "otherReminders": "تذكيرات أخرى",
+      "totalReminders": "إجمالي التنبيهات",
+      "totalRemindersDesc": "تم إعداد تنبيهات نشطة",
+      "warReminders": "تنبيهات الحرب",
+      "warRemindersDesc": "الحروب العادية ودوري حروب العشائر (CWL)",
+      "capitalReminders": "تنبيهات العاصمة",
+      "capitalRemindersDesc": "هجمات غارات نهاية الأسبوع",
+      "otherReminders": "تنبيهات أخرى",
       "otherRemindersDesc": "الألعاب وعدم النشاط"
     },
     "actions": {
       "saving": "جارٍ الحفظ...",
       "saveChanges": "حفظ التغييرات",
-      "addReminder": "إضافة تذكير",
-      "addWarReminder": "إضافة تذكير حرب",
-      "addCapitalReminder": "إضافة تذكير عاصمة",
-      "addClanGamesReminder": "إضافة تذكير ألعاب القبيلة",
-      "addInactivityReminder": "إضافة تذكير عدم النشاط",
+      "addReminder": "إضافة تنبيه",
+      "addWarReminder": "إضافة تنبيه حرب",
+      "addCapitalReminder": "إضافة تنبيه العاصمة",
+      "addClanGamesReminder": "إضافة تنبيه ألعاب القبيلة",
+      "addInactivityReminder": "إضافة تنبيه عدم النشاط",
       "retry": "إعادة المحاولة",
-      "clone": "Clone reminder",
-      "edit": "Edit reminder",
-      "delete": "Delete reminder",
-      "more": "Reminder actions"
+      "clone": "نسخ التنبيه",
+      "edit": "تعديل التنبيه",
+      "delete": "حذف التنبيه",
+      "more": "إجراءات التنبيه"
     },
     "clanSelector": {
-      "label": "القبيلة",
-      "placeholder": "اختر قبيلة",
+      "label": "العشيرة:",
+      "placeholder": "اختر عشيرة",
       "allClans": "جميع القبائل"
     },
     "empty": {
-      "noWarReminders": "لا توجد تذكيرات حرب",
-      "noCapitalReminders": "لا توجد تذكيرات عاصمة",
-      "noClanGamesReminders": "لا توجد تذكيرات ألعاب قبيلة",
-      "noInactivityReminders": "لا توجد تذكيرات عدم نشاط",
-      "getStarted": "أنشئ تذكيرك الأول للبدء"
+      "noWarReminders": "لا توجد تنبيهات حرب",
+      "noCapitalReminders": "لا توجد تنبيهات عاصمة",
+      "noClanGamesReminders": "لا توجد تنبيهات ألعاب قبيلة",
+      "noInactivityReminders": "لا توجد تنبيهات عدم نشاط",
+      "getStarted": "ابدأ بإنشاء تذكيرك الأول"
     },
     "card": {
       "new": "جديد",
       "before": "قبل",
       "timeBefore": "الوقت المتبقي",
       "timeBeforePlaceholder": "مثلاً: 6",
-      "timeInactive": "عدم نشاط لمدة",
+      "timeInactive": "​مدة عدم النشاط",
       "timeInactivePlaceholder": "مثلاً: 160",
       "timeUnit": "ساعات",
-      "hoursRemaining": "ساعات متبقية",
+      "hoursRemaining": "الساعات المتبقية",
       "channel": "القناة",
       "channelPlaceholder": "اختر قناة",
-      "threadOptional": "سلسلة المحادثات (اختياري)",
-      "threadPlaceholder": "اختر سلسلة محادثات",
+      "threadOptional": "قناة فرعية (اختياري)",
+      "threadPlaceholder": "اختر قناة فرعية",
       "noThread": "النشر مباشرة في القناة",
       "forumPost": "منشور منتدى",
       "forumPostPlaceholder": "اختر منشور منتدى",
@@ -1865,7 +1865,7 @@
       "customMessage": "رسالة مخصصة",
       "customMessagePlaceholder": "لا تنس استخدام هجماتك!",
       "customMessagePlaceholderClanGames": "حاول جمع المزيد من النقاط في ألعاب القبيلة!",
-      "customMessagePlaceholderInactivity": "لم تنشط في القبيلة منذ فترة :(",
+      "customMessagePlaceholderInactivity": "​مستوى نشاطك في العشيرة منخفض مؤخراً :(",
       "warTypes": "أنواع الحرب",
       "random": "عشوائية",
       "friendly": "ودية",
@@ -1877,10 +1877,10 @@
       "attackThresholdPlaceholder": "1",
       "attackThresholdHelp": "سيشير إلى من تبقى لديهم {threshold} هجمات أو أكثر.",
       "notSet": "غير محدد",
-      "pointsValue": "{count} points",
+      "pointsValue": "{count} نقطة",
       "attacksValue": "{count, plural, one {1 attack remaining} other {# attacks remaining}}",
-      "customImageAlt": "Custom reminder image",
-      "customGifTitle": "Custom reminder GIF"
+      "customImageAlt": "صورة تذكير مخصصة",
+      "customGifTitle": "صورة متحركة GIF مخصصة للتذكير"
     },
     "dialog": {
       "addTitle": "إضافة تذكير جديد",
@@ -1896,49 +1896,49 @@
     },
     "toast": {
       "errorTitle": "خطأ",
-      "errorLoadingReminders": "فشل تحميل التذكيرات. حاول مجددًا.",
-      "reminderAdded": "أُضيف التذكير بنجاح",
-      "reminderAddedDesc": "أُضيف تذكير جديد من نوع {type}. لا تنس الحفظ!",
-      "reminderUpdated": "حُدّث التذكير بنجاح",
-      "successTitle": "نجاح",
-      "reminderDeleted": "حُذف التذكير بنجاح",
+      "errorLoadingReminders": "تعذر تحميل الإشعارات. يرجى إعادة المحاولة.",
+      "reminderAdded": "تم حفظ الإشعارات بنجاح",
+      "reminderAddedDesc": "تمت إضافة تذكير {type} جديد. لا تنسَ الحفظ!",
+      "reminderUpdated": "تم تحديث التذكير بنجاح",
+      "successTitle": "تم بنجاح",
+      "reminderDeleted": "تم حذف التذكير بنجاح",
       "failedToDelete": "فشل حذف التذكير",
-      "allRemindersSaved": "حُفظت جميع التذكيرات بنجاح",
-      "failedToSave": "فشل حفظ التذكيرات",
-      "forumPostRequired": "اختر منشور منتدى قبل حفظ التذكير.",
-      "invalidDestination": "السلسلة المحددة لا تنتمي إلى هذه القناة.",
+      "allRemindersSaved": "تم حفظ جميع الإشعارات بنجاح",
+      "failedToSave": "فشل حفظ الإشعارات",
+      "forumPostRequired": "يرجى تحديد منشور في المنتدى قبل حفظ هذا التذكير.",
+      "invalidDestination": "الموضوع المحدد لا ينتمي إلى هذه القناة.",
       "timeExceedsLimit": "يجب أن يكون الوقت المتبقي بين {min} و{max} ساعة",
       "pointThresholdInvalid": "يجب أن يكون حد النقاط بين {min} و{max}",
       "attackThresholdInvalid": "يجب أن يكون حد الهجمات بين {min} و{max}",
-      "reminderCloned": "Reminder cloned successfully",
-      "failedToClone": "Failed to clone reminder"
+      "reminderCloned": "تم نسخ التذكير بنجاح",
+      "failedToClone": "تعذر في نسخ التذكير"
     },
     "section": {
-      "title": "Configured reminders",
-      "description": "Filter by clan, then choose a reminder type to review or change its delivery."
+      "title": "التنبيهات المضافة",
+      "description": "فلتر حسب العشيرة، ثم اختر نوع التذكير لمراجعة طريقه تسليمه أو تعديلها."
     },
     "issues": {
       "title": "{count, plural, one {1 reminder needs attention} other {# reminders need attention}}",
-      "description": "These reminders point to a channel, thread, or forum post that is no longer available.",
-      "channelMissing": "Channel {channelId} was deleted or is unavailable",
-      "threadMissing": "Thread or forum post was deleted or is unavailable",
-      "showDetails": "Show details",
-      "hideDetails": "Hide details",
-      "review": "Review"
+      "description": "تشير هذه الإشعارات إلى قناة أو منشور أو موضوع لم يعد متاحاً.",
+      "channelMissing": "القناة {channelId} محذوفة أو غير متاحة",
+      "threadMissing": "الموضوع أو منشور المنتدى محذوف أو غير متاح",
+      "showDetails": "عرض التفاصيل",
+      "hideDetails": "إخفاء التفاصيل",
+      "review": "مراجعة"
     },
     "clone": {
-      "title": "Clone reminder",
-      "description": "Choose a different clan. The time, channel, message, and all other settings will stay the same.",
-      "targetClan": "New clan",
-      "selectClan": "Select a different clan",
-      "noOtherClans": "Add another clan to this server before cloning this reminder.",
-      "action": "Clone reminder",
-      "cloning": "Cloning..."
+      "title": "نسخ التذكير",
+      "description": "اختر كلاناً آخر. ستبقى المواعيد والقناة والرسالة وكافة الإعدادات الأخرى كما هي.",
+      "targetClan": "كلان جديد",
+      "selectClan": "اختر كلاناً آخر",
+      "noOtherClans": "أضف كلاناً آخر إلى هذا الخادم قبل نسخ هذا التذكير.",
+      "action": "نسخ التذكير",
+      "cloning": "جاري النسخ..."
     }
   },
   "LogsPage": {
     "title": "سجلات النشاط",
-    "description": "إعداد التسجيل التلقائي لأنشطة القبيلة واللاعبين",
+    "description": "إعداد التسجيل التلقائي لأنشطة العشيرة واللاعبين",
     "stats": {
       "activeLogs": "السجلات النشطة",
       "activeLogsDesc": "عبر جميع قبائل العائلة وسجلات الخادم",
@@ -1947,39 +1947,39 @@
       "trackedClans": "القبائل المتتبعة",
       "trackedClansDesc": "القبائل المعدّة",
       "issues": "المشكلات",
-      "issuesDesc": "عبر العائلة بأكملها"
+      "issuesDesc": "العائلة بالكامل"
     },
     "clanSelector": {
-      "label": "القبيلة",
-      "placeholder": "اختر قبيلة"
+      "label": "العشيرة:",
+      "placeholder": "اختر عشيرة"
     },
     "tabs": {
-      "clan": "القبيلة",
+      "clan": "العشيرة",
       "war": "الحرب",
       "capital": "عاصمة",
       "player": "لاعب",
       "server": "الخادم",
-      "countdowns": "Countdowns"
+      "countdowns": "العد التنازلي"
     },
     "clanLogs": {
       "joinLog": {
-        "label": "انضمام عضو",
-        "description": "تتبّع الأعضاء المنضمين إلى القبيلة"
+        "label": "دخول الأعضاء",
+        "description": "​متابعة انضمام الأعضاء للعشيرة"
       },
       "leaveLog": {
         "label": "مغادرة عضو",
-        "description": "تتبّع الأعضاء المغادرين للقبيلة"
+        "description": "متابعة خروج الأعضاء من العشيرة"
       },
       "donationLog": {
-        "label": "تبرعات العضو",
+        "label": "تبرعات الأعضاء",
         "description": "تتبّع تبرعات القوات والتعويذات"
       },
       "clanAchievementLog": {
-        "label": "إنجازات القبيلة",
-        "description": "تتبّع إنجازات القبيلة المكتسبة"
+        "label": "إنجازات العشيرة",
+        "description": "تتبّع إنجازات العشيرة المكتسبة"
       },
       "clanRequirementsLog": {
-        "label": "متطلبات القبيلة",
+        "label": "متطلبات العشيرة",
         "description": "تتبّع تغييرات متطلبات القبيلة"
       },
       "clanDescriptionLog": {
@@ -2004,11 +2004,11 @@
       },
       "warPanel": {
         "label": "لوحة الحرب",
-        "description": "لوحة حرب تفاعلية بتحديثات مباشرة"
+        "description": "لوحة حرب تفاعلية بتحديثات لحظياً"
       },
       "cwlLineupChangeLog": {
-        "label": "تغيير تشكيلة CWL",
-        "description": "تتبّع تغييرات تشكيلة CWL"
+        "label": "تغيير تشكيلة حرب الدوري CWL",
+        "description": "متابعة تعديلات تشكيلة حرب الدوري CWL"
       }
     },
     "capitalLogs": {
@@ -2064,7 +2064,7 @@
       },
       "nameChange": {
         "label": "تغيير الاسم",
-        "description": "تتبّع تغييرات أسماء اللاعبين"
+        "description": "متابعة تغييرات أسماء اللاعبين"
       },
       "legendLogAttacks": {
         "label": "هجمات الأسطورة",
@@ -2099,90 +2099,90 @@
       "example": "مثال"
     },
     "source": {
-      "title": "Choose what you're configuring",
-      "description": "Select a Clan for clan-specific logs & setup or the server for server-wide logs & setup",
-      "label": "Server or clan",
-      "placeholder": "Select a server or clan",
-      "searchPlaceholder": "Search server or clans",
-      "serverDescription": "Logs, countdowns, and join panel",
-      "serverFallback": "This server"
+      "title": "اختر ما تريد إعداده",
+      "description": "اختر عشيرة للسجلات والإعدادات الخاصة بالعشيرة، أو الخادم للسجلات والإعدادات على مستوى الخادم",
+      "label": "الخادم أو العشيرة",
+      "placeholder": "اختر خادمًا أو عشيرة",
+      "searchPlaceholder": "البحث عن خادم أو عشائر",
+      "serverDescription": "السجلات، مؤقتات العد التنازلي، ولوحة الانضمام",
+      "serverFallback": "هذا الخادم"
     },
     "scope": {
-      "clan": "Clan",
-      "server": "Server",
-      "serverTitle": "Server logs",
-      "serverDescription": "These feeds apply to the whole Discord server and do not change with the selected clan."
+      "clan": "العشيرة",
+      "server": "الخادم",
+      "serverTitle": "سجلات الخادم",
+      "serverDescription": "تنطبق هذه الخلاصات على خادم Discord بالكامل ولا تتغير بتغير العشيرة المحدد."
     },
     "issues": {
       "title": "{count, plural, one {1 destination needs attention} other {# destinations need attention}}",
-      "description": "These enabled logs point to a channel, thread, or forum post that is no longer available.",
-      "serverScope": "Server-wide",
-      "channelMissing": "Channel {channelId} was deleted or is unavailable",
-      "threadMissing": "Thread or forum post was deleted or is unavailable",
-      "showDetails": "Show details",
-      "hideDetails": "Hide details",
-      "review": "Review"
+      "description": "تشير هذه السجلات المفعلة إلى قناة أو ثريد أو منشور منتدى لم يعد متاحاً.",
+      "serverScope": "على مستوى الخادم",
+      "channelMissing": "القناة {channelId} تم حذفها أو غير متاحة",
+      "threadMissing": "تم حذف الثريد أو منشور المنتدى أو أنه غير متاح",
+      "showDetails": "عرض التفاصيل",
+      "hideDetails": "إخفاء التفاصيل",
+      "review": "مراجعة"
     },
-    "emptyClans": "Add a clan to this server before configuring clan logs.",
+    "emptyClans": "أضف عشيرة إلى هذا الخادم قبل إعداد سجلات العشيرة.",
     "serverTabs": {
-      "logs": "Logs",
-      "countdowns": "Countdowns",
-      "joinPanel": "Join panel"
+      "logs": "السجلات",
+      "countdowns": "العد التنازلي",
+      "joinPanel": "لوحة الانضمام"
     },
     "countdowns": {
-      "loadError": "Failed to load countdowns.",
-      "updateError": "Failed to update the countdown.",
-      "empty": "No countdown types are available.",
-      "toggle": "Toggle {name}",
+      "loadError": "فشل تحميل العد التنازلي.",
+      "updateError": "فشل تحديث العد التنازلي.",
+      "empty": "لا تتوفر أي أنواع للعد التنازلي.",
+      "toggle": "تبديل {name}",
       "types": {
         "clan_games_timer": {
-          "label": "Clan Games",
-          "description": "Show the time remaining in Clan Games in a voice channel."
+          "label": "ألعاب القبيلة",
+          "description": "عرض الوقت المتبقي لمباريات القبيلة في قناة صوتية."
         },
         "cwl_timer": {
-          "label": "Clan War League",
-          "description": "Show the time remaining in Clan War League in a voice channel."
+          "label": "دوري حرب القبائل",
+          "description": "عرض الوقت المتبقي لدوري حرب القبائل في قناة صوتية."
         },
         "raid_weekend_timer": {
-          "label": "Raid Weekend",
-          "description": "Show the time remaining in Raid Weekend in a voice channel."
+          "label": "عطلة الهجمات",
+          "description": "عرض الوقت المتبقي لعطلة نهاية الأسبوع للهجمات في قناة صوتية."
         },
         "season_end_timer": {
-          "label": "Season end",
-          "description": "Show the time remaining in the current season in a voice channel."
+          "label": "نهاية الموسم",
+          "description": "عرض الوقت المتبقي للموسم الحالي في قناة صوتية."
         },
         "season_day_timer": {
-          "label": "Season day",
-          "description": "Show the current season day in a voice channel."
+          "label": "يوم الموسم",
+          "description": "عرض يوم الموسم الحالي في قناة صوتية."
         },
         "war_score": {
-          "label": "War score",
-          "description": "Show this clan's current war score in a voice channel."
+          "label": "نتيجة الحرب",
+          "description": "عرض نتيجة الحرب الحالية لهذه القبيلة في قناة صوتية."
         },
         "war_timer": {
-          "label": "War timer",
-          "description": "Show the time remaining in this clan's current war in a voice channel."
+          "label": "مؤقت الحرب",
+          "description": "عرض الوقت المتبقي للحرب الحالية لهذه القبيلة في قناة صوتية."
         }
       }
     }
   },
   "GeneralPage": {
     "title": "الإعدادات العامة",
-    "description": "إعداد سلوك البوت ومظهره على مستوى الخادم",
+    "description": "تكوين سلوك ومظهر البوت على مستوى الخادم",
     "loading": "جارٍ تحميل الإعدادات...",
     "reset": "إعادة تعيين",
     "saving": "جارٍ الحفظ...",
     "saveChanges": "حفظ التغييرات",
-    "settingsSaved": "حُفظت الإعدادات بنجاح!",
+    "settingsSaved": "تم حفظ الإعدادات بنجاح!",
     "infoBanner": {
       "title": "هل تبحث عن إعدادات أخرى؟",
-      "description": "توجد رتب العائلة وإعدادات الألقاب في صفحة **إعدادات العائلة**، وإدارة الرتب في صفحة **الرتب**، أما رتب القبائل واختصاراتها وفئاتها وقنوات العد التنازلي للحروب فتوجد في صفحة **القبائل**."
+      "description": "توجد إعدادات رتب العائلة والأسماء المستعارة في صفحة **إعدادات العائلة**. وتوجد إعدادات إدارة الرتب في صفحة **الرتب**. بينما توجد رتب العشيرة، الاختصارات، الفئات، وعروض الحرب التنازلية في صفحة **العشائر**."
     },
     "nickname": {
-      "title": "إدارة الألقاب",
-      "description": "التحكم في تنسيق الألقاب",
+      "title": "إدارة الأسماء المستعارة",
+      "description": "التحكم في كيفية تنسيق الأسماء المستعارة",
       "automaticChanges": "التغييرات التلقائية",
-      "automaticChangesDesc": "السماح للبوت بتحديث ألقاب الأعضاء",
+      "automaticChangesDesc": "السماح للبوت بتحديث الأسماء المستعارة للأعضاء",
       "familyFormat": "تنسيق أعضاء العائلة",
       "availablePlaceholders": "العناصر النائبة المتاحة",
       "preview": "معاينة",

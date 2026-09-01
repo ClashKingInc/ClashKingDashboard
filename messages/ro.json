@@ -420,7 +420,7 @@
       },
       "list": {
         "title": "Jucători interziși",
-        "count": "{count, plural, one {# jucător interzis} other {# jucători interziși}}",
+        "count": "{count} player{count, plural, one {} other {s}} banned",
         "searchPlaceholder": "Caută după nume, etichetă sau motiv...",
         "noBansFound": "Nu au fost găsite interdicții",
         "noBans": "Niciun jucător interzis",
@@ -490,7 +490,7 @@
       },
       "list": {
         "title": "Avertismentele jucătorilor",
-        "count": "{count, plural, one {# avertisment emis} other {# avertismente emise}}",
+        "count": "{count} strike{count, plural, one {} other {s}} issued",
         "searchPlaceholder": "Caută după nume, etichetă sau motiv...",
         "noStrikesFound": "Nu au fost găsite avertismente",
         "noStrikes": "Niciun avertisment emis",
@@ -971,6 +971,8 @@
       "editTitle": "Editează automatizarea",
       "createDesc": "Programează o acțiune automată",
       "actionType": "Tipul acțiunii",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "Momentul față de eveniment",
       "offsetBefore": "Înaintea evenimentului",
       "offsetAfter": "După eveniment",
@@ -1016,9 +1018,7 @@
         "roster_clear": "Elimină toți membrii din listă fără a o șterge",
         "roster_archive": "Arhivează lista și o transformă în una doar pentru citire"
       },
-      "infoBox": "Automatizările sunt activate în raport cu ora de începere a evenimentului. Stabilește un decalaj (de ex., cu 3 zile înainte), iar botul va executa automat acțiunea la momentul stabilit, inclusiv pentru evenimente recurente.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "Automatizările sunt activate în raport cu ora de începere a evenimentului. Stabilește un decalaj (de ex., cu 3 zile înainte), iar botul va executa automat acțiunea la momentul stabilit, inclusiv pentru evenimente recurente."
     },
     "groups": {
       "title": "Grupuri de liste",
@@ -3082,8 +3082,8 @@
       "start": "Începe",
       "end": "Se termină",
       "winnersHeader": "Câștigători",
-      "winners": "{count, plural, one {# câștigător} other {# câștigători}}",
-      "boosters": "{count, plural, one {# multiplicator} other {# multiplicatori}}",
+      "winners": "{count} winner{count, plural, one {} other {s}}",
+      "boosters": "{count} booster{count, plural, one {} other {s}}",
       "noChannel": "Fără canal",
       "noChannelHelp": "Nu este atribuit niciun canal. Editează concursul pentru a corecta situația.",
       "endsAt": "Se termină la",
@@ -3195,7 +3195,7 @@
       "notScheduled": "Neprogramat",
       "schedule": "Programare",
       "endMessage": "Mesaj pentru câștigători",
-      "endSummary": "{winners, plural, one {Aici va fi anunțat # câștigător.} other {Aici vor fi anunțați # câștigători.}}",
+      "endSummary": "{winners} winner{winners, plural, one {} other {s}} will be announced here.",
       "totalParticipants": "Total de participanți: {count}",
       "participate": "Participă",
       "buttonHint": "Butonul principal de acțiune de sub postarea Discord."
