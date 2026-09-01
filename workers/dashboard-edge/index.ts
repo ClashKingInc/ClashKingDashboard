@@ -12,6 +12,7 @@ interface AssetEnv {
 const dashboardRoutePrefixes = [
   "/admin",
   "/auth",
+  "/connect",
   "/dashboard",
   "/login",
   "/servers",
@@ -63,9 +64,24 @@ export function resolveRscAssetUrl(request: Request): URL | null {
   return assetUrl;
 }
 
+export function resolveConnectAssetUrl(request: Request): URL | null {
+  if (request.method !== "GET" && request.method !== "HEAD") return null;
+
+  const assetUrl = new URL(request.url);
+  const segments = assetUrl.pathname.split("/").filter(Boolean);
+  if (segments.length !== 2 || segments[0] !== "connect") return null;
+
+  assetUrl.pathname = "/connect";
+  return assetUrl;
+}
+
 export async function fetchAsset(request: Request, env: AssetEnv): Promise<Response> {
-  const rscAssetUrl = resolveRscAssetUrl(request);
-  if (!rscAssetUrl) return env.ASSETS.fetch(request);
+  const connectAssetUrl = resolveConnectAssetUrl(request);
+  const assetRequest = connectAssetUrl
+    ? new Request(connectAssetUrl.toString(), request)
+    : request;
+  const rscAssetUrl = resolveRscAssetUrl(assetRequest);
+  if (!rscAssetUrl) return env.ASSETS.fetch(assetRequest);
 
   const response = await env.ASSETS.fetch(new Request(rscAssetUrl.toString(), request));
   if (!response.ok || response.headers.get("Content-Type")?.startsWith("text/html")) {

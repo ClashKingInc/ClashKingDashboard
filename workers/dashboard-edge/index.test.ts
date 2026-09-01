@@ -1,5 +1,11 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { fetchAsset, handleDashboardRequest, resolveDomainRedirect, resolveRscAssetUrl } from "./index";
+import {
+  fetchAsset,
+  handleDashboardRequest,
+  resolveConnectAssetUrl,
+  resolveDomainRedirect,
+  resolveRscAssetUrl,
+} from "./index";
 
 afterEach(() => vi.unstubAllGlobals());
 
@@ -10,7 +16,7 @@ describe("resolveDomainRedirect", () => {
     );
   });
 
-  it.each(["/servers", "/login", "/auth/callback", "/dashboard", "/dashboard/roles", "/admin/creators"])(
+  it.each(["/servers", "/login", "/auth/callback", "/connect/app_123", "/dashboard", "/dashboard/roles", "/admin/creators"])(
     "moves the application route %s from the marketing host to the dashboard host",
     (pathname) => {
       const redirect = resolveDomainRedirect(
@@ -37,6 +43,47 @@ describe("resolveDomainRedirect", () => {
     "https://app.clashk.ing/",
   ])("serves %s without a domain redirect", (url) => {
     expect(resolveDomainRedirect(new URL(url))).toBeNull();
+  });
+});
+
+describe("permanent connect URLs", () => {
+  it("serves an arbitrary application ID from the static connect page", () => {
+    const request = new Request(
+      "https://dash.clashk.ing/connect/app_123?redirect_uri=https%3A%2F%2Fexample.com%2Fcallback&state=opaque",
+    );
+
+    expect(resolveConnectAssetUrl(request)?.toString()).toBe(
+      "https://dash.clashk.ing/connect?redirect_uri=https%3A%2F%2Fexample.com%2Fcallback&state=opaque",
+    );
+  });
+
+  it("does not rewrite malformed or unrelated connect paths", () => {
+    expect(resolveConnectAssetUrl(new Request("https://dash.clashk.ing/connect"))).toBeNull();
+    expect(resolveConnectAssetUrl(new Request("https://dash.clashk.ing/connect/app_123/extra"))).toBeNull();
+    expect(resolveConnectAssetUrl(new Request("https://dash.clashk.ing/dashboard/connect/app_123"))).toBeNull();
+  });
+
+  it("maps connect-page navigation to the generated static RSC asset", async () => {
+    let fetchedUrl = "";
+    const env = {
+      ASSETS: {
+        fetch: async (request: Request) => {
+          fetchedUrl = request.url;
+          return new Response("rsc payload", {
+            headers: { "Content-Type": "application/octet-stream" },
+          });
+        },
+      },
+    };
+    const request = new Request(
+      "https://dash.clashk.ing/connect/app_123?state=opaque&_rsc=cache-key",
+      { headers: { Accept: "text/x-component", RSC: "1" } },
+    );
+
+    const response = await fetchAsset(request, env);
+
+    expect(fetchedUrl).toBe("https://dash.clashk.ing/connect.rsc?state=opaque");
+    expect(response.headers.get("Content-Type")).toBe("text/x-component");
   });
 });
 
