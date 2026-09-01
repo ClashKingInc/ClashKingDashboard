@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { beforeEach, describe, expect, it } from "vitest";
 import { LocaleProvider, useAppLocale } from "./locale-provider";
 import {
@@ -10,11 +10,13 @@ import {
 
 function LocaleProbe() {
   const locale = useLocale();
+  const connectedApps = useTranslations("ConnectedApps.connect");
   const { mode, setDashboardLocale } = useAppLocale();
   return (
     <>
       <span>{locale}</span>
       <span data-testid="locale-mode">{mode}</span>
+      <span data-testid="connected-app-fallback">{connectedApps("title", { application: "Test app" })}</span>
       <button type="button" onClick={() => setDashboardLocale("nl", "manual")}>
         Dutch
       </button>
@@ -153,6 +155,20 @@ describe("LocaleProvider", () => {
 
     await waitFor(() => expect(screen.getByText("fr")).toBeInTheDocument());
     expect(document.documentElement.lang).toBe("fr");
+  });
+
+  it("uses an explicit English fallback for untranslated connected-app consent copy", async () => {
+    localStorage.setItem(DASHBOARD_LOCALE_STORAGE_KEY, "de");
+    localStorage.setItem(DASHBOARD_LOCALE_MODE_STORAGE_KEY, "manual");
+
+    render(
+      <LocaleProvider>
+        <LocaleProbe />
+      </LocaleProvider>,
+    );
+
+    await waitFor(() => expect(screen.getByText("de")).toBeInTheDocument());
+    expect(screen.getByTestId("connected-app-fallback")).toHaveTextContent("Connect Test app");
   });
 
   it("changes the Dashboard locale without changing its URL", async () => {

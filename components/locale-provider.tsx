@@ -4,6 +4,11 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import { NextIntlClientProvider } from "next-intl";
 import englishMessages from "@/messages/en.json";
 import {
+  withEnglishFallback,
+  type LocalizedMessageCatalog,
+  type MessageCatalog,
+} from "@/lib/message-catalog";
+import {
   DASHBOARD_LOCALE_MODE_STORAGE_KEY,
   DASHBOARD_LOCALE_STORAGE_KEY,
   getPublicRoute,
@@ -13,12 +18,10 @@ import {
   type SupportedLocale,
 } from "@/lib/locale-preference";
 
-type Messages = typeof englishMessages;
+const loadMessages = async (loader: () => Promise<{ default: unknown }>): Promise<LocalizedMessageCatalog> =>
+  (await loader()).default as LocalizedMessageCatalog;
 
-const loadMessages = async (loader: () => Promise<{ default: unknown }>): Promise<Messages> =>
-  (await loader()).default as Messages;
-
-const messageLoaders: Record<SupportedLocale, () => Promise<Messages>> = {
+const messageLoaders: Record<SupportedLocale, () => Promise<LocalizedMessageCatalog>> = {
   en: async () => englishMessages,
   af: () => loadMessages(() => import("@/messages/af.json")),
   ar: () => loadMessages(() => import("@/messages/ar.json")),
@@ -80,13 +83,13 @@ export function updateDashboardLocale(locale: SupportedLocale, mode: LocaleMode)
 
 export function LocaleProvider({ children }: { readonly children: React.ReactNode }) {
   const [locale, setLocale] = useState<SupportedLocale>("en");
-  const [messages, setMessages] = useState<Messages>(englishMessages);
+  const [messages, setMessages] = useState<MessageCatalog>(englishMessages);
   const [mode, setMode] = useState<LocaleMode>("manual");
   const localeRequestId = useRef(0);
 
   const applyLocale = useCallback(async (nextLocale: SupportedLocale) => {
     const requestId = ++localeRequestId.current;
-    const nextMessages = await messageLoaders[nextLocale]();
+    const nextMessages = withEnglishFallback(await messageLoaders[nextLocale]());
     if (requestId !== localeRequestId.current) return;
     setMessages(nextMessages);
     setLocale(nextLocale);

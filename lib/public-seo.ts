@@ -3,6 +3,7 @@ import englishMessages from "@/messages/en.json";
 import frenchMessages from "@/messages/fr.json";
 import dutchMessages from "@/messages/nl.json";
 import { publicPath, type PublicLocale } from "@/lib/locale-preference";
+import { withEnglishFallback, type MessageCatalog } from "@/lib/message-catalog";
 
 export type PublicPage = "home" | "privacy" | "terms";
 
@@ -11,9 +12,9 @@ const SOCIAL_IMAGE = `${SITE_ORIGIN}/og/clashking-landing.png`;
 
 const messages = {
   en: englishMessages,
-  fr: frenchMessages,
-  nl: dutchMessages,
-} satisfies Record<PublicLocale, typeof englishMessages>;
+  fr: withEnglishFallback(frenchMessages),
+  nl: withEnglishFallback(dutchMessages),
+} satisfies Record<PublicLocale, MessageCatalog>;
 
 const pagePaths = {
   home: "/",
