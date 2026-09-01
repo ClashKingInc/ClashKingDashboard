@@ -12,6 +12,7 @@ export interface ConnectedApplicationMetadata {
 export interface ShareableAccount {
   player_tag: string;
   name: string;
+  is_verified: boolean;
   hidden: boolean;
 }
 

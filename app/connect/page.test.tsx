@@ -61,8 +61,8 @@ describe("ConnectApplicationPage", () => {
       data: {
         application: { id: "app_123", name: "Roster Tool", developer_name: "Example Dev" },
         accounts: [
-          { player_tag: "#AAA", name: "Alpha", hidden: false },
-          { player_tag: "#BBB", name: "Beta", hidden: true },
+          { player_tag: "#AAA", name: "Alpha", is_verified: true, hidden: false },
+          { player_tag: "#BBB", name: "Beta", is_verified: false, hidden: true },
         ],
         grant: null,
       },
@@ -107,6 +107,23 @@ describe("ConnectApplicationPage", () => {
     await waitFor(() => {
       expect(testState.updateGrant).toHaveBeenCalledWith("app_123", {
         access_mode: "all_current_and_future",
+      });
+    });
+  });
+
+  it("allows explicit selection of an unverified hidden account", async () => {
+    render(<ConnectApplicationPage />);
+
+    await screen.findByRole("heading", { name: "Connect Roster Tool" });
+    expect(screen.getByText("status.unverified")).toBeInTheDocument();
+    expect(screen.getByText("status.hidden")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("checkbox", { name: "Share Beta" }));
+    fireEvent.click(screen.getByRole("button", { name: "connect" }));
+
+    await waitFor(() => {
+      expect(testState.updateGrant).toHaveBeenCalledWith("app_123", {
+        access_mode: "selected",
+        player_tags: ["#BBB"],
       });
     });
   });

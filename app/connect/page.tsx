@@ -271,7 +271,7 @@ export default function ConnectApplicationPage() {
           <div className="mt-5 rounded-2xl bg-muted/30 p-3 sm:p-4">
             <p className="px-1 text-sm font-medium">{t("accountsTitle")}</p>
             {details.accounts.length === 0 ? (
-              <p className="px-1 pt-3 text-sm text-muted-foreground">{t("noVerifiedAccounts")}</p>
+              <p className="px-1 pt-3 text-sm text-muted-foreground">{t("noLinkedAccounts")}</p>
             ) : (
               <div className="mt-2 space-y-2">
                 {details.accounts.map((account) => (
@@ -283,7 +283,15 @@ export default function ConnectApplicationPage() {
                     />
                     <span className="min-w-0 flex-1">
                       <span className="block truncate text-sm font-medium">{account.name}</span>
-                      <span className="block text-xs text-muted-foreground">{account.player_tag}</span>
+                      <span className="mt-0.5 block text-xs text-muted-foreground">{account.player_tag}</span>
+                      <span className="mt-2 flex flex-wrap gap-1.5">
+                        <span className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${account.is_verified ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300" : "bg-amber-500/15 text-amber-700 dark:text-amber-300"}`}>
+                          {account.is_verified ? t("status.verified") : t("status.unverified")}
+                        </span>
+                        <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
+                          {account.hidden ? t("status.hidden") : t("status.visible")}
+                        </span>
+                      </span>
                     </span>
                   </label>
                 ))}
