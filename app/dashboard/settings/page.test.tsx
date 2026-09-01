@@ -9,7 +9,6 @@ const testState = vi.hoisted(() => ({
   createCheckout: vi.fn(),
   createPortal: vi.fn(),
   updateAssignment: vi.fn(),
-  listConnectedApps: vi.fn(),
 }));
 
 vi.mock("next/image", () => ({
@@ -49,7 +48,6 @@ vi.mock("next-intl", () => ({
       "usage.freePoolInfo": "Shared free usage details",
       "usage.progressLabel": "Usage progress",
       "usage.resets": "Resets soon",
-      empty: "No connected apps.",
     };
     return messages[key] ?? key;
   },
@@ -74,7 +72,6 @@ vi.mock("@/lib/api/client", () => ({
       updateAssignment: testState.updateAssignment,
     },
     servers: { getGuilds: testState.getGuilds },
-    connectedApps: { listGrants: testState.listConnectedApps },
   },
 }));
 
@@ -108,7 +105,6 @@ describe("AccountSettingsPage", () => {
         inactive: false,
       }],
     });
-    testState.listConnectedApps.mockResolvedValue({ data: { items: [] } });
   });
 
   it("renders without LocaleProvider, locks assignment on the free plan, and never exposes the server ID", async () => {
@@ -125,6 +121,5 @@ describe("AccountSettingsPage", () => {
     );
     expect(screen.getByText("Usage for ClashKing this month.")).toBeInTheDocument();
     expect(screen.queryByText("923764211845312533")).not.toBeInTheDocument();
-    expect(await screen.findByText("No connected apps.")).toBeInTheDocument();
   });
 });

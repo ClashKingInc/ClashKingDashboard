@@ -2,18 +2,8 @@ import { resolveTenorMedia } from "../../lib/tenor-media";
 
 const MARKETING_HOST = "clashk.ing";
 const DASHBOARD_HOST = "dash.clashk.ing";
-const CONNECT_HOST = "connect.clashk.ing";
 const WWW_HOST = "www.clashk.ing";
 const RSC_CONTENT_TYPE = "text/x-component";
-const connectReservedSegments = new Set([
-  "admin",
-  "api",
-  "auth",
-  "connect",
-  "dashboard",
-  "login",
-  "servers",
-]);
 
 interface AssetEnv {
   ASSETS: Pick<Fetcher, "fetch">;
@@ -45,27 +35,6 @@ export function resolveDomainRedirect(requestUrl: URL): URL | null {
     return redirectUrl;
   }
 
-  if (requestUrl.hostname === CONNECT_HOST) {
-    const connectSegments = requestUrl.pathname.split("/").filter(Boolean);
-    if (requestUrl.pathname === "/") {
-      redirectUrl.hostname = MARKETING_HOST;
-      return redirectUrl;
-    }
-
-    const isStaticAsset =
-      requestUrl.pathname.startsWith("/_next/") ||
-      requestUrl.pathname.startsWith("/fonts/") ||
-      Boolean(requestUrl.pathname.split("/").at(-1)?.includes("."));
-    const isConnectApplication =
-      connectSegments.length === 1 &&
-      !connectReservedSegments.has(connectSegments[0]);
-    const isStandaloneAuthRoute = ["/login", "/auth/callback"].includes(requestUrl.pathname);
-    if (!isConnectApplication && !isStandaloneAuthRoute && !isStaticAsset) {
-      redirectUrl.hostname = MARKETING_HOST;
-      return redirectUrl;
-    }
-  }
-
   if (
     requestUrl.hostname === MARKETING_HOST &&
     dashboardRoutePrefixes.some((prefix) => matchesRoutePrefix(requestUrl.pathname, prefix))
@@ -94,29 +63,9 @@ export function resolveRscAssetUrl(request: Request): URL | null {
   return assetUrl;
 }
 
-export function resolveConnectAssetUrl(request: Request): URL | null {
-  if (request.method !== "GET" && request.method !== "HEAD") return null;
-
-  const assetUrl = new URL(request.url);
-  const segments = assetUrl.pathname.split("/").filter(Boolean);
-  const isStandaloneUrl =
-    assetUrl.hostname === CONNECT_HOST &&
-    segments.length === 1 &&
-    !segments[0].includes(".") &&
-    !connectReservedSegments.has(segments[0]);
-  if (!isStandaloneUrl) return null;
-
-  assetUrl.pathname = "/connect";
-  return assetUrl;
-}
-
 export async function fetchAsset(request: Request, env: AssetEnv): Promise<Response> {
-  const connectAssetUrl = resolveConnectAssetUrl(request);
-  const assetRequest = connectAssetUrl
-    ? new Request(connectAssetUrl.toString(), request)
-    : request;
-  const rscAssetUrl = resolveRscAssetUrl(assetRequest);
-  if (!rscAssetUrl) return env.ASSETS.fetch(assetRequest);
+  const rscAssetUrl = resolveRscAssetUrl(request);
+  if (!rscAssetUrl) return env.ASSETS.fetch(request);
 
   const response = await env.ASSETS.fetch(new Request(rscAssetUrl.toString(), request));
   if (!response.ok || response.headers.get("Content-Type")?.startsWith("text/html")) {

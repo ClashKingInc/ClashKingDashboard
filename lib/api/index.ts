@@ -16,7 +16,6 @@ export { RosterClient } from './clients/roster-client';
 export { WarClient } from './clients/war-client';
 export { ServerClient } from './clients/server-client';
 export { LinkClient } from './clients/link-client';
-export { ConnectedAppsClient } from './clients/connected-apps-client';
 export { UtilityClient } from './clients/utility-client';
 export { LeaderboardClient } from './clients/leaderboard-client';
 export { BasesClient } from './clients/bases-client';
@@ -135,17 +134,6 @@ export type {
 
 // Link types
 export type { CocAccountRequest } from './types/link';
-export type {
-  ConnectedApplication,
-  ConnectedApplicationMetadata,
-  ShareableAccount,
-  ConnectedAppAccessMode,
-  ConnectedAppGrant,
-  ConnectedAppGrantDetails,
-  ConnectedAppGrantListItem,
-  ConnectedAppGrantList,
-  UpdateConnectedAppGrant,
-} from './types/connected-apps';
 
 // Leaderboard types
 export type {

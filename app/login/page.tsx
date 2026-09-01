@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 
 import { useAuthSession } from "@/components/auth-session-provider";
 import { initiateDiscordLogin } from "@/lib/auth/discord-login";
-import { postAuthFallbackPath } from "@/lib/connected-apps";
 
 export default function LoginRedirect() {
   const locale = useLocale();
@@ -20,11 +19,7 @@ export default function LoginRedirect() {
     if (authStatus === "authenticated") {
       const returnTo = sessionStorage.getItem("auth_return_to");
       sessionStorage.removeItem("auth_return_to");
-      router.replace(
-        returnTo?.startsWith("/")
-          ? returnTo
-          : postAuthFallbackPath(globalThis.location.hostname),
-      );
+      router.replace(returnTo?.startsWith("/") ? returnTo : "/servers");
       return;
     }
 
