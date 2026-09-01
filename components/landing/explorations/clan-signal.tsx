@@ -223,7 +223,7 @@ export function ClanSignal() {
         <nav aria-label={t("resources.ariaLabel")}>
           <a href="https://docs.clashk.ing/" target="_blank" rel="noreferrer">{t("resources.documentation")} <ArrowAsset /></a>
           <a href="https://github.com/ClashKingInc" target="_blank" rel="noreferrer">GitHub <ArrowAsset /></a>
-          <a href="https://go.api.clashk.ing/" target="_blank" rel="noreferrer">{t("resources.publicApi")} <ArrowAsset /></a>
+          <a href="https://api.clashk.ing/" target="_blank" rel="noreferrer">{t("resources.publicApi")} <ArrowAsset /></a>
         </nav>
       </section>
 
