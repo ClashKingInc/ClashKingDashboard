@@ -27,7 +27,6 @@ import {
   type SupportedLocale,
 } from "@/lib/locale-preference";
 import { dashboardHref, useGuildId } from "@/lib/dashboard-route";
-import { ConnectedAppsSettings } from "@/components/connected-apps-settings";
 
 const THEME_OPTIONS = ["system", "light", "dark"] as const;
 const FILLED_SELECT_CLASS = "border-0 bg-muted/55 shadow-sm shadow-black/5 focus:ring-2 focus:ring-ring/30";
@@ -289,8 +288,6 @@ export default function AccountSettingsPage() {
           </p>
         </div>
       </section>
-
-      <ConnectedAppsSettings />
 
       <section className="rounded-3xl bg-card p-5 shadow-sm shadow-black/5 sm:p-6" aria-labelledby="usage-title">
         <div className="flex items-start justify-between gap-3">

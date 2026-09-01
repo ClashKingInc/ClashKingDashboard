@@ -6,9 +6,6 @@
 https://dash.clashk.ing/*
   X-Robots-Tag: noindex, nofollow
 
-https://connect.clashk.ing/*
-  X-Robots-Tag: noindex, nofollow
-
 https://:worker.:subdomain.workers.dev/*
   X-Robots-Tag: noindex, nofollow
 

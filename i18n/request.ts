@@ -1,6 +1,5 @@
 import { getRequestConfig } from 'next-intl/server';
 import { routing } from './routing';
-import { withEnglishFallback } from '@/lib/message-catalog';
 
 export default getRequestConfig(async ({ requestLocale }) => {
   let locale = await requestLocale;
@@ -12,6 +11,6 @@ export default getRequestConfig(async ({ requestLocale }) => {
 
   return {
     locale,
-    messages: withEnglishFallback((await import(`../messages/${locale}.json`)).default)
+    messages: (await import(`../messages/${locale}.json`)).default
   };
 });

@@ -6,7 +6,6 @@ Vinext/React dashboard and static ClashKing marketing site.
 
 - `clashk.ing` serves the statically prerendered marketing homepage and legal pages.
 - `dash.clashk.ing` serves the static dashboard application.
-- `connect.clashk.ing` serves the standalone connected-app consent flow.
 - Production browser API calls go directly to `https://api.clashk.ing`; local development calls the Go API directly on `http://localhost:8000`.
 - Dashboard routes are finite static shells. Guild context is carried as `?guildId=...`; roster detail uses `?guildId=...&rosterId=...`.
 - The Go API owns Discord and email authentication, refresh-cookie rotation, Discohook resolution, uploads, and all application data.
@@ -42,7 +41,7 @@ npm run build
 
 ## Deployment
 
-One Cloudflare Worker serves the static build on `clashk.ing`, `dash.clashk.ing`, `connect.clashk.ing`, and `www.clashk.ing`. The Worker redirects the dashboard hostname root to `/login`, where an existing session continues to `/servers`; it gives connected apps permanent `https://connect.clashk.ing/{application_id}` URLs, moves other application routes from the marketing hostname to the dashboard hostname, and redirects `www` to the apex.
+One Cloudflare Worker serves the static build on `clashk.ing`, `dash.clashk.ing`, and `www.clashk.ing`. The Worker redirects the dashboard hostname root to `/login`, where an existing session continues to `/servers`; it also moves application routes from the marketing hostname to the dashboard hostname and redirects `www` to the apex.
 
 A second Worker in `workers/roster-assistant` serves `ai.clashk.ing`. Its `/chat` route asks `https://api.clashk.ing` to authorize and meter roster requests, then exposes only typed roster tools to a network-disabled Dynamic Worker. `OPENAI_API_KEY` and `AI_USAGE_SECRET` must be stored as Cloudflare Worker secrets; `AI_USAGE_SECRET` must exactly match the API value.
 

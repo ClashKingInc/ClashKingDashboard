@@ -348,9 +348,6 @@ for (const locale of locales) {
 }
 
 const english = flatten(parsed.en);
-const intentionalFallbackPrefixes = ["ConnectedApps."];
-const usesIntentionalFallback = (key) =>
-  intentionalFallbackPrefixes.some((prefix) => key.startsWith(prefix));
 let failed = false;
 
 const staticTranslationCalls = await collectStaticTranslationCalls();
@@ -378,10 +375,7 @@ if (uniqueMissingEnglishCalls.length > 0) {
 
 for (const locale of locales.filter((locale) => locale !== "en")) {
   const translated = flatten(parsed[locale]);
-  const missing = [...english.keys()].filter(
-    (key) => !translated.has(key) && !usesIntentionalFallback(key),
-  );
-  const fallbackOverrides = [...translated.keys()].filter(usesIntentionalFallback);
+  const missing = [...english.keys()].filter((key) => !translated.has(key));
   const extra = [...translated.keys()].filter((key) => !english.has(key));
   const typeMismatches = [...english.entries()]
     .filter(([key, entry]) => translated.has(key) && translated.get(key).type !== entry.type)
@@ -419,7 +413,6 @@ for (const locale of locales.filter((locale) => locale !== "en")) {
 
   if (
     missing.length ||
-    fallbackOverrides.length ||
     extra.length ||
     typeMismatches.length ||
     placeholderMismatches.length ||
@@ -431,9 +424,6 @@ for (const locale of locales.filter((locale) => locale !== "en")) {
     failed = true;
     console.error(`messages/${locale}.json does not match messages/en.json`);
     if (missing.length) console.error(`  Missing: ${missing.join(", ")}`);
-    if (fallbackOverrides.length) {
-      console.error(`  Intentional English fallback must be omitted: ${fallbackOverrides.join(", ")}`);
-    }
     if (extra.length) console.error(`  Extra: ${extra.join(", ")}`);
     if (typeMismatches.length) console.error(`  Type mismatch: ${typeMismatches.join(", ")}`);
     if (placeholderMismatches.length) {
@@ -452,8 +442,7 @@ for (const locale of locales.filter((locale) => locale !== "en")) {
       console.error(`  Invalid plural selector: ${invalidPluralSelectors.join(", ")}`);
     }
   } else {
-    const fallbackCount = [...english.keys()].filter(usesIntentionalFallback).length;
-    console.log(`messages/${locale}.json: ${translated.size} translated keys + ${fallbackCount} explicit English fallback keys match English`);
+    console.log(`messages/${locale}.json: ${translated.size} keys match English`);
   }
 }
 

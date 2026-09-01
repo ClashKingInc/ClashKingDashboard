@@ -1,11 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import {
-  fetchAsset,
-  handleDashboardRequest,
-  resolveConnectAssetUrl,
-  resolveDomainRedirect,
-  resolveRscAssetUrl,
-} from "./index";
+import { fetchAsset, handleDashboardRequest, resolveDomainRedirect, resolveRscAssetUrl } from "./index";
 
 afterEach(() => vi.unstubAllGlobals());
 
@@ -23,7 +17,9 @@ describe("resolveDomainRedirect", () => {
         new URL(`https://clashk.ing${pathname}?guildId=123`),
       );
 
-      expect(redirect?.toString()).toBe(`https://dash.clashk.ing${pathname}?guildId=123`);
+      expect(redirect?.toString()).toBe(
+        `https://dash.clashk.ing${pathname}?guildId=123`,
+      );
     },
   );
 
@@ -36,76 +32,11 @@ describe("resolveDomainRedirect", () => {
   it.each([
     "https://clashk.ing/",
     "https://clashk.ing/privacy",
-    "https://clashk.ing/connect/app_123",
     "https://clashk.ing/dashboarding",
     "https://dash.clashk.ing/dashboard",
     "https://app.clashk.ing/",
   ])("serves %s without a domain redirect", (url) => {
     expect(resolveDomainRedirect(new URL(url))).toBeNull();
-  });
-
-  it.each([
-    "https://connect.clashk.ing/app_123?state=opaque",
-    "https://connect.clashk.ing/login",
-    "https://connect.clashk.ing/auth/callback?code=abc",
-    "https://connect.clashk.ing/_next/static/app.js",
-    "https://connect.clashk.ing/connect.rsc",
-    "https://connect.clashk.ing/favicon.ico",
-  ])("keeps standalone flow URL %s on the connect host", (url) => {
-    expect(resolveDomainRedirect(new URL(url))).toBeNull();
-  });
-
-  it.each(["/", "/servers", "/dashboard", "/auth/other", "/app_123/extra"])(
-    "keeps unrelated path %s out of the connect experience",
-    (pathname) => {
-      expect(resolveDomainRedirect(new URL(`https://connect.clashk.ing${pathname}`))?.hostname)
-        .toBe("clashk.ing");
-    },
-  );
-});
-
-describe("permanent connect URLs", () => {
-  it("serves an arbitrary application ID from the static connect page", () => {
-    const request = new Request(
-      "https://connect.clashk.ing/app_123?redirect_uri=https%3A%2F%2Fexample.com%2Fcallback&state=opaque",
-    );
-
-    expect(resolveConnectAssetUrl(request)?.toString()).toBe(
-      "https://connect.clashk.ing/connect?redirect_uri=https%3A%2F%2Fexample.com%2Fcallback&state=opaque",
-    );
-  });
-
-  it("does not rewrite malformed or unrelated connect paths", () => {
-    expect(resolveConnectAssetUrl(new Request("https://dash.clashk.ing/connect"))).toBeNull();
-    expect(resolveConnectAssetUrl(new Request("https://dash.clashk.ing/connect/app_123"))).toBeNull();
-    expect(resolveConnectAssetUrl(new Request("https://dash.clashk.ing/connect/app_123/extra"))).toBeNull();
-    expect(resolveConnectAssetUrl(new Request("https://dash.clashk.ing/dashboard/connect/app_123"))).toBeNull();
-    expect(resolveConnectAssetUrl(new Request("https://connect.clashk.ing/app_123/extra"))).toBeNull();
-    expect(resolveConnectAssetUrl(new Request("https://connect.clashk.ing/login"))).toBeNull();
-    expect(resolveConnectAssetUrl(new Request("https://connect.clashk.ing/connect.rsc"))).toBeNull();
-  });
-
-  it("maps connect-page navigation to the generated static RSC asset", async () => {
-    let fetchedUrl = "";
-    const env = {
-      ASSETS: {
-        fetch: async (request: Request) => {
-          fetchedUrl = request.url;
-          return new Response("rsc payload", {
-            headers: { "Content-Type": "application/octet-stream" },
-          });
-        },
-      },
-    };
-    const request = new Request(
-      "https://connect.clashk.ing/app_123?state=opaque&_rsc=cache-key",
-      { headers: { Accept: "text/x-component", RSC: "1" } },
-    );
-
-    const response = await fetchAsset(request, env);
-
-    expect(fetchedUrl).toBe("https://connect.clashk.ing/connect.rsc?state=opaque");
-    expect(response.headers.get("Content-Type")).toBe("text/x-component");
   });
 });
 
