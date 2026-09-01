@@ -199,9 +199,9 @@ export function ClanSignal() {
           <h2 id="cs-dashboard-title">{t("dashboard.title")}</h2>
           <p className="cs-section-intro">{t("dashboard.intro")}</p>
           <FeatureList features={dashboardFeatures} />
-          <button className="cs-text-link cs-disabled" type="button" disabled>
+          <a className="cs-text-link" href="/login">
             {t("actions.openDashboard")} <ArrowAsset />
-          </button>
+          </a>
         </div>
         <figure className="cs-dashboard-art" aria-label={t("dashboard.imageLabel")}>
           <Image
