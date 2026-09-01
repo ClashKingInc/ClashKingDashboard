@@ -18,6 +18,10 @@
       "custom_domain": true
     },
     {
+      "pattern": "connect.clashk.ing",
+      "custom_domain": true
+    },
+    {
       "pattern": "www.clashk.ing",
       "custom_domain": true
     }

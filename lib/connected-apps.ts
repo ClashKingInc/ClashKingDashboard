@@ -1,4 +1,5 @@
 export const CONNECT_PERMISSION = "links.read" as const;
+export const CONNECT_HOST = "connect.clashk.ing" as const;
 
 export type ConnectedAppSelectionMode = "selected" | "all_current" | "all_current_and_future";
 export type ConnectResultStatus = "connected" | "denied" | "error";
@@ -9,13 +10,18 @@ export interface ConnectRequestContext {
   state?: string;
 }
 
+export function postAuthFallbackPath(hostname: string): string {
+  return hostname === CONNECT_HOST ? "/" : "/servers";
+}
+
 export function readConnectRequest(url: URL): ConnectRequestContext | null {
   const segments = url.pathname.split("/").filter(Boolean);
-  if (segments.length !== 2 || segments[0] !== "connect") return null;
+  const isStandaloneUrl = url.hostname === CONNECT_HOST && segments.length === 1;
+  if (!isStandaloneUrl) return null;
 
   let applicationId: string;
   try {
-    applicationId = decodeURIComponent(segments[1]);
+    applicationId = decodeURIComponent(segments[0]);
   } catch {
     return null;
   }

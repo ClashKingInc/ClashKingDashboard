@@ -2,8 +2,18 @@ import { resolveTenorMedia } from "../../lib/tenor-media";
 
 const MARKETING_HOST = "clashk.ing";
 const DASHBOARD_HOST = "dash.clashk.ing";
+const CONNECT_HOST = "connect.clashk.ing";
 const WWW_HOST = "www.clashk.ing";
 const RSC_CONTENT_TYPE = "text/x-component";
+const connectReservedSegments = new Set([
+  "admin",
+  "api",
+  "auth",
+  "connect",
+  "dashboard",
+  "login",
+  "servers",
+]);
 
 interface AssetEnv {
   ASSETS: Pick<Fetcher, "fetch">;
@@ -12,7 +22,6 @@ interface AssetEnv {
 const dashboardRoutePrefixes = [
   "/admin",
   "/auth",
-  "/connect",
   "/dashboard",
   "/login",
   "/servers",
@@ -34,6 +43,27 @@ export function resolveDomainRedirect(requestUrl: URL): URL | null {
   if (requestUrl.hostname === DASHBOARD_HOST && requestUrl.pathname === "/") {
     redirectUrl.pathname = "/login";
     return redirectUrl;
+  }
+
+  if (requestUrl.hostname === CONNECT_HOST) {
+    const connectSegments = requestUrl.pathname.split("/").filter(Boolean);
+    if (requestUrl.pathname === "/") {
+      redirectUrl.hostname = MARKETING_HOST;
+      return redirectUrl;
+    }
+
+    const isStaticAsset =
+      requestUrl.pathname.startsWith("/_next/") ||
+      requestUrl.pathname.startsWith("/fonts/") ||
+      Boolean(requestUrl.pathname.split("/").at(-1)?.includes("."));
+    const isConnectApplication =
+      connectSegments.length === 1 &&
+      !connectReservedSegments.has(connectSegments[0]);
+    const isStandaloneAuthRoute = ["/login", "/auth/callback"].includes(requestUrl.pathname);
+    if (!isConnectApplication && !isStandaloneAuthRoute && !isStaticAsset) {
+      redirectUrl.hostname = MARKETING_HOST;
+      return redirectUrl;
+    }
   }
 
   if (
@@ -69,7 +99,12 @@ export function resolveConnectAssetUrl(request: Request): URL | null {
 
   const assetUrl = new URL(request.url);
   const segments = assetUrl.pathname.split("/").filter(Boolean);
-  if (segments.length !== 2 || segments[0] !== "connect") return null;
+  const isStandaloneUrl =
+    assetUrl.hostname === CONNECT_HOST &&
+    segments.length === 1 &&
+    !segments[0].includes(".") &&
+    !connectReservedSegments.has(segments[0]);
+  if (!isStandaloneUrl) return null;
 
   assetUrl.pathname = "/connect";
   return assetUrl;

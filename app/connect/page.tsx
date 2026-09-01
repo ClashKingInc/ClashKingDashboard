@@ -76,7 +76,7 @@ export default function ConnectApplicationPage() {
   const [request, setRequest] = useState<ConnectRequestContext | null>();
   const [details, setDetails] = useState<ConnectedAppGrantDetails | null>(null);
   const [application, setApplication] = useState<ConnectedApplication | null>(null);
-  const [selectionMode, setSelectionMode] = useState<ConnectedAppSelectionMode>("selected");
+  const [selectionMode, setSelectionMode] = useState<ConnectedAppSelectionMode>("all_current_and_future");
   const [selectedTags, setSelectedTags] = useState<Set<string>>(new Set());
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -197,7 +197,7 @@ export default function ConnectApplicationPage() {
               ? t("result.connectedDescription", { application: result.applicationName })
               : t("result.deniedDescription", { application: result.applicationName })}
           </p>
-          <Button className="mt-6" variant="secondary" onClick={() => router.push("/servers")}>
+          <Button className="mt-6" variant="secondary" onClick={() => globalThis.location.assign("https://clashk.ing")}>
             {t("result.done")}
           </Button>
         </section>

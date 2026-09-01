@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const testState = vi.hoisted(() => ({
   authStatus: "authenticated" as "restoring" | "authenticated" | "anonymous",
@@ -53,7 +53,13 @@ describe("ConnectApplicationPage", () => {
     vi.clearAllMocks();
     sessionStorage.clear();
     testState.authStatus = "authenticated";
-    window.history.replaceState({}, "", "/connect/app_123?state=opaque");
+    vi.stubGlobal("location", {
+      href: "https://connect.clashk.ing/app_123?state=opaque",
+      pathname: "/app_123",
+      search: "?state=opaque",
+      hostname: "connect.clashk.ing",
+      assign: vi.fn(),
+    });
     testState.getApplication.mockResolvedValue({
       data: { application: { id: "app_123", name: "Roster Tool", developer_name: "Example Dev" } },
     });
@@ -70,13 +76,15 @@ describe("ConnectApplicationPage", () => {
     testState.updateGrant.mockResolvedValue({ data: { access_mode: "selected" } });
   });
 
+  afterEach(() => vi.unstubAllGlobals());
+
   it("sends anonymous visitors through existing login and preserves the full connect URL", async () => {
     testState.authStatus = "anonymous";
 
     render(<ConnectApplicationPage />);
 
     await waitFor(() => expect(testState.replace).toHaveBeenCalledWith("/login"));
-    expect(sessionStorage.getItem("auth_return_to")).toBe("/connect/app_123?state=opaque");
+    expect(sessionStorage.getItem("auth_return_to")).toBe("/app_123?state=opaque");
     expect(testState.getApplication).not.toHaveBeenCalled();
   });
 
@@ -101,7 +109,7 @@ describe("ConnectApplicationPage", () => {
     render(<ConnectApplicationPage />);
 
     await screen.findByRole("heading", { name: "Connect Roster Tool" });
-    fireEvent.click(screen.getByRole("radio", { name: /modes\.all_current_and_future\.title/ }));
+    expect(screen.getByRole("radio", { name: /modes\.all_current_and_future\.title/ })).toBeChecked();
     fireEvent.click(screen.getByRole("button", { name: "connect" }));
 
     await waitFor(() => {
@@ -115,6 +123,7 @@ describe("ConnectApplicationPage", () => {
     render(<ConnectApplicationPage />);
 
     await screen.findByRole("heading", { name: "Connect Roster Tool" });
+    fireEvent.click(screen.getByRole("radio", { name: /modes\.selected\.title/ }));
     expect(screen.getByText("status.unverified")).toBeInTheDocument();
     expect(screen.getByText("status.hidden")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("checkbox", { name: "Share Beta" }));

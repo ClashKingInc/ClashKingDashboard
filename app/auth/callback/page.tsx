@@ -9,6 +9,7 @@ import LoadingScreenWithMessages from "@/components/ui/loading-screen-with-messa
 import { apiClient } from "@/lib/api/client";
 import { clashKingAssets } from "@/lib/theme";
 import { cacheUser, setAccessToken } from "@/lib/auth/session";
+import { CONNECT_HOST, postAuthFallbackPath } from "@/lib/connected-apps";
 
 export default function AuthCallbackPage() {
   const t = useTranslations("AuthCallback");
@@ -114,27 +115,33 @@ export default function AuthCallbackPage() {
         cacheUser(data.user);
 
         // Prefetch guilds to avoid loading screen on servers page
-        try {
-          const guildsResponse = await apiClient.servers.getGuilds();
-          if (guildsResponse.data) {
-            // Sort guilds: servers with bot first, then by name
-            const sortedGuilds = guildsResponse.data.toSorted((a, b) => {
-              // Primary sort: has_bot (true first)
-              if (a.has_bot && !b.has_bot) return -1;
-              if (!a.has_bot && b.has_bot) return 1;
-              // Secondary sort: alphabetically by name
-              return a.name.localeCompare(b.name);
-            });
-            sessionStorage.setItem('prefetched_guilds', JSON.stringify(sortedGuilds));
+        if (globalThis.location.hostname !== CONNECT_HOST) {
+          try {
+            const guildsResponse = await apiClient.servers.getGuilds();
+            if (guildsResponse.data) {
+              // Sort guilds: servers with bot first, then by name
+              const sortedGuilds = guildsResponse.data.toSorted((a, b) => {
+                // Primary sort: has_bot (true first)
+                if (a.has_bot && !b.has_bot) return -1;
+                if (!a.has_bot && b.has_bot) return 1;
+                // Secondary sort: alphabetically by name
+                return a.name.localeCompare(b.name);
+              });
+              sessionStorage.setItem('prefetched_guilds', JSON.stringify(sortedGuilds));
+            }
+          } catch (err) {
+            console.error('Failed to prefetch guilds:', err);
+            // Still redirect, it will fetch on servers page
           }
-        } catch (err) {
-          console.error('Failed to prefetch guilds:', err);
-          // Still redirect, it will fetch on servers page
         }
 
         const returnTo = sessionStorage.getItem("auth_return_to");
         sessionStorage.removeItem("auth_return_to");
-        router.push(returnTo?.startsWith("/") ? returnTo : "/servers");
+        router.push(
+          returnTo?.startsWith("/")
+            ? returnTo
+            : postAuthFallbackPath(globalThis.location.hostname),
+        );
       } catch (err) {
         console.error("Authentication error:", err);
         setError(err instanceof Error ? err.message : t("errorAuthenticateFailed"));
