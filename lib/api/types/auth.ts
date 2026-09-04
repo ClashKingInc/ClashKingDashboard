@@ -1,55 +1,37 @@
-/**
- * Authentication-related types
- */
+import type {
+  AuthForgotPasswordEndpoint,
+  AuthMeEndpoint,
+  AuthRegisterEndpoint,
+  AuthWebDiscordEndpoint,
+  AuthWebEmailEndpoint,
+  AuthWebResetPasswordEndpoint,
+  EndpointRequest,
+  EndpointResponse,
+} from "@clashking/api-contracts";
 
-export interface UserInfo {
-  user_id: string;
-  username: string;
-  avatar_url: string;
-  auth_methods?: string[];
-  is_admin?: boolean;
-}
+type WebAuthUser = EndpointResponse<typeof AuthWebDiscordEndpoint>["user"];
 
-export interface AuthResponse {
-  access_token: string;
-  user: UserInfo;
-}
+/** The optional admin claim is returned to Dashboard sessions but is not yet in AuthMeEndpoint. */
+export type UserInfo = WebAuthUser & {
+  readonly account_summary?: EndpointResponse<typeof AuthMeEndpoint>["account_summary"];
+  readonly is_admin?: boolean;
+};
 
-export interface EmailRegisterRequest {
-  email: string;
-  password: string;
-  username: string;
-  device_id?: string;
-}
+export type AuthResponse = EndpointResponse<typeof AuthWebDiscordEndpoint>;
+export type EmailRegisterRequest = EndpointRequest<typeof AuthRegisterEndpoint>["body"];
+export type EmailAuthRequest = Extract<
+  EndpointRequest<typeof AuthWebEmailEndpoint>["body"],
+  { readonly email: string; readonly password: string }
+>;
+export type ForgotPasswordRequest = EndpointRequest<typeof AuthForgotPasswordEndpoint>["body"];
+export type ResetPasswordRequest = Extract<
+  EndpointRequest<typeof AuthWebResetPasswordEndpoint>["body"],
+  { readonly reset_code: string }
+>;
+export type DiscordAuthRequest = Extract<
+  EndpointRequest<typeof AuthWebDiscordEndpoint>["body"],
+  { readonly code: string; readonly code_verifier: string }
+>;
 
-export interface EmailAuthRequest {
-  email: string;
-  password: string;
-  device_id?: string;
-}
-
-export interface ForgotPasswordRequest {
-  email: string;
-}
-
-export interface ResetPasswordRequest {
-  email: string;
-  reset_code: string;
-  new_password: string;
-  device_id?: string;
-}
-
-export interface DiscordAuthRequest {
-  code: string;
-  code_verifier: string;
-  device_id?: string;
-  redirect_uri?: string;
-}
-
-export interface LinkDiscordRequest {
-  access_token: string;
-  refresh_token?: string;
-  expires_in?: number;
-  device_id?: string;
-  device_name?: string;
-}
+/** @deprecated The authoritative API no longer registers a Discord-link route. */
+export type LinkDiscordRequest = never;

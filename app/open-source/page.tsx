@@ -2,9 +2,9 @@
 
 import { Navbar } from "@/components/landing/navbar";
 import { Footer } from "@/components/landing/footer";
-import Link from "next/link";
+import Link from "@/components/app-link";
 import { GitFork, Code2, BookOpen, Users, ExternalLink, Languages } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "use-intl";
 
 export default function OpenSourcePage() {
   const t = useTranslations("OpenSourcePage");

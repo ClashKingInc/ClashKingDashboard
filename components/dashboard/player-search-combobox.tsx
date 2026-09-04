@@ -1,8 +1,7 @@
 "use client";
 
-import { apiFetch } from "@/lib/api/fetch";
-
-
+import { dashboardEndpoints } from "@clashking/api-contracts";
+import { executeSharedEndpoint } from "@/lib/api/shared-client";
 import { useState, useCallback } from "react";
 import { Check, ChevronsUpDown, Loader2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -54,13 +53,13 @@ export function PlayerSearchCombobox({
     if (loaded) return;
     setLoading(true);
     try {
-      const res = await apiFetch(`/v2/roster/server/${guildId}/members`);
-      if (res.ok) {
-        const data = await res.json();
-        const list = Array.isArray(data) ? data : (data.members ?? []);
-        setPlayers(list);
-        setLoaded(true);
-      }
+      const data = await executeSharedEndpoint(dashboardEndpoints.dashboardServerClanMembers, {
+        path: { serverId: guildId },
+        query: {},
+        body: {},
+      });
+      setPlayers([...data.members]);
+      setLoaded(true);
     } catch {
       // silently fail — popover just shows empty
     } finally {

@@ -20,6 +20,7 @@ export interface RosterMember {
   current_league?: string | null;
   added_at?: number | null;
   last_updated?: number | null;
+  refreshed_at?: string | null;
   is_in_family?: boolean;
   member_status?: string;
   error_details?: string | null;
@@ -28,7 +29,7 @@ export interface RosterMember {
 export interface Roster {
   id: string;
   revision?: number;
-  server_id: string | number;
+  server_id: string;
   alias: string;
   description?: string | null;
   roster_type: "clan" | "family";
@@ -63,7 +64,7 @@ export interface RosterAutomationOptions {
 
 export interface RosterAutomation {
   automation_id: string;
-  server_id: string | number;
+  server_id: string;
   roster_id?: string;
   group_id?: string;
   action_type: AutomationActionType;
@@ -96,7 +97,7 @@ export interface RosterGroup {
   group_id: string;
   alias: string;
   description?: string;
-  server_id: string | number;
+  server_id: string;
   max_accounts_per_user?: number | null;
   min_signups?: number | null;
   roster_count?: number;

@@ -2,6 +2,12 @@ import { describe, expect, it } from "vitest";
 
 import { aiUsageSettlementHeaders, normalizeAIUsage, settleAIUsage, sumAIUsage } from "../../workers/roster-assistant/usage-reporting";
 
+const payload = {
+  requestId: "request-1", model: "gpt-5.6-luna" as const,
+  usage: { inputTokens: 100, cachedInputTokens: 0, cacheWriteTokens: 0, outputTokens: 20, reasoningTokens: 5 },
+  steps: [{ inputTokens: 100, cachedInputTokens: 0, cacheWriteTokens: 0, outputTokens: 20, reasoningTokens: 5 }],
+};
+
 describe("AI usage reporting", () => {
   it("combines completed step usage for aborted and failed streams", () => {
     expect(sumAIUsage([
@@ -39,35 +45,53 @@ describe("AI usage reporting", () => {
 
   it("retries transient settlement failures with the same payload and metering header", async () => {
     const fetcher = vi.fn()
-      .mockResolvedValueOnce(new Response("temporary failure", { status: 500 }))
+      .mockResolvedValueOnce(Response.json({ code: "internal_error", message: "temporary failure" }, { status: 500 }))
       .mockResolvedValueOnce(new Response(null, { status: 204 }));
-    const payload = { requestId: "request-1", usage: { inputTokens: 100 } };
 
     await settleAIUsage(
       { CLASHKING_API_ORIGIN: "http://127.0.0.1:8000", AI_USAGE_SECRET: "worker-secret" } as RosterAssistantRuntimeEnv,
-      "/v2/roster/ai/usage",
       payload,
       { fetcher, retryDelayMs: 0 },
     );
 
     expect(fetcher).toHaveBeenCalledTimes(2);
-    expect(fetcher).toHaveBeenLastCalledWith("http://127.0.0.1:8000/v2/roster/ai/usage", expect.objectContaining({
-      method: "POST",
-      body: JSON.stringify(payload),
-    }));
-    const headers = fetcher.mock.calls[1][1]?.headers as Record<string, string>;
-    expect(headers["x-clashking-ai-metering"]).toBe("worker-secret");
+    for (const [request] of fetcher.mock.calls as [Request][]) {
+      expect(request.url).toBe("http://127.0.0.1:8000/v2/roster/ai/usage");
+      expect(request.method).toBe("POST");
+      expect(await request.json()).toEqual(payload);
+      expect(request.headers.get("x-clashking-ai-metering")).toBe("worker-secret");
+      expect(request.headers.has("authorization")).toBe(false);
+    }
   });
 
   it("does not retry a permanent settlement rejection", async () => {
-    const fetcher = vi.fn().mockResolvedValue(new Response("bad payload", { status: 400 }));
+    const fetcher = vi.fn().mockResolvedValue(Response.json({ code: "invalid_request", message: "bad payload" }, { status: 400 }));
 
     await expect(settleAIUsage(
       { CLASHKING_API_ORIGIN: "http://127.0.0.1:8000", AI_USAGE_SECRET: "worker-secret" } as RosterAssistantRuntimeEnv,
-      "/v2/roster/ai/usage",
-      {},
+      payload,
       { fetcher, retryDelayMs: 0 },
     )).rejects.toThrow("AI usage settlement failed (400): bad payload");
     expect(fetcher).toHaveBeenCalledOnce();
+  });
+
+  it("retries transport failures but does not retry a metering authorization failure", async () => {
+    const fetcher = vi.fn().mockRejectedValueOnce(new Error("network failure"))
+      .mockResolvedValue(Response.json({ code: "unauthenticated", message: "Invalid metering secret" }, { status: 401 }));
+    await expect(settleAIUsage(
+      { CLASHKING_API_ORIGIN: "https://api.example.com", AI_USAGE_SECRET: "worker-secret" } as RosterAssistantRuntimeEnv,
+      payload, { fetcher, retryDelayMs: 0 },
+    )).rejects.toThrow("AI usage settlement failed (401): Invalid metering secret");
+    expect(fetcher).toHaveBeenCalledTimes(2);
+  });
+
+  it("rejects malformed token usage before attempting settlement", async () => {
+    const fetcher = vi.fn();
+    await expect(settleAIUsage(
+      { CLASHKING_API_ORIGIN: "https://api.example.com", AI_USAGE_SECRET: "worker-secret" } as RosterAssistantRuntimeEnv,
+      { ...payload, usage: { ...payload.usage, inputTokens: "100" } } as never,
+      { fetcher, retryDelayMs: 0 },
+    )).rejects.toThrow();
+    expect(fetcher).not.toHaveBeenCalled();
   });
 });

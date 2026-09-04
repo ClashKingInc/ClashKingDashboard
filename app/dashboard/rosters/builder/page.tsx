@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent } from "react";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
+import { useRouter } from "@/lib/navigation";
+import Image from "@/components/app-image";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, readUIMessageStream, type UIMessage } from "ai";
 import ReactMarkdown from "react-markdown";
@@ -79,7 +79,7 @@ import {
 } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import { apiClient, getDefaultBaseUrl } from "@/lib/api/client";
-import { apiFetch, apiUrl } from "@/lib/api/fetch";
+import { readBrowserRuntimeConfig } from "@/lib/runtime-config";
 import type { MaterializedRosterView, RosterMembershipProposal, RosterView, RosterViewResult } from "@/lib/api/types/roster";
 import { dashboardHref, useGuildId } from "@/lib/dashboard-route";
 import { clearRosterBuilderChats, loadRosterBuilderChat, saveRosterBuilderChat } from "@/lib/roster-builder-session";
@@ -136,15 +136,7 @@ type PlayerChatContext = {
 };
 
 function rosterAssistantUrl(): string {
-  const configured = process.env.NEXT_PUBLIC_CLASHKING_AI_ORIGIN?.trim().replace(/\/$/, "");
-  if (configured) return `${configured}/chat`;
-  const apiBaseUrl = getDefaultBaseUrl();
-  if (apiBaseUrl.includes("localhost") || apiBaseUrl.includes("127.0.0.1")) {
-    return "http://localhost:8788/chat";
-  }
-  return apiBaseUrl.includes("dev-api.clashk.ing")
-    ? "https://dev-ai.clashk.ing/chat"
-    : "https://ai.clashk.ing/chat";
+  return `${readBrowserRuntimeConfig().assistantOrigin.replace(/\/$/, "")}/chat`;
 }
 
 async function copyText(text: string): Promise<boolean> {

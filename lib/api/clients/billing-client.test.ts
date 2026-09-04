@@ -12,16 +12,11 @@ describe("BillingClient", () => {
 
     await client.createCheckout("server-1");
 
-    expect(fetchMock).toHaveBeenCalledWith(
-      "http://dashboard.test/v2/billing/stripe/checkout",
-      expect.objectContaining({
-        method: "POST",
-        body: JSON.stringify({ serverId: "server-1" }),
-        headers: expect.objectContaining({}),
-      }),
-    );
-    const headers = fetchMock.mock.calls[0][1].headers as Headers;
-    expect(headers.get("Authorization")).toBe("Bearer token");
+    const request = fetchMock.mock.calls[0]?.[0] as Request;
+    expect(request.url).toBe("http://dashboard.test/v2/billing/stripe/checkout");
+    expect(request.method).toBe("POST");
+    expect(await request.clone().json()).toEqual({ serverId: "server-1" });
+    expect(request.headers.get("Authorization")).toBe("Bearer token");
   });
 
   it("updates the server assigned to the subscription", async () => {
@@ -31,10 +26,10 @@ describe("BillingClient", () => {
 
     await client.updateAssignment("server-2");
 
-    expect(fetchMock).toHaveBeenCalledWith(
-      "http://dashboard.test/v2/billing/subscription/assignment",
-      expect.objectContaining({ method: "PUT", body: JSON.stringify({ serverId: "server-2" }) }),
-    );
+    const request = fetchMock.mock.calls[0]?.[0] as Request;
+    expect(request.url).toBe("http://dashboard.test/v2/billing/subscription/assignment");
+    expect(request.method).toBe("PUT");
+    expect(await request.json()).toEqual({ serverId: "server-2" });
   });
 
   it("loads usage for the selected server", async () => {
@@ -44,9 +39,8 @@ describe("BillingClient", () => {
 
     await client.getUsage("server/1");
 
-    expect(fetchMock).toHaveBeenCalledWith(
-      "http://dashboard.test/v2/billing/usage?serverId=server%2F1",
-      expect.objectContaining({ method: "GET" }),
-    );
+    const request = fetchMock.mock.calls[0]?.[0] as Request;
+    expect(request.url).toBe("http://dashboard.test/v2/billing/usage?serverId=server%2F1");
+    expect(request.method).toBe("GET");
   });
 });

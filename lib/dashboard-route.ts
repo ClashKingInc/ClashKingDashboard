@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, createElement, useContext, useEffect, useState, type ReactNode } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams } from "@/lib/navigation";
 
 const DashboardRouteContext = createContext<{ guildId?: string }>({});
 
@@ -15,9 +15,8 @@ function useDashboardParam(name: string): string {
   const [value, setValue] = useState("");
 
   useEffect(() => {
-    // Keep the server render and first browser render identical. Vinext's
-    // static snapshot can omit query params, so read the authoritative URL
-    // only after hydration has completed.
+    // Read the browser URL after mount so route state and restored session
+    // state settle in the same phase.
     setValue(new URLSearchParams(globalThis.location.search).get(name) ?? frameworkValue);
   }, [frameworkValue, name]);
 

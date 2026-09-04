@@ -1,3 +1,19 @@
+import {
+  CreateServerEmbedEndpoint,
+  CreateTicketButtonEndpoint,
+  CreateTicketPanelEndpoint,
+  DeleteServerEmbedEndpoint,
+  DeleteTicketButtonEndpoint,
+  DeleteTicketPanelEndpoint,
+  ServerEmbedsEndpoint,
+  TicketPanelsEndpoint,
+  UpdateServerEmbedEndpoint,
+  UpdateTicketApproveMessagesEndpoint,
+  UpdateTicketButtonAppearanceEndpoint,
+  UpdateTicketButtonSettingsEndpoint,
+  UpdateTicketPanelEndpoint,
+} from "@clashking/api-contracts";
+
 import { BaseApiClient } from '../core/base-client';
 import type { ApiResponse } from '../types/common';
 import type {
@@ -13,128 +29,149 @@ import type {
 } from '../types/tickets';
 
 export class TicketsClient extends BaseApiClient {
-  async getPanels(serverId: string | number): Promise<ApiResponse<TicketPanelsResponse>> {
-    return this.request(`/v2/server/${serverId}/tickets`, { method: 'GET' });
+  async getPanels(serverId: string): Promise<ApiResponse<TicketPanelsResponse>> {
+    return this.executeEndpoint(TicketPanelsEndpoint, {
+      path: { serverId },
+      query: {},
+      body: {},
+    });
   }
 
   async createPanel(
-    serverId: string | number,
+    serverId: string,
     data: CreatePanelRequest,
   ): Promise<ApiResponse<{ message: string }>> {
-    return this.request(`/v2/server/${serverId}/tickets`, {
-      method: 'POST',
-      body: JSON.stringify(data),
+    return this.executeEndpoint(CreateTicketPanelEndpoint, {
+      path: { serverId },
+      query: {},
+      body: data,
     });
   }
 
   async deletePanel(
-    serverId: string | number,
+    serverId: string,
     panelName: string,
   ): Promise<ApiResponse<{ message: string }>> {
-    return this.request(`/v2/server/${serverId}/tickets/${encodeURIComponent(panelName)}`, {
-      method: 'DELETE',
+    return this.executeEndpoint(DeleteTicketPanelEndpoint, {
+      path: { serverId, panelName },
+      query: {},
+      body: {},
     });
   }
 
   async createButton(
-    serverId: string | number,
+    serverId: string,
     panelName: string,
     data: CreateButtonRequest,
   ): Promise<ApiResponse<{ message: string }>> {
-    return this.request(
-      `/v2/server/${serverId}/tickets/${encodeURIComponent(panelName)}/buttons`,
-      { method: 'POST', body: JSON.stringify(data) },
-    );
+    return this.executeEndpoint(CreateTicketButtonEndpoint, {
+      path: { serverId, panelName },
+      query: {},
+      body: data,
+    });
   }
 
   async deleteButton(
-    serverId: string | number,
+    serverId: string,
     panelName: string,
     customId: string,
   ): Promise<ApiResponse<{ message: string }>> {
-    return this.request(
-      `/v2/server/${serverId}/tickets/${encodeURIComponent(panelName)}/buttons/${encodeURIComponent(customId)}`,
-      { method: 'DELETE' },
-    );
+    return this.executeEndpoint(DeleteTicketButtonEndpoint, {
+      path: { serverId, panelName, customId },
+      query: {},
+      body: {},
+    });
   }
 
   async updateButtonAppearance(
-    serverId: string | number,
+    serverId: string,
     panelName: string,
     customId: string,
     data: UpdateButtonAppearanceRequest,
   ): Promise<ApiResponse<{ message: string }>> {
-    return this.request(
-      `/v2/server/${serverId}/tickets/${encodeURIComponent(panelName)}/buttons/${encodeURIComponent(customId)}`,
-      { method: 'PATCH', body: JSON.stringify(data) },
-    );
+    return this.executeEndpoint(UpdateTicketButtonAppearanceEndpoint, {
+      path: { serverId, panelName, customId },
+      query: {},
+      body: data,
+    });
   }
 
   async updatePanel(
-    serverId: string | number,
+    serverId: string,
     panelName: string,
     data: UpdateTicketPanelRequest,
   ): Promise<ApiResponse<{ message: string }>> {
-    return this.request(`/v2/server/${serverId}/tickets/${encodeURIComponent(panelName)}`, {
-      method: 'PUT',
-      body: JSON.stringify(data),
+    return this.executeEndpoint(UpdateTicketPanelEndpoint, {
+      path: { serverId, panelName },
+      query: {},
+      body: data,
     });
   }
 
   async updateButtonSettings(
-    serverId: string | number,
+    serverId: string,
     panelName: string,
     customId: string,
     data: UpdateButtonSettingsRequest,
   ): Promise<ApiResponse<{ message: string }>> {
-    return this.request(
-      `/v2/server/${serverId}/tickets/${encodeURIComponent(panelName)}/buttons/${encodeURIComponent(customId)}`,
-      { method: 'PUT', body: JSON.stringify(data) },
-    );
+    return this.executeEndpoint(UpdateTicketButtonSettingsEndpoint, {
+      path: { serverId, panelName, customId },
+      query: {},
+      body: data,
+    });
   }
 
   async updateApproveMessages(
-    serverId: string | number,
+    serverId: string,
     panelName: string,
     data: UpdateApproveMessagesRequest,
   ): Promise<ApiResponse<{ message: string }>> {
-    return this.request(
-      `/v2/server/${serverId}/tickets/${encodeURIComponent(panelName)}/approve-messages`,
-      { method: 'PUT', body: JSON.stringify(data) },
-    );
+    return this.executeEndpoint(UpdateTicketApproveMessagesEndpoint, {
+      path: { serverId, panelName },
+      query: {},
+      body: data,
+    });
   }
 
-  async getEmbeds(serverId: string | number): Promise<ApiResponse<ServerEmbedsResponse>> {
-    return this.request(`/v2/server/${serverId}/embeds`, { method: 'GET' });
+  async getEmbeds(serverId: string): Promise<ApiResponse<ServerEmbedsResponse>> {
+    return this.executeEndpoint(ServerEmbedsEndpoint, {
+      path: { serverId },
+      query: {},
+      body: {},
+    });
   }
 
   async createEmbed(
-    serverId: string | number,
+    serverId: string,
     data: UpsertEmbedRequest,
   ): Promise<ApiResponse<{ message: string }>> {
-    return this.request(`/v2/server/${serverId}/embeds`, {
-      method: 'POST',
-      body: JSON.stringify(data),
+    return this.executeEndpoint(CreateServerEmbedEndpoint, {
+      path: { serverId },
+      query: {},
+      body: data,
     });
   }
 
   async updateEmbed(
-    serverId: string | number,
+    serverId: string,
     embedName: string,
     data: UpsertEmbedRequest,
   ): Promise<ApiResponse<{ message: string }>> {
-    return this.request(`/v2/server/${serverId}/embeds/${encodeURIComponent(embedName)}`, {
-      method: 'PUT',
-      body: JSON.stringify(data),
+    return this.executeEndpoint(UpdateServerEmbedEndpoint, {
+      path: { serverId, embedName },
+      query: {},
+      body: data,
     });
   }
 
   async deleteEmbed(
-    serverId: string | number,
+    serverId: string,
     embedName: string,
   ): Promise<ApiResponse<{ message: string }>> {
-    return this.request(`/v2/server/${serverId}/embeds/${encodeURIComponent(embedName)}`, {
-      method: 'DELETE',
+    return this.executeEndpoint(DeleteServerEmbedEndpoint, {
+      path: { serverId, embedName },
+      query: {},
+      body: {},
     });
   }
 }

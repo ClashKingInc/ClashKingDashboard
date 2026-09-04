@@ -1,4 +1,5 @@
 import { generateCodeVerifier, generateCodeChallenge } from "@/lib/pkce";
+import { readBrowserRuntimeConfig } from "@/lib/runtime-config";
 
 /**
  * Initiates Discord OAuth2 login flow with PKCE
@@ -22,7 +23,7 @@ export async function initiateDiscordLogin(locale: string = 'en') {
     // Build Discord OAuth2 URL with PKCE
     // Use a single redirect URI without locale for easier Discord configuration
     const redirectUri = globalThis.window.location.origin + '/auth/callback';
-    const clientId = process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID;
+    const clientId = readBrowserRuntimeConfig().discordClientId;
 
     if (!clientId) {
       throw new Error("Discord Client ID is not set in environment variables.");

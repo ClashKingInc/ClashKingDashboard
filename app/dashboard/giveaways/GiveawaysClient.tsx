@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import Image from "next/image";
-import { useTranslations } from "next-intl";
+import Image from "@/components/app-image";
+import { useTranslations } from "use-intl";
 import ReactMarkdown from "react-markdown";
 import type { Components } from "react-markdown";
 import { Badge } from "@/components/ui/badge";
@@ -104,20 +104,21 @@ export function giveawayToFormState(
     startNow: false,
     endTime: duplicate ? "" : toInputDate(giveaway.end),
     winners: String(giveaway.winners),
-    mentions: giveaway.mentions || [],
+    mentions: [...(giveaway.mentions || [])],
     textAbove: giveaway.textAboveEmbed || "",
     textEmbed: giveaway.textInEmbed || "",
     textEnd: giveaway.textOnEnd || "",
     profileRequired: giveaway.profilePictureRequired,
     accountRequired: giveaway.cocAccountRequired,
     rolesMode: giveaway.rolesMode || "none",
-    roles: giveaway.roles || [],
+    roles: [...(giveaway.roles || [])],
     imageFile: null,
     imagePreview: giveaway.imageUrl ?? null,
     removeImage: false,
     boosters: (giveaway.boosters || []).map((booster) => ({
       ...booster,
       id: createBoosterId(),
+      roles: [...booster.roles],
     })),
   };
 }
@@ -600,7 +601,12 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
       if (gRes.error || !isGiveawaysResponse(gRes.data)) {
         throw new Error(gRes.error || t("toast.loadError"));
       }
-      setGiveaways(gRes.data);
+      setGiveaways({
+        ...gRes.data,
+        ongoing: [...gRes.data.ongoing],
+        upcoming: [...gRes.data.upcoming],
+        ended: [...gRes.data.ended],
+      });
     } catch (error) {
       toast({ title: t("toast.errorTitle"), description: error instanceof Error ? error.message : t("toast.loadError"), variant: "destructive" });
     } finally {
@@ -615,7 +621,7 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
       queryClient.fetchQuery(dashboardQueryOptions.roles(guildId)),
     ]);
     if (channelsResult.status === "fulfilled") setChannels(normalizeChannelsPayload(channelsResult.value));
-    if (rolesResult.status === "fulfilled") setRoles(normalizeDiscordRolesPayload(rolesResult.value));
+    if (rolesResult.status === "fulfilled") setRoles([...normalizeDiscordRolesPayload(rolesResult.value)]);
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps

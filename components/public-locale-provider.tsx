@@ -1,4 +1,4 @@
-import { NextIntlClientProvider } from "next-intl";
+import { IntlProvider } from "use-intl";
 import englishMessages from "@/messages/en.json";
 import frenchMessages from "@/messages/fr.json";
 import dutchMessages from "@/messages/nl.json";
@@ -19,8 +19,8 @@ export function PublicLocaleProvider({
   readonly children: React.ReactNode;
 }) {
   return (
-    <NextIntlClientProvider locale={locale} messages={messages[locale]}>
+    <IntlProvider locale={locale} messages={messages[locale]}>
       {children}
-    </NextIntlClientProvider>
+    </IntlProvider>
   );
 }

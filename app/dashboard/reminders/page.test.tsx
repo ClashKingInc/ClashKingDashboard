@@ -13,16 +13,17 @@ const fixtures = vi.hoisted(() => ({
     capital_reminders: [] as Array<Record<string, unknown>>,
     clan_games_reminders: [] as Array<Record<string, unknown>>,
     inactivity_reminders: [] as Array<Record<string, unknown>>,
+    roster_reminders: [] as Array<Record<string, unknown>>,
   },
 }));
 
-vi.mock("next/navigation", () => ({
+vi.mock("@/lib/navigation", () => ({
   useParams: () => ({ guildId: "123", locale: "en" }),
   useSearchParams: () => new URLSearchParams("guildId=123"),
   useRouter: () => ({ push: vi.fn() }),
 }));
 
-vi.mock("next-intl", () => ({
+vi.mock("use-intl", () => ({
   useTranslations: () => (key: string) => key,
   useLocale: () => "en",
 }));
@@ -43,15 +44,11 @@ vi.mock("@/lib/api/client", () => ({
   apiClient: {
     servers: {
       getServerClans: () => Promise.resolve({ data: fixtures.clans, status: 200 }),
-      getChannels: () => Promise.resolve({ data: {
-        channels: [
+      getChannels: () => Promise.resolve({ data: [
           { id: "100", name: "text", type: "text" },
           { id: "300", name: "forum", type: "forum" },
-        ],
-      }, status: 200 }),
-      getThreads: () => Promise.resolve({ data: {
-        threads: [{ id: "301", name: "forum post", parent_channel_id: "300" }],
-      }, status: 200 }),
+        ], status: 200 }),
+      getThreads: () => Promise.resolve({ data: [{ id: "301", name: "forum post", parent_channel_id: "300", parent_channel_name: "forum", archived: false }], status: 200 }),
     },
   },
 }));
@@ -92,6 +89,16 @@ function jsonResponse(body: unknown, status = 200): Response {
   });
 }
 
+function capturedRequest(method: string): Request | undefined {
+  const call = fetchMock.mock.calls.find(([input, init]) => {
+    const request = input instanceof Request ? input : new Request(input, init);
+    return request.method === method;
+  });
+  if (!call) return undefined;
+  const [input, init] = call;
+  return input instanceof Request ? input : new Request(input, init);
+}
+
 describe("RemindersPage Discord destinations", () => {
   beforeEach(() => {
     clearSession(false);
@@ -103,6 +110,7 @@ describe("RemindersPage Discord destinations", () => {
       capital_reminders: [],
       clan_games_reminders: [],
       inactivity_reminders: [],
+      roster_reminders: [],
     };
     Element.prototype.scrollIntoView = vi.fn();
     vi.stubGlobal("ResizeObserver", class ResizeObserver {
@@ -113,7 +121,8 @@ describe("RemindersPage Discord destinations", () => {
     localStorage.setItem("access_token", "token");
     vi.stubGlobal("fetch", fetchMock);
     fetchMock.mockImplementation((input: string | URL | Request, init?: RequestInit) => {
-      const url = String(input);
+      const request = input instanceof Request ? input : new Request(input, init);
+      const url = request.url;
       if (url.endsWith("/channels")) {
         return Promise.resolve(jsonResponse({
           channels: [
@@ -127,11 +136,11 @@ describe("RemindersPage Discord destinations", () => {
           threads: [{ id: "301", name: "forum post", parent_channel_id: "300" }],
         }));
       }
-      if (url.endsWith("/reminders") && !init?.method) {
+      if (url.endsWith("/reminders") && request.method === "GET") {
         return Promise.resolve(jsonResponse(fixtures.reminders));
       }
-      if (url.endsWith("/reminders") && init?.method === "POST") {
-        return Promise.resolve(jsonResponse({ reminder_id: "new" }));
+      if (url.endsWith("/reminders") && request.method === "POST") {
+        return Promise.resolve(jsonResponse({ message: "created", reminder_id: "new", server_id: 123 }, 201));
       }
       throw new Error(`Unexpected request: ${url}`);
     });
@@ -155,12 +164,12 @@ describe("RemindersPage Discord destinations", () => {
     fireEvent.click(screen.getByRole("button", { name: "dialog.addReminder" }));
 
     await waitFor(() => {
-      const post = fetchMock.mock.calls.find(([, init]) => init?.method === "POST");
+      const post = capturedRequest("POST");
       expect(post).toBeDefined();
-      expect(JSON.parse(String(post?.[1]?.body))).toMatchObject({
+    });
+    await expect(capturedRequest("POST")!.clone().json()).resolves.toMatchObject({
         channel_id: "100",
         thread_id: null,
-      });
     });
   });
 
@@ -174,11 +183,11 @@ describe("RemindersPage Discord destinations", () => {
     fireEvent.click(screen.getByRole("button", { name: "dialog.addReminder" }));
 
     await waitFor(() => {
-      const post = fetchMock.mock.calls.find(([, init]) => init?.method === "POST");
-      expect(JSON.parse(String(post?.[1]?.body))).toMatchObject({
+      expect(capturedRequest("POST")).toBeDefined();
+    });
+    await expect(capturedRequest("POST")!.clone().json()).resolves.toMatchObject({
         channel_id: "300",
         thread_id: "301",
-      });
     });
   });
 
@@ -193,11 +202,11 @@ describe("RemindersPage Discord destinations", () => {
     fireEvent.click(screen.getByRole("button", { name: "dialog.addReminder" }));
 
     await waitFor(() => {
-      const post = fetchMock.mock.calls.find(([, init]) => init?.method === "POST");
-      expect(JSON.parse(String(post?.[1]?.body))).toMatchObject({
+      expect(capturedRequest("POST")).toBeDefined();
+    });
+    await expect(capturedRequest("POST")!.clone().json()).resolves.toMatchObject({
         channel_id: "100",
         thread_id: null,
-      });
     });
   });
 
@@ -225,8 +234,9 @@ describe("RemindersPage Discord destinations", () => {
     fireEvent.click(screen.getByRole("button", { name: "clone.action" }));
 
     await waitFor(() => {
-      const post = fetchMock.mock.calls.find(([, init]) => init?.method === "POST");
-      expect(JSON.parse(String(post?.[1]?.body))).toMatchObject({
+      expect(capturedRequest("POST")).toBeDefined();
+    });
+    await expect(capturedRequest("POST")!.clone().json()).resolves.toMatchObject({
         type: "War",
         clan_tag: "#DEF",
         channel_id: "100",
@@ -234,7 +244,6 @@ describe("RemindersPage Discord destinations", () => {
         time: "6 hr",
         custom_text: "Use both attacks",
         war_types: ["Random", "CWL"],
-      });
     });
   });
 

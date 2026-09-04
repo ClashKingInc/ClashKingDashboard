@@ -4,7 +4,7 @@ import { useGuildId } from "@/lib/dashboard-route";
 
 
 import React, { useRef, useState, useEffect, useEffectEvent } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "use-intl";
 import { useQueryClient } from "@tanstack/react-query";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
@@ -280,7 +280,7 @@ export default function FamilySettingsPage() {
       }
 
       const rolesPayload = await queryClient.fetchQuery(dashboardQueryOptions.roles(guildId));
-      setDiscordRoles(normalizeDiscordRolesPayload(rolesPayload));
+      setDiscordRoles([...normalizeDiscordRolesPayload(rolesPayload)]);
     } catch (err) {
       console.error("Failed to load Discord roles:", err);
     }

@@ -11,7 +11,7 @@ const testState = vi.hoisted(() => ({
   getDashboardCapabilities: vi.fn(),
 }));
 
-vi.mock("next/navigation", () => ({
+vi.mock("@/lib/navigation", () => ({
   useRouter: () => ({ replace: testState.replace }),
 }));
 

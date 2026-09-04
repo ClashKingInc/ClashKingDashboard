@@ -4,12 +4,12 @@ import { getAccessToken } from "@/lib/auth/session";
 
 
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/navigation";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { initiateDiscordLogin } from "@/lib/auth/discord-login";
-import { useLocale, useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "use-intl";
 import { SERVER_COUNT } from "@/lib/constants";
 
 export function Hero() {

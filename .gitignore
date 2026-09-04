@@ -12,11 +12,6 @@
 /coverage
 *.log
 
-# Next.js
-/.next/
-/out/
-.next
-
 # Production
 /build
 /dist
@@ -49,14 +44,7 @@ yarn-error.log*
 
 # TypeScript
 *.tsbuildinfo
-next-env.d.ts
 .tsbuildinfo
-
-# Vercel
-.vercel
-
-# Turbopack
-.turbo
 
 # Editor directories
 .idea/
@@ -78,5 +66,4 @@ NUL
 # Claude
 .claude/
 .claude/CLAUDE.md
-.vinext/
 .wrangler/

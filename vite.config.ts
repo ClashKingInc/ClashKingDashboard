@@ -1,21 +1,25 @@
 import { defineConfig } from "vite";
-import vinext from "vinext";
 import { cloudflare } from "@cloudflare/vite-plugin";
+import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 
-export default defineConfig(({ command }) => ({
+export default defineConfig({
+  build: {
+    manifest: true,
+  },
   server: {
+    host: "127.0.0.1",
+    port: 3002,
     allowedHosts: ["dev-dash.clashk.ing"],
   },
   plugins: [
-    vinext(),
+    react(),
     tailwindcss(),
-    ...(command === "build"
-      ? [
-          cloudflare({
-            viteEnvironment: { name: "rsc", childEnvironments: ["ssr"] },
-          }),
-        ]
-      : []),
+    cloudflare(),
   ],
-}));
+  resolve: {
+    alias: {
+      "@": import.meta.dirname,
+    },
+  },
+});

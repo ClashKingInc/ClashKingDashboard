@@ -1,0 +1,38 @@
+import { forwardRef, type ComponentPropsWithoutRef, type CSSProperties } from "react";
+
+type NativeImageProps = Omit<ComponentPropsWithoutRef<"img">, "height" | "src" | "width">;
+
+export type AppImageProps = NativeImageProps & {
+  readonly src: string;
+  readonly width?: number | string;
+  readonly height?: number | string;
+  readonly fill?: boolean;
+  readonly priority?: boolean;
+  readonly unoptimized?: boolean;
+};
+
+const fillStyle: CSSProperties = {
+  position: "absolute",
+  inset: 0,
+  width: "100%",
+  height: "100%",
+};
+
+const AppImage = forwardRef<HTMLImageElement, AppImageProps>(function AppImage(
+  { fill = false, height, priority = false, src, style, unoptimized: _unoptimized, width, ...props },
+  ref,
+) {
+  return (
+    <img
+      {...props}
+      ref={ref}
+      src={src}
+      width={fill ? undefined : width}
+      height={fill ? undefined : height}
+      style={fill ? { ...fillStyle, ...style } : style}
+      fetchPriority={priority ? "high" : props.fetchPriority}
+    />
+  );
+});
+
+export default AppImage;

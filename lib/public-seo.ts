@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import englishMessages from "@/messages/en.json";
 import frenchMessages from "@/messages/fr.json";
 import dutchMessages from "@/messages/nl.json";
@@ -6,6 +5,18 @@ import { publicPath, type PublicLocale } from "@/lib/locale-preference";
 import { withEnglishFallback, type MessageCatalog } from "@/lib/message-catalog";
 
 export type PublicPage = "home" | "privacy" | "terms";
+
+export interface PublicMetadata {
+  readonly title: string;
+  readonly description: string;
+  readonly canonical: string;
+  readonly languageAlternates: Readonly<Record<string, string>>;
+  readonly openGraphTitle: string;
+  readonly openGraphLocale: string;
+  readonly alternateOpenGraphLocales: readonly string[];
+  readonly socialImage: string;
+  readonly socialImageAlt: string;
+}
 
 const SITE_ORIGIN = "https://clashk.ing";
 const SOCIAL_IMAGE = `${SITE_ORIGIN}/og/clashking-landing.png`;
@@ -47,7 +58,7 @@ export function getPublicPageCopy(locale: PublicLocale, page: PublicPage) {
   };
 }
 
-export function getPublicMetadata(locale: PublicLocale, page: PublicPage): Metadata {
+export function getPublicMetadata(locale: PublicLocale, page: PublicPage): PublicMetadata {
   const copy = getPublicPageCopy(locale, page);
   const pagePath = pagePaths[page];
   const localizedPath = publicPath(locale, pagePath);
@@ -62,38 +73,14 @@ export function getPublicMetadata(locale: PublicLocale, page: PublicPage): Metad
   return {
     title: copy.title,
     description: copy.description,
-    robots: { index: true, follow: true },
-    alternates: {
-      canonical,
-      languages: languageAlternates,
-    },
-    openGraph: {
-      title: copy.openGraphTitle,
-      description: copy.description,
-      type: "website",
-      siteName: "ClashKing",
-      url: canonical,
-      locale: openGraphLocales[locale],
-      alternateLocale: Object.values(openGraphLocales).filter(
-        (candidate) => candidate !== openGraphLocales[locale],
-      ),
-      images: [
-        {
-          url: SOCIAL_IMAGE,
-          width: 1200,
-          height: 630,
-          alt: copy.imageAlt,
-        },
-      ],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: copy.openGraphTitle,
-      description: copy.description,
-      images: [SOCIAL_IMAGE],
-    },
-    other: {
-      "content-language": locale,
-    },
+    canonical,
+    languageAlternates,
+    openGraphTitle: copy.openGraphTitle,
+    openGraphLocale: openGraphLocales[locale],
+    alternateOpenGraphLocales: Object.values(openGraphLocales).filter(
+      (candidate) => candidate !== openGraphLocales[locale],
+    ),
+    socialImage: SOCIAL_IMAGE,
+    socialImageAlt: copy.imageAlt,
   };
 }

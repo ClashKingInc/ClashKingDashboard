@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
-import { useLocale } from "next-intl";
-import { useRouter } from "next/navigation";
+import { useLocale } from "use-intl";
+import { useRouter } from "@/lib/navigation";
 import { Loader2 } from "lucide-react";
 import { useAuthSession } from "@/components/auth-session-provider";
 import { SidebarClient } from "@/components/dashboard/sidebar-client";

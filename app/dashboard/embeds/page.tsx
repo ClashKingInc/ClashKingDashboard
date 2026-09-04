@@ -2,7 +2,7 @@
 
 import { useGuildId } from "@/lib/dashboard-route";
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "use-intl";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   ChevronDown,
@@ -32,7 +32,7 @@ import { DiscordMessagePreview, extractEmbeds, extractMessageContent, extractMes
 import { normalizeChannelsPayload, normalizeDiscordRolesPayload } from "@/lib/dashboard-cache";
 import { dashboardQueryKeys } from "@/lib/dashboard-query";
 import { dashboardQueryOptions } from "@/lib/dashboard-query-options";
-import type { ServerEmbed } from "@/lib/api/types/tickets";
+import type { ServerEmbed, UpsertEmbedRequest } from "@/lib/api/types/tickets";
 
 const EmbedEditor = lazy(() => import("@/components/dashboard/embed-editor").then((module) => ({ default: module.EmbedEditor })));
 
@@ -144,7 +144,7 @@ export default function EmbedsPage() {
     void loadMentionMetadata();
   };
 
-  const handleSave = async (data: Record<string, unknown>) => {
+  const handleSave = async (data: UpsertEmbedRequest["data"]) => {
     const name = editingEmbed ? editingEmbed.name : pendingName.trim();
     setIsSaving(true);
     try {

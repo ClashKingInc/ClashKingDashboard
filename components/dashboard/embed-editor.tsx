@@ -1,12 +1,13 @@
 "use client";
 
-import { apiFetch } from "@/lib/api/fetch";
-
-
+import { dashboardEndpoints, UpsertEmbedRequest as UpsertEmbedRequestSchema } from "@clashking/api-contracts";
+import { Schema } from "effect";
+import type { UpsertEmbedRequest } from "@/lib/api/types/tickets";
+import { executeSharedEndpoint } from "@/lib/api/shared-client";
 import { decompressFromEncodedURIComponent, decompressFromBase64 } from 'lz-string';
 import { useId, useRef, useState, type ComponentType, type MutableRefObject, useEffect } from "react";
-import { useLocale, useTranslations } from "next-intl";
-import Image from "next/image";
+import { useLocale, useTranslations } from "use-intl";
+import Image from "@/components/app-image";
 import emojiDataset from "emoji-datasource-twitter/emoji.json";
 import { AtSign, Bike, CalendarDays, CheckCircle2, ChevronDown, ChevronRight, ChevronUp, Clock3, Copy, ExternalLink, Flag, Gamepad2, GlassWater, Hash, Heart, Keyboard, Leaf, Loader2, Plus, Smile, Trash2, Utensils, Link2, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -147,7 +148,7 @@ function createCollapsedSectionState(): Record<SectionKey, boolean> {
 
 export interface EmbedEditorProps {
   readonly initialData?: Record<string, unknown> | null;
-  readonly onSave: (data: Record<string, unknown>) => Promise<void>;
+  readonly onSave: (data: UpsertEmbedRequest["data"]) => Promise<void>;
   readonly isSaving: boolean;
   readonly onCancel: () => void;
   readonly channels?: PreviewDiscordChannel[];
@@ -327,9 +328,9 @@ function isSkinToneVariant(emoji: string): boolean {
 
 function buildCategoryEmojis(categories: readonly string[]): string[] {
   const allowed = new Set(categories);
-  const picked = [...EMOJI_DATA
+  const picked = EMOJI_DATA
     .filter((entry) => allowed.has(entry.category))
-  ].sort((a, b) => (a.sort_order ?? Number.MAX_SAFE_INTEGER) - (b.sort_order ?? Number.MAX_SAFE_INTEGER))
+    .sort((a, b) => (a.sort_order ?? Number.MAX_SAFE_INTEGER) - (b.sort_order ?? Number.MAX_SAFE_INTEGER))
     .map((entry) => entry.emoji)
     .filter((emoji) => !isSkinToneVariant(emoji));
   return [...new Set(picked)];
@@ -366,9 +367,9 @@ function flagEmojiToCountryCode(emoji: string): string | null {
 
 function buildSupportedFlagEmojis(): string[] {
   const base = [...SPECIAL_FLAG_ORDER];
-  const flagsFromSource = [...EMOJI_DATA
+  const flagsFromSource = EMOJI_DATA
     .filter((entry) => entry.category === "Flags")
-  ].sort((a, b) => (a.sort_order ?? Number.MAX_SAFE_INTEGER) - (b.sort_order ?? Number.MAX_SAFE_INTEGER))
+    .sort((a, b) => (a.sort_order ?? Number.MAX_SAFE_INTEGER) - (b.sort_order ?? Number.MAX_SAFE_INTEGER))
     .map((entry) => entry.emoji)
     .filter((emoji) => !base.includes(emoji as (typeof SPECIAL_FLAG_ORDER)[number]));
   return [...new Set([...base, ...flagsFromSource])];
@@ -1388,7 +1389,7 @@ function hasMeaningfulEmbedContent(embed: DiscordEmbed): boolean {
 export function stateToPayload( // NOSONAR — sequential field assignments, no real logic branches
   messages: MessageState[],
   profile: MessageProfileState = EMPTY_MESSAGE_PROFILE,
-): Record<string, unknown> {
+): UpsertEmbedRequest["data"] {
   const normalizedProfile = {
     name: profile.name.slice(0, MAX_PROFILE_NAME_LENGTH).trim() || null,
     avatar_url: profile.avatarUrl.trim() || null,
@@ -1422,7 +1423,7 @@ export function stateToPayload( // NOSONAR — sequential field assignments, no 
     if (normalizedProfile.name) payload.username = normalizedProfile.name;
     if (normalizedProfile.avatar_url) payload.avatar_url = normalizedProfile.avatar_url;
   }
-  return payload;
+  return Schema.decodeUnknownSync(UpsertEmbedRequestSchema.fields.data)(payload);
 }
 
 function decodeBase64DiscohookPayload(raw: string): string {
@@ -1949,12 +1950,11 @@ function FileComponentEditorFields({
     try {
       const formData = new FormData();
       formData.append("file", file);
-      const res = await apiFetch("/v2/app/cdn-upload", {
-        method: "POST",
+      const data = await executeSharedEndpoint(dashboardEndpoints.dashboardCdnUpload, {
+        path: {},
+        query: {},
         body: formData,
       });
-      if (!res.ok) throw new Error(`Upload failed (${res.status})`);
-      const data = await res.json();
       if (data.url) onChange({ ...comp, url: data.url });
       else throw new Error("No URL in response");
     } catch (err) {
@@ -2265,21 +2265,23 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
     let urlToparse = importUrl.trim();
 
     // Share links don't carry ?data= and can't be fetched client-side (CORS).
-    // Resolve both share.discohook.app URLs and discohook.app/?share= links through the Go API.
+    // Resolve both supported Discohook forms through the API.
     if (requiresDiscohookResolve(urlToparse)) {
       setImportResolving(true);
       setImportError(false);
       try {
-        const res = await apiFetch(`/v2/app/discohook-resolve?url=${encodeURIComponent(urlToparse)}`);
-        const json = await res.json();
-        if (!res.ok) { setImportError(true); setImportWarning(null); return; }
+        const json = await executeSharedEndpoint(dashboardEndpoints.dashboardDiscohookResolve, {
+          path: {},
+          query: { url: urlToparse },
+          body: {},
+        });
 
-        if (json.payload) {
+        if ("payload" in json && typeof json.payload === "object" && json.payload !== null && !Array.isArray(json.payload)) {
           // Backend returned the raw JSON payload directly
-          applyParsed(json.payload as Record<string, unknown>);
+          applyParsed({ ...json.payload });
           return;
         }
-        if (json.resolvedUrl) {
+        if ("resolvedUrl" in json) {
           urlToparse = json.resolvedUrl;
         } else {
           setImportError(true); setImportWarning(null); return;

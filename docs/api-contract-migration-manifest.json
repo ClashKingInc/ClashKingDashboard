@@ -1,0 +1,3465 @@
+{
+  "generatedFrom": "ClashKingDashboard current shared descriptor callers and remaining raw transport boundaries",
+  "packageTargets": {
+    "contracts": "@clashking/api-contracts@0.1.0-rc.0",
+    "client": "@clashking/api-client@0.1.0-rc.0"
+  },
+  "queryToPostRoutes": [
+    "/v2/home/activity",
+    "/v2/stats/armies",
+    "/v2/stats/items",
+    "/v2/stats/ranked",
+    "/v2/stats/war",
+    "/v2/stats/cwl"
+  ],
+  "notes": [
+    "No current Dashboard source caller references any of the six query-to-POST routes.",
+    "The local /api/tenor-media route was removed; reminders use the typed API-owned Tenor endpoint.",
+    "localTypeLocations points to facade aliases or UI projections; wire types are derived from shared contracts.",
+    "The auth refresh raw transport is independently schema-validated to avoid a circular refresh dependency."
+  ],
+  "clientEndpoints": [
+    {
+      "clientMethod": "AuthClient.verifyEmailCode",
+      "operationId": "expoAuthWebVerifyEmail",
+      "method": "POST",
+      "path": "/v2/auth/web/verify-email-code",
+      "contract": "AuthWebVerifyEmailEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<AuthResponse>>",
+      "parameters": "email: string, code: string",
+      "source": "lib/api/clients/auth-client.ts:31",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "AuthResponse",
+          "path": "lib/api/types/auth.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "AuthClient.getCurrentUser",
+      "operationId": "getExpoAuthMe",
+      "method": "GET",
+      "path": "/v2/auth/me",
+      "contract": "AuthMeEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<UserInfo>>",
+      "parameters": "",
+      "source": "lib/api/clients/auth-client.ts:39",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "UserInfo",
+          "path": "lib/api/types/auth.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "AuthClient.authenticateWithDiscord",
+      "operationId": "expoAuthWebDiscord",
+      "method": "POST",
+      "path": "/v2/auth/web/discord",
+      "contract": "AuthWebDiscordEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<AuthResponse>>",
+      "parameters": "data: DiscordAuthRequest",
+      "source": "lib/api/clients/auth-client.ts:43",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "AuthResponse",
+          "path": "lib/api/types/auth.ts"
+        },
+        {
+          "name": "DiscordAuthRequest",
+          "path": "lib/api/types/auth.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "AuthClient.refreshToken",
+      "operationId": "expoAuthWebRefresh",
+      "method": "POST",
+      "path": "/v2/auth/web/refresh",
+      "contract": "AuthWebRefreshEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<{ access_token: string }>>",
+      "parameters": "",
+      "source": "lib/api/clients/auth-client.ts:51",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "AuthClient.registerWithEmail",
+      "operationId": "expoAuthRegister",
+      "method": "POST",
+      "path": "/v2/auth/register",
+      "contract": "AuthRegisterEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<{ message: string; verification_code?: string }>>",
+      "parameters": "data: EmailRegisterRequest",
+      "source": "lib/api/clients/auth-client.ts:55",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "EmailRegisterRequest",
+          "path": "lib/api/types/auth.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "AuthClient.resendVerification",
+      "operationId": "expoAuthResendVerification",
+      "method": "POST",
+      "path": "/v2/auth/resend-verification",
+      "contract": "AuthResendVerificationEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<{ message: string; verification_code?: string }>>",
+      "parameters": "email: string",
+      "source": "lib/api/clients/auth-client.ts:65",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "AuthClient.loginWithEmail",
+      "operationId": "expoAuthWebEmail",
+      "method": "POST",
+      "path": "/v2/auth/web/email",
+      "contract": "AuthWebEmailEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<AuthResponse>>",
+      "parameters": "data: EmailAuthRequest",
+      "source": "lib/api/clients/auth-client.ts:75",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "AuthResponse",
+          "path": "lib/api/types/auth.ts"
+        },
+        {
+          "name": "EmailAuthRequest",
+          "path": "lib/api/types/auth.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "AuthClient.forgotPassword",
+      "operationId": "expoAuthForgotPassword",
+      "method": "POST",
+      "path": "/v2/auth/forgot-password",
+      "contract": "AuthForgotPasswordEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<{ message: string }>>",
+      "parameters": "data: ForgotPasswordRequest",
+      "source": "lib/api/clients/auth-client.ts:83",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "ForgotPasswordRequest",
+          "path": "lib/api/types/auth.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "AuthClient.resetPassword",
+      "operationId": "expoAuthWebResetPassword",
+      "method": "POST",
+      "path": "/v2/auth/web/reset-password",
+      "contract": "AuthWebResetPasswordEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<AuthResponse>>",
+      "parameters": "data: ResetPasswordRequest",
+      "source": "lib/api/clients/auth-client.ts:91",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "AuthResponse",
+          "path": "lib/api/types/auth.ts"
+        },
+        {
+          "name": "ResetPasswordRequest",
+          "path": "lib/api/types/auth.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "AuthClient.logout",
+      "operationId": "expoAuthWebLogout",
+      "method": "POST",
+      "path": "/v2/auth/web/logout",
+      "contract": "AuthWebLogoutEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<null>>",
+      "parameters": "",
+      "source": "lib/api/clients/auth-client.ts:99",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "BasesClient.list",
+      "operationId": "dashboardBases",
+      "method": "GET",
+      "path": "/v2/server/:serverId/bases",
+      "contract": "BasesEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<BasesResponse>>",
+      "parameters": "serverId: string, limit = 50, offset = 0",
+      "source": "lib/api/clients/bases-client.ts:22",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "BasesResponse",
+          "path": "lib/api/types/bases.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "BasesClient.get",
+      "operationId": "dashboardBase",
+      "method": "GET",
+      "path": "/v2/server/:serverId/bases/:baseId",
+      "contract": "BaseEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<Base>>",
+      "parameters": "serverId: string, baseId: string",
+      "source": "lib/api/clients/bases-client.ts:30",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "Base",
+          "path": "lib/api/types/bases.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "BasesClient.delete",
+      "operationId": "deleteDashboardBase",
+      "method": "DELETE",
+      "path": "/v2/server/:serverId/bases/:baseId",
+      "contract": "DeleteBaseEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<BaseDeleteResponse>>",
+      "parameters": "serverId: string, baseId: string",
+      "source": "lib/api/clients/bases-client.ts:38",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "BaseDeleteResponse",
+          "path": "lib/api/types/bases.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "BasesClient.create",
+      "operationId": "createDashboardBase",
+      "method": "POST",
+      "path": "/v2/server/:serverId/bases",
+      "contract": "CreateBaseEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<Base>>",
+      "parameters": "serverId: string, data: CreateBaseRequest",
+      "source": "lib/api/clients/bases-client.ts:46",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "Base",
+          "path": "lib/api/types/bases.ts"
+        },
+        {
+          "name": "CreateBaseRequest",
+          "path": "lib/api/types/bases.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "BasesClient.uploadImage",
+      "operationId": "uploadDashboardBaseImage",
+      "method": "POST",
+      "path": "/v2/server/:serverId/bases/images",
+      "contract": "UploadBaseImageEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<BaseImageUploadResponse>>",
+      "parameters": "serverId: string, file: File",
+      "source": "lib/api/clients/bases-client.ts:54",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "BaseImageUploadResponse",
+          "path": "lib/api/types/bases.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "BasesClient.getDownloader",
+      "operationId": "baseDownloader",
+      "method": "GET",
+      "path": "/v2/server/:serverId/bases/:baseId/downloaders/:userId",
+      "contract": "BaseDownloaderEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<BaseDownloader>>",
+      "parameters": "serverId: string, baseId: string, userId: string",
+      "source": "lib/api/clients/bases-client.ts:64",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "BaseDownloader",
+          "path": "lib/api/types/bases.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "BillingClient.getSubscription",
+      "operationId": "dashboardBillingSubscription",
+      "method": "GET",
+      "path": "/v2/billing/subscription",
+      "contract": "DashboardBillingSubscriptionEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<BillingSubscription>>",
+      "parameters": "",
+      "source": "lib/api/clients/billing-client.ts:14",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "BillingSubscription",
+          "path": "lib/api/types/billing.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "BillingClient.createCheckout",
+      "operationId": "dashboardBillingCheckout",
+      "method": "POST",
+      "path": "/v2/billing/stripe/checkout",
+      "contract": "DashboardBillingCheckoutEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<BillingSession>>",
+      "parameters": "serverId: string",
+      "source": "lib/api/clients/billing-client.ts:22",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "BillingSession",
+          "path": "lib/api/types/billing.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "BillingClient.createPortal",
+      "operationId": "dashboardBillingPortal",
+      "method": "POST",
+      "path": "/v2/billing/stripe/portal",
+      "contract": "DashboardBillingPortalEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<BillingSession>>",
+      "parameters": "",
+      "source": "lib/api/clients/billing-client.ts:30",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "BillingSession",
+          "path": "lib/api/types/billing.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "BillingClient.getUsage",
+      "operationId": "dashboardBillingUsage",
+      "method": "GET",
+      "path": "/v2/billing/usage",
+      "contract": "DashboardBillingUsageEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<BillingUsage>>",
+      "parameters": "serverId: string",
+      "source": "lib/api/clients/billing-client.ts:38",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "BillingUsage",
+          "path": "lib/api/types/billing.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "BillingClient.updateAssignment",
+      "operationId": "dashboardBillingAssignment",
+      "method": "PUT",
+      "path": "/v2/billing/subscription/assignment",
+      "contract": "DashboardBillingAssignmentEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<null>>",
+      "parameters": "serverId: string | null",
+      "source": "lib/api/clients/billing-client.ts:46",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "ClanCategoriesClient.list",
+      "operationId": "clanCategories",
+      "method": "GET",
+      "path": "/v2/server/:serverId/clan-categories",
+      "contract": "ClanCategoriesEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<ClanCategoriesResponse>>",
+      "parameters": "serverId: string",
+      "source": "lib/api/clients/clan-categories-client.ts:20",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "ClanCategoriesResponse",
+          "path": "lib/api/types/clan-categories.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "ClanCategoriesClient.create",
+      "operationId": "createClanCategory",
+      "method": "POST",
+      "path": "/v2/server/:serverId/clan-categories",
+      "contract": "CreateClanCategoryEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<ClanCategoryMutationResponse>>",
+      "parameters": "serverId: string, name: string",
+      "source": "lib/api/clients/clan-categories-client.ts:28",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "ClanCategoryMutationResponse",
+          "path": "lib/api/types/clan-categories.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "ClanCategoriesClient.rename",
+      "operationId": "renameClanCategory",
+      "method": "PATCH",
+      "path": "/v2/server/:serverId/clan-categories/:categoryId",
+      "contract": "RenameClanCategoryEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<ClanCategoryMutationResponse>>",
+      "parameters": "serverId: string, categoryId: string, name: string",
+      "source": "lib/api/clients/clan-categories-client.ts:36",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "ClanCategoryMutationResponse",
+          "path": "lib/api/types/clan-categories.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "ClanCategoriesClient.reorder",
+      "operationId": "reorderClanCategories",
+      "method": "PUT",
+      "path": "/v2/server/:serverId/clan-categories/order",
+      "contract": "ReorderClanCategoriesEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<ClanCategoriesResponse>>",
+      "parameters": "serverId: string, categoryIds: string[]",
+      "source": "lib/api/clients/clan-categories-client.ts:48",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "ClanCategoriesResponse",
+          "path": "lib/api/types/clan-categories.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "ClanCategoriesClient.previewDelete",
+      "operationId": "previewClanCategoryDelete",
+      "method": "GET",
+      "path": "/v2/server/:serverId/clan-categories/:categoryId/delete-preview",
+      "contract": "PreviewClanCategoryDeleteEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<ClanCategoryDeletePreview>>",
+      "parameters": "serverId: string, categoryId: string",
+      "source": "lib/api/clients/clan-categories-client.ts:59",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "ClanCategoryDeletePreview",
+          "path": "lib/api/types/clan-categories.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "ClanCategoriesClient.delete",
+      "operationId": "deleteClanCategory",
+      "method": "DELETE",
+      "path": "/v2/server/:serverId/clan-categories/:categoryId",
+      "contract": "DeleteClanCategoryEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<ClanCategoryDeleteResponse>>",
+      "parameters": "serverId: string, categoryId: string",
+      "source": "lib/api/clients/clan-categories-client.ts:70",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "ClanCategoryDeleteResponse",
+          "path": "lib/api/types/clan-categories.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "ClanClient.getClanInfo",
+      "operationId": "getExpoProxyClan",
+      "method": "GET",
+      "path": "/proxy/v1/clans/:clanTag",
+      "contract": "ProxyClanEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "inferred from shared descriptor",
+      "parameters": "clanTag: string",
+      "source": "lib/api/clients/clan-client.ts:14",
+      "localTypeLocations": []
+    },
+    {
+      "clientMethod": "ClanClient.getRanking",
+      "operationId": "botClanRankings",
+      "method": "GET",
+      "path": "/v2/clan/:tag/rankings",
+      "contract": "BotClanRankingsEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<ClanRanking>>",
+      "parameters": "clanTag: string",
+      "source": "lib/api/clients/clan-client.ts:23",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "ClanRanking",
+          "path": "lib/api/types/clan.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "ClanClient.search",
+      "operationId": "dashboardClanSearch",
+      "method": "GET",
+      "path": "/v2/clan/search",
+      "contract": "DashboardClanSearchEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<PaginatedResponse<ClanSearchResult>>>",
+      "parameters": "query: string, _userId?: string, _guildId?: string",
+      "source": "lib/api/clients/clan-client.ts:32",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "PaginatedResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "ClanSearchResult",
+          "path": "lib/api/types/clan.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "FamilyRolesClient.getFamilyRoles",
+      "operationId": "serverRoles",
+      "method": "GET",
+      "path": "/v2/server/:serverId/server-roles",
+      "contract": "ServerRolesEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<FamilyRolesResponse>>",
+      "parameters": "serverId: string",
+      "source": "lib/api/clients/family-roles-client.ts:44",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "FamilyRolesResponse",
+          "path": "lib/api/types/family-roles.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "FamilyRolesClient.addFamilyRole",
+      "operationId": "createServerRole",
+      "method": "POST",
+      "path": "/v2/server/:serverId/server-roles",
+      "contract": "CreateServerRoleEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<FamilyRoleOperationResponse>>",
+      "parameters": "serverId: string, data: FamilyRoleAdd",
+      "source": "lib/api/clients/family-roles-client.ts:54",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "FamilyRoleAdd",
+          "path": "lib/api/types/family-roles.ts"
+        },
+        {
+          "name": "FamilyRoleOperationResponse",
+          "path": "lib/api/types/family-roles.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "FamilyRolesClient.updateFamilyRoleMode",
+      "operationId": "updateServerRole",
+      "method": "PATCH",
+      "path": "/v2/server/:serverId/server-roles/:roleId",
+      "contract": "UpdateServerRoleEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<ServerRoleResponse>>",
+      "parameters": "serverId: string, id: string, mode: RoleMode",
+      "source": "lib/api/clients/family-roles-client.ts:73",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "ServerRoleResponse",
+          "path": "lib/api/types/roles.ts"
+        },
+        {
+          "name": "RoleMode",
+          "path": "lib/api/types/roles.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "FamilyRolesClient.removeFamilyRole",
+      "operationId": "deleteServerRole",
+      "method": "DELETE",
+      "path": "/v2/server/:serverId/server-roles/:roleId",
+      "contract": "DeleteServerRoleEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<FamilyRoleOperationResponse>>",
+      "parameters": "serverId: string, roleType: FamilyRoleType, id: string, roleId: string",
+      "source": "lib/api/clients/family-roles-client.ts:81",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "FamilyRoleOperationResponse",
+          "path": "lib/api/types/family-roles.ts"
+        },
+        {
+          "name": "FamilyRoleType",
+          "path": "lib/api/types/family-roles.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "LinkClient.linkAccount",
+      "operationId": "dashboardLinksAdd",
+      "method": "POST",
+      "path": "/v2/links/:userId",
+      "contract": "DashboardLinksAddEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "inferred from shared descriptor",
+      "parameters": "id: string, data: CocAccountRequest",
+      "source": "lib/api/clients/link-client.ts:16",
+      "localTypeLocations": [
+        {
+          "name": "CocAccountRequest",
+          "path": "lib/api/types/link.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "LinkClient.getLinkedAccounts",
+      "operationId": "dashboardLinksList",
+      "method": "GET",
+      "path": "/v2/links/:userId",
+      "contract": "DashboardLinksListEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<LinkedAccountsResponse>>",
+      "parameters": "id: string",
+      "source": "lib/api/clients/link-client.ts:24",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "LinkedAccountsResponse",
+          "path": "lib/api/types/link.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "LinkClient.unlinkAccount",
+      "operationId": "dashboardLinksRemove",
+      "method": "DELETE",
+      "path": "/v2/links/:userId/:playerTag",
+      "contract": "DashboardLinksRemoveEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<{ message: string }>>",
+      "parameters": "id: string, playerTag: string",
+      "source": "lib/api/clients/link-client.ts:32",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "LinkClient.setAccountHidden",
+      "operationId": "dashboardLinksVisibility",
+      "method": "PATCH",
+      "path": "/v2/links/:userId/:playerTag",
+      "contract": "DashboardLinksVisibilityEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<LinkedAccount>>",
+      "parameters": "id: string, playerTag: string, hidden: boolean",
+      "source": "lib/api/clients/link-client.ts:40",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "LinkedAccount",
+          "path": "lib/api/types/link.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "LinkClient.reorderAccounts",
+      "operationId": "dashboardLinksOrder",
+      "method": "PUT",
+      "path": "/v2/links/:userId/order",
+      "contract": "DashboardLinksOrderEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<{ message: string }>>",
+      "parameters": "id: string, orderedTags: string[]",
+      "source": "lib/api/clients/link-client.ts:52",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "PanelsClient.getPanel",
+      "operationId": "serverPanel",
+      "method": "GET",
+      "path": "/v2/server/:serverId/panel",
+      "contract": "ServerPanelEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<ServerPanel>>",
+      "parameters": "serverId: string",
+      "source": "lib/api/clients/panels-client.ts:11",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "ServerPanel",
+          "path": "lib/api/types/panels.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "PanelsClient.updatePanel",
+      "operationId": "updateServerPanel",
+      "method": "PUT",
+      "path": "/v2/server/:serverId/panel",
+      "contract": "UpdateServerPanelEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<ServerPanel>>",
+      "parameters": "serverId: string, data: UpdatePanelRequest",
+      "source": "lib/api/clients/panels-client.ts:19",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "ServerPanel",
+          "path": "lib/api/types/panels.ts"
+        },
+        {
+          "name": "UpdatePanelRequest",
+          "path": "lib/api/types/panels.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "PlayerClient.getPlayerInfo",
+      "operationId": "getExpoProxyPlayer",
+      "method": "GET",
+      "path": "/proxy/v1/players/:playerTag",
+      "contract": "ProxyPlayerEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "inferred from shared descriptor",
+      "parameters": "playerTag: string",
+      "source": "lib/api/clients/player-client.ts:10",
+      "localTypeLocations": []
+    },
+    {
+      "clientMethod": "RolesClient.getDiscordRoles",
+      "operationId": "discordRoles",
+      "method": "GET",
+      "path": "/v2/server/:serverId/discord-roles",
+      "contract": "DiscordRolesEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<DiscordRolesResponse>>",
+      "parameters": "serverId: string, signal?: AbortSignal",
+      "source": "lib/api/clients/roles-client.ts:25",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "DiscordRolesResponse",
+          "path": "lib/api/types/roles.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "RolesClient.getRoleSettings",
+      "operationId": "roleSettings",
+      "method": "GET",
+      "path": "/v2/server/:serverId/role-settings",
+      "contract": "RoleSettingsEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<RoleSettings>>",
+      "parameters": "serverId: string",
+      "source": "lib/api/clients/roles-client.ts:33",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "RoleSettings",
+          "path": "lib/api/types/roles.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "RolesClient.updateRoleSettings",
+      "operationId": "updateRoleSettings",
+      "method": "PATCH",
+      "path": "/v2/server/:serverId/role-settings",
+      "contract": "UpdateRoleSettingsEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "inferred from shared descriptor",
+      "parameters": "serverId: string, settings: RoleSettingsUpdate",
+      "source": "lib/api/clients/roles-client.ts:41",
+      "localTypeLocations": [
+        {
+          "name": "RoleSettingsUpdate",
+          "path": "lib/api/types/roles.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "RolesClient.getServerRoles",
+      "operationId": "serverRoles",
+      "method": "GET",
+      "path": "/v2/server/:serverId/server-roles",
+      "contract": "ServerRolesEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<ServerRolesResponse>>",
+      "parameters": "serverId: string, filters: { type?: RoleType; clan_tag?: string } = {}",
+      "source": "lib/api/clients/roles-client.ts:52",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "ServerRolesResponse",
+          "path": "lib/api/types/roles.ts"
+        },
+        {
+          "name": "RoleType",
+          "path": "lib/api/types/roles.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "RolesClient.createServerRole",
+      "operationId": "createServerRole",
+      "method": "POST",
+      "path": "/v2/server/:serverId/server-roles",
+      "contract": "CreateServerRoleEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<ServerRoleResponse>>",
+      "parameters": "serverId: string, role: ServerRoleInput",
+      "source": "lib/api/clients/roles-client.ts:63",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "ServerRoleInput",
+          "path": "lib/api/types/roles.ts"
+        },
+        {
+          "name": "ServerRoleResponse",
+          "path": "lib/api/types/roles.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "RolesClient.updateServerRole",
+      "operationId": "updateServerRole",
+      "method": "PATCH",
+      "path": "/v2/server/:serverId/server-roles/:roleId",
+      "contract": "UpdateServerRoleEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<ServerRoleResponse>>",
+      "parameters": "serverId: string, roleId: string, update: ServerRoleUpdate",
+      "source": "lib/api/clients/roles-client.ts:74",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "ServerRoleResponse",
+          "path": "lib/api/types/roles.ts"
+        },
+        {
+          "name": "ServerRoleUpdate",
+          "path": "lib/api/types/roles.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "RolesClient.deleteServerRole",
+      "operationId": "deleteServerRole",
+      "method": "DELETE",
+      "path": "/v2/server/:serverId/server-roles/:roleId",
+      "contract": "DeleteServerRoleEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<ServerRoleResponse>>",
+      "parameters": "serverId: string, roleId: string",
+      "source": "lib/api/clients/roles-client.ts:86",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "ServerRoleResponse",
+          "path": "lib/api/types/roles.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "RosterClient.create",
+      "operationId": "dashboardCreateRoster",
+      "method": "POST",
+      "path": "/v2/roster",
+      "contract": "DashboardCreateRosterEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<{ message: string; roster_id: string }>>",
+      "parameters": "serverId: string, data: CreateRosterModel",
+      "source": "lib/api/clients/roster-client.ts:68",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "CreateRosterModel",
+          "path": "lib/api/types/roster.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "RosterClient.update",
+      "operationId": "dashboardUpdateRoster",
+      "method": "PATCH",
+      "path": "/v2/roster/:rosterId",
+      "contract": "DashboardUpdateRosterEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "inferred from shared descriptor",
+      "parameters": "rosterId: string, serverId: string, data: RosterUpdateModel, groupId?: string",
+      "source": "lib/api/clients/roster-client.ts:78",
+      "localTypeLocations": [
+        {
+          "name": "RosterUpdateModel",
+          "path": "lib/api/types/roster.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "RosterClient.get",
+      "operationId": "dashboardGetRoster",
+      "method": "GET",
+      "path": "/v2/roster/:rosterId",
+      "contract": "DashboardGetRosterEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "inferred from shared descriptor",
+      "parameters": "rosterId: string, serverId: string",
+      "source": "lib/api/clients/roster-client.ts:92",
+      "localTypeLocations": []
+    },
+    {
+      "clientMethod": "RosterClient.delete",
+      "operationId": "dashboardDeleteRoster",
+      "method": "DELETE",
+      "path": "/v2/roster/:rosterId",
+      "contract": "DashboardDeleteRosterEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<{ message: string }>>",
+      "parameters": "rosterId: string, serverId: string, membersOnly?: boolean",
+      "source": "lib/api/clients/roster-client.ts:102",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "RosterClient.list",
+      "operationId": "dashboardListRosters",
+      "method": "GET",
+      "path": "/v2/roster/:serverId/list",
+      "contract": "DashboardListRostersEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "inferred from shared descriptor",
+      "parameters": "serverId: string, groupId?: string, clanTag?: string",
+      "source": "lib/api/clients/roster-client.ts:117",
+      "localTypeLocations": []
+    },
+    {
+      "clientMethod": "RosterClient.clone",
+      "operationId": "dashboardCloneRoster",
+      "method": "POST",
+      "path": "/v2/roster/:rosterId/clone",
+      "contract": "DashboardCloneRosterEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<{ message: string; new_roster_id: string }>>",
+      "parameters": "rosterId: string, serverId: string, data: RosterCloneModel",
+      "source": "lib/api/clients/roster-client.ts:133",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "RosterCloneModel",
+          "path": "lib/api/types/roster.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "RosterClient.refresh",
+      "operationId": "dashboardRefreshRosters",
+      "method": "POST",
+      "path": "/v2/roster/refresh",
+      "contract": "DashboardRefreshRostersEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<EndpointResponse<typeof DashboardRefreshRostersEndpoint>>>",
+      "parameters": "serverId?: string, groupId?: string, rosterId?: string",
+      "source": "lib/api/clients/roster-client.ts:144",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "RosterClient.bulkUpdateMembers",
+      "operationId": "dashboardManageRosterMembers",
+      "method": "POST",
+      "path": "/v2/roster/:rosterId/members",
+      "contract": "DashboardManageRosterMembersEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<{ message: string; added: number; removed: number }>>",
+      "parameters": "rosterId: string, serverId: string, data: RosterMemberBulkOperationModel",
+      "source": "lib/api/clients/roster-client.ts:167",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "RosterMemberBulkOperationModel",
+          "path": "lib/api/types/roster.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "RosterClient.updateMember",
+      "operationId": "dashboardUpdateRosterMember",
+      "method": "PATCH",
+      "path": "/v2/roster/:rosterId/members/:memberTag",
+      "contract": "DashboardUpdateRosterMemberEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<{ message: string }>>",
+      "parameters": "rosterId: string, memberTag: string, serverId: string, data: UpdateMemberModel",
+      "source": "lib/api/clients/roster-client.ts:182",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "UpdateMemberModel",
+          "path": "lib/api/types/roster.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "RosterClient.removeMember",
+      "operationId": "dashboardRemoveRosterMember",
+      "method": "DELETE",
+      "path": "/v2/roster/:rosterId/members/:memberTag",
+      "contract": "DashboardRemoveRosterMemberEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<{ message: string }>>",
+      "parameters": "rosterId: string, playerTag: string, serverId: string",
+      "source": "lib/api/clients/roster-client.ts:194",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "RosterClient.getMissingMembers",
+      "operationId": "dashboardMissingRosterMembers",
+      "method": "GET",
+      "path": "/v2/roster/missing-members",
+      "contract": "DashboardMissingRosterMembersEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "inferred from shared descriptor",
+      "parameters": "serverId: string, rosterId?: string, groupId?: string",
+      "source": "lib/api/clients/roster-client.ts:205",
+      "localTypeLocations": []
+    },
+    {
+      "clientMethod": "RosterClient.getServerMembers",
+      "operationId": "dashboardServerClanMembers",
+      "method": "GET",
+      "path": "/v2/roster/server/:serverId/members",
+      "contract": "DashboardServerClanMembersEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "inferred from shared descriptor",
+      "parameters": "serverId: string",
+      "source": "lib/api/clients/roster-client.ts:221",
+      "localTypeLocations": []
+    },
+    {
+      "clientMethod": "RosterClient.createGroup",
+      "operationId": "dashboardCreateRosterGroup",
+      "method": "POST",
+      "path": "/v2/roster-group",
+      "contract": "DashboardCreateRosterGroupEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<{ message: string; group_id: string }>>",
+      "parameters": "serverId: string, data: CreateRosterGroupModel",
+      "source": "lib/api/clients/roster-client.ts:230",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "CreateRosterGroupModel",
+          "path": "lib/api/types/roster.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "RosterClient.getGroup",
+      "operationId": "dashboardGetRosterGroup",
+      "method": "GET",
+      "path": "/v2/roster-group/:groupId",
+      "contract": "DashboardGetRosterGroupEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "inferred from shared descriptor",
+      "parameters": "groupId: string, serverId: string",
+      "source": "lib/api/clients/roster-client.ts:240",
+      "localTypeLocations": []
+    },
+    {
+      "clientMethod": "RosterClient.updateGroup",
+      "operationId": "dashboardUpdateRosterGroup",
+      "method": "PATCH",
+      "path": "/v2/roster-group/:groupId",
+      "contract": "DashboardUpdateRosterGroupEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "inferred from shared descriptor",
+      "parameters": "groupId: string, serverId: string, data: UpdateRosterGroupModel",
+      "source": "lib/api/clients/roster-client.ts:250",
+      "localTypeLocations": [
+        {
+          "name": "UpdateRosterGroupModel",
+          "path": "lib/api/types/roster.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "RosterClient.listGroups",
+      "operationId": "dashboardListRosterGroups",
+      "method": "GET",
+      "path": "/v2/roster-group/list",
+      "contract": "DashboardListRosterGroupsEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "inferred from shared descriptor",
+      "parameters": "serverId: string",
+      "source": "lib/api/clients/roster-client.ts:261",
+      "localTypeLocations": []
+    },
+    {
+      "clientMethod": "RosterClient.deleteGroup",
+      "operationId": "dashboardDeleteRosterGroup",
+      "method": "DELETE",
+      "path": "/v2/roster-group/:groupId",
+      "contract": "DashboardDeleteRosterGroupEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<{ message: string; affected_rosters: number }>>",
+      "parameters": "groupId: string, serverId: string",
+      "source": "lib/api/clients/roster-client.ts:268",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "RosterClient.createAutomation",
+      "operationId": "dashboardCreateRosterAutomation",
+      "method": "POST",
+      "path": "/v2/roster-automation",
+      "contract": "DashboardCreateRosterAutomationEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<{ message: string; automation_id: string }>>",
+      "parameters": "data: CreateRosterAutomationModel",
+      "source": "lib/api/clients/roster-client.ts:277",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "CreateRosterAutomationModel",
+          "path": "lib/api/types/roster.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "RosterClient.listAutomation",
+      "operationId": "dashboardListRosterAutomations",
+      "method": "GET",
+      "path": "/v2/roster-automation/list",
+      "contract": "DashboardListRosterAutomationsEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "inferred from shared descriptor",
+      "parameters": "serverId: string, rosterId?: string, groupId?: string, activeOnly?: boolean",
+      "source": "lib/api/clients/roster-client.ts:287",
+      "localTypeLocations": []
+    },
+    {
+      "clientMethod": "RosterClient.updateAutomation",
+      "operationId": "dashboardUpdateRosterAutomation",
+      "method": "PATCH",
+      "path": "/v2/roster-automation/:automationId",
+      "contract": "DashboardUpdateRosterAutomationEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<{ message: string }>>",
+      "parameters": "automationId: string, serverId: string, data: UpdateRosterAutomationModel",
+      "source": "lib/api/clients/roster-client.ts:306",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "UpdateRosterAutomationModel",
+          "path": "lib/api/types/roster.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "RosterClient.deleteAutomation",
+      "operationId": "dashboardDeleteRosterAutomation",
+      "method": "DELETE",
+      "path": "/v2/roster-automation/:automationId",
+      "contract": "DashboardDeleteRosterAutomationEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<{ message: string }>>",
+      "parameters": "automationId: string, serverId: string",
+      "source": "lib/api/clients/roster-client.ts:317",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "RosterClient.listViews",
+      "operationId": "dashboardListRosterViews",
+      "method": "GET",
+      "path": "/v2/roster/views",
+      "contract": "DashboardListRosterViewsEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<RosterView[]>>",
+      "parameters": "serverId: string",
+      "source": "lib/api/clients/roster-client.ts:327",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "RosterView",
+          "path": "lib/api/types/roster.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "RosterClient.queryMetric",
+      "operationId": "dashboardQueryRosterMetric",
+      "method": "POST",
+      "path": "/v2/roster/metrics/query",
+      "contract": "DashboardQueryRosterMetricEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<RosterMetricQueryResult>>",
+      "parameters": "serverId: string, data: RosterMetricQuery",
+      "source": "lib/api/clients/roster-client.ts:334",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "RosterMetricQuery",
+          "path": "lib/api/types/roster.ts"
+        },
+        {
+          "name": "RosterMetricQueryResult",
+          "path": "lib/api/types/roster.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "RosterClient.getView",
+      "operationId": "dashboardGetRosterView",
+      "method": "GET",
+      "path": "/v2/roster/views/:viewId",
+      "contract": "DashboardGetRosterViewEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<RosterView>>",
+      "parameters": "viewId: string, serverId: string",
+      "source": "lib/api/clients/roster-client.ts:343",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "RosterView",
+          "path": "lib/api/types/roster.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "RosterClient.resolveSharedView",
+      "operationId": "dashboardResolveSharedRosterView",
+      "method": "GET",
+      "path": "/v2/roster/views/shared/:viewId",
+      "contract": "DashboardResolveSharedRosterViewEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<RosterView>>",
+      "parameters": "viewId: string",
+      "source": "lib/api/clients/roster-client.ts:349",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "RosterView",
+          "path": "lib/api/types/roster.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "RosterClient.createView",
+      "operationId": "dashboardCreateRosterView",
+      "method": "POST",
+      "path": "/v2/roster/views",
+      "contract": "DashboardCreateRosterViewEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<RosterView>>",
+      "parameters": "serverId: string, data: CreateRosterViewModel",
+      "source": "lib/api/clients/roster-client.ts:355",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "CreateRosterViewModel",
+          "path": "lib/api/types/roster.ts"
+        },
+        {
+          "name": "RosterView",
+          "path": "lib/api/types/roster.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "RosterClient.updateView",
+      "operationId": "dashboardUpdateRosterView",
+      "method": "PATCH",
+      "path": "/v2/roster/views/:viewId",
+      "contract": "DashboardUpdateRosterViewEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<RosterView>>",
+      "parameters": "viewId: string, serverId: string, data: UpdateRosterViewModel",
+      "source": "lib/api/clients/roster-client.ts:364",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "RosterView",
+          "path": "lib/api/types/roster.ts"
+        },
+        {
+          "name": "UpdateRosterViewModel",
+          "path": "lib/api/types/roster.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "RosterClient.deleteView",
+      "operationId": "dashboardDeleteRosterView",
+      "method": "DELETE",
+      "path": "/v2/roster/views/:viewId",
+      "contract": "DashboardDeleteRosterViewEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<{ message: string }>>",
+      "parameters": "viewId: string, serverId: string",
+      "source": "lib/api/clients/roster-client.ts:374",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "RosterClient.previewView",
+      "operationId": "dashboardPreviewRosterView",
+      "method": "POST",
+      "path": "/v2/roster/views/preview",
+      "contract": "DashboardPreviewRosterViewEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<{ view: RosterView; result: RosterViewResult }>>",
+      "parameters": "serverId: string, view: MaterializedRosterView, rosterIds: string[]",
+      "source": "lib/api/clients/roster-client.ts:387",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "MaterializedRosterView",
+          "path": "lib/api/types/roster.ts"
+        },
+        {
+          "name": "RosterView",
+          "path": "lib/api/types/roster.ts"
+        },
+        {
+          "name": "RosterViewResult",
+          "path": "lib/api/types/roster.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "RosterClient.applyMembershipChanges",
+      "operationId": "dashboardApplyRosterMembershipChanges",
+      "method": "POST",
+      "path": "/v2/roster/membership-changes",
+      "contract": "DashboardApplyRosterMembershipChangesEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<EndpointResponse<typeof DashboardApplyRosterMembershipChangesEndpoint>>>",
+      "parameters": "serverId: string, data: ApplyRosterMembershipChangesModel",
+      "source": "lib/api/clients/roster-client.ts:411",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "ApplyRosterMembershipChangesModel",
+          "path": "lib/api/types/roster.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "ServerClient.getDashboardCapabilities",
+      "operationId": "dashboardCapabilities",
+      "method": "GET",
+      "path": "/v2/server/:serverId/dashboard-capabilities",
+      "contract": "DashboardCapabilitiesEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<DashboardCapabilities>>",
+      "parameters": "serverId: string, signal?: AbortSignal",
+      "source": "lib/api/clients/server-client.ts:87",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "DashboardCapabilities",
+          "path": "lib/api/types/dashboard-access.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "ServerClient.getDashboardAccess",
+      "operationId": "dashboardAccess",
+      "method": "GET",
+      "path": "/v2/server/:serverId/dashboard-access",
+      "contract": "DashboardAccessEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<DashboardAccessConfig>>",
+      "parameters": "serverId: string",
+      "source": "lib/api/clients/server-client.ts:98",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "DashboardAccessConfig",
+          "path": "lib/api/types/dashboard-access.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "ServerClient.updateDashboardAccess",
+      "operationId": "updateDashboardAccess",
+      "method": "PUT",
+      "path": "/v2/server/:serverId/dashboard-access",
+      "contract": "UpdateDashboardAccessEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<DashboardAccessConfig>>",
+      "parameters": "serverId: string, grants: DashboardAccessGrant[]",
+      "source": "lib/api/clients/server-client.ts:106",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "DashboardAccessConfig",
+          "path": "lib/api/types/dashboard-access.ts"
+        },
+        {
+          "name": "DashboardAccessGrant",
+          "path": "lib/api/types/dashboard-access.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "ServerClient.getBotGuildProfile",
+      "operationId": "botGuildProfile",
+      "method": "GET",
+      "path": "/v2/server/:serverId/bot-profile",
+      "contract": "BotGuildProfileEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<BotGuildProfile>>",
+      "parameters": "serverId: string",
+      "source": "lib/api/clients/server-client.ts:117",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "BotGuildProfile",
+          "path": "lib/api/types/dashboard-access.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "ServerClient.updateBotGuildProfile",
+      "operationId": "updateBotGuildProfile",
+      "method": "PATCH",
+      "path": "/v2/server/:serverId/bot-profile",
+      "contract": "UpdateBotGuildProfileEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<BotGuildProfile>>",
+      "parameters": "serverId: string, profile: BotGuildProfileUpdate",
+      "source": "lib/api/clients/server-client.ts:125",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "BotGuildProfile",
+          "path": "lib/api/types/dashboard-access.ts"
+        },
+        {
+          "name": "BotGuildProfileUpdate",
+          "path": "lib/api/types/dashboard-access.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "ServerClient.getGuilds",
+      "operationId": "dashboardGuilds",
+      "method": "GET",
+      "path": "/v2/guilds",
+      "contract": "GuildsEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<GuildInfo[]>>",
+      "parameters": "signal?: AbortSignal",
+      "source": "lib/api/clients/server-client.ts:136",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "GuildInfo",
+          "path": "lib/api/types/server.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "ServerClient.getGuild",
+      "operationId": "dashboardGuild",
+      "method": "GET",
+      "path": "/v2/guild/:guildId",
+      "contract": "GuildEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<GuildInfo>>",
+      "parameters": "guildId: string, signal?: AbortSignal",
+      "source": "lib/api/clients/server-client.ts:146",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "GuildInfo",
+          "path": "lib/api/types/server.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "ServerClient.reactivateServer",
+      "operationId": "reactivateServer",
+      "method": "POST",
+      "path": "/v2/server/:serverId/reactivate",
+      "contract": "ReactivateServerEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<{ message: string }>>",
+      "parameters": "serverId: string",
+      "source": "lib/api/clients/server-client.ts:154",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "ServerClient.getSettings",
+      "operationId": "serverSettings",
+      "method": "GET",
+      "path": "/v2/server/:serverId/settings",
+      "contract": "ServerSettingsEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<ServerSettings>>",
+      "parameters": "serverId: string, clanSettings = false, signal?: AbortSignal",
+      "source": "lib/api/clients/server-client.ts:162",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "ServerSettings",
+          "path": "lib/api/types/server.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "ServerClient.updateSettings",
+      "operationId": "updateServerSettings",
+      "method": "PATCH",
+      "path": "/v2/server/:serverId/settings",
+      "contract": "UpdateServerSettingsEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<ServerSettingsResponse>>",
+      "parameters": "serverId: string, settings: ServerSettingsUpdate",
+      "source": "lib/api/clients/server-client.ts:174",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "ServerSettingsResponse",
+          "path": "lib/api/types/server.ts"
+        },
+        {
+          "name": "ServerSettingsUpdate",
+          "path": "lib/api/types/server.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "ServerClient.getClanSettings",
+      "operationId": "serverClanSettings",
+      "method": "GET",
+      "path": "/v2/server/:serverId/clan/:clanTag/settings",
+      "contract": "ClanSettingsEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<ClanSettings>>",
+      "parameters": "serverId: string, clanTag: string",
+      "source": "lib/api/clients/server-client.ts:185",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "ClanSettings",
+          "path": "lib/api/types/server.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "ServerClient.updateClanSettings",
+      "operationId": "updateServerClanSettings",
+      "method": "PATCH",
+      "path": "/v2/server/:serverId/clan/:clanTag/settings",
+      "contract": "UpdateClanSettingsEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<ClanSettingsResponse>>",
+      "parameters": "serverId: string, clanTag: string, settings: ClanSettingsUpdate",
+      "source": "lib/api/clients/server-client.ts:193",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "ClanSettingsResponse",
+          "path": "lib/api/types/server.ts"
+        },
+        {
+          "name": "ClanSettingsUpdate",
+          "path": "lib/api/types/server.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "ServerClient.getServerClans",
+      "operationId": "serverClans",
+      "method": "GET",
+      "path": "/v2/server/:serverId/clans",
+      "contract": "ServerClansEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<ServerClanListItem[]>>",
+      "parameters": "serverId: string, signal?: AbortSignal",
+      "source": "lib/api/clients/server-client.ts:205",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "ServerClanListItem",
+          "path": "lib/api/types/server.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "ServerClient.updateEmbedColor",
+      "operationId": "updateServerEmbedColor",
+      "method": "PUT",
+      "path": "/v2/server/:serverId/embed-color/:hexCode",
+      "contract": "UpdateEmbedColorEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<{ message: string }>>",
+      "parameters": "serverId: string, hexCode: string",
+      "source": "lib/api/clients/server-client.ts:218",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "ServerClient.getBans",
+      "operationId": "serverBans",
+      "method": "GET",
+      "path": "/v2/server/:serverId/bans",
+      "contract": "ServerBansEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<PaginatedResponse<BannedPlayer>>>",
+      "parameters": "serverId: string, userId?: string",
+      "source": "lib/api/clients/server-client.ts:229",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "PaginatedResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "BannedPlayer",
+          "path": "lib/api/types/server.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "ServerClient.addBan",
+      "operationId": "addServerBan",
+      "method": "POST",
+      "path": "/v2/server/:serverId/bans/:playerTag",
+      "contract": "AddServerBanEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<BanResponse>>",
+      "parameters": "serverId: string, playerTag: string, data: BanRequest, userId?: string",
+      "source": "lib/api/clients/server-client.ts:245",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "BanRequest",
+          "path": "lib/api/types/server.ts"
+        },
+        {
+          "name": "BanResponse",
+          "path": "lib/api/types/server.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "ServerClient.removeBan",
+      "operationId": "removeServerBan",
+      "method": "DELETE",
+      "path": "/v2/server/:serverId/bans/:playerTag",
+      "contract": "RemoveServerBanEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<BanResponse>>",
+      "parameters": "serverId: string, playerTag: string, userId?: string",
+      "source": "lib/api/clients/server-client.ts:258",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "BanResponse",
+          "path": "lib/api/types/server.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "ServerClient.searchBannedPlayers",
+      "operationId": "searchBannedPlayers",
+      "method": "GET",
+      "path": "/v2/search/:guildId/banned-players",
+      "contract": "SearchBannedPlayersEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<SearchBannedPlayersResponse>>",
+      "parameters": "guildId: string, query: string",
+      "source": "lib/api/clients/server-client.ts:270",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "SearchBannedPlayersResponse",
+          "path": "lib/api/types/server.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "ServerClient.getLogsConfig",
+      "operationId": "serverLogs",
+      "method": "GET",
+      "path": "/v2/server/:serverId/logs",
+      "contract": "ServerLogsEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "inferred from shared descriptor",
+      "parameters": "serverId: string",
+      "source": "lib/api/clients/server-client.ts:281",
+      "localTypeLocations": []
+    },
+    {
+      "clientMethod": "ServerClient.saveLogsConfig",
+      "operationId": "saveServerLogs",
+      "method": "PUT",
+      "path": "/v2/server/:serverId/logs",
+      "contract": "SaveServerLogsEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "inferred from shared descriptor",
+      "parameters": "serverId: string, logsConfig: EndpointRequest<typeof SaveServerLogsEndpoint>[\"body\"]",
+      "source": "lib/api/clients/server-client.ts:289",
+      "localTypeLocations": []
+    },
+    {
+      "clientMethod": "ServerClient.getChannels",
+      "operationId": "serverChannels",
+      "method": "GET",
+      "path": "/v2/server/:serverId/channels",
+      "contract": "ServerChannelsEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "inferred from shared descriptor",
+      "parameters": "serverId: string, signal?: AbortSignal",
+      "source": "lib/api/clients/server-client.ts:297",
+      "localTypeLocations": []
+    },
+    {
+      "clientMethod": "ServerClient.getThreads",
+      "operationId": "serverThreads",
+      "method": "GET",
+      "path": "/v2/server/:serverId/threads",
+      "contract": "ServerThreadsEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "inferred from shared descriptor",
+      "parameters": "serverId: string, signal?: AbortSignal",
+      "source": "lib/api/clients/server-client.ts:305",
+      "localTypeLocations": []
+    },
+    {
+      "clientMethod": "ServerClient.getServerLinks",
+      "operationId": "serverLinks",
+      "method": "GET",
+      "path": "/v2/links/server/:serverId",
+      "contract": "ServerLinksEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<ServerLinksResponse>>",
+      "parameters": "serverId: string, params?: { limit?: number; offset?: number; query?: string; account_filter?: \"none\" }",
+      "source": "lib/api/clients/server-client.ts:313",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "ServerLinksResponse",
+          "path": "lib/api/types/server.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "ServerClient.getStrikes",
+      "operationId": "serverStrikes",
+      "method": "GET",
+      "path": "/v2/server/:serverId/strikes",
+      "contract": "ServerStrikesEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<PaginatedResponse<Strike>>>",
+      "parameters": "serverId: string, playerTag?: string, viewExpired = false",
+      "source": "lib/api/clients/server-client.ts:324",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "PaginatedResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "Strike",
+          "path": "lib/api/types/server.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "ServerClient.addStrike",
+      "operationId": "addServerStrike",
+      "method": "POST",
+      "path": "/v2/server/:serverId/strikes/:playerTag",
+      "contract": "AddServerStrikeEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<StrikeAddResponse>>",
+      "parameters": "serverId: string, playerTag: string, data: StrikeRequest",
+      "source": "lib/api/clients/server-client.ts:344",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "StrikeAddResponse",
+          "path": "lib/api/types/server.ts"
+        },
+        {
+          "name": "StrikeRequest",
+          "path": "lib/api/types/server.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "ServerClient.removeStrike",
+      "operationId": "removeServerStrike",
+      "method": "DELETE",
+      "path": "/v2/server/:serverId/strikes/:strikeId",
+      "contract": "RemoveServerStrikeEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<StrikeDeleteResponse>>",
+      "parameters": "serverId: string, strikeId: string",
+      "source": "lib/api/clients/server-client.ts:356",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "StrikeDeleteResponse",
+          "path": "lib/api/types/server.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "ServerClient.getPlayerStrikeSummary",
+      "operationId": "playerStrikeSummary",
+      "method": "GET",
+      "path": "/v2/server/:serverId/strikes/player/:playerTag/summary",
+      "contract": "PlayerStrikeSummaryEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<StrikeSummary>>",
+      "parameters": "serverId: string, playerTag: string",
+      "source": "lib/api/clients/server-client.ts:367",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "StrikeSummary",
+          "path": "lib/api/types/server.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "ServerClient.getDiscordRoles",
+      "operationId": "discordRoles",
+      "method": "GET",
+      "path": "/v2/server/:serverId/discord-roles",
+      "contract": "DiscordRolesEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<{ roles: DiscordRole[] }>>",
+      "parameters": "serverId: string",
+      "source": "lib/api/clients/server-client.ts:378",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "DiscordRole",
+          "path": "lib/api/types/server.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "ServerClient.getGiveaways",
+      "operationId": "serverGiveaways",
+      "method": "GET",
+      "path": "/v2/server/:serverId/giveaways",
+      "contract": "ServerGiveawaysEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<GiveawaysResponse>>",
+      "parameters": "serverId: string",
+      "source": "lib/api/clients/server-client.ts:388",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "GiveawaysResponse",
+          "path": "lib/api/types/server.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "ServerClient.createGiveaway",
+      "operationId": "createServerGiveaway",
+      "method": "POST",
+      "path": "/v2/server/:serverId/giveaways",
+      "contract": "CreateServerGiveawayEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<GiveawayMutationResponse>>",
+      "parameters": "serverId: string, body: FormData",
+      "source": "lib/api/clients/server-client.ts:396",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "GiveawayMutationResponse",
+          "path": "lib/api/types/server.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "ServerClient.updateGiveaway",
+      "operationId": "updateServerGiveaway",
+      "method": "PUT",
+      "path": "/v2/server/:serverId/giveaways/:giveawayId",
+      "contract": "UpdateServerGiveawayEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<GiveawayMutationResponse>>",
+      "parameters": "serverId: string, giveawayId: string, body: FormData",
+      "source": "lib/api/clients/server-client.ts:407",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "GiveawayMutationResponse",
+          "path": "lib/api/types/server.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "ServerClient.deleteGiveaway",
+      "operationId": "deleteServerGiveaway",
+      "method": "DELETE",
+      "path": "/v2/server/:serverId/giveaways/:giveawayId",
+      "contract": "DeleteServerGiveawayEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<GiveawayMutationResponse>>",
+      "parameters": "serverId: string, giveawayId: string",
+      "source": "lib/api/clients/server-client.ts:419",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "GiveawayMutationResponse",
+          "path": "lib/api/types/server.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "ServerClient.getGiveawayEntries",
+      "operationId": "giveawayEntries",
+      "method": "GET",
+      "path": "/v2/server/:serverId/giveaways/:giveawayId/entries",
+      "contract": "GiveawayEntriesEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<GiveawayEntriesResponse>>",
+      "parameters": "serverId: string, giveawayId: string",
+      "source": "lib/api/clients/server-client.ts:430",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "GiveawayEntriesResponse",
+          "path": "lib/api/types/server.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "ServerClient.rerollGiveaway",
+      "operationId": "rerollGiveaway",
+      "method": "POST",
+      "path": "/v2/server/:serverId/giveaways/:giveawayId/reroll",
+      "contract": "RerollGiveawayEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<GiveawayRerollResponse>>",
+      "parameters": "serverId: string, giveawayId: string, userIdsToReplace: string[]",
+      "source": "lib/api/clients/server-client.ts:441",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "GiveawayRerollResponse",
+          "path": "lib/api/types/server.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "TicketsClient.getPanels",
+      "operationId": "ticketPanels",
+      "method": "GET",
+      "path": "/v2/server/:serverId/tickets",
+      "contract": "TicketPanelsEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<TicketPanelsResponse>>",
+      "parameters": "serverId: string",
+      "source": "lib/api/clients/tickets-client.ts:32",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "TicketPanelsResponse",
+          "path": "lib/api/types/tickets.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "TicketsClient.createPanel",
+      "operationId": "createTicketPanel",
+      "method": "POST",
+      "path": "/v2/server/:serverId/tickets",
+      "contract": "CreateTicketPanelEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<{ message: string }>>",
+      "parameters": "serverId: string, data: CreatePanelRequest",
+      "source": "lib/api/clients/tickets-client.ts:40",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "CreatePanelRequest",
+          "path": "lib/api/types/tickets.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "TicketsClient.deletePanel",
+      "operationId": "deleteTicketPanel",
+      "method": "DELETE",
+      "path": "/v2/server/:serverId/tickets/:panelName",
+      "contract": "DeleteTicketPanelEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<{ message: string }>>",
+      "parameters": "serverId: string, panelName: string",
+      "source": "lib/api/clients/tickets-client.ts:51",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "TicketsClient.createButton",
+      "operationId": "createTicketButton",
+      "method": "POST",
+      "path": "/v2/server/:serverId/tickets/:panelName/buttons",
+      "contract": "CreateTicketButtonEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<{ message: string }>>",
+      "parameters": "serverId: string, panelName: string, data: CreateButtonRequest",
+      "source": "lib/api/clients/tickets-client.ts:62",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "CreateButtonRequest",
+          "path": "lib/api/types/tickets.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "TicketsClient.deleteButton",
+      "operationId": "deleteTicketButton",
+      "method": "DELETE",
+      "path": "/v2/server/:serverId/tickets/:panelName/buttons/:customId",
+      "contract": "DeleteTicketButtonEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<{ message: string }>>",
+      "parameters": "serverId: string, panelName: string, customId: string",
+      "source": "lib/api/clients/tickets-client.ts:74",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "TicketsClient.updateButtonAppearance",
+      "operationId": "updateTicketButtonAppearance",
+      "method": "PATCH",
+      "path": "/v2/server/:serverId/tickets/:panelName/buttons/:customId",
+      "contract": "UpdateTicketButtonAppearanceEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<{ message: string }>>",
+      "parameters": "serverId: string, panelName: string, customId: string, data: UpdateButtonAppearanceRequest",
+      "source": "lib/api/clients/tickets-client.ts:86",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "UpdateButtonAppearanceRequest",
+          "path": "lib/api/types/tickets.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "TicketsClient.updatePanel",
+      "operationId": "updateTicketPanel",
+      "method": "PUT",
+      "path": "/v2/server/:serverId/tickets/:panelName",
+      "contract": "UpdateTicketPanelEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<{ message: string }>>",
+      "parameters": "serverId: string, panelName: string, data: UpdateTicketPanelRequest",
+      "source": "lib/api/clients/tickets-client.ts:99",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "UpdateTicketPanelRequest",
+          "path": "lib/api/types/tickets.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "TicketsClient.updateButtonSettings",
+      "operationId": "updateTicketButtonSettings",
+      "method": "PUT",
+      "path": "/v2/server/:serverId/tickets/:panelName/buttons/:customId",
+      "contract": "UpdateTicketButtonSettingsEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<{ message: string }>>",
+      "parameters": "serverId: string, panelName: string, customId: string, data: UpdateButtonSettingsRequest",
+      "source": "lib/api/clients/tickets-client.ts:111",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "UpdateButtonSettingsRequest",
+          "path": "lib/api/types/tickets.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "TicketsClient.updateApproveMessages",
+      "operationId": "updateTicketApproveMessages",
+      "method": "PUT",
+      "path": "/v2/server/:serverId/tickets/:panelName/approve-messages",
+      "contract": "UpdateTicketApproveMessagesEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<{ message: string }>>",
+      "parameters": "serverId: string, panelName: string, data: UpdateApproveMessagesRequest",
+      "source": "lib/api/clients/tickets-client.ts:124",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "UpdateApproveMessagesRequest",
+          "path": "lib/api/types/tickets.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "TicketsClient.getEmbeds",
+      "operationId": "serverEmbeds",
+      "method": "GET",
+      "path": "/v2/server/:serverId/embeds",
+      "contract": "ServerEmbedsEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<ServerEmbedsResponse>>",
+      "parameters": "serverId: string",
+      "source": "lib/api/clients/tickets-client.ts:136",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "ServerEmbedsResponse",
+          "path": "lib/api/types/tickets.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "TicketsClient.createEmbed",
+      "operationId": "createServerEmbed",
+      "method": "POST",
+      "path": "/v2/server/:serverId/embeds",
+      "contract": "CreateServerEmbedEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<{ message: string }>>",
+      "parameters": "serverId: string, data: UpsertEmbedRequest",
+      "source": "lib/api/clients/tickets-client.ts:144",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "UpsertEmbedRequest",
+          "path": "lib/api/types/tickets.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "TicketsClient.updateEmbed",
+      "operationId": "updateServerEmbed",
+      "method": "PUT",
+      "path": "/v2/server/:serverId/embeds/:embedName",
+      "contract": "UpdateServerEmbedEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<{ message: string }>>",
+      "parameters": "serverId: string, embedName: string, data: UpsertEmbedRequest",
+      "source": "lib/api/clients/tickets-client.ts:155",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "UpsertEmbedRequest",
+          "path": "lib/api/types/tickets.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "TicketsClient.deleteEmbed",
+      "operationId": "deleteServerEmbed",
+      "method": "DELETE",
+      "path": "/v2/server/:serverId/embeds/:embedName",
+      "contract": "DeleteServerEmbedEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<{ message: string }>>",
+      "parameters": "serverId: string, embedName: string",
+      "source": "lib/api/clients/tickets-client.ts:167",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "UtilityClient.getSeasonDates",
+      "operationId": "dashboardSeasonDates",
+      "method": "GET",
+      "path": "/v2/dates/seasons",
+      "contract": "DashboardSeasonDatesEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "inferred from shared descriptor",
+      "parameters": "numberOfSeasons = 0, asText = false",
+      "source": "lib/api/clients/utility-client.ts:23",
+      "localTypeLocations": []
+    },
+    {
+      "clientMethod": "UtilityClient.getRaidWeekendDates",
+      "operationId": "dashboardRaidWeekendDates",
+      "method": "GET",
+      "path": "/v2/dates/raid-weekends",
+      "contract": "DashboardRaidWeekendDatesEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "inferred from shared descriptor",
+      "parameters": "numberOfWeeks = 0",
+      "source": "lib/api/clients/utility-client.ts:35",
+      "localTypeLocations": []
+    },
+    {
+      "clientMethod": "UtilityClient.getCurrentDates",
+      "operationId": "dashboardCurrentDates",
+      "method": "GET",
+      "path": "/v2/dates/current",
+      "contract": "DashboardCurrentDatesEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "inferred from shared descriptor",
+      "parameters": "",
+      "source": "lib/api/clients/utility-client.ts:44",
+      "localTypeLocations": []
+    },
+    {
+      "clientMethod": "UtilityClient.getSeasonStartEnd",
+      "operationId": "dashboardSeasonBounds",
+      "method": "GET",
+      "path": "/v2/dates/season-start-end",
+      "contract": "DashboardSeasonBoundsEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "inferred from shared descriptor",
+      "parameters": "season = \"\", goldPassSeason = false",
+      "source": "lib/api/clients/utility-client.ts:52",
+      "localTypeLocations": []
+    },
+    {
+      "clientMethod": "UtilityClient.getSeasonRaidDates",
+      "operationId": "dashboardSeasonRaidDates",
+      "method": "GET",
+      "path": "/v2/dates/season-raid-dates",
+      "contract": "DashboardSeasonRaidDatesEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "inferred from shared descriptor",
+      "parameters": "season = \"\"",
+      "source": "lib/api/clients/utility-client.ts:63",
+      "localTypeLocations": []
+    },
+    {
+      "clientMethod": "WarClient.getCurrentWar",
+      "operationId": "getExpoProxyCurrentWar",
+      "method": "GET",
+      "path": "/proxy/v1/clans/:clanTag/currentwar",
+      "contract": "ProxyCurrentWarEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "inferred from shared descriptor",
+      "parameters": "clanTag: string",
+      "source": "lib/api/clients/war-client.ts:33",
+      "localTypeLocations": []
+    },
+    {
+      "clientMethod": "WarClient.getCwlRankingHistory",
+      "operationId": "botCwlRankingHistory",
+      "method": "GET",
+      "path": "/v2/cwl/:tag/ranking-history",
+      "contract": "BotCwlRankingHistoryEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "inferred from shared descriptor",
+      "parameters": "clanTag: string",
+      "source": "lib/api/clients/war-client.ts:41",
+      "localTypeLocations": []
+    },
+    {
+      "clientMethod": "WarClient.getCwlSeasons",
+      "operationId": "getExpoClanCwlSeasons",
+      "method": "GET",
+      "path": "/v2/cwl/:clanTag/seasons",
+      "contract": "ClanCwlSeasonsEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<{ items: CwlSeasonItem[] }>>",
+      "parameters": "clanTag: string",
+      "source": "lib/api/clients/war-client.ts:50",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "CwlSeasonItem",
+          "path": "lib/api/types/war.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "WarClient.getStoredCwl",
+      "operationId": "botCwlGroup",
+      "method": "GET",
+      "path": "/v2/cwl/:tag/group",
+      "contract": "BotCwlGroupEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<CwlGroupResponse>>",
+      "parameters": "clanTag: string, season?: string",
+      "source": "lib/api/clients/war-client.ts:59",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "CwlGroupResponse",
+          "path": "lib/api/types/war.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "WarClient.getCwlBonusRecipients",
+      "operationId": "dashboardCwlBonusRecipients",
+      "method": "GET",
+      "path": "/v2/server/:serverId/cwl/:clanTag/bonus-recipients",
+      "contract": "DashboardCwlBonusRecipientsEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<{ items: CwlBonusRecipient[] }>>",
+      "parameters": "serverId: string, clanTag: string, season: string",
+      "source": "lib/api/clients/war-client.ts:72",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "CwlBonusRecipient",
+          "path": "lib/api/types/war.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "WarClient.replaceCwlBonusRecipients",
+      "operationId": "dashboardReplaceCwlBonusRecipients",
+      "method": "PUT",
+      "path": "/v2/server/:serverId/cwl/:clanTag/bonus-recipients",
+      "contract": "DashboardReplaceCwlBonusRecipientsEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<{ items: CwlBonusRecipient[] }>>",
+      "parameters": "serverId: string, clanTag: string, season: string, recipients: CwlBonusRecipient[]",
+      "source": "lib/api/clients/war-client.ts:85",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "CwlBonusRecipient",
+          "path": "lib/api/types/war.ts"
+        }
+      ]
+    },
+    {
+      "clientMethod": "WarClient.exportCwlSummary",
+      "operationId": "downloadExpoCwlSummary",
+      "method": "GET",
+      "path": "/v2/exports/war/cwl-summary",
+      "contract": "CwlSummaryExportEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<Blob>",
+      "parameters": "clanTag: string",
+      "source": "lib/api/clients/war-client.ts:99",
+      "localTypeLocations": []
+    },
+    {
+      "clientMethod": "WarClient.exportPlayerStats",
+      "operationId": "downloadExpoPlayerWarStats",
+      "method": "POST",
+      "path": "/v2/exports/war/player-stats",
+      "contract": "PlayerWarStatsExportEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<Blob>",
+      "parameters": "filter: PlayerWarhitsFilter",
+      "source": "lib/api/clients/war-client.ts:109",
+      "localTypeLocations": [
+        {
+          "name": "PlayerWarhitsFilter",
+          "path": "lib/api/types/war.ts"
+        }
+      ]
+    }
+  ],
+  "directCallers": [
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "serverAutoboards",
+      "method": "GET",
+      "path": "/v2/server/:serverId/autoboards",
+      "contract": "ServerAutoboardsEndpoint",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/autoboards/page.tsx:168"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "autoboardCapabilities",
+      "method": "GET",
+      "path": "/v2/server/:serverId/autoboards/capabilities",
+      "contract": "AutoboardCapabilitiesEndpoint",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/autoboards/page.tsx:169"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "replaceAutoboard",
+      "method": "PUT",
+      "path": "/v2/server/:serverId/autoboards/:autoboardId",
+      "contract": "ReplaceAutoboardEndpoint",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/autoboards/page.tsx:304"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "createAutoboard",
+      "method": "POST",
+      "path": "/v2/server/:serverId/autoboards",
+      "contract": "CreateAutoboardEndpoint",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/autoboards/page.tsx:308"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "deleteAutoboard",
+      "method": "DELETE",
+      "path": "/v2/server/:serverId/autoboards/:autoboardId",
+      "contract": "DeleteAutoboardEndpoint",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/autoboards/page.tsx:328"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "addServerClan",
+      "method": "POST",
+      "path": "/v2/server/:serverId/clans",
+      "contract": "dashboardEndpoints.addServerClan",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/clans/page.tsx:247"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "removeServerClan",
+      "method": "DELETE",
+      "path": "/v2/server/:serverId/clans/:clanTag",
+      "contract": "dashboardEndpoints.removeServerClan",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/clans/page.tsx:279"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "createServerLink",
+      "method": "POST",
+      "path": "/v2/links/server/:serverId",
+      "contract": "CreateServerLinkEndpoint",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/links/page.tsx:234"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "getExpoProxyPlayer",
+      "method": "GET",
+      "path": "/proxy/v1/players/:playerTag",
+      "contract": "ProxyPlayerEndpoint",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/links/page.tsx:300"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "deleteServerLink",
+      "method": "DELETE",
+      "path": "/v2/links/server/:serverId",
+      "contract": "DeleteServerLinkEndpoint",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/links/page.tsx:309"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "serverLinks",
+      "method": "GET",
+      "path": "/v2/links/server/:serverId",
+      "contract": "dashboardEndpoints.serverLinks",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/links/page.tsx:92"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "clanCountdowns",
+      "method": "GET",
+      "path": "/v2/server/:serverId/clan/:clanTag/countdowns",
+      "contract": "dashboardEndpoints.clanCountdowns",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/logs/page.tsx:140"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "serverCountdowns",
+      "method": "GET",
+      "path": "/v2/server/:serverId/countdowns",
+      "contract": "dashboardEndpoints.serverCountdowns",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/logs/page.tsx:145"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "enableCountdown",
+      "method": "POST",
+      "path": "/v2/server/:serverId/countdowns",
+      "contract": "dashboardEndpoints.enableCountdown",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/logs/page.tsx:169"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "disableCountdown",
+      "method": "DELETE",
+      "path": "/v2/server/:serverId/countdowns",
+      "contract": "dashboardEndpoints.disableCountdown",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/logs/page.tsx:181"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "serverLogs",
+      "method": "GET",
+      "path": "/v2/server/:serverId/logs",
+      "contract": "dashboardEndpoints.serverLogs",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/logs/page.tsx:324"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "saveServerLogs",
+      "method": "PUT",
+      "path": "/v2/server/:serverId/logs",
+      "contract": "dashboardEndpoints.saveServerLogs",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/logs/page.tsx:406"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "serverLogs",
+      "method": "GET",
+      "path": "/v2/server/:serverId/logs",
+      "contract": "dashboardEndpoints.serverLogs",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/logs/page.tsx:412"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "updateServerLogsState",
+      "method": "PATCH",
+      "path": "/v2/server/:serverId/logs",
+      "contract": "dashboardEndpoints.updateServerLogsState",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/logs/page.tsx:431"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "serverLogs",
+      "method": "GET",
+      "path": "/v2/server/:serverId/logs",
+      "contract": "dashboardEndpoints.serverLogs",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/logs/page.tsx:441"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "serverReminders",
+      "method": "GET",
+      "path": "/v2/server/:serverId/reminders",
+      "contract": "dashboardEndpoints.serverReminders",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/reminders/page.tsx:255"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "createServerReminder",
+      "method": "POST",
+      "path": "/v2/server/:serverId/reminders",
+      "contract": "dashboardEndpoints.createServerReminder",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/reminders/page.tsx:423"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "serverReminders",
+      "method": "GET",
+      "path": "/v2/server/:serverId/reminders",
+      "contract": "dashboardEndpoints.serverReminders",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/reminders/page.tsx:429"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "deleteServerReminder",
+      "method": "DELETE",
+      "path": "/v2/server/:serverId/reminders/:reminderId",
+      "contract": "dashboardEndpoints.deleteServerReminder",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/reminders/page.tsx:550"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "createServerReminder",
+      "method": "POST",
+      "path": "/v2/server/:serverId/reminders",
+      "contract": "dashboardEndpoints.createServerReminder",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/reminders/page.tsx:679"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "updateServerReminder",
+      "method": "PUT",
+      "path": "/v2/server/:serverId/reminders/:reminderId",
+      "contract": "dashboardEndpoints.updateServerReminder",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/reminders/page.tsx:704"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "serverReminders",
+      "method": "GET",
+      "path": "/v2/server/:serverId/reminders",
+      "contract": "dashboardEndpoints.serverReminders",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/reminders/page.tsx:717"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "dashboardStaticMaxLevel",
+      "method": "GET",
+      "path": "/v2/static/:category/:itemIdOrName/max-level",
+      "contract": "dashboardEndpoints.dashboardStaticMaxLevel",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/roles/page.tsx:185"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "dashboardStaticMaxLevel",
+      "method": "GET",
+      "path": "/v2/static/:category/:itemIdOrName/max-level",
+      "contract": "dashboardEndpoints.dashboardStaticMaxLevel",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/roles/page.tsx:190"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "dashboardStaticCategoryNames",
+      "method": "GET",
+      "path": "/v2/static/:category/names",
+      "contract": "dashboardEndpoints.dashboardStaticCategoryNames",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/roles/page.tsx:233"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "dashboardStaticMaxLevel",
+      "method": "GET",
+      "path": "/v2/static/:category/:itemIdOrName/max-level",
+      "contract": "dashboardEndpoints.dashboardStaticMaxLevel",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/rosters/_hooks/useGameConstants.ts:28"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "dashboardListRosters",
+      "method": "GET",
+      "path": "/v2/roster/:serverId/list",
+      "contract": "dashboardEndpoints.dashboardListRosters",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/rosters/_lib/api.ts:127"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "dashboardGetRoster",
+      "method": "GET",
+      "path": "/v2/roster/:rosterId",
+      "contract": "dashboardEndpoints.dashboardGetRoster",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/rosters/_lib/api.ts:136"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "dashboardCreateRoster",
+      "method": "POST",
+      "path": "/v2/roster",
+      "contract": "dashboardEndpoints.dashboardCreateRoster",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/rosters/_lib/api.ts:143"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "dashboardUpdateRoster",
+      "method": "PATCH",
+      "path": "/v2/roster/:rosterId",
+      "contract": "dashboardEndpoints.dashboardUpdateRoster",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/rosters/_lib/api.ts:154"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "dashboardDeleteRoster",
+      "method": "DELETE",
+      "path": "/v2/roster/:rosterId",
+      "contract": "dashboardEndpoints.dashboardDeleteRoster",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/rosters/_lib/api.ts:161"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "dashboardDeleteRoster",
+      "method": "DELETE",
+      "path": "/v2/roster/:rosterId",
+      "contract": "dashboardEndpoints.dashboardDeleteRoster",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/rosters/_lib/api.ts:169"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "dashboardCloneRoster",
+      "method": "POST",
+      "path": "/v2/roster/:rosterId/clone",
+      "contract": "dashboardEndpoints.dashboardCloneRoster",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/rosters/_lib/api.ts:181"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "dashboardRefreshRosters",
+      "method": "POST",
+      "path": "/v2/roster/refresh",
+      "contract": "dashboardEndpoints.dashboardRefreshRosters",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/rosters/_lib/api.ts:188"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "dashboardManageRosterMembers",
+      "method": "POST",
+      "path": "/v2/roster/:rosterId/members",
+      "contract": "dashboardEndpoints.dashboardManageRosterMembers",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/rosters/_lib/api.ts:207"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "dashboardRemoveRosterMember",
+      "method": "DELETE",
+      "path": "/v2/roster/:rosterId/members/:memberTag",
+      "contract": "dashboardEndpoints.dashboardRemoveRosterMember",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/rosters/_lib/api.ts:219"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "dashboardRefreshRosterMember",
+      "method": "POST",
+      "path": "/v2/roster/:rosterId/members/:memberTag/refresh",
+      "contract": "dashboardEndpoints.dashboardRefreshRosterMember",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/rosters/_lib/api.ts:231"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "dashboardRefreshRosterDiscordIdentity",
+      "method": "POST",
+      "path": "/v2/server/:serverId/rosters/:rosterId/discord-identity/refresh",
+      "contract": "dashboardEndpoints.dashboardRefreshRosterDiscordIdentity",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/rosters/_lib/api.ts:242"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "dashboardMissingRosterMembers",
+      "method": "GET",
+      "path": "/v2/roster/missing-members",
+      "contract": "dashboardEndpoints.dashboardMissingRosterMembers",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/rosters/_lib/api.ts:259"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "dashboardServerClanMembers",
+      "method": "GET",
+      "path": "/v2/roster/server/:serverId/members",
+      "contract": "dashboardEndpoints.dashboardServerClanMembers",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/rosters/_lib/api.ts:272"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "getExpoProxyClan",
+      "method": "GET",
+      "path": "/proxy/v1/clans/:clanTag",
+      "contract": "ProxyClanEndpoint",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/rosters/_lib/api.ts:279"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "serverClans",
+      "method": "GET",
+      "path": "/v2/server/:serverId/clans",
+      "contract": "dashboardEndpoints.serverClans",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/rosters/_lib/api.ts:293"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "dashboardListRosterAutomations",
+      "method": "GET",
+      "path": "/v2/roster-automation/list",
+      "contract": "dashboardEndpoints.dashboardListRosterAutomations",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/rosters/_lib/api.ts:314"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "dashboardCreateRosterAutomation",
+      "method": "POST",
+      "path": "/v2/roster-automation",
+      "contract": "dashboardEndpoints.dashboardCreateRosterAutomation",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/rosters/_lib/api.ts:330"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "dashboardUpdateRosterAutomation",
+      "method": "PATCH",
+      "path": "/v2/roster-automation/:automationId",
+      "contract": "dashboardEndpoints.dashboardUpdateRosterAutomation",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/rosters/_lib/api.ts:351"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "dashboardDeleteRosterAutomation",
+      "method": "DELETE",
+      "path": "/v2/roster-automation/:automationId",
+      "contract": "dashboardEndpoints.dashboardDeleteRosterAutomation",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/rosters/_lib/api.ts:369"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "dashboardListRosterGroups",
+      "method": "GET",
+      "path": "/v2/roster-group/list",
+      "contract": "dashboardEndpoints.dashboardListRosterGroups",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/rosters/_lib/api.ts:381"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "dashboardCreateRosterGroup",
+      "method": "POST",
+      "path": "/v2/roster-group",
+      "contract": "dashboardEndpoints.dashboardCreateRosterGroup",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/rosters/_lib/api.ts:393"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "dashboardUpdateRosterGroup",
+      "method": "PATCH",
+      "path": "/v2/roster-group/:groupId",
+      "contract": "dashboardEndpoints.dashboardUpdateRosterGroup",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/rosters/_lib/api.ts:409"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "dashboardDeleteRosterGroup",
+      "method": "DELETE",
+      "path": "/v2/roster-group/:groupId",
+      "contract": "dashboardEndpoints.dashboardDeleteRosterGroup",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/rosters/_lib/api.ts:418"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "serverChannels",
+      "method": "GET",
+      "path": "/v2/server/:serverId/channels",
+      "contract": "dashboardEndpoints.serverChannels",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/rosters/_lib/api.ts:430"
+    },
+    {
+      "helper": "executeSharedApiResult",
+      "operationId": "dashboardPublicRoster",
+      "method": "GET",
+      "path": "/v2/public/rosters/:publicShareId",
+      "contract": "dashboardEndpoints.dashboardPublicRoster",
+      "validatedBySharedClient": true,
+      "source": "app/roster/page.tsx:55"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "dashboardCdnUpload",
+      "method": "POST",
+      "path": "/v2/cdn/upload",
+      "contract": "dashboardEndpoints.dashboardCdnUpload",
+      "validatedBySharedClient": true,
+      "source": "components/dashboard/embed-editor.tsx:1953"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "dashboardDiscohookResolve",
+      "method": "GET",
+      "path": "/v2/app/discohook-resolve",
+      "contract": "dashboardEndpoints.dashboardDiscohookResolve",
+      "validatedBySharedClient": true,
+      "source": "components/dashboard/embed-editor.tsx:2273"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "dashboardServerClanMembers",
+      "method": "GET",
+      "path": "/v2/roster/server/:serverId/members",
+      "contract": "dashboardEndpoints.dashboardServerClanMembers",
+      "validatedBySharedClient": true,
+      "source": "components/dashboard/player-search-combobox.tsx:56"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "resolveTenorMedia",
+      "method": "POST",
+      "path": "/v2/media/tenor/resolve",
+      "contract": "endpoints.tenorMedia",
+      "validatedBySharedClient": true,
+      "source": "components/tenor-media.tsx:16"
+    },
+    {
+      "helper": "fetch",
+      "method": "POST",
+      "path": "{baseUrl}/v2/auth/web/refresh",
+      "validatedBySharedClient": false,
+      "source": "lib/auth/session.ts:182"
+    },
+    {
+      "helper": "fetch",
+      "method": "POST",
+      "path": "{baseUrl}/v2/auth/web/refresh",
+      "validatedBySharedClient": false,
+      "source": "lib/auth/session.ts:188"
+    },
+    {
+      "helper": "executeAssistantEndpoint",
+      "operationId": "getExpoAuthMe",
+      "method": "GET",
+      "path": "/v2/auth/me",
+      "contract": "AuthMeEndpoint",
+      "validatedBySharedClient": true,
+      "source": "workers/roster-assistant/developer-authorization.ts:16"
+    },
+    {
+      "helper": "executeAssistantEndpoint",
+      "operationId": "dashboardRosterMembersQuery",
+      "method": "POST",
+      "path": "/v2/roster/members/query",
+      "contract": "DashboardRosterMembersQueryEndpoint",
+      "validatedBySharedClient": true,
+      "source": "workers/roster-assistant/index.ts:355"
+    },
+    {
+      "helper": "executeAssistantEndpoint",
+      "operationId": "dashboardRosterAccountGroupsQuery",
+      "method": "POST",
+      "path": "/v2/roster/account-groups/query",
+      "contract": "DashboardRosterAccountGroupsQueryEndpoint",
+      "validatedBySharedClient": true,
+      "source": "workers/roster-assistant/index.ts:362"
+    },
+    {
+      "helper": "executeAssistantEndpoint",
+      "operationId": "dashboardQueryRosterMetric",
+      "method": "POST",
+      "path": "/v2/roster/metrics/query",
+      "contract": "DashboardQueryRosterMetricEndpoint",
+      "validatedBySharedClient": true,
+      "source": "workers/roster-assistant/index.ts:369"
+    },
+    {
+      "helper": "executeAssistantEndpoint",
+      "operationId": "dashboardPreviewRosterView",
+      "method": "POST",
+      "path": "/v2/roster/views/preview",
+      "contract": "DashboardPreviewRosterViewEndpoint",
+      "validatedBySharedClient": true,
+      "source": "workers/roster-assistant/index.ts:377"
+    },
+    {
+      "helper": "executeAssistantEndpoint",
+      "operationId": "dashboardPreviewRosterView",
+      "method": "POST",
+      "path": "/v2/roster/views/preview",
+      "contract": "DashboardPreviewRosterViewEndpoint",
+      "validatedBySharedClient": true,
+      "source": "workers/roster-assistant/index.ts:406"
+    },
+    {
+      "helper": "executeAssistantEndpoint",
+      "operationId": "dashboardRosterRefreshBatch",
+      "method": "POST",
+      "path": "/v2/roster/refresh-batch",
+      "contract": "DashboardRosterRefreshBatchEndpoint",
+      "validatedBySharedClient": true,
+      "source": "workers/roster-assistant/index.ts:422"
+    },
+    {
+      "helper": "executeAssistantEndpoint",
+      "operationId": "dashboardRefreshRosterDiscordIdentity",
+      "method": "POST",
+      "path": "/v2/server/:serverId/rosters/:rosterId/discord-identity/refresh",
+      "contract": "DashboardRefreshRosterDiscordIdentityEndpoint",
+      "validatedBySharedClient": true,
+      "source": "workers/roster-assistant/index.ts:434"
+    },
+    {
+      "helper": "executeAssistantEndpoint",
+      "operationId": "dashboardRosterMembersQuery",
+      "method": "POST",
+      "path": "/v2/roster/members/query",
+      "contract": "DashboardRosterMembersQueryEndpoint",
+      "validatedBySharedClient": true,
+      "source": "workers/roster-assistant/index.ts:443"
+    },
+    {
+      "helper": "executeAssistantEndpoint",
+      "operationId": "dashboardRosterAccountGroupsQuery",
+      "method": "POST",
+      "path": "/v2/roster/account-groups/query",
+      "contract": "DashboardRosterAccountGroupsQueryEndpoint",
+      "validatedBySharedClient": true,
+      "source": "workers/roster-assistant/index.ts:452"
+    },
+    {
+      "helper": "executeAssistantEndpoint",
+      "operationId": "dashboardQueryRosterMetric",
+      "method": "POST",
+      "path": "/v2/roster/metrics/query",
+      "contract": "DashboardQueryRosterMetricEndpoint",
+      "validatedBySharedClient": true,
+      "source": "workers/roster-assistant/index.ts:463"
+    },
+    {
+      "helper": "executeAssistantEndpoint",
+      "operationId": "dashboardRosterMembershipValidate",
+      "method": "POST",
+      "path": "/v2/roster/membership-changes/validate",
+      "contract": "DashboardRosterMembershipValidateEndpoint",
+      "validatedBySharedClient": true,
+      "source": "workers/roster-assistant/index.ts:495"
+    },
+    {
+      "helper": "executeAssistantEndpoint",
+      "operationId": "dashboardRosterAccountGroupsQuery",
+      "method": "POST",
+      "path": "/v2/roster/account-groups/query",
+      "contract": "DashboardRosterAccountGroupsQueryEndpoint",
+      "validatedBySharedClient": true,
+      "source": "workers/roster-assistant/index.ts:607"
+    },
+    {
+      "helper": "executeAssistantEndpoint",
+      "operationId": "dashboardRosterAIContext",
+      "method": "POST",
+      "path": "/v2/roster/ai/context",
+      "contract": "DashboardRosterAIContextEndpoint",
+      "validatedBySharedClient": true,
+      "source": "workers/roster-assistant/request-context.ts:56"
+    },
+    {
+      "helper": "executeAssistantEndpoint",
+      "operationId": "dashboardRosterAIUsage",
+      "method": "POST",
+      "path": "/v2/roster/ai/usage",
+      "contract": "DashboardRosterAIUsageEndpoint",
+      "validatedBySharedClient": true,
+      "source": "workers/roster-assistant/usage-reporting.ts:66"
+    }
+  ]
+}

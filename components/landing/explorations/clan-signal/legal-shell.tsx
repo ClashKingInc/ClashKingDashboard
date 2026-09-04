@@ -1,5 +1,5 @@
-import Link from "next/link";
-import { getTranslations } from "next-intl/server";
+import Link from "@/components/app-link";
+import { useTranslations } from "use-intl";
 import { ClanSignalWordmark } from "./brand";
 import { ClanSignalFooter } from "./footer";
 import { LandingLanguageSwitcher } from "./language-switcher";
@@ -7,7 +7,7 @@ import { publicPath, type PublicLocale } from "@/lib/locale-preference";
 import "../../../../app/explorations/clan-signal.css";
 
 
-export async function ClanSignalLegalShell({
+export function ClanSignalLegalShell({
   title,
   eyebrow,
   locale = "en",
@@ -18,7 +18,7 @@ export async function ClanSignalLegalShell({
   locale?: PublicLocale;
   children: React.ReactNode;
 }>) {
-  const t = await getTranslations({ locale, namespace: "ClanSignal" });
+  const t = useTranslations("ClanSignal");
   const landingTheme = "day";
 
   return (

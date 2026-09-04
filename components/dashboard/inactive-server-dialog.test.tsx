@@ -6,7 +6,7 @@ const testState = vi.hoisted(() => ({
   reactivateServer: vi.fn(),
 }));
 
-vi.mock("next-intl", () => ({
+vi.mock("use-intl", () => ({
   useTranslations: () => (key: string) => ({
     title: "Re-enable server tracking?",
     description: "Tracking was disabled.",

@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Shield, TrendingUp, Trophy, Swords, Bell, Settings, Users, BarChart3, Zap, Lock } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "use-intl";
 
 export function Features() {
   const t = useTranslations("HomePage.features");

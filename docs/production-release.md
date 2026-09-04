@@ -1,74 +1,54 @@
-# Production release
+# Production release and rollback
 
-Production uses four public origins:
+This document prepares the coordinated release; it does not authorize a production cutover.
 
-- `https://clashk.ing` — marketing and legal pages
-- `https://dash.clashk.ing` — authenticated dashboard
-- `https://api.clashk.ing` — Go API
-- `https://ai.clashk.ing` — roster-assistant Worker
+The browser origins are `https://clashk.ing` and `https://dash.clashk.ing`. They call the API Worker at `https://api.clashk.ing` directly. The roster assistant remains a separate Worker at `https://ai.clashk.ing`.
 
-The graphics editor has no AI assistant endpoint.
+## Required release inputs
+
+- Publish matching `@clashking/api-contracts` and `@clashking/api-client` release candidates, install those exact versions in every consumer, and verify their generated schemas and endpoint registry came from the same API revision.
+- Apply required Goose migrations from the authoritative schema repository before enabling API code that reads or writes the new shape.
+- Configure API CORS with exact allowed origins for the two browser hosts and local development. Credentialed requests cannot use a wildcard origin.
+- Add `https://dash.clashk.ing/auth/callback` to Discord's allowed OAuth redirect URIs and keep the refresh cookie scoped for direct API requests.
+- Confirm the API release exposes the six body-based POST endpoints and the typed Tenor resolver used by the shared client before building the dashboard.
+- Apply the canonical ticket-configuration migration before serving ticket settings. Verify active panels and buttons expose stable UUIDs, settings are keyed by canonical `ck:ticket:open:<panel-id>:<button-id>` values, archived panels remain immutable, and historical tickets still resolve their original panel identity.
+- Keep ticket and roster publishing disabled until their API-owned publication records and Discord delivery handlers persist the exact channel/message result. Dashboard settings readiness alone does not prove persistent-message readiness.
 
 ## Release order
 
-1. **Create and migrate the target Timescale database.** Apply the authoritative DevKit Goose baseline from `database/timescale`. A fresh database applies `001_initial_stats.sql` and `002_initial_settings.sql` and ends at Goose version 2. Run the DevKit data importers required for the cutover before sending production traffic to the new API.
-2. **Deploy the Go API against the migrated database.** Map its canonical `TIMESCALE_*`, `VALKEY_*`, origin, and trust values from the Coolify server environment, publish it on `api.clashk.ing`, and confirm its health and authentication endpoints before deploying clients.
-3. **Deploy the admin panel.** It uses the same Timescale database. The seeded `subscription_support` flag appears under **Dashboard & billing** and starts disabled.
-4. **Configure and deploy the roster-assistant Worker.** Create both account secrets in Cloudflare Secrets Store, bind them through the generated Wrangler configuration, then deploy to `ai.clashk.ing`.
-5. **Deploy the dashboard Worker.** `npm run deploy:dashboard` builds with the production API and assistant origins before deploying `wrangler.deploy.jsonc` to the marketing and dashboard domains. `npm run deploy` performs steps 4 and 5 together after the API is ready.
+1. **Publish contracts and client.** Publish immutable release-candidate versions, verify their package contents and provenance, then lock every consumer to the coordinated versions. Do not publish an implementation that silently falls back to the legacy method or response shape.
+2. **Apply schemas.** Run the authoritative Goose status and up commands for each affected datastore, record the applied versions, and verify the new objects before changing API traffic.
+3. **Deploy the API Worker without switching clients.** Verify health, authentication refresh, exact-origin CORS, the six POST routes, and the Tenor resolver against the release-candidate contracts.
+4. **Deploy dependent applications.** Deploy the admin and other consumers against the same package versions, then deploy the roster assistant if its API contract changed.
+5. **Build and stage the dashboard Worker.** Run the validation commands below, upload or preview the Worker without changing custom-domain routing, and verify the generated deployment contains the expected API and assistant origins.
+6. **Republish persistent messages deliberately.** Once the new Bot handlers and publication records are verified, replace legacy ticket and roster messages with canonical `ck:` components. Do not enable a legacy-ID parser or assume old message locations can be recovered from configuration that never stored them.
+7. **Cut over deliberately.** Only after the cross-repository checks pass, attach or promote the staged dashboard Worker to the production domains. This step requires separate production authorization.
 
-## API environment
+## Dashboard validation and staging
 
-Use `clashking-api/example.env` and the DevKit production-environment contract as the key inventory. URLs are derived from canonical origins:
-
-```dotenv
-CLASHKING_LANDING_ORIGIN=https://clashk.ing
-CLASHKING_DASHBOARD_ORIGIN=https://dash.clashk.ing
-CLASHKING_PROXY_INTERNAL_ORIGIN=http://clashking-proxy:8011
-AI_USAGE_SECRET=<same strong secret used by the roster-assistant Worker>
-```
-
-`AI_USAGE_SECRET` is required outside local mode. Keep it out of Wrangler variables and source control. Stripe checkout remains unavailable while `subscription_support` is disabled, even when the three `STRIPE_*` values are configured.
-
-Add `https://dash.clashk.ing/auth/callback` to the Discord application’s allowed OAuth redirect URIs. When Stripe checkout is eventually enabled, configure its webhook destination as `https://api.clashk.ing/v2/billing/stripe/webhook` and use that endpoint’s signing secret as `STRIPE_WEBHOOK_SECRET`.
-
-When subscriptions are ready, update `subscription_support` in the admin panel: include the `web` platform, choose the rollout percentage, and enable the flag. Rollout assignment is stable per user, and the API applies its start/end window.
-
-## Cloudflare Workers
-
-The dashboard has no runtime secrets; its public API, assistant, and Discord client values are pinned by `build:production`. The roster assistant has one non-secret variable in `wrangler.assistant.jsonc`:
-
-```text
-CLASHKING_API_ORIGIN=https://api.clashk.ing
-```
-
-Create the account-level secrets, then expose the non-secret store ID to the deployment job:
+Use the repository's declared Node.js 26.1+/npm 12+ toolchain:
 
 ```bash
-npx wrangler secrets-store store list
-npx wrangler secrets-store secret create <STORE_ID> --name OPENAI_API_KEY --scopes workers --remote
-npx wrangler secrets-store secret create <STORE_ID> --name AI_USAGE_SECRET --scopes workers --remote
-CLOUDFLARE_SECRETS_STORE_ID=<STORE_ID> npm run deploy:assistant
-```
-
-The `AI_USAGE_SECRET` value must exactly match the API environment. The preparation script replaces only the public store ID in a gitignored generated config; secret values never enter source files.
-
-Run these checks before release:
-
-```bash
+npm ci
 npm run typecheck
 npm run lint
 npm test
 npm run build:production
-npx wrangler deploy --dry-run --config wrangler.deploy.jsonc
-CLOUDFLARE_SECRETS_STORE_ID=<STORE_ID> npm run assistant:config
-npx wrangler deploy --dry-run --config .wrangler/wrangler.assistant.generated.jsonc
+npx wrangler deploy --dry-run --config dist/clashking_dashboard/wrangler.json
 ```
 
-Wrangler needs an authenticated Cloudflare session or `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` in the deployment environment. Do not use temporary preview-account deployment for production.
+`build:production` embeds `https://api.clashk.ing`, `https://ai.clashk.ing`, and the production Discord client ID in browser assets. The dashboard Worker has no runtime secrets. The local dry-run does not upload or switch traffic; an upload requires an authenticated Cloudflare session or a narrowly scoped API token.
 
-## Why old notes mention migrations 003 and 004
+The roster assistant still requires `OPENAI_API_KEY` and `AI_USAGE_SECRET` in Cloudflare Secrets Store. Its generated Wrangler configuration must bind the same `AI_USAGE_SECRET` value that the API Worker expects.
 
-The V2 cleanup and roster architecture originally existed as `003_v2_schema_cleanup.sql` and `004_roster_architecture.sql`; DevKit commit `77be112` contains those files. The current DevKit worktree intentionally squashes their final schema into the fresh-install `001`/`002` baseline, and `database/timescale/schema_baseline_report.md` preserves the historical validation record. That is why Git history and an older API handoff could name 003/004 while the current migration directory contains only 001/002.
+## Rollback
 
-Do not apply the squashed baseline over a database that already recorded versions 003/004. The two-file baseline is for the new database; an existing migrated database needs an explicit upgrade plan based on its Goose state.
+Roll back in the reverse dependency direction, keeping schemas forward-compatible unless an explicit down migration has been reviewed and authorized.
+
+1. **Dashboard first.** Redeploy the last known-good dashboard Worker version or restore its previous Cloudflare deployment. Because documents are revalidated and assets are content-addressed, clients will load that version's matching entry point and chunks.
+2. **Other clients next.** Restore any dependent application that consumed the new contracts before rolling back the API.
+3. **API after clients.** Restore the previous API Worker only after no active client requires the new POST or Tenor contracts. Recheck authentication and exact-origin CORS after promotion.
+4. **Packages stay immutable.** Deprecate a bad release candidate and publish a new version; never overwrite an existing package version.
+5. **Schemas last and usually not down.** Prefer a forward repair. Run a down migration only when it is explicitly proven safe for production data and separately authorized.
+
+Record the Cloudflare deployment IDs, package versions, schema versions, API commit, dashboard commit, validation output, and the person authorizing cutover. Those values are the rollback coordinates; a branch name or mutable tag is not sufficient.

@@ -7,21 +7,17 @@ import {
   normalizeDestinationThreads,
 } from "./discord-destinations";
 
-const channels = normalizeDestinationChannels({
-  channels: [
-    { id: 1, name: "general", type: 0 },
-    { id: 2, name: "announcements", type: 5 },
-    { id: 3, name: "reminders", type: 15 },
-    { id: 4, name: "voice", type: 2 },
-  ],
-});
+const channels = normalizeDestinationChannels([
+    { id: "1", name: "general", type: "text" },
+    { id: "2", name: "announcements", type: "news" },
+    { id: "3", name: "reminders", type: "forum" },
+    { id: "4", name: "category", type: "category" },
+]);
 
-const threads = normalizeDestinationThreads({
-  threads: [
-    { id: 10, name: "general thread", parent_channel_id: 1 },
-    { id: 30, name: "forum post", parent_channel_id: 3 },
-  ],
-});
+const threads = normalizeDestinationThreads([
+    { id: "10", name: "general thread", parent_channel_id: "1", parent_channel_name: "general", archived: false },
+    { id: "30", name: "forum post", parent_channel_id: "3", parent_channel_name: "reminders", archived: false },
+]);
 
 describe("Discord reminder destinations", () => {
   it("includes text, announcement, and forum parents without broadening to voice", () => {

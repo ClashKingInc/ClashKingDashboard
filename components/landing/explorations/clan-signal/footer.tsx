@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
-import { useLocale, useTranslations } from "next-intl";
+import Image from "@/components/app-image";
+import Link from "@/components/app-link";
+import { useLocale, useTranslations } from "use-intl";
 import { ClanSignalWordmark } from "./brand";
 import { isPublicLocale, publicPath, type SupportedLocale } from "@/lib/locale-preference";
 

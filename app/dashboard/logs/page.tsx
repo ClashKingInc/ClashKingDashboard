@@ -1,12 +1,12 @@
 "use client";
 
 import { useGuildId } from "@/lib/dashboard-route";
-import { getAccessToken } from "@/lib/auth/session";
-import { apiFetch } from "@/lib/api/fetch";
+import { dashboardEndpoints, type EndpointResponse } from "@clashking/api-contracts";
+import { executeSharedEndpoint } from "@/lib/api/shared-client";
 
-import Image from "next/image";
+import Image from "@/components/app-image";
 import { useState, useEffect, useRef, type ReactNode } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "use-intl";
 import { useQueryClient } from "@tanstack/react-query";
 import { dashboardQueryKeys } from "@/lib/dashboard-query";
 import { dashboardQueryOptions } from "@/lib/dashboard-query-options";
@@ -70,13 +70,8 @@ interface ServerLog {
   type: string;
   webhook_id: string;
   channel_id?: string;
-  thread_id?: string;
+  thread_id?: string | null;
   disabled: boolean;
-}
-
-interface ServerLogsResponse {
-  logs: ServerLog[];
-  count: number;
 }
 
 interface LogTypeDefinition {
@@ -99,12 +94,7 @@ interface ServerIdentity {
   icon: string | null;
 }
 
-interface CountdownStatus {
-  type: string;
-  name: string;
-  enabled: boolean;
-  channel_id: string | null;
-}
+type CountdownStatus = EndpointResponse<typeof dashboardEndpoints.serverCountdowns>["countdowns"][number];
 
 const WAR_LOG_TYPES = new Set(["war_log", "war_panel", "cwl_lineup_change_log"]);
 const CAPITAL_LOG_TYPES = new Set(["capital_donations", "capital_attacks", "raid_panel", "capital_weekly_summary"]);
@@ -142,18 +132,22 @@ function CountdownsPanel({ serverId, clanTag }: Readonly<{ serverId: string; cla
   const [pendingType, setPendingType] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const endpoint = clanTag
-    ? `/v2/server/${serverId}/clan/${encodeURIComponent(clanTag)}/countdowns`
-    : `/v2/server/${serverId}/countdowns`;
-
   const loadCountdowns = async () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await apiFetch(endpoint, { cache: "no-store" });
-      const body = await response.json() as { countdowns?: CountdownStatus[]; message?: string; error?: string };
-      if (!response.ok) throw new Error(body.message || body.error || t("loadError"));
-      setItems(body.countdowns ?? []);
+      const body = clanTag
+        ? await executeSharedEndpoint(dashboardEndpoints.clanCountdowns, {
+            path: { serverId, clanTag },
+            query: {},
+            body: {},
+          })
+        : await executeSharedEndpoint(dashboardEndpoints.serverCountdowns, {
+            path: { serverId },
+            query: {},
+            body: {},
+          });
+      setItems([...body.countdowns]);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : t("loadError"));
     } finally {
@@ -165,24 +159,37 @@ function CountdownsPanel({ serverId, clanTag }: Readonly<{ serverId: string; cla
     void loadCountdowns();
     // Reload whenever the selected clan or server changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [endpoint]);
+  }, [serverId, clanTag]);
 
   const toggleCountdown = async (item: CountdownStatus, enabled: boolean) => {
     setPendingType(item.type);
     setError(null);
     try {
-      const response = await apiFetch(`/v2/server/${serverId}/countdowns`, {
-        method: enabled ? "POST" : "DELETE",
-        body: JSON.stringify({
+      if (enabled) {
+        const body = await executeSharedEndpoint(dashboardEndpoints.enableCountdown, {
+          path: { serverId },
+          query: {},
+          body: {
+            countdown_type: item.type,
+            ...(clanTag ? { clan_tag: clanTag } : {}),
+          },
+        });
+        setItems((current) => current.map((countdown) => countdown.type === item.type
+          ? { ...countdown, enabled: true, channel_id: body.channel_id }
+          : countdown));
+      } else {
+        await executeSharedEndpoint(dashboardEndpoints.disableCountdown, {
+          path: { serverId },
+          query: {},
+          body: {
           countdown_type: item.type,
           ...(clanTag ? { clan_tag: clanTag } : {}),
-        }),
-      });
-      const body = await response.json() as { channel_id?: string; message?: string; error?: string; detail?: string };
-      if (!response.ok) throw new Error(body.detail || body.message || body.error || t("updateError"));
-      setItems((current) => current.map((countdown) => countdown.type === item.type
-        ? { ...countdown, enabled, channel_id: enabled ? body.channel_id ?? countdown.channel_id : null }
-        : countdown));
+          },
+        });
+        setItems((current) => current.map((countdown) => countdown.type === item.type
+          ? { ...countdown, enabled: false, channel_id: undefined }
+          : countdown));
+      }
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : t("updateError"));
     } finally {
@@ -314,11 +321,11 @@ export default function LogsPage() {
             queryKey: dashboardQueryKeys.route("logs", guildId),
             staleTime: 30_000,
             queryFn: async () => {
-            const res = await apiFetch(`/v2/server/${guildId}/logs`, {
-              headers: { 'Authorization': `Bearer ${getAccessToken()}` }
+            return executeSharedEndpoint(dashboardEndpoints.serverLogs, {
+              path: { serverId: guildId },
+              query: {},
+              body: {},
             });
-            if (!res.ok) throw new Error('Failed to fetch logs');
-            return res.json();
             },
           }),
           queryClient.fetchQuery(dashboardQueryOptions.guild(guildId)).catch(() => null),
@@ -326,7 +333,7 @@ export default function LogsPage() {
 
         setChannels(normalizeDestinationChannels(channelsData));
         setClans(clansData);
-        setServerLogs((logsData as ServerLogsResponse).logs ?? []);
+        setServerLogs([...logsData.logs]);
         if (guildData) setServerIdentity({ name: guildData.name, icon: guildData.icon });
 
         if (clansData.length > 0) {
@@ -389,8 +396,6 @@ export default function LogsPage() {
 
     try {
       setSaving(logKeys[0]);
-      const token = getAccessToken();
-
       const requestBody = {
         ...(!serverScoped ? { clan_tag: selectedClan } : {}),
         channel_id: channelId,
@@ -398,28 +403,19 @@ export default function LogsPage() {
         log_types: logKeys
       };
 
-      const response = await apiFetch(`/v2/server/${guildId}/logs`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(requestBody)
+      await executeSharedEndpoint(dashboardEndpoints.saveServerLogs, {
+        path: { serverId: guildId },
+        query: {},
+        body: requestBody,
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to update clan logs');
-      }
-
-      const logsRes = await apiFetch(`/v2/server/${guildId}/logs`, {
-        headers: { 'Authorization': `Bearer ${token}` }
+      const data = await executeSharedEndpoint(dashboardEndpoints.serverLogs, {
+        path: { serverId: guildId },
+        query: {},
+        body: {},
       });
-
-      if (logsRes.ok) {
-        const data = await logsRes.json() as ServerLogsResponse;
-        setServerLogs(data.logs ?? []);
-        queryClient.setQueryData(dashboardQueryKeys.route("logs", guildId), data);
-      }
+      setServerLogs([...data.logs]);
+      queryClient.setQueryData(dashboardQueryKeys.route("logs", guildId), data);
     } catch (error) {
       console.error("Failed to update clan logs:", error);
     } finally {
@@ -432,32 +428,23 @@ export default function LogsPage() {
 
     try {
       setSaving(logKeys[0]);
-      const token = getAccessToken();
-      const response = await apiFetch(`/v2/server/${guildId}/logs`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
+      await executeSharedEndpoint(dashboardEndpoints.updateServerLogsState, {
+        path: { serverId: guildId },
+        query: {},
+        body: {
           ...(!serverScoped ? { clan_tag: selectedClan } : {}),
           log_types: logKeys,
           disabled
-        })
+        },
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to change clan log state');
-      }
-
-      const logsRes = await apiFetch(`/v2/server/${guildId}/logs`, {
-        headers: { 'Authorization': `Bearer ${token}` }
+      const data = await executeSharedEndpoint(dashboardEndpoints.serverLogs, {
+        path: { serverId: guildId },
+        query: {},
+        body: {},
       });
-      if (logsRes.ok) {
-        const data = await logsRes.json() as ServerLogsResponse;
-        setServerLogs(data.logs ?? []);
-        queryClient.setQueryData(dashboardQueryKeys.route("logs", guildId), data);
-      }
+      setServerLogs([...data.logs]);
+      queryClient.setQueryData(dashboardQueryKeys.route("logs", guildId), data);
     } catch (error) {
       console.error("Failed to change clan log state:", error);
     } finally {
@@ -495,7 +482,7 @@ export default function LogsPage() {
 
   const logsWithIssues = serverLogs.filter(log => {
       if (!log.webhook_id || log.disabled) return false;
-      return !isDestinationValid(log.channel_id, log.thread_id, channels, threads);
+      return !isDestinationValid(log.channel_id, log.thread_id ?? undefined, channels, threads);
     });
 
   const getDefinitionForLog = (logType: string) => {

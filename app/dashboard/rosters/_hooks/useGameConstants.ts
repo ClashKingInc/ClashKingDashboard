@@ -1,4 +1,5 @@
-import { apiFetch } from "@/lib/api/fetch";
+import { dashboardEndpoints } from "@clashking/api-contracts";
+import { executeSharedEndpoint } from "@/lib/api/shared-client";
 import { useState, useEffect } from 'react';
 
 interface GameConstants {
@@ -24,11 +25,12 @@ let fetchPromise: Promise<GameConstants> | null = null;
 
 async function fetchMaxLevel(category: string, itemName: string): Promise<number | null> {
   try {
-    const response = await apiFetch(`/v2/static/${category}/${encodeURIComponent(itemName)}/max-level`);
-    if (response.ok) {
-      const data = await response.json();
-      return data.max_level;
-    }
+    const response = await executeSharedEndpoint(dashboardEndpoints.dashboardStaticMaxLevel, {
+      path: { category, itemIdOrName: itemName },
+      query: {},
+      body: {},
+    });
+    return response.max_level;
   } catch (error) {
     console.error(`Failed to fetch max level for ${itemName}:`, error);
   }

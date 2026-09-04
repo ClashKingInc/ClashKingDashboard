@@ -1,5 +1,5 @@
 import { ClanSignalLegalShell } from "@/components/landing/explorations/clan-signal/legal-shell";
-import Link from "next/link";
+import Link from "@/components/app-link";
 import type { PublicLocale } from "@/lib/locale-preference";
 
 export function TermsOfService({

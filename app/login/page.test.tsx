@@ -7,11 +7,11 @@ const testState = vi.hoisted(() => ({
   initiateDiscordLogin: vi.fn().mockResolvedValue(undefined),
 }));
 
-vi.mock("next/navigation", () => ({
+vi.mock("@/lib/navigation", () => ({
   useRouter: () => ({ replace: testState.replace }),
 }));
 
-vi.mock("next-intl", () => ({
+vi.mock("use-intl", () => ({
   useLocale: () => "en",
 }));
 

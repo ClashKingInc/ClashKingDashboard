@@ -2,8 +2,10 @@
 
 import { useGuildId } from "@/lib/dashboard-route";
 import { type Dispatch, type ReactNode, type SetStateAction, useCallback, useEffect, useEffectEvent, useMemo, useRef, useState } from "react";
-import Link from "next/link";
-import { useTranslations } from "next-intl";
+import Link from "@/components/app-link";
+import { useTranslations } from "use-intl";
+import { UpdateApproveMessagesRequest } from "@clashking/api-contracts";
+import { Schema } from "effect";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   ArrowDown,
@@ -58,6 +60,7 @@ import { cn } from "@/lib/utils";
 import type {
   ApproveMessage,
   ServerEmbed,
+  ServerEmbedsResponse,
   THRequirement,
   TicketButton,
   TicketButtonSettings,
@@ -82,9 +85,6 @@ interface DiscordRole {
 }
 
 const getTicketsPanelsCacheKey = (guildId: string) => `ticket-panels-${guildId}`;
-const getTicketsEmbedsCacheKey = (guildId: string) => `ticket-embeds-${guildId}`;
-const getServerChannelsCacheKey = (guildId: string) => `server-channels-${guildId}`;
-const getServerRolesCacheKey = (guildId: string) => `server-roles-${guildId}`;
 const MAX_APPROVE_MESSAGE_NAME_LENGTH = 100;
 const MAX_APPROVE_MESSAGE_CONTENT_LENGTH = 2000;
 const DEFAULT_TOWNHALL_REQUIREMENT_FIELDS = ["BK", "AQ", "GW", "RC", "WARST"];
@@ -120,34 +120,11 @@ const isTextLikeChannel = (channel: DiscordChannel): boolean => {
 };
 
 const normalizeTicketChannels = (payload: unknown): DiscordChannel[] => {
-  const normalized = normalizeAllChannelsPayload(payload) as DiscordChannel[];
-  if (normalized.length > 0) {
-    return normalized;
-  }
-
-  if (payload && typeof payload === "object") {
-    const obj = payload as { items?: unknown; results?: unknown };
-    if (Array.isArray(obj.items)) return obj.items as DiscordChannel[];
-    if (Array.isArray(obj.results)) return obj.results as DiscordChannel[];
-  }
-
-  return [];
+  return normalizeAllChannelsPayload(payload);
 };
 
-const normalizeTicketEmbeds = (payload: unknown): ServerEmbed[] => {
-  if (Array.isArray(payload)) {
-    return payload as ServerEmbed[];
-  }
-
-  if (!payload || typeof payload !== "object") {
-    return [];
-  }
-
-  const obj = payload as { items?: unknown; data?: { items?: unknown } };
-  if (Array.isArray(obj.items)) return obj.items as ServerEmbed[];
-  if (obj.data && Array.isArray(obj.data.items)) return obj.data.items as ServerEmbed[];
-
-  return [];
+const normalizeTicketEmbeds = (payload: ServerEmbedsResponse): ServerEmbed[] => {
+  return [...payload.items];
 };
 
 const toEmbedDataRecord = (data: unknown): Record<string, unknown> | null => {
@@ -363,7 +340,7 @@ function TicketPanelTab({
                 <div className="pt-2 flex flex-wrap gap-2">
                   {previewButtons.map((button) => (
                     <span
-                      key={`draft-${button.custom_id}`}
+                      key={`draft-${button.id}`}
                       className={cn(
                         "inline-flex h-8 items-center gap-1.5 rounded px-3 text-xs font-medium transition-colors",
                         getPreviewButtonClass(button.style),
@@ -443,7 +420,7 @@ function TicketPanelTab({
             <div className="pt-2 flex flex-wrap gap-2">
               {previewButtons.map((button) => (
                 <span
-                  key={button.custom_id}
+                  key={button.id}
                   className={cn(
                     "inline-flex h-8 items-center gap-1.5 rounded px-3 text-xs font-medium transition-colors",
                     getPreviewButtonClass(button.style),
@@ -948,7 +925,7 @@ function ButtonCard({
                         );
                       })}
                     </div>
-                    <RoleCombobox roles={roleOptions} mode="add" excludeRoleIds={form[type]} onAdd={addRole(type)} />
+                    <RoleCombobox roles={roleOptions} mode="add" excludeRoleIds={[...form[type]]} onAdd={addRole(type)} />
                   </div>
                 ))}
               </div>
@@ -969,7 +946,7 @@ function ButtonCard({
                         );
                       })}
                     </div>
-                    <RoleCombobox roles={roleOptions} mode="add" excludeRoleIds={form[type]} onAdd={addRole(type)} />
+                    <RoleCombobox roles={roleOptions} mode="add" excludeRoleIds={[...form[type]]} onAdd={addRole(type)} />
                   </div>
                 ))}
               </div>
@@ -1271,7 +1248,7 @@ function createLocalMessageId(): string {
   return globalThis.crypto.randomUUID();
 }
 
-function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly guildId: string }) {
+export function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly guildId: string }) {
   const t = useTranslations("TicketsSettingsPage");
   const tCommon = useTranslations("Common");
   const { toast } = useToast();
@@ -1309,10 +1286,7 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
   };
 
   const updateMessageField = (index: number, field: "name" | "message", value: string) => {
-    const limitedValue = field === "name"
-      ? value.slice(0, MAX_APPROVE_MESSAGE_NAME_LENGTH)
-      : value.slice(0, MAX_APPROVE_MESSAGE_CONTENT_LENGTH);
-    setDraftMessages((prev) => prev.map((msg, idx) => (idx === index ? { ...msg, [field]: limitedValue } : msg)));
+    setDraftMessages((prev) => prev.map((msg, idx) => (idx === index ? { ...msg, [field]: value } : msg)));
   };
 
   const addMessage = () => {
@@ -1354,16 +1328,18 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
   };
 
   const handleSave = async () => {
-    const valid = draftMessages.filter((m) => m.name.trim());
-    if (valid.length !== draftMessages.length) {
-      toast({ title: tCommon("error"), description: t("messageNameRequired"), variant: "destructive" });
+    if (isSaving) return;
+    const payload = { messages: draftMessages.map(({ name, message }) => ({ name, message })) };
+    if (!Schema.is(UpdateApproveMessagesRequest)(payload)) {
+      toast({ title: tCommon("error"), description: t("messagesInvalid"), variant: "destructive" });
       return;
     }
     setIsSaving(true);
     try {
-      const payloadMessages = valid.map(({ name, message }) => ({ name, message }));
-      const res = await apiClient.tickets.updateApproveMessages(guildId, panel.name, { messages: payloadMessages });
-      if (res.error) throw new Error(res.error);
+      const res = await apiClient.tickets.updateApproveMessages(guildId, panel.name, payload);
+      if (res.error !== undefined) throw new Error(res.error || tCommon("loadError"));
+      // The API trims names, while message whitespace and array order are significant.
+      const valid = draftMessages.map((message) => ({ ...message, name: message.name.trim() }));
       setMessages(valid);
       setDraftMessages(cloneMessages(valid));
       setExpandedPreviewIds(new Set());
@@ -1380,6 +1356,7 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
   return (
     <>
       <Dialog open={editOpen} onOpenChange={(open) => {
+        if (isSaving) return;
         setEditOpen(open);
         if (open) {
           setDraftMessages(cloneMessages(messages));
@@ -1389,13 +1366,13 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
         setDraftMessages(cloneMessages(messages));
         setExpandedEditorIds(new Set());
       }}>
-        <DialogContent variant="workspace" className="flex min-h-0 flex-col gap-0 overflow-hidden bg-background sm:max-w-3xl">
+        <DialogContent variant="workspace" closeLabel={tCommon("close")} aria-busy={isSaving} className="flex min-h-0 flex-col gap-0 overflow-hidden bg-background sm:max-w-3xl">
           <DialogHeader className="shrink-0 px-5 pb-4 pr-16 pt-5 text-left sm:px-7 sm:pb-5 sm:pr-16 sm:pt-7">
             <DialogTitle>{t("editMessagesTitle")}</DialogTitle>
             <DialogDescription>{t("editMessagesDescription")}</DialogDescription>
           </DialogHeader>
 
-          <div className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain px-5 py-5 pb-8 sm:px-7">
+          <fieldset disabled={isSaving} className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain px-5 py-5 pb-8 sm:px-7">
             <div className="flex items-center justify-between gap-3">
               <p className="text-xs text-muted-foreground">{t("messagesMaxHint")}</p>
               <Button size="sm" className={CLASHKING_RED_BUTTON_CLASS} onClick={addMessage} disabled={draftMessages.length >= 25}>
@@ -1403,9 +1380,9 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
               </Button>
             </div>
 
-            <div className="rounded-xl border border-border bg-background p-4">
+            <div>
               {draftMessages.length === 0 ? (
-                <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-border py-10 text-muted-foreground gap-2">
+                <div className="flex flex-col items-center justify-center rounded-2xl bg-muted/45 py-10 text-muted-foreground gap-2">
                   <MessageSquare className="h-8 w-8 opacity-40" />
                   <p className="text-sm">{t("noMessages")}</p>
                 </div>
@@ -1414,11 +1391,13 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
                   {draftMessages.map((msg, i) => {
                     const isExpanded = expandedEditorIds.has(msg.localId);
                     return (
-                      <div key={msg.localId} className="rounded-lg border border-border bg-card p-3">
+                      <div key={msg.localId} className="rounded-[20px] bg-card p-4 shadow-sm shadow-black/5">
                         <div className="flex items-center gap-2">
                           <button
                             type="button"
-                            className="flex flex-1 items-center gap-2 text-left"
+                            className="flex min-w-0 flex-1 items-center gap-2 rounded-lg text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                            aria-expanded={isExpanded}
+                            aria-controls={`message-editor-${msg.localId}`}
                             onClick={() => toggleExpanded(setExpandedEditorIds, msg.localId)}
                           >
                             {isExpanded ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
@@ -1427,6 +1406,7 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
                           <Button
                             variant="ghost"
                             size="icon"
+                            aria-label={`${tCommon("delete")}: ${i + 1}. ${msg.name.trim() || t("messageName")}`}
                             className="h-8 w-8 shrink-0 text-destructive/80 hover:bg-destructive/10 hover:text-destructive"
                             onClick={() => removeMessage(i)}
                           >
@@ -1435,6 +1415,7 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
                           <Button
                             variant="ghost"
                             size="icon"
+                            aria-label={`${t("moveMessageUp")}: ${i + 1}. ${msg.name.trim() || t("messageName")}`}
                             className="h-8 w-8 shrink-0 text-muted-foreground hover:text-foreground"
                             onClick={() => moveMessage(i, "up")}
                             disabled={i === 0}
@@ -1444,6 +1425,7 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
                           <Button
                             variant="ghost"
                             size="icon"
+                            aria-label={`${t("moveMessageDown")}: ${i + 1}. ${msg.name.trim() || t("messageName")}`}
                             className="h-8 w-8 shrink-0 text-muted-foreground hover:text-foreground"
                             onClick={() => moveMessage(i, "down")}
                             disabled={i === draftMessages.length - 1}
@@ -1453,29 +1435,29 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
                         </div>
 
                         {isExpanded ? (
-                          <div className="mt-3 space-y-3">
+                          <div id={`message-editor-${msg.localId}`} className="mt-3 space-y-3">
                             <div className="flex items-center justify-between gap-2">
                               <p className="text-xs font-medium text-muted-foreground">{t("messageName")}</p>
                               <p className="text-xs text-muted-foreground">({msg.name.length}/{MAX_APPROVE_MESSAGE_NAME_LENGTH})</p>
                             </div>
                             <Input
+                              aria-label={`${t("messageName")}: ${i + 1}`}
                               className="h-9 bg-background border-border font-medium"
                               value={msg.name}
                               onChange={(e) => updateMessageField(i, "name", e.target.value)}
                               placeholder={t("messageName")}
-                              maxLength={MAX_APPROVE_MESSAGE_NAME_LENGTH}
                             />
                             <div className="flex items-center justify-between gap-2">
                               <p className="text-xs font-medium text-muted-foreground">{t("contentLabel")}</p>
                               <p className="text-xs text-muted-foreground">({msg.message.length}/{MAX_APPROVE_MESSAGE_CONTENT_LENGTH})</p>
                             </div>
                             <Textarea
+                              aria-label={`${t("contentLabel")}: ${i + 1}`}
                               className="bg-background border-border"
                               value={msg.message}
                               onChange={(e) => updateMessageField(i, "message", e.target.value)}
                               placeholder={t("messageContent")}
                               rows={4}
-                              maxLength={MAX_APPROVE_MESSAGE_CONTENT_LENGTH}
                             />
                           </div>
                         ) : null}
@@ -1485,10 +1467,10 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
                 </div>
               )}
             </div>
-          </div>
+          </fieldset>
 
           <DialogFooter className="shrink-0 flex-row gap-2 border-t border-border/50 bg-background px-5 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-7 sm:py-4 [&>*]:w-auto">
-            <Button variant="secondary" className="min-w-0 flex-1 border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted sm:flex-none" onClick={() => setEditOpen(false)}>{tCommon("cancel")}</Button>
+            <Button variant="secondary" disabled={isSaving} className="min-w-0 flex-1 border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted sm:flex-none" onClick={() => setEditOpen(false)}>{tCommon("cancel")}</Button>
             <Button className="min-w-0 flex-1 sm:flex-none" onClick={handleSave} disabled={isSaving}>
               {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {tCommon("save")}
@@ -1513,7 +1495,7 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
         </div>
 
         {messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-border py-10 text-muted-foreground gap-2">
+          <div className="flex flex-col items-center justify-center rounded-2xl bg-muted/45 py-10 text-muted-foreground gap-2">
             <MessageSquare className="h-8 w-8 opacity-40" />
             <p className="text-sm">{t("noMessages")}</p>
           </div>
@@ -1522,10 +1504,11 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
             {messages.map((msg, i) => {
               const isExpanded = expandedPreviewIds.has(msg.localId);
               return (
-                <div key={msg.localId} className="rounded-lg border border-border p-3">
+                <div key={msg.localId} className="rounded-[20px] bg-card p-4 shadow-sm shadow-black/5">
                   <button
                     type="button"
-                    className="flex w-full items-center gap-2 text-left"
+                    className="flex w-full items-center gap-2 rounded-lg text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    aria-expanded={isExpanded}
                     onClick={() => toggleExpanded(setExpandedPreviewIds, msg.localId)}
                   >
                     {isExpanded ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
@@ -1624,7 +1607,7 @@ function PanelCard({
       // Reload panel data by fetching fresh panels
       apiCache.invalidate(getTicketsPanelsCacheKey(guildId));
       const panelsRes = await apiCache.get(getTicketsPanelsCacheKey(guildId), () => apiClient.tickets.getPanels(guildId));
-      const fresh = panelsRes.data?.items.find(p => p.name === panel.name);
+      const fresh = panelsRes.data?.items.find(p => p.id === panel.id);
       if (fresh) setComponents(fresh.components);
       setAddButtonOpen(false);
       setNewButtonLabel("");
@@ -1728,7 +1711,7 @@ function PanelCard({
                   guildId={guildId}
                   availableEmbeds={availableEmbeds}
                   embeds={embeds}
-                  previewButtons={components}
+                  previewButtons={[...components]}
                   onOpenButtonsTab={() => setActiveConfigTab("buttons")}
                 />
               </TabsContent>
@@ -1753,12 +1736,12 @@ function PanelCard({
                   ) : (
                     <div className="space-y-3">
                       {components.map((btn) => (
-                        <ButtonCard key={btn.custom_id} customId={btn.custom_id} label={btn.label} style={btn.style}
+                        <ButtonCard key={btn.id} customId={btn.custom_id} label={btn.label} style={btn.style}
                           settings={panel.button_settings[btn.custom_id] ?? createDefaultButtonSettings()}
                           panelName={panel.name} guildId={guildId} roles={roles} availableEmbeds={availableEmbeds} embeds={embeds}
                           townhallRequirementFields={townhallRequirementFields}
-                          onDeleted={() => setComponents((prev) => prev.filter(c => c.custom_id !== btn.custom_id))} // NOSONAR — structural JSX complexity from framework nesting
-                          onAppearanceUpdated={(newLabel, newStyle) => setComponents((prev) => prev.map(c => c.custom_id === btn.custom_id ? { ...c, label: newLabel, style: newStyle } : c))} // NOSONAR — JSX inline handler nesting is structural, not logic complexity
+                          onDeleted={() => setComponents((prev) => prev.filter(c => c.id !== btn.id))} // NOSONAR — structural JSX complexity from framework nesting
+                          onAppearanceUpdated={(newLabel, newStyle) => setComponents((prev) => prev.map(c => c.id === btn.id ? { ...c, label: newLabel, style: newStyle } : c))} // NOSONAR — JSX inline handler nesting is structural, not logic complexity
                         />
                       ))}
                     </div>
@@ -1835,7 +1818,7 @@ function PanelCard({
           {components.length > 0 ? (
             <div className={cn("flex flex-wrap gap-2", hasPanelPreview && "mt-3 pl-0 sm:pl-12")}>
               {components.map((button) => (
-                <span key={button.custom_id} className={cn("inline-flex h-8 items-center rounded px-3 text-xs font-medium", getPreviewButtonClass(button.style))}>
+                <span key={button.id} className={cn("inline-flex h-8 items-center rounded px-3 text-xs font-medium", getPreviewButtonClass(button.style))}>
                   {button.label}
                 </span>
               ))}
@@ -1879,7 +1862,7 @@ function ConfigTab({ guildId }: { readonly guildId: string }) {
       setCategories(all.filter(isCategoryChannel));
       setTextChannels(all.filter(isTextLikeChannel));
     }
-    if (rolesResult.status === "fulfilled") setRoles(rolesResult.value.roles ?? []);
+    if (rolesResult.status === "fulfilled") setRoles([...(rolesResult.value.roles ?? [])]);
     if (channelsResult.status === "rejected" && rolesResult.status === "rejected") metadataLoaded.current = false;
   }, [guildId, queryClient]);
 
@@ -1895,10 +1878,10 @@ function ConfigTab({ guildId }: { readonly guildId: string }) {
           queryClient.fetchQuery(ticketEmbedsQuery(guildId)),
         ]);
         if (panelsRes.error) throw new Error(panelsRes.error);
-        if (embedsRes.error) throw new Error(embedsRes.error);
+        if (embedsRes.error || !embedsRes.data) throw new Error(embedsRes.error || "Failed to load server embeds");
 
-        setPanels(panelsRes.data?.items ?? []);
-        setAvailableEmbeds(panelsRes.data?.available_embeds ?? []);
+        setPanels([...(panelsRes.data?.items ?? [])]);
+        setAvailableEmbeds([...(panelsRes.data?.available_embeds ?? [])]);
         setTownhallRequirementFields(normalizeTownhallRequirementFields(panelsRes.data?.townhall_requirement_fields));
         setEmbeds(normalizeTicketEmbeds(embedsRes.data));
       } catch (err) {
@@ -1926,8 +1909,8 @@ function ConfigTab({ guildId }: { readonly guildId: string }) {
       // Fetch fresh panel list
       await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.route("ticket-panels", guildId), exact: true });
       const panelsRes = await queryClient.fetchQuery(ticketPanelsQuery(guildId));
-      setPanels(panelsRes.data?.items ?? []);
-      setAvailableEmbeds(panelsRes.data?.available_embeds ?? []);
+      setPanels([...(panelsRes.data?.items ?? [])]);
+      setAvailableEmbeds([...(panelsRes.data?.available_embeds ?? [])]);
       setTownhallRequirementFields(normalizeTownhallRequirementFields(panelsRes.data?.townhall_requirement_fields));
       setCreatePanelOpen(false);
       setNewPanelName("");
@@ -1992,10 +1975,10 @@ function ConfigTab({ guildId }: { readonly guildId: string }) {
           </div>
         ) : (
           panels.map((panel) => (
-            <PanelCard key={panel.name} panel={panel} categories={categories} textChannels={textChannels} roles={roles} guildId={guildId} availableEmbeds={availableEmbeds} embeds={embeds}
+            <PanelCard key={panel.id} panel={panel} categories={categories} textChannels={textChannels} roles={roles} guildId={guildId} availableEmbeds={availableEmbeds} embeds={embeds}
               townhallRequirementFields={townhallRequirementFields}
               onConfigure={() => { void loadDiscordMetadata(); }}
-              onDeleted={() => setPanels((prev) => prev.filter(p => p.name !== panel.name))} // NOSONAR — JSX inline handler nesting is structural, not logic complexity
+              onDeleted={() => setPanels((prev) => prev.filter(p => p.id !== panel.id))} // NOSONAR — JSX inline handler nesting is structural, not logic complexity
             />
           ))
         )}

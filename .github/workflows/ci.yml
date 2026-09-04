@@ -33,7 +33,7 @@ jobs:
       - name: Type check
         run: npm run typecheck
 
-  # ─── ESLint ───────────────────────────────────────────────────────────────
+  # ─── Oxlint ───────────────────────────────────────────────────────────────
   lint:
     name: Lint
     runs-on: ubuntu-latest

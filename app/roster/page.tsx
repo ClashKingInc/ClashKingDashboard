@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import Image from "next/image";
+import { dashboardEndpoints } from "@clashking/api-contracts";
+import Image from "@/components/app-image";
 import { AlertCircle, Clock3, RefreshCw, Shield, Users } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -9,13 +10,15 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { apiUrl } from "@/lib/api/fetch";
+import { executeSharedApiResult } from "@/lib/api/shared-client";
 import { townHallImageUrl } from "@/lib/theme";
+import { RosterTownhallStatus } from "@/components/roster-townhall-status";
 
 interface SharedRosterMember {
   playerTag: string;
   name: string;
   townhall: number;
+  refreshedAt?: string | null;
   currentClanName?: string;
   currentClanTag?: string;
 }
@@ -28,6 +31,8 @@ interface SharedRoster {
   clanTag?: string;
   clanBadgeUrl?: string;
   updatedAt: string;
+  minTownhall?: number | null;
+  maxTownhall?: number | null;
   members: SharedRosterMember[];
 }
 
@@ -40,6 +45,7 @@ export default function SharedRosterPage() {
   const [roster, setRoster] = useState<SharedRoster>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>();
+  const [now, setNow] = useState(() => Date.now());
 
   const load = useCallback(async () => {
     const id = shareId();
@@ -51,11 +57,17 @@ export default function SharedRosterPage() {
     setLoading(true);
     setError(undefined);
     try {
-      const response = await fetch(apiUrl(`/v2/public/rosters/${encodeURIComponent(id)}`));
-      if (!response.ok) {
-        throw new Error(response.status === 404 ? "This roster is no longer available." : "The roster could not be loaded.");
+      const result = await executeSharedApiResult(
+        dashboardEndpoints.dashboardPublicRoster,
+        { path: { publicShareId: id }, query: {}, body: {} },
+        { auth: {} },
+      );
+      if (!result.data) {
+        throw new Error(result.status === 404
+          ? "This roster is no longer available."
+          : result.error || "The roster could not be loaded.");
       }
-      setRoster((await response.json()) as SharedRoster);
+      setRoster({ ...result.data, members: [...result.data.members] });
     } catch (loadError) {
       setError(loadError instanceof Error ? loadError.message : "The roster could not be loaded.");
     } finally {
@@ -65,6 +77,8 @@ export default function SharedRosterPage() {
 
   useEffect(() => {
     void load();
+    const timer = window.setInterval(() => setNow(Date.now()), 30_000);
+    return () => window.clearInterval(timer);
   }, [load]);
 
   return (
@@ -148,6 +162,8 @@ export default function SharedRosterPage() {
                         <TableCell>
                           <p className="font-medium">{member.name}</p>
                           <p className="font-mono text-xs text-muted-foreground">{member.playerTag}</p>
+                          <RosterTownhallStatus townhall={member.townhall} minTownhall={roster.minTownhall}
+                            maxTownhall={roster.maxTownhall} refreshedAt={member.refreshedAt} now={now} />
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">

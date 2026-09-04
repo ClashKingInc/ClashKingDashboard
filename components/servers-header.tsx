@@ -1,13 +1,13 @@
 "use client";
 
-import Link from "next/link";
-import Image from "next/image";
+import Link from "@/components/app-link";
+import Image from "@/components/app-image";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { LogOut, ChevronDown, Home, UserRoundCheck } from "lucide-react";
+import { useRouter } from "@/lib/navigation";
+import { LogOut, ChevronDown, Home } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { useLocale, useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "use-intl";
 import { useTheme } from "next-themes";
 import { clashKingAssets } from "@/lib/theme";
 import type { UserInfo } from "@/lib/api/types/auth";
@@ -102,14 +102,6 @@ export function ServersHeader() {
                     <span className="hover:!text-primary">{t("Sidebar.goHome")}</span>
                   </Link>
                 </DropdownMenuItem>
-                {user.is_admin && (
-                  <DropdownMenuItem asChild className="hover:!bg-transparent">
-                    <Link href={"/admin/creators"} className="flex items-center space-x-2">
-                      <UserRoundCheck className="h-4 w-4" />
-                      <span className="hover:!text-primary">Creator review</span>
-                    </Link>
-                  </DropdownMenuItem>
-                )}
                 <DropdownMenuItem onClick={handleLogout} className="flex items-center space-x-2 hover:!bg-transparent">
                   <LogOut className="h-4 w-4 text-destructive" />
                   <span className="hover:!text-primary">{t("Navigation.logout")}</span>

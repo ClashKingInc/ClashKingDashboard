@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import Image from "next/image";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useTranslations } from "next-intl";
+import Image from "@/components/app-image";
+import { useRouter, useSearchParams } from "@/lib/navigation";
+import { useTranslations } from "use-intl";
 import {
   closestCenter,
   DndContext,

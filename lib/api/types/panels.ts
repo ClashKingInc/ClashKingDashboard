@@ -11,16 +11,11 @@ export type ButtonType = (typeof BUTTON_TYPES)[number];
 export const BUTTON_COLORS = ["Blue", "Green", "Grey", "Red"] as const;
 export type ButtonColor = (typeof BUTTON_COLORS)[number];
 
-export interface ServerPanel {
-  embed_name: string | null;
-  buttons: string[];
-  button_color: string;
-  welcome_channel: string | number | null;
-}
-
-export interface UpdatePanelRequest {
-  embed_name: string | null;
-  buttons: string[];
-  button_color: string;
-  welcome_channel: string | null;
-}
+export type ServerPanel = EndpointResponse<typeof ServerPanelEndpoint>;
+export type UpdatePanelRequest = EndpointRequest<typeof UpdateServerPanelEndpoint>["body"];
+import {
+  ServerPanelEndpoint,
+  UpdateServerPanelEndpoint,
+  type EndpointRequest,
+  type EndpointResponse,
+} from "@clashking/api-contracts";

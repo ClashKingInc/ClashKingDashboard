@@ -32,7 +32,7 @@ export const dashboardQueryOptions = {
   channels: (guildId: string) => queryOptions({
     queryKey: dashboardQueryKeys.channels(guildId),
     staleTime: 30_000,
-    queryFn: async ({ signal }) => unwrap<unknown>(await apiClient.servers.getChannels(guildId, signal), "Discord channels"),
+    queryFn: async ({ signal }) => unwrap(await apiClient.servers.getChannels(guildId, signal), "Discord channels"),
   }),
   roles: (guildId: string) => queryOptions({
     queryKey: dashboardQueryKeys.roles(guildId),
@@ -42,7 +42,7 @@ export const dashboardQueryOptions = {
   threads: (guildId: string) => queryOptions({
     queryKey: dashboardQueryKeys.threads(guildId),
     staleTime: 30_000,
-    queryFn: async ({ signal }) => unwrap<unknown>(await apiClient.servers.getThreads(guildId, signal), "Discord threads"),
+    queryFn: async ({ signal }) => unwrap(await apiClient.servers.getThreads(guildId, signal), "Discord threads"),
   }),
   clans: (guildId: string) => queryOptions({
     queryKey: dashboardQueryKeys.clans(guildId),

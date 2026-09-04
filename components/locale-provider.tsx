@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { NextIntlClientProvider } from "next-intl";
+import { IntlProvider } from "use-intl";
 import englishMessages from "@/messages/en.json";
 import {
   withEnglishFallback,
@@ -188,9 +188,9 @@ export function LocaleProvider({ children }: { readonly children: React.ReactNod
 
   return (
     <LocaleContext.Provider value={value}>
-      <NextIntlClientProvider locale={locale} messages={messages}>
+      <IntlProvider locale={locale} messages={messages}>
         {children}
-      </NextIntlClientProvider>
+      </IntlProvider>
     </LocaleContext.Provider>
   );
 }

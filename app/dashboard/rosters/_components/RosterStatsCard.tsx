@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+import Image from "@/components/app-image";
 import { Badge } from "@/components/ui/badge";
 import type { Roster } from "../_lib/types";
 import { calculateRosterStats, formatThRestriction } from "../_lib/utils";

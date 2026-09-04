@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Image from "next/image";
-import { useLocale, useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
+import Image from "@/components/app-image";
+import { useLocale, useTranslations } from "use-intl";
+import { useRouter } from "@/lib/navigation";
 import { AlertTriangle, ArrowLeft, Check, Loader2 } from "lucide-react";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -13,7 +13,8 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 import { apiClient } from "@/lib/api/client";
-import type { CwlGroupResponse, CwlSeasonItem, CwlWarLeagueStaticItem } from "@/lib/api/types/war";
+import { CwlWarLeaguesStaticResponse, type CwlGroupResponse, type CwlSeasonItem, type CwlWarLeagueStaticItem } from "@/lib/api/types/war";
+import { Schema } from "effect";
 import { dashboardHref, useGuildId } from "@/lib/dashboard-route";
 import { cwlLeagueImageUrl, townHallImageUrl } from "@/lib/theme";
 import { cn } from "@/lib/utils";
@@ -139,7 +140,7 @@ export default function CwlBonusesPage() {
       apiClient.wars.getCwlBonusRecipients(guildId, clanTag, season),
       fetch(WAR_LEAGUES_URL, { cache: "force-cache" }).then(async (response) => {
         if (!response.ok) throw new Error(t("loadMedalRulesError"));
-        return response.json() as Promise<{ items: CwlWarLeagueStaticItem[] }>;
+        return Schema.decodeUnknownPromise(CwlWarLeaguesStaticResponse)(await response.json());
       }),
     ]).then(([groupResponse, savedResponse, staticData]) => {
       if (cancelled) return;
@@ -147,7 +148,7 @@ export default function CwlBonusesPage() {
       if (savedResponse.error) throw new Error(savedResponse.error);
       setGroup(groupResponse.data);
       setSelected((savedResponse.data?.items ?? []).map((item) => item.playerTag));
-      setRules(staticData.items);
+      setRules([...staticData.items]);
     }).catch((loadError) => {
       if (!cancelled) setError(loadError instanceof Error ? loadError.message : t("loadDataError"));
     }).finally(() => {
@@ -164,7 +165,7 @@ export default function CwlBonusesPage() {
   const rewards = warSize && standing && rule ? calculateCwlRewards(rule, standing, warSize) : undefined;
   const clan = group?.clans.find((item) => item.tag === clanTag);
   const playerPerformance = useMemo(() => group ? calculateCwlPlayerPerformance(group) : {}, [group]);
-  const members = useMemo(() => sortCwlMembersByPerformance(clan?.members ?? [], playerPerformance), [clan?.members, playerPerformance]);
+  const members = useMemo(() => sortCwlMembersByPerformance([...(clan?.members ?? [])], playerPerformance), [clan?.members, playerPerformance]);
   const selectionEnabled = Boolean(standings?.complete && rewards);
   const ready = Boolean(selectionEnabled && clan && selected.length === rewards?.bonusSlots);
   const movement = resolveCwlLeagueMovement(rule, standing?.rank);

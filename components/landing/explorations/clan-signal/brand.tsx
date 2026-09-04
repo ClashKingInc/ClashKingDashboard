@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "@/components/app-image";
 
 export function ClanSignalWordmark({ priority = false }: Readonly<{ priority?: boolean }>) {
   return (

@@ -1,75 +1,14 @@
-export type AutoboardTargetScope = "family" | "custom";
-export type AutoboardDeliveryMode = "refresh" | "send";
-export type AutoboardScheduleKind = "daily" | "weekdays" | "day_of_month";
+import { AutoboardCapabilitiesEndpoint, type AutoBoardCapability, type AutoBoardSchedule, type AutoBoardWrite, type ServerAutoboardsEndpoint, type EndpointResponse } from "@clashking/api-contracts";
+import { Schema } from "effect";
 
-export interface AutoboardRefreshIntervalCapability {
-  minMinutes: number;
-  maxMinutes: number;
-  defaultMinutes: number;
-}
-
-export interface AutoboardBoardTypeCapability {
-  boardType: string;
-  label: string;
-  targetKind: string;
-  minTargets: number;
-  maxTargets: number;
-  allowedScopes: AutoboardTargetScope[];
-  allowedModes: AutoboardDeliveryMode[];
-  refreshInterval: AutoboardRefreshIntervalCapability | null;
-  uiCapabilities: string[];
-}
-
-export interface AutoboardCapabilitiesResponse {
-  boardTypes: AutoboardBoardTypeCapability[];
-}
-
-export interface AutoboardSchedule {
-  kind: AutoboardScheduleKind;
-  timeOfDay: string;
-  weekdays: number[] | null;
-  dayOfMonth: number | null;
-}
-
-export interface AutoboardItem {
-  id: string;
-  boardType: string;
-  targetKind: string;
-  targetScope: AutoboardTargetScope;
-  targets: string[];
-  deliveryMode: AutoboardDeliveryMode;
-  channelId: string | null;
-  channelDeleted: boolean;
-  threadId: string | null;
-  messageId: string | null;
-  enabled: boolean;
-  intervalMinutes: number | null;
-  schedule: AutoboardSchedule | null;
-  nextRunAt: string | null;
-  lastRunAt: string | null;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface AutoboardsResponse {
-  items: AutoboardItem[];
-  total: number;
-  refreshCount: number;
-  sendCount: number;
-  limit: number;
-}
-
-export interface AutoboardWriteRequest {
-  boardType: string;
-  targetScope: AutoboardTargetScope;
-  targets: string[];
-  deliveryMode: AutoboardDeliveryMode;
-  channelId: string;
-  threadId: string | null;
-  enabled: boolean;
-  intervalMinutes: number | null;
-  schedule: AutoboardSchedule | null;
-}
+export type AutoboardsResponse = EndpointResponse<typeof ServerAutoboardsEndpoint>;
+export type AutoboardItem = AutoboardsResponse["items"][number];
+export type AutoboardTargetScope = AutoboardItem["targetScope"];
+export type AutoboardDeliveryMode = AutoboardItem["deliveryMode"];
+export type AutoboardSchedule = typeof AutoBoardSchedule.Type;
+export type AutoboardScheduleKind = AutoboardSchedule["kind"];
+export type AutoboardBoardTypeCapability = typeof AutoBoardCapability.Type;
+export type AutoboardWriteRequest = typeof AutoBoardWrite.Type;
 
 export interface AutoboardFormState {
   boardType: string;
@@ -106,76 +45,7 @@ export function autoboardArtworkUrl(boardType: string, targetKind: string): stri
   return `${AUTOBOARD_ARTWORK_BASE_URL}/bot/icons/clock.png`;
 }
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
-}
-
-function isInteger(value: unknown): value is number {
-  return typeof value === "number" && Number.isInteger(value);
-}
-
-function isStringArray(value: unknown): value is string[] {
-  return Array.isArray(value) && value.every((item) => typeof item === "string");
-}
-
-function isOneOf<T extends string>(value: unknown, options: readonly T[]): value is T {
-  return typeof value === "string" && options.includes(value as T);
-}
-
-export function parseAutoboardCapabilities(payload: unknown): AutoboardCapabilitiesResponse {
-  if (!isRecord(payload) || !Array.isArray(payload.boardTypes)) {
-    throw new Error("Invalid autoboard capabilities response");
-  }
-
-  const boardTypes = payload.boardTypes.map((raw) => {
-    if (
-      !isRecord(raw) ||
-      typeof raw.boardType !== "string" ||
-      typeof raw.label !== "string" ||
-      typeof raw.targetKind !== "string" ||
-      !isInteger(raw.minTargets) ||
-      !isInteger(raw.maxTargets) ||
-      !Array.isArray(raw.allowedScopes) ||
-      !raw.allowedScopes.every((scope) => isOneOf(scope, ["family", "custom"] as const)) ||
-      !Array.isArray(raw.allowedModes) ||
-      !raw.allowedModes.every((mode) => isOneOf(mode, ["refresh", "send"] as const)) ||
-      !isStringArray(raw.uiCapabilities)
-    ) {
-      throw new Error("Invalid autoboard board type capability");
-    }
-
-    let refreshInterval: AutoboardRefreshIntervalCapability | null = null;
-    if (raw.refreshInterval !== null) {
-      if (
-        !isRecord(raw.refreshInterval) ||
-        !isInteger(raw.refreshInterval.minMinutes) ||
-        !isInteger(raw.refreshInterval.maxMinutes) ||
-        !isInteger(raw.refreshInterval.defaultMinutes)
-      ) {
-        throw new Error("Invalid autoboard refresh interval capability");
-      }
-      refreshInterval = {
-        minMinutes: raw.refreshInterval.minMinutes,
-        maxMinutes: raw.refreshInterval.maxMinutes,
-        defaultMinutes: raw.refreshInterval.defaultMinutes,
-      };
-    }
-
-    return {
-      boardType: raw.boardType,
-      label: raw.label,
-      targetKind: raw.targetKind,
-      minTargets: raw.minTargets,
-      maxTargets: raw.maxTargets,
-      allowedScopes: raw.allowedScopes as AutoboardTargetScope[],
-      allowedModes: raw.allowedModes as AutoboardDeliveryMode[],
-      refreshInterval,
-      uiCapabilities: raw.uiCapabilities,
-    };
-  });
-
-  return { boardTypes };
-}
+export const parseAutoboardCapabilities = Schema.decodeUnknownSync(AutoboardCapabilitiesEndpoint.response);
 
 export function createInitialAutoboardForm(
   capability: AutoboardBoardTypeCapability | undefined,
@@ -212,7 +82,7 @@ export function createEditAutoboardForm(item: AutoboardItem): AutoboardFormState
     intervalMinutes: item.intervalMinutes?.toString() ?? "",
     scheduleKind: item.schedule?.kind ?? "daily",
     timeOfDay: item.schedule?.timeOfDay ?? "09:00",
-    weekdays: item.schedule?.weekdays ?? [],
+    weekdays: [...(item.schedule?.weekdays ?? [])],
     dayOfMonth: item.schedule?.dayOfMonth?.toString() ?? "1",
   };
 }
@@ -297,11 +167,4 @@ export function buildAutoboardRequest(form: AutoboardFormState): AutoboardWriteR
     intervalMinutes: form.deliveryMode === "refresh" ? Number(form.intervalMinutes) : null,
     schedule,
   };
-}
-
-export function extractApiError(payload: unknown, fallback: string): string {
-  if (!isRecord(payload)) return fallback;
-  if (typeof payload.message === "string" && payload.message) return payload.message;
-  if (typeof payload.detail === "string" && payload.detail) return payload.detail;
-  return fallback;
 }

@@ -1,16 +1,30 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "clashking-dashboard",
-  "compatibility_date": "2026-08-10",
+  "main": "workers/dashboard-edge/index.ts",
+  "compatibility_date": "2026-09-03",
   "compatibility_flags": [
     "nodejs_compat"
   ],
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [
+    { "pattern": "clashk.ing", "custom_domain": true },
+    { "pattern": "dash.clashk.ing", "custom_domain": true },
+    { "pattern": "www.clashk.ing", "custom_domain": true }
+  ],
   "assets": {
-    "directory": "dist/client",
+    "binding": "ASSETS",
     "html_handling": "auto-trailing-slash",
-    "not_found_handling": "single-page-application"
+    "not_found_handling": "single-page-application",
+    "run_worker_first": true
   },
-  "secrets": {
-    "required": []
+  "observability": {
+    "enabled": true,
+    "logs": {
+      "enabled": true,
+      "head_sampling_rate": 0.1,
+      "invocation_logs": true
+    }
   }
 }

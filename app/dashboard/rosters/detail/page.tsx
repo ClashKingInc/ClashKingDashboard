@@ -2,8 +2,8 @@
 
 import { useGuildId, useRosterId } from "@/lib/dashboard-route";
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useRouter } from "@/lib/navigation";
+import { useTranslations } from "use-intl";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -42,7 +42,7 @@ import {
   RefreshCw, UserPlus, Clock, Calendar, Plus, Trash2, Bell, Lock, Unlock,
   MessageSquare, UserMinus, Building2, Hash, Shield,
   Tag, FileText, Home, Pencil, Columns3, ChevronUp, ChevronDown, GripVertical,
-  Info, Lightbulb, Play, Pause, Archive,
+  Lightbulb, Play, Pause, Archive,
   CheckCircle2, AlertTriangle
 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -793,6 +793,8 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                 members={roster.members || []}
                 columns={localColumns}
                 rosterClanTag={roster.clan_tag}
+                minTownhall={roster.min_th}
+                maxTownhall={roster.max_th}
                 familyClans={clans}
                 onRemoveMember={handleRemoveMember}
                 removingMember={removingMember}

@@ -1,52 +1,8 @@
 /**
- * Leaderboard API Client
+ * The former `/v1/leaderboard/:entity/:category` facade was removed with its
+ * unregistered API route. Canonical v2 leaderboard operations are exposed by
+ * the shared contracts and can be added here when the Dashboard ships a caller.
  */
+import { BaseApiClient } from "../core/base-client";
 
-import { BaseApiClient } from '../core/base-client';
-import type { ApiResponse } from '../types/common';
-import type {
-  LeaderboardResponse,
-  LeaderboardQueryParams,
-  LeaderboardCategory,
-  LeaderboardEntityType,
-} from '../types/leaderboard';
-
-export class LeaderboardClient extends BaseApiClient {
-  /**
-   * Fetch leaderboard data for players or clans
-   */
-  async getLeaderboard(
-    category: LeaderboardCategory,
-    entityType: LeaderboardEntityType,
-    params: LeaderboardQueryParams
-  ): Promise<ApiResponse<LeaderboardResponse>> {
-    const queryString = this.buildQueryString({
-      weekend: params.weekend,
-      type: params.type,
-      league: params.league,
-      lower: params.lower,
-      upper: params.upper,
-    });
-
-    return this.request<LeaderboardResponse>(
-      `/v1/leaderboard/${entityType}/${category}${queryString}`,
-      {
-        method: 'GET',
-      }
-    );
-  }
-
-  /**
-   * Fetch player leaderboard for capital raids
-   */
-  async getPlayerCapitalLeaderboard(params: LeaderboardQueryParams): Promise<ApiResponse<LeaderboardResponse>> {
-    return this.getLeaderboard('capital', 'players', params);
-  }
-
-  /**
-   * Fetch clan leaderboard for capital raids
-   */
-  async getClanCapitalLeaderboard(params: LeaderboardQueryParams): Promise<ApiResponse<LeaderboardResponse>> {
-    return this.getLeaderboard('capital', 'clans', params);
-  }
-}
+export class LeaderboardClient extends BaseApiClient {}

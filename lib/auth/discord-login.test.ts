@@ -21,6 +21,7 @@ describe('initiateDiscordLogin', () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
+    vi.unstubAllEnvs();
     sessionStorage.clear();
   });
 
@@ -47,11 +48,9 @@ describe('initiateDiscordLogin', () => {
   });
 
   it('calls alert and logs error when client ID is missing', async () => {
-    const originalId = process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID;
-    delete process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID;
+    vi.stubEnv('VITE_DISCORD_CLIENT_ID', '');
     await initiateDiscordLogin('en');
     expect(console.error).toHaveBeenCalled();
     expect(window.alert).toHaveBeenCalled();
-    process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID = originalId;
   });
 });

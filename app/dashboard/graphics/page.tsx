@@ -2,7 +2,7 @@
 
 import { lazy, Suspense, useEffect, useState } from "react";
 import { MonitorUp } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "use-intl";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const GraphicEditor = lazy(() => import("./graphic-editor").then((module) => ({ default: module.GraphicEditor })));

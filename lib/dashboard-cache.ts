@@ -1,9 +1,7 @@
 import type { DiscordRolesResponse } from "@/lib/api/types/roles";
 import type { ServerSettings } from "@/lib/api/types/server";
-
-type ApiEnvelope<T> = {
-  data?: T;
-};
+import { ServerChannelsEndpoint, ServerSettingsEndpoint, DiscordRolesEndpoint } from "@clashking/api-contracts";
+import { Schema } from "effect";
 
 type DiscordChannel = {
   id: string;
@@ -11,18 +9,6 @@ type DiscordChannel = {
   type: string;
   parent_name?: string;
 };
-
-function unwrapApiData<T>(payload: unknown): T | undefined {
-  if (!payload || typeof payload !== "object") {
-    return undefined;
-  }
-
-  if ("data" in payload) {
-    return (payload as ApiEnvelope<T>).data;
-  }
-
-  return payload as T;
-}
 
 export const dashboardCacheKeys = {
   channels: (guildId: string) => `dashboard-server-channels-${guildId}`,
@@ -32,23 +18,7 @@ export const dashboardCacheKeys = {
 };
 
 function normalizeAllChannels(payload: unknown): DiscordChannel[] {
-  const unwrapped = unwrapApiData<unknown>(payload);
-  const normalizeChannel = (channel: any): DiscordChannel => ({
-    ...channel,
-    id: String(channel.id),
-    name: String(channel.name),
-    type: String(channel.type),
-  });
-
-  if (Array.isArray(unwrapped)) {
-    return unwrapped.map(normalizeChannel);
-  }
-
-  if (unwrapped && typeof unwrapped === "object" && Array.isArray((unwrapped as any).channels)) {
-    return (unwrapped as any).channels.map(normalizeChannel);
-  }
-
-  return [];
+  return [...Schema.decodeUnknownSync(ServerChannelsEndpoint.response)(payload)];
 }
 
 export function normalizeAllChannelsPayload(payload: unknown): DiscordChannel[] {
@@ -63,28 +33,18 @@ export function normalizeChannelsPayload(payload: unknown): DiscordChannel[] {
 }
 
 export function normalizeDiscordRolesPayload(payload: unknown): DiscordRolesResponse["roles"] {
-  const unwrapped = unwrapApiData<unknown>(payload);
-
-  if (unwrapped && typeof unwrapped === "object" && Array.isArray((unwrapped as any).roles)) {
-    return ((unwrapped as any).roles as DiscordRolesResponse["roles"]).filter(
-      (role) => !role.managed && role.name !== "@everyone",
-    );
-  }
-
-  return [];
+  return Schema.decodeUnknownSync(DiscordRolesEndpoint.response)(payload).roles.filter(
+    (role) => !role.managed && role.name !== "@everyone",
+  );
 }
 
-export function normalizeServerSettingsPayload(payload: unknown): ServerSettings | null {
-  const unwrapped = unwrapApiData<unknown>(payload);
-  if (!unwrapped || typeof unwrapped !== "object") {
-    return null;
-  }
-
-  const settings = { ...(unwrapped as ServerSettings & { embed_color?: number | string }) };
-  if (settings.embed_color !== undefined) {
-    const embedColor = Number(settings.embed_color);
+export function normalizeServerSettingsPayload(payload: unknown): (Omit<ServerSettings, "embed_color"> & { embed_color?: number }) | null {
+  const { embed_color, ...rest } = Schema.decodeUnknownSync(ServerSettingsEndpoint.response)(payload);
+  const settings: Omit<ServerSettings, "embed_color"> & { embed_color?: number } = rest;
+  if (embed_color !== undefined) {
+    const embedColor = Number(embed_color);
     if (Number.isFinite(embedColor)) settings.embed_color = embedColor;
     else delete settings.embed_color;
   }
-  return settings as ServerSettings;
+  return settings;
 }

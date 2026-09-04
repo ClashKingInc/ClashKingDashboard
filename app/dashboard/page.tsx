@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { dashboardHref, useGuildId } from "@/lib/dashboard-route";
 import { dashboardQueryOptions } from "@/lib/dashboard-query-options";

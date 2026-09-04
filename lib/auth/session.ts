@@ -1,5 +1,8 @@
 "use client";
 
+import { DashboardAuthWebRefreshResponse } from "@clashking/api-contracts";
+import { Schema } from "effect";
+
 import type { UserInfo } from "@/lib/api/types/auth";
 
 const CHANNEL_NAME = "clashking-auth";
@@ -29,7 +32,6 @@ type AuthRuntime = {
   refreshTimer?: ReturnType<typeof setTimeout>;
 };
 
-const AUTH_RUNTIME_KEY = "__clashkingAuthRuntime";
 const serverRuntime = createRuntime(false);
 
 function createTabId(enableChannel: boolean): string {
@@ -194,7 +196,7 @@ async function performRefresh(baseUrl: string, observedGeneration: number): Prom
       return "anonymous";
     }
     if (!response.ok) return "unavailable";
-    const data = (await response.json()) as { access_token?: string };
+    const data = await Schema.decodeUnknownPromise(DashboardAuthWebRefreshResponse)(await response.json());
     if (!data.access_token) return "unavailable";
     if (runtime.generation !== observedGeneration && runtime.accessToken) return "restored";
     setAccessToken(data.access_token);
@@ -206,7 +208,7 @@ async function performRefresh(baseUrl: string, observedGeneration: number): Prom
 
 async function wasAlreadyRefreshed(response: Response): Promise<boolean> {
   try {
-    const body = await response.json() as { message?: unknown };
+    const body = Schema.decodeUnknownSync(Schema.Struct({ message: Schema.String }))(await response.json());
     return body.message === "Browser session was already refreshed";
   } catch {
     return false;

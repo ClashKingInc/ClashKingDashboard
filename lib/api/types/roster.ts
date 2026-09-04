@@ -1,60 +1,37 @@
-/**
- * Roster-related types
- */
+import type {
+  DashboardApplyRosterMembershipChangesEndpoint,
+  DashboardCloneRosterEndpoint,
+  DashboardCreateRosterAutomationEndpoint,
+  DashboardCreateRosterEndpoint,
+  DashboardCreateRosterGroupEndpoint,
+  DashboardCreateRosterViewEndpoint,
+  DashboardGetRosterViewEndpoint,
+  DashboardManageRosterMembersEndpoint,
+  DashboardPreviewRosterViewEndpoint,
+  DashboardQueryRosterMetricEndpoint,
+  DashboardUpdateRosterAutomationEndpoint,
+  DashboardUpdateRosterEndpoint,
+  DashboardUpdateRosterGroupEndpoint,
+  DashboardUpdateRosterMemberEndpoint,
+  EndpointRequest,
+  EndpointResponse,
+} from "@clashking/api-contracts";
 
-export interface CreateRosterModel {
-  name: string;
-  roster_type: string;
-  clan_tag?: string;
-  alias?: string;
-}
+export type CreateRosterModel = EndpointRequest<typeof DashboardCreateRosterEndpoint>["body"];
+export type RosterUpdateModel = EndpointRequest<typeof DashboardUpdateRosterEndpoint>["body"];
+export type RosterMemberBulkOperationModel = EndpointRequest<typeof DashboardManageRosterMembersEndpoint>["body"];
+export type UpdateMemberModel = EndpointRequest<typeof DashboardUpdateRosterMemberEndpoint>["body"];
+export type CreateRosterGroupModel = EndpointRequest<typeof DashboardCreateRosterGroupEndpoint>["body"];
+export type UpdateRosterGroupModel = EndpointRequest<typeof DashboardUpdateRosterGroupEndpoint>["body"];
+type CreateRosterAutomationRequest = EndpointRequest<typeof DashboardCreateRosterAutomationEndpoint>;
+export type CreateRosterAutomationModel = EndpointRequest<typeof DashboardCreateRosterAutomationEndpoint>["body"] & {
+  readonly server_id: Extract<CreateRosterAutomationRequest["query"]["server_id"], string>;
+};
+export type UpdateRosterAutomationModel = EndpointRequest<typeof DashboardUpdateRosterAutomationEndpoint>["body"];
+export type RosterCloneModel = EndpointRequest<typeof DashboardCloneRosterEndpoint>["body"];
 
-export interface RosterUpdateModel {
-  min_th?: number;
-  max_th?: number;
-  clan_tag?: string;
-  roster_type?: string;
-}
-
-export interface RosterMemberBulkOperationModel {
-  add?: Array<{ player_tag: string; signupAnswers?: Record<string, unknown> }>;
-  remove?: string[];
-}
-
-export interface UpdateMemberModel {
-  signupAnswers?: Record<string, unknown>;
-  member_status?: string;
-}
-
-export interface CreateRosterGroupModel {
-  alias: string;
-  description?: string;
-}
-
-export interface UpdateRosterGroupModel {
-  alias?: string;
-  description?: string;
-}
-
-export interface CreateRosterAutomationModel {
-  server_id: string | number;
-  roster_id?: string;
-  group_id?: string;
-  action_type: string;
-  scheduled_at: string;
-  discord_channel_id?: string;
-  options?: { ping_type?: 'signup_reminder' | 'missing' };
-  active?: boolean;
-}
-
-export interface RosterCloneModel {
-  new_alias: string;
-  copy_members?: boolean;
-  group_id?: string;
-}
-
+/** The questionnaire editor is local UI state; it is not a body handled by this facade. */
 export type RosterQuestionType = "text" | "boolean" | "single_select";
-
 export interface RosterSignupQuestion {
   id: string;
   label: string;
@@ -64,114 +41,41 @@ export interface RosterSignupQuestion {
   order: number;
 }
 
-export interface RosterViewColumn {
-  id: string;
-  label: string;
-  metricId: string;
-  description?: string;
-  parameters?: Record<string, unknown>;
-  format?: "text" | "number" | "percent" | "boolean" | "player" | "clan";
-}
+type PreviewRequest = EndpointRequest<typeof DashboardPreviewRosterViewEndpoint>["body"];
+export type RosterViewColumn = PreviewRequest["columns"][number];
+export type RosterViewSpec = {
+  readonly schemaVersion: 1;
+  readonly columns: RosterViewColumn[];
+  readonly filters?: Array<PreviewRequest["filters"][number]>;
+  readonly sort?: Array<PreviewRequest["sort"][number]>;
+  readonly highlights?: Array<PreviewRequest["highlights"][number]>;
+  readonly limit?: number;
+};
+export type RosterView = EndpointResponse<typeof DashboardGetRosterViewEndpoint>;
+export type MaterializedRosterView = Omit<RosterView, "spec"> & { readonly spec: RosterViewSpec };
+export type RosterViewResult = EndpointResponse<typeof DashboardPreviewRosterViewEndpoint>["result"];
+export type RosterMetricQuery = Omit<
+  EndpointRequest<typeof DashboardQueryRosterMetricEndpoint>["body"],
+  "force"
+> & { readonly force?: boolean };
+export type RosterMetricQueryResult = EndpointResponse<typeof DashboardQueryRosterMetricEndpoint>;
+export type CreateRosterViewModel = EndpointRequest<typeof DashboardCreateRosterViewEndpoint>["body"];
+export type UpdateRosterViewModel = EndpointRequest<typeof DashboardCreateRosterViewEndpoint>["body"];
+export type RosterMembershipChange = EndpointRequest<typeof DashboardApplyRosterMembershipChangesEndpoint>["body"]["changes"][number];
+export type ApplyRosterMembershipChangesModel = EndpointRequest<typeof DashboardApplyRosterMembershipChangesEndpoint>["body"];
 
-export interface RosterViewSpec {
-  schemaVersion: 1;
-  columns: RosterViewColumn[];
-  filters?: Array<{
-    columnId: string;
-    operator: "eq" | "neq" | "gt" | "gte" | "lt" | "lte" | "contains" | "in";
-    value: unknown;
-  }>;
-  sort?: Array<{ columnId: string; direction: "asc" | "desc" }>;
-  highlights?: Array<{
-    id: string;
-    target: "row" | "column" | "cell";
-    columnId?: string;
-    when?: {
-      columnId?: string;
-      operator: "eq" | "neq" | "gt" | "gte" | "lt" | "lte" | "contains" | "in";
-      value: unknown;
-    };
-    tone: "red" | "amber" | "green" | "blue" | "purple" | "gray";
-  }>;
-  limit?: number;
-}
-
-export interface RosterView {
-  id: string;
-  shareId: string;
-  serverId: string;
-  name: string;
-  sourceCode: string;
-  sourceVersion: 1;
-  createdBy?: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface MaterializedRosterView extends RosterView {
-  spec: RosterViewSpec;
-}
-
-export interface RosterViewResult {
-  viewId: string;
-  rosterIds: string[];
-  schemaVersion: 1;
-  rows: Array<{
-    rosterId: string;
-    playerTag: string;
-    values: Record<string, unknown>;
-    highlight?: string;
-  }>;
-  cachedMetricIds: string[];
-  evaluatedAt: string;
-}
-
-export interface RosterMetricQuery {
-  rosterIds: string[];
-  metricId: string;
-  parameters?: Record<string, unknown>;
-  force?: boolean;
-}
-
-export interface RosterMetricQueryResult {
-  metricId: string;
-  parameters: Record<string, unknown>;
-  rows: Array<{ rosterId: string; playerTag: string; value: unknown }>;
-  cached: boolean;
-  evaluatedAt: string;
-}
-
-export interface CreateRosterViewModel {
-  name: string;
-  sourceCode: string;
-  sourceVersion: 1;
-}
-
-export interface UpdateRosterViewModel {
-  name: string;
-  sourceCode: string;
-  sourceVersion: 1;
-}
-
-export interface RosterMembershipChange {
-  action: "add" | "remove" | "move";
-  playerTag: string;
-  fromRosterId?: string;
-  toRosterId?: string;
-  reason?: string;
-}
-
+/** Roster-assistant proposal payload carried in chat UI parts, not an HTTP response. */
 export interface RosterMembershipProposal {
   type: "membershipProposal";
   changes: RosterMembershipChange[];
   expectedRevisions: Record<string, number>;
   generatedAt: string;
   counts: { add: number; move: number; remove: number };
-  items: Array<{ action: "add" | "move" | "remove"; playerTag: string; fromRoster?: string; toRoster?: string; reason?: string }>;
-}
-
-export interface ApplyRosterMembershipChangesModel {
-  serverId: string;
-  changes: RosterMembershipChange[];
-  expectedRevisions: Record<string, number>;
+  items: Array<{
+    action: "add" | "move" | "remove";
+    playerTag: string;
+    fromRoster?: string;
+    toRoster?: string;
+    reason?: string;
+  }>;
 }

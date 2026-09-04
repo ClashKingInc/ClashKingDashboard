@@ -21,17 +21,17 @@ vi.stubGlobal("ResizeObserver", class {
 });
 HTMLElement.prototype.scrollIntoView = vi.fn();
 
-vi.mock("next/navigation", () => ({
+vi.mock("@/lib/navigation", () => ({
   useParams: () => ({ guildId: "server-1", locale: "en" }),
   useSearchParams: () => new URLSearchParams("guildId=server-1"),
 }));
 
-vi.mock("next-intl", () => ({
+vi.mock("use-intl", () => ({
   useTranslations: () => translateMock,
   useLocale: () => "en",
 }));
 
-vi.mock("next/image", () => ({
+vi.mock("@/components/app-image", () => ({
   default: ({ alt }: { alt: string }) => <span aria-label={alt} />,
 }));
 
@@ -67,7 +67,7 @@ describe("BasesPage manager deletion", () => {
       status: 200,
     });
     serverMock.getChannels.mockResolvedValue({
-      data: [{ id: "channel-1", name: "base-share", type: "0" }],
+      data: [{ id: "channel-1", name: "base-share", type: "text" }],
       status: 200,
     });
   });

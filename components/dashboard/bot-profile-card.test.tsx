@@ -22,7 +22,7 @@ vi.mock("./dashboard-access-provider", () => ({
   useDashboardAccess: () => ({ canManage: () => true }),
 }));
 
-vi.mock("next/image", () => ({
+vi.mock("@/components/app-image", () => ({
   default: ({ alt }: { alt: string }) => <span role="img" aria-label={alt} />,
 }));
 

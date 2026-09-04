@@ -1,13 +1,13 @@
 "use client";
 
 import { useGuildId } from "@/lib/dashboard-route";
-import { getAccessToken } from "@/lib/auth/session";
-import { apiFetch } from "@/lib/api/fetch";
+import { dashboardEndpoints, type EndpointResponse } from "@clashking/api-contracts";
+import { executeSharedEndpoint } from "@/lib/api/shared-client";
 
 
-import Image from "next/image";
+import Image from "@/components/app-image";
 import { useState, useEffect, useRef, type ReactNode } from "react";
-import { useLocale, useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "use-intl";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { clanBadgeUrl } from "@/lib/clash-asset-urls";
 import { dashboardQueryKeys } from "@/lib/dashboard-query";
@@ -63,12 +63,13 @@ import {
 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { getStandaloneImageUrl, getStandaloneTenorUrl } from "./reminder-utils";
+import { TenorMedia } from "@/components/tenor-media";
 
 // API types based on ClashKingAPI reminders endpoints
 type ReminderType = "War" | "Clan Capital" | "Clan Games" | "Inactivity";
 interface ReminderConfig {
   id: string;
-  type: ReminderType;
+  type: string;
   clan_tag?: string;
   channel_id?: string;
   thread_id?: string | null;
@@ -106,6 +107,17 @@ interface CreateReminderRequest {
   ping_type?: string;
 }
 
+type ContractReminder = EndpointResponse<typeof dashboardEndpoints.serverReminders>["war_reminders"][number];
+
+function mutableReminder(reminder: ContractReminder): ReminderConfig {
+  return {
+    ...reminder,
+    townhall_filter: reminder.townhall_filter ? [...reminder.townhall_filter] : undefined,
+    roles: reminder.roles ? [...reminder.roles] : undefined,
+    war_types: reminder.war_types ? [...reminder.war_types] : undefined,
+  };
+}
+
 interface Clan {
   tag: string;
   name: string;
@@ -135,6 +147,16 @@ const REMINDER_TYPE_TO_TAB: Record<ReminderType, string> = {
   "Clan Games": "games",
   Inactivity: "inactivity",
 };
+
+function tabForReminderType(type: string): string {
+  switch (type) {
+    case "War": return REMINDER_TYPE_TO_TAB.War;
+    case "Clan Capital": return REMINDER_TYPE_TO_TAB["Clan Capital"];
+    case "Clan Games": return REMINDER_TYPE_TO_TAB["Clan Games"];
+    case "Inactivity": return REMINDER_TYPE_TO_TAB.Inactivity;
+    default: return "war";
+  }
+}
 
 const TYPE_TIME_LIMIT: Record<string, number> = {
   War: 48,
@@ -215,8 +237,6 @@ export default function RemindersPage() { // NOSONAR — React page component: c
   useEffect(() => {
     const fetchReminders = async () => {
       try {
-        const accessToken = getAccessToken() ?? "";
-
         const clansPromise = queryClient
           .fetchQuery(dashboardQueryOptions.clans(guildId))
           .catch((clanError) => {
@@ -232,17 +252,11 @@ export default function RemindersPage() { // NOSONAR — React page component: c
           queryClient.fetchQuery(dashboardQueryOptions.threads(guildId)),
           queryClient.fetchQuery({
             queryKey: dashboardQueryKeys.route("reminders", guildId),
-            queryFn: async ({ signal }) => {
-              const response = await apiFetch(`/v2/server/${guildId}/reminders`, {
-                signal,
-                headers: {
-                  Authorization: `Bearer ${accessToken}`,
-                  'Content-Type': 'application/json',
-                },
-              });
-              if (!response.ok) throw new Error(`Failed to fetch reminders: ${response.statusText}`);
-              return response.json() as Promise<ServerRemindersResponse>;
-            },
+            queryFn: ({ signal }) => executeSharedEndpoint(
+              dashboardEndpoints.serverReminders,
+              { path: { serverId: guildId }, query: {}, body: {} },
+              { signal },
+            ),
           }),
         ]);
 
@@ -256,10 +270,10 @@ export default function RemindersPage() { // NOSONAR — React page component: c
         // Parse reminders
         const remindersData = remindersRes;
         setReminders({
-          war_reminders: remindersData.war_reminders || [],
-          capital_reminders: remindersData.capital_reminders || [],
-          clan_games_reminders: remindersData.clan_games_reminders || [],
-          inactivity_reminders: remindersData.inactivity_reminders || [],
+          war_reminders: remindersData.war_reminders.map(mutableReminder),
+          capital_reminders: remindersData.capital_reminders.map(mutableReminder),
+          clan_games_reminders: remindersData.clan_games_reminders.map(mutableReminder),
+          inactivity_reminders: remindersData.inactivity_reminders.map(mutableReminder),
         });
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -390,49 +404,40 @@ export default function RemindersPage() { // NOSONAR — React page component: c
 
     try {
       setSaving(true);
-      const accessToken = getAccessToken();
       const createRequest: CreateReminderRequest = {
         type: cloningReminder.type,
         clan_tag: cloneClanTag,
         channel_id: cloningReminder.channel_id || "",
         thread_id: cloningReminder.thread_id || null,
         time: cloningReminder.time,
-        custom_text: cloningReminder.custom_text,
-        townhall_filter: cloningReminder.townhall_filter,
-        roles: cloningReminder.roles,
-        war_types: cloningReminder.war_types,
-        point_threshold: cloningReminder.point_threshold,
-        attack_threshold: cloningReminder.attack_threshold,
-        roster_id: cloningReminder.roster_id,
-        ping_type: cloningReminder.ping_type,
+        ...(cloningReminder.custom_text !== undefined ? { custom_text: cloningReminder.custom_text } : {}),
+        ...(cloningReminder.townhall_filter !== undefined ? { townhall_filter: cloningReminder.townhall_filter } : {}),
+        ...(cloningReminder.roles !== undefined ? { roles: cloningReminder.roles } : {}),
+        ...(cloningReminder.war_types !== undefined ? { war_types: cloningReminder.war_types } : {}),
+        ...(cloningReminder.point_threshold !== undefined ? { point_threshold: cloningReminder.point_threshold } : {}),
+        ...(cloningReminder.attack_threshold !== undefined ? { attack_threshold: cloningReminder.attack_threshold } : {}),
+        ...(cloningReminder.roster_id !== undefined ? { roster_id: cloningReminder.roster_id } : {}),
+        ...(cloningReminder.ping_type !== undefined ? { ping_type: cloningReminder.ping_type } : {}),
       };
 
-      const response = await apiFetch(`/v2/server/${guildId}/reminders`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(createRequest),
+      await executeSharedEndpoint(dashboardEndpoints.createServerReminder, {
+        path: { serverId: guildId },
+        query: {},
+        body: createRequest,
       });
-      if (!response.ok) throw new Error(`Failed to clone reminder: ${response.statusText}`);
 
-      const refreshedResponse = await apiFetch(`/v2/server/${guildId}/reminders`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
+      const data = await executeSharedEndpoint(dashboardEndpoints.serverReminders, {
+        path: { serverId: guildId },
+        query: {},
+        body: {},
       });
-      if (refreshedResponse.ok) {
-        const data: ServerRemindersResponse = await refreshedResponse.json();
-        queryClient.setQueryData(dashboardQueryKeys.route("reminders", guildId), data);
-        setReminders({
-          war_reminders: data.war_reminders || [],
-          capital_reminders: data.capital_reminders || [],
-          clan_games_reminders: data.clan_games_reminders || [],
-          inactivity_reminders: data.inactivity_reminders || [],
-        });
-      }
+      queryClient.setQueryData(dashboardQueryKeys.route("reminders", guildId), data);
+      setReminders({
+        war_reminders: data.war_reminders.map(mutableReminder),
+        capital_reminders: data.capital_reminders.map(mutableReminder),
+        clan_games_reminders: data.clan_games_reminders.map(mutableReminder),
+        inactivity_reminders: data.inactivity_reminders.map(mutableReminder),
+      });
 
       toast({
         title: t('toast.successTitle'),
@@ -542,18 +547,11 @@ export default function RemindersPage() { // NOSONAR — React page component: c
     if (!reminder.id.startsWith('temp-')) {
       try {
         setSaving(true);
-        const accessToken = getAccessToken();
-        const response = await apiFetch(`/v2/server/${guildId}/reminders/${reminder.id}`, {
-          method: 'DELETE',
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'application/json',
-          },
+        await executeSharedEndpoint(dashboardEndpoints.deleteServerReminder, {
+          path: { serverId: guildId, reminderId: reminder.id },
+          query: {},
+          body: {},
         });
-
-        if (!response.ok) {
-          throw new Error('Failed to delete reminder');
-        }
 
         toast({
           title: t('toast.successTitle'),
@@ -655,7 +653,6 @@ export default function RemindersPage() { // NOSONAR — React page component: c
       }
 
       setSaving(true);
-      const accessToken = getAccessToken();
       // Add " hr" suffix to time before sending to API
       const timeWithUnit = `${dialogReminder.time} hr`;
 
@@ -665,32 +662,25 @@ export default function RemindersPage() { // NOSONAR — React page component: c
         // Create new reminder
         const createRequest: CreateReminderRequest = {
           type: dialogReminder.type!,
-          clan_tag: dialogReminder.clan_tag,
           channel_id: dialogReminder.channel_id || "",
           thread_id: dialogReminder.thread_id || null,
           time: timeWithUnit,
-          custom_text: dialogReminder.custom_text,
-          townhall_filter: dialogReminder.townhall_filter,
-          roles: dialogReminder.roles,
-          war_types: dialogReminder.war_types,
-          point_threshold: dialogReminder.point_threshold,
-          attack_threshold: dialogReminder.attack_threshold,
-          roster_id: dialogReminder.roster_id,
-          ping_type: dialogReminder.ping_type,
+          ...(dialogReminder.clan_tag !== undefined ? { clan_tag: dialogReminder.clan_tag } : {}),
+          ...(dialogReminder.custom_text !== undefined ? { custom_text: dialogReminder.custom_text } : {}),
+          ...(dialogReminder.townhall_filter !== undefined ? { townhall_filter: dialogReminder.townhall_filter } : {}),
+          ...(dialogReminder.roles !== undefined ? { roles: dialogReminder.roles } : {}),
+          ...(dialogReminder.war_types !== undefined ? { war_types: dialogReminder.war_types } : {}),
+          ...(dialogReminder.point_threshold !== undefined ? { point_threshold: dialogReminder.point_threshold } : {}),
+          ...(dialogReminder.attack_threshold !== undefined ? { attack_threshold: dialogReminder.attack_threshold } : {}),
+          ...(dialogReminder.roster_id !== undefined ? { roster_id: dialogReminder.roster_id } : {}),
+          ...(dialogReminder.ping_type !== undefined ? { ping_type: dialogReminder.ping_type } : {}),
         };
 
-        const response = await apiFetch(`/v2/server/${guildId}/reminders`, {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(createRequest),
+        await executeSharedEndpoint(dashboardEndpoints.createServerReminder, {
+          path: { serverId: guildId },
+          query: {},
+          body: createRequest,
         });
-
-        if (!response.ok) {
-          throw new Error(`Failed to create reminder: ${response.statusText}`);
-        }
 
         toast({
           title: t('toast.successTitle'),
@@ -699,31 +689,23 @@ export default function RemindersPage() { // NOSONAR — React page component: c
       } else {
         // Update existing reminder
         const updateRequest = {
-          type: dialogReminder.type, // Include type for validation
-          channel_id: dialogReminder.channel_id,
           thread_id: dialogReminder.thread_id || null,
           time: timeWithUnit,
-          custom_text: dialogReminder.custom_text,
-          townhall_filter: dialogReminder.townhall_filter,
-          roles: dialogReminder.roles,
-          war_types: dialogReminder.war_types,
-          point_threshold: dialogReminder.point_threshold,
-          attack_threshold: dialogReminder.attack_threshold,
-          ping_type: dialogReminder.ping_type,
+          ...(dialogReminder.channel_id !== undefined ? { channel_id: dialogReminder.channel_id } : {}),
+          ...(dialogReminder.custom_text !== undefined ? { custom_text: dialogReminder.custom_text } : {}),
+          ...(dialogReminder.townhall_filter !== undefined ? { townhall_filter: dialogReminder.townhall_filter } : {}),
+          ...(dialogReminder.roles !== undefined ? { roles: dialogReminder.roles } : {}),
+          ...(dialogReminder.war_types !== undefined ? { war_types: dialogReminder.war_types } : {}),
+          ...(dialogReminder.point_threshold !== undefined ? { point_threshold: dialogReminder.point_threshold } : {}),
+          ...(dialogReminder.attack_threshold !== undefined ? { attack_threshold: dialogReminder.attack_threshold } : {}),
+          ...(dialogReminder.ping_type !== undefined ? { ping_type: dialogReminder.ping_type } : {}),
         };
 
-        const response = await apiFetch(`/v2/server/${guildId}/reminders/${editingReminder.id}`, {
-          method: 'PUT',
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(updateRequest),
+        await executeSharedEndpoint(dashboardEndpoints.updateServerReminder, {
+          path: { serverId: guildId, reminderId: editingReminder.id },
+          query: {},
+          body: updateRequest,
         });
-
-        if (!response.ok) {
-          throw new Error(`Failed to update reminder: ${response.statusText}`);
-        }
 
         toast({
           title: t('toast.successTitle'),
@@ -732,23 +714,18 @@ export default function RemindersPage() { // NOSONAR — React page component: c
       }
 
       // Refresh reminders from API
-      const response = await apiFetch(`/v2/server/${guildId}/reminders`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
+      const data = await executeSharedEndpoint(dashboardEndpoints.serverReminders, {
+        path: { serverId: guildId },
+        query: {},
+        body: {},
       });
-
-      if (response.ok) {
-        const data: ServerRemindersResponse = await response.json();
-        queryClient.setQueryData(dashboardQueryKeys.route("reminders", guildId), data);
-        setReminders({
-          war_reminders: data.war_reminders || [],
-          capital_reminders: data.capital_reminders || [],
-          clan_games_reminders: data.clan_games_reminders || [],
-          inactivity_reminders: data.inactivity_reminders || [],
-        });
-      }
+      queryClient.setQueryData(dashboardQueryKeys.route("reminders", guildId), data);
+      setReminders({
+        war_reminders: data.war_reminders.map(mutableReminder),
+        capital_reminders: data.capital_reminders.map(mutableReminder),
+        clan_games_reminders: data.clan_games_reminders.map(mutableReminder),
+        inactivity_reminders: data.inactivity_reminders.map(mutableReminder),
+      });
 
       // Close dialog
       setIsDialogOpen(false);
@@ -891,7 +868,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                             variant="secondary"
                             className="border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted"
                             onClick={() => {
-                              setActiveTab(REMINDER_TYPE_TO_TAB[reminder.type]);
+                              setActiveTab(tabForReminderType(reminder.type));
                               if (reminder.clan_tag) setSelectedClan(reminder.clan_tag);
                               editReminder(reminder);
                             }}
@@ -1122,12 +1099,9 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                                       </div>
                                     ) : customMessageTenorUrl ? (
                                       <div className="mt-3 overflow-hidden rounded-2xl bg-muted/45">
-                                        <Image
-                                          src={`/api/tenor-media?url=${encodeURIComponent(customMessageTenorUrl)}`}
+                                        <TenorMedia
+                                          url={customMessageTenorUrl}
                                           alt={t('card.customGifTitle')}
-                                          width={640}
-                                          height={360}
-                                          unoptimized
                                           className="max-h-48 h-auto w-full object-contain"
                                         />
                                       </div>

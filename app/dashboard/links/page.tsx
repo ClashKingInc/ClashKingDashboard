@@ -1,12 +1,15 @@
 "use client";
 
 import { useGuildId } from "@/lib/dashboard-route";
-import { apiFetch } from "@/lib/api/fetch";
+import { dashboardEndpoints, CreateServerLinkEndpoint, DeleteServerLinkEndpoint, ProxyPlayerEndpoint } from "@clashking/api-contracts";
+import { ApiResponseError } from "@clashking/api-client";
+import { Schema } from "effect";
+import { executeSharedEndpoint } from "@/lib/api/shared-client";
 
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import Image from "next/image";
+import Image from "@/components/app-image";
 import {
   BarChart3,
   ChevronDown,
@@ -24,12 +27,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { DashboardTabsList, DashboardTabTrigger } from "@/components/ui/dashboard-tabs";
 import { townHallImageUrl } from "@/lib/theme";
-import { loadedMembersDetail, playerLookupPath } from "./links-utils";
+import { loadedMembersDetail } from "./links-utils";
 import { dashboardQueryOptions } from "@/lib/dashboard-query-options";
 
 interface LinkedAccount {
@@ -64,6 +68,33 @@ interface ServerLinksResponse {
   members_with_links: number;
   total_linked_accounts: number;
   verified_accounts: number;
+}
+
+function mutableServerLinks(response: Awaited<ReturnType<typeof fetchServerLinks>>): ServerLinksResponse {
+  return {
+    ...response,
+    members: response.members.map((member) => ({
+      ...member,
+      linked_accounts: member.linked_accounts.map((account) => ({
+        ...account,
+        player_name: account.player_name ?? null,
+        town_hall: account.town_hall ?? null,
+      })),
+    })),
+    roles: [...response.roles],
+  };
+}
+
+function fetchServerLinks(
+  serverId: string,
+  query: { limit: number; offset: number; query?: string; account_filter?: "none" },
+  signal?: AbortSignal,
+) {
+  return executeSharedEndpoint(
+    dashboardEndpoints.serverLinks,
+    { path: { serverId }, query, body: {} },
+    signal ? { signal } : {},
+  );
 }
 
 type AccountFilter = "all" | "none";
@@ -108,6 +139,7 @@ export default function LinksManagementPage() {
   const [pendingAccount, setPendingAccount] = useState<string | null>(null);
   const [addTarget, setAddTarget] = useState<MemberLinks | null>(null);
   const [addTag, setAddTag] = useState("");
+  const [addApiToken, setAddApiToken] = useState("");
   const [adding, setAdding] = useState(false);
   const [exporting, setExporting] = useState<"csv" | "json" | null>(null);
 
@@ -124,16 +156,13 @@ export default function LinksManagementPage() {
     setLoading(true);
     setError(null);
     try {
-      const search = new URLSearchParams({
-        limit: String(ITEMS_PER_PAGE),
-        offset: String((page - 1) * ITEMS_PER_PAGE),
-      });
-      if (serverQuery) search.set("query", serverQuery);
-      if (accountFilter !== "all") search.set("account_filter", accountFilter);
-      const response = await apiFetch(`/v2/links/server/${guildId}?${search}`, { cache: "no-store", signal: controller.signal });
-      const body = await response.json();
-      if (!response.ok) throw new Error(body.message || body.error || "Failed to fetch links");
-      setData(body);
+      const body = await fetchServerLinks(guildId, {
+        limit: ITEMS_PER_PAGE,
+        offset: (page - 1) * ITEMS_PER_PAGE,
+        ...(serverQuery ? { query: serverQuery } : {}),
+        ...(accountFilter === "none" ? { account_filter: accountFilter } : {}),
+      }, controller.signal);
+      setData(mutableServerLinks(body));
     } catch (caught) {
       if (controller.signal.aborted) return;
       setError(caught instanceof Error ? caught.message : "Failed to fetch links");
@@ -150,10 +179,8 @@ export default function LinksManagementPage() {
     setStatsLoading(true);
     setError(null);
     try {
-      const response = await apiFetch(`/v2/links/server/${guildId}?limit=5000&offset=0`, { cache: "no-store" });
-      const body = await response.json();
-      if (!response.ok) throw new Error(body.message || body.error || "Failed to fetch link statistics");
-      setStatsData(body);
+      const body = await fetchServerLinks(guildId, { limit: 5000, offset: 0 });
+      setStatsData(mutableServerLinks(body));
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Failed to fetch link statistics");
     } finally {
@@ -201,30 +228,23 @@ export default function LinksManagementPage() {
     } : current);
   }, []);
 
-  const request = useCallback(async (method: "POST" | "DELETE", options: { query?: URLSearchParams; body?: unknown }) => {
-    const suffix = options.query ? `?${options.query}` : "";
-    const response = await apiFetch(`/v2/links/server/${guildId}${suffix}`, {
-      method,
-      headers: { "Content-Type": "application/json" },
-      body: options.body === undefined ? undefined : JSON.stringify(options.body),
-    });
-    const body = await response.json();
-    if (!response.ok) throw new Error(body.message || body.error || "Link operation failed");
-    return body;
-  }, [guildId]);
-
   const addLink = async () => {
     if (!addTarget || !addTag.trim()) return;
     setAdding(true);
     setError(null);
     try {
-      await request("POST", { body: { playerTag: addTag.trim(), userID: addTarget.user_id } });
+      await executeSharedEndpoint(CreateServerLinkEndpoint, {
+        path: { serverId: guildId }, query: {},
+        body: { playerTag: addTag.trim(), userID: addTarget.user_id,
+          ...(addApiToken.trim() ? { api_token: addApiToken.trim() } : {}) },
+      });
       setAddTarget(null);
       setAddTag("");
       await fetchLinks();
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Failed to add link");
     } finally {
+      setAddApiToken("");
       setAdding(false);
     }
   };
@@ -233,12 +253,12 @@ export default function LinksManagementPage() {
     setExporting(format);
     setError(null);
     try {
-      const search = new URLSearchParams({ limit: "5000", offset: "0" });
-      if (serverQuery) search.set("query", serverQuery);
-      if (accountFilter !== "all") search.set("account_filter", accountFilter);
-      const response = await apiFetch(`/v2/links/server/${guildId}?${search}`, { cache: "no-store" });
-      const exportData = await response.json() as ServerLinksResponse & { message?: string; error?: string };
-      if (!response.ok) throw new Error(exportData.message || exportData.error || "Failed to export links");
+      const exportData = await fetchServerLinks(guildId, {
+        limit: 5000,
+        offset: 0,
+        ...(serverQuery ? { query: serverQuery } : {}),
+        ...(accountFilter === "none" ? { account_filter: accountFilter } : {}),
+      });
 
       let contents: string;
       let contentType: string;
@@ -281,18 +301,25 @@ export default function LinksManagementPage() {
     setError(null);
     setNotice(null);
     try {
-      const response = await apiFetch(playerLookupPath(account.player_tag));
-      const player = await response.json();
-      if (response.status === 404 && player.reason === "notFound") {
-        await request("DELETE", { query: new URLSearchParams({ playerTag: account.player_tag }) });
-        setNotice(`${account.player_tag} returned 404 and its stale unverified link was removed.`);
-        await fetchLinks();
+      const player = await executeSharedEndpoint(ProxyPlayerEndpoint, {
+        path: { playerTag: account.player_tag }, query: {}, body: {},
+      });
+      updateAccount(account.player_tag, current => ({ ...current, player_name: player.name, town_hall: player.townHallLevel }));
+    } catch (caught) {
+      const notFoundSchema = ProxyPlayerEndpoint.errors?.find((error) => error.status === 404)?.body;
+      if (caught instanceof ApiResponseError && caught.status === 404 && notFoundSchema
+        && Schema.is(notFoundSchema)(caught.body) && caught.body.reason === "notFound") {
+        try {
+          await executeSharedEndpoint(DeleteServerLinkEndpoint, {
+            path: { serverId: guildId }, query: { playerTag: account.player_tag }, body: {},
+          });
+          setNotice(`${account.player_tag} returned 404 and its stale unverified link was removed.`);
+          await fetchLinks();
+        } catch (deleteError) {
+          setError(deleteError instanceof Error ? deleteError.message : "Failed to remove stale link");
+        }
         return;
       }
-      if (!response.ok) throw new Error(player.message || player.error || "Failed to load player");
-      const townHall = player.town_hall_level ?? player.townHallLevel ?? player.townhall ?? null;
-      updateAccount(account.player_tag, current => ({ ...current, player_name: player.name ?? null, town_hall: townHall }));
-    } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Failed to load player");
     } finally {
       setPendingAccount(null);
@@ -414,7 +441,7 @@ export default function LinksManagementPage() {
                       if (next.has(member.user_id)) next.delete(member.user_id); else next.add(member.user_id);
                       return next;
                     })}
-                    onAdd={() => { setAddTarget(member); setAddTag(""); }}
+                    onAdd={() => { setAddTarget(member); setAddTag(""); setAddApiToken(""); }}
                     onLoad={loadPlayer}
                   />
                 ))}
@@ -447,15 +474,21 @@ export default function LinksManagementPage() {
         </section>
       </div>
 
-      <Dialog open={Boolean(addTarget)} onOpenChange={open => { if (!open) setAddTarget(null); }}>
+      <Dialog open={Boolean(addTarget)} onOpenChange={open => { if (!open) { setAddTarget(null); setAddApiToken(""); } }}>
         <DialogContent variant="form">
           <DialogHeader>
             <DialogTitle>Add account link</DialogTitle>
             <DialogDescription>Link an account to {addTarget?.display_name}.</DialogDescription>
           </DialogHeader>
           <Input value={addTag} onChange={event => setAddTag(event.target.value)} placeholder="#PLAYER_TAG" autoFocus />
+          <div className="space-y-2">
+            <Label htmlFor="server-link-api-token">In-game API token</Label>
+            <Input id="server-link-api-token" type="password" autoComplete="off" spellCheck={false} maxLength={128}
+              value={addApiToken} onChange={event => setAddApiToken(event.target.value)} aria-describedby="server-link-api-token-hint" />
+            <p id="server-link-api-token-hint" className="text-xs text-muted-foreground">Required when this server requires a token or when transferring an account. Use the token from the account’s in-game settings. It is cleared after each attempt.</p>
+          </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setAddTarget(null)}>Cancel</Button>
+            <Button variant="outline" onClick={() => { setAddTarget(null); setAddApiToken(""); }}>Cancel</Button>
             <Button onClick={addLink} disabled={adding || !addTag.trim()}>{adding && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}Add link</Button>
           </DialogFooter>
         </DialogContent>

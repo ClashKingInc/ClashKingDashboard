@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { useLocale } from "next-intl";
+import { useLocale } from "use-intl";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { LocaleProvider, useAppLocale } from "@/components/locale-provider";
 import {
@@ -13,7 +13,7 @@ const { navigationMock, pushMock } = vi.hoisted(() => ({
   pushMock: vi.fn(),
 }));
 
-vi.mock("next/navigation", () => ({
+vi.mock("@/lib/navigation", () => ({
   usePathname: () => navigationMock.pathname,
   useRouter: () => ({ push: pushMock }),
 }));

@@ -1,108 +1,118 @@
-/**
- * War API client
- */
+/** War API client backed by the shared endpoint contracts. */
 
-import { BaseApiClient } from '../core/base-client';
-import type { ApiResponse, PaginatedResponse } from '../types/common';
+import {
+  BotCwlGroupEndpoint,
+  BotCwlRankingHistoryEndpoint,
+  ClanCwlSeasonsEndpoint,
+  CwlSummaryExportEndpoint,
+  DashboardCwlBonusRecipientsEndpoint,
+  DashboardReplaceCwlBonusRecipientsEndpoint,
+  PlayerWarStatsExportEndpoint,
+  ProxyCurrentWarEndpoint,
+} from "@clashking/api-contracts";
+
+import { BaseApiClient } from "../core/base-client";
+import type { ApiResponse } from "../types/common";
 import type {
-  PreviousWarsOptions,
-  ClanWarStatsOptions,
-  PlayerWarhitsFilter,
   CwlBonusRecipient,
   CwlGroupResponse,
   CwlSeasonItem,
-} from '../types/war';
+  PlayerWarhitsFilter,
+} from "../types/war";
+
+function mapData<A, B>(response: ApiResponse<A>, transform: (data: A) => B): ApiResponse<B> {
+  if (response.data === undefined) {
+    const { data: _data, ...rest } = response;
+    return rest;
+  }
+  return { ...response, data: transform(response.data) };
+}
+
 
 export class WarClient extends BaseApiClient {
-  async getCurrentWar(clanTag: string): Promise<ApiResponse<Record<string, unknown>>> {
-    return this.request(`/proxy/v1/clans/${encodeURIComponent(clanTag)}/currentwar`, { method: 'GET' });
+  async getCurrentWar(clanTag: string) {
+    return this.executeEndpoint(ProxyCurrentWarEndpoint, {
+      path: { clanTag },
+      query: {},
+      body: {},
+    });
   }
 
-  /**
-   * GET /v2/war/{clan_tag}/previous
-   */
-  async getPrevious(clanTag: string, options?: PreviousWarsOptions): Promise<ApiResponse<PaginatedResponse<any>>> {
-    const query = this.buildQueryString(options || {});
-    return this.request(`/v2/war/${clanTag}/previous${query}`, { method: 'GET' });
-  }
-
-  /**
-   * GET /v2/cwl/{clan_tag}/ranking-history
-   */
-  async getCwlRankingHistory(clanTag: string): Promise<ApiResponse<PaginatedResponse<any>>> {
-    return this.request(`/v2/cwl/${clanTag}/ranking-history`, { method: 'GET' });
-  }
-
-  /**
-   * GET /v2/cwl/league-thresholds
-   */
-  async getCwlLeagueThresholds(): Promise<ApiResponse<PaginatedResponse<any>>> {
-    return this.request('/v2/cwl/league-thresholds', { method: 'GET' });
+  async getCwlRankingHistory(clanTag: string) {
+    const response = await this.executeEndpoint(BotCwlRankingHistoryEndpoint, {
+      path: { tag: clanTag },
+      query: {},
+      body: {},
+    });
+    return mapData(response, (data) => ({ ...data, items: [...data.items] }));
   }
 
   async getCwlSeasons(clanTag: string): Promise<ApiResponse<{ items: CwlSeasonItem[] }>> {
-    return this.request(`/v2/cwl/${encodeURIComponent(clanTag)}/seasons`, { method: 'GET' });
+    const response = await this.executeEndpoint(ClanCwlSeasonsEndpoint, {
+      path: { clanTag },
+      query: {},
+      body: {},
+    });
+    return mapData(response, (data) => ({ items: [...data.items] }));
   }
 
   async getStoredCwl(clanTag: string, season?: string): Promise<ApiResponse<CwlGroupResponse>> {
-    const query = this.buildQueryString({ season });
-    return this.request(`/v2/cwl/${encodeURIComponent(clanTag)}/group${query}`, { method: 'GET' });
+    const response = await this.executeEndpoint(BotCwlGroupEndpoint, {
+      path: { tag: clanTag },
+      query: season === undefined ? {} : { season },
+      body: {},
+    });
+    return mapData(response, (data) => ({
+      ...data,
+      clans: data.clans.map((clan) => ({ ...clan, members: [...clan.members] })),
+      rounds: data.rounds.map((round) => ({ warTags: [...round.warTags] })),
+    }));
   }
 
   async getCwlBonusRecipients(
-    serverId: string | number,
+    serverId: string,
     clanTag: string,
     season: string,
   ): Promise<ApiResponse<{ items: CwlBonusRecipient[] }>> {
-    const query = this.buildQueryString({ season });
-    return this.request(`/v2/server/${serverId}/cwl/${encodeURIComponent(clanTag)}/bonus-recipients${query}`, { method: 'GET' });
+    const response = await this.executeEndpoint(DashboardCwlBonusRecipientsEndpoint, {
+      path: { serverId, clanTag },
+      query: { season },
+      body: {},
+    });
+    return mapData(response, (data) => ({ items: [...data.items] }));
   }
 
   async replaceCwlBonusRecipients(
-    serverId: string | number,
+    serverId: string,
     clanTag: string,
     season: string,
     recipients: CwlBonusRecipient[],
   ): Promise<ApiResponse<{ items: CwlBonusRecipient[] }>> {
-    const query = this.buildQueryString({ season });
-    return this.request(`/v2/server/${serverId}/cwl/${encodeURIComponent(clanTag)}/bonus-recipients${query}`, {
-      method: 'PUT',
-      body: JSON.stringify({ recipients }),
+    const response = await this.executeEndpoint(DashboardReplaceCwlBonusRecipientsEndpoint, {
+      path: { serverId, clanTag },
+      query: { season },
+      body: { recipients },
     });
+    return mapData(response, (data) => ({ items: [...data.items] }));
   }
 
-  /**
-   * GET /v2/war/clan/stats
-   */
-  async getClanStats(options: ClanWarStatsOptions): Promise<ApiResponse<any>> {
-    const query = this.buildQueryString(options);
-    return this.request(`/v2/war/clan/stats${query}`, { method: 'GET' });
-  }
-
-  /**
-   * GET /v2/exports/war/cwl-summary
-   */
   async exportCwlSummary(clanTag: string): Promise<Blob> {
-    const url = `${this.config.baseUrl}/v2/exports/war/cwl-summary?tag=${clanTag}`;
-    const response = await fetch(url, {
-      headers: this.config.accessToken ? { Authorization: `Bearer ${this.config.accessToken}` } : {},
+    const response = await this.executeEndpoint(CwlSummaryExportEndpoint, {
+      path: {},
+      query: { tag: clanTag },
+      body: {},
     });
-    return response.blob();
+    if (!response.data) throw new Error(response.error ?? "CWL summary export failed");
+    return response.data.blob();
   }
 
-  /**
-   * POST /v2/exports/war/player-stats
-   */
   async exportPlayerStats(filter: PlayerWarhitsFilter): Promise<Blob> {
-    const url = `${this.config.baseUrl}/v2/exports/war/player-stats`;
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(this.config.accessToken ? { Authorization: `Bearer ${this.config.accessToken}` } : {}),
-      },
-      body: JSON.stringify(filter),
+    const response = await this.executeEndpoint(PlayerWarStatsExportEndpoint, {
+      path: {},
+      query: {},
+      body: filter,
     });
-    return response.blob();
+    if (!response.data) throw new Error(response.error ?? "Player stats export failed");
+    return response.data.blob();
   }
 }

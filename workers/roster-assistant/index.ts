@@ -13,6 +13,18 @@ import {
 } from "ai";
 import { z } from "zod";
 import {
+  DashboardPreviewRosterViewEndpoint,
+  DashboardQueryRosterMetricEndpoint,
+  DashboardRefreshRosterDiscordIdentityEndpoint,
+  DashboardRosterMembersQueryEndpoint,
+  DashboardRosterAccountGroupsQueryEndpoint,
+  DashboardRosterRefreshBatchEndpoint,
+  DashboardRosterMembershipValidateEndpoint,
+  type EndpointResponse,
+} from "@clashking/api-contracts";
+import { AssistantApiError, executeAssistantEndpoint } from "./api-client";
+import { decodeAssistantBrowserRequest, prepareRequest, type AssistantBrowserRequest, type AssistantRequest } from "./request-context";
+import {
   ROSTER_ASSISTANT_COMPACTION_THRESHOLD,
   ROSTER_ASSISTANT_MODEL,
 } from "../../lib/roster-assistant-constants";
@@ -20,7 +32,6 @@ import { normalizeAIUsage, settleAIUsage, sumAIUsage, type NormalizedAIUsage } f
 import {
   assertAuthorizedMembershipChanges,
   authorizedRosterIds,
-  buildTrustedUserTranscript,
 } from "./request-guard";
 import {
   firstZodIssueMessage,
@@ -29,43 +40,13 @@ import {
   savedViewProgramGuidance,
 } from "./view-program-contract";
 import { resolveAssistantSecrets } from "./runtime-secrets";
-import { assertRosterAssistantDeveloper, RosterAssistantAuthorizationError } from "./developer-authorization";
+import { RosterAssistantAuthorizationError } from "./developer-authorization";
 
 const MODEL = ROSTER_ASSISTANT_MODEL;
 const MAX_ROSTERS = 25;
 const MAX_CHANGES = 1_000;
 
-type AssistantBrowserRequest = {
-  serverId: string;
-  rosterIds: string[];
-  viewId?: string;
-  currentView?: unknown;
-  mode?: "chat" | "replay";
-  sourceCode?: string;
-  sourceVersion?: number;
-  playerContexts?: Array<{ playerTag: string; name: string; townhall: number; rosterId: string }>;
-  messages: UIMessage[];
-};
-
-type AssistantRequest = {
-	requestId: string;
-	model: string;
-  userToken: string;
-  request: AssistantBrowserRequest;
-  context: {
-		attachments: Array<{ rosterId: string; alias: string; clanTag?: string; memberCount: number; revision: number; signupQuestions: Array<{ id: string; label: string; type: "text" | "boolean" | "single_select"; required: boolean; options: string[] }> }>;
-    metrics: unknown[];
-    currentView?: unknown;
-  };
-};
-
 type PlayerContext = { playerTag: string; name: string; townhall: number; rosterId: string };
-
-class ContextRequestError extends Error {
-  constructor(readonly status: number, message: string) {
-    super(message);
-  }
-}
 
 const ALLOWED_ORIGINS = new Set([
   "https://dash.clashk.ing",
@@ -114,69 +95,6 @@ async function sourceWorkerId(sourceCode: string, sourceVersion: number): Promis
   const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(sourceCode));
   const hash = [...new Uint8Array(digest)].slice(0, 12).map((byte) => byte.toString(16).padStart(2, "0")).join("");
   return `roster-view-v${sourceVersion}-${hash}`;
-}
-
-async function apiRequest(env: RosterAssistantRuntimeEnv, body: AssistantRequest, path: string, input: unknown, signal: AbortSignal): Promise<any> {
-  const response = await fetch(`${env.CLASHKING_API_ORIGIN.replace(/\/$/, "")}${path}`, {
-    method: "POST",
-    headers: {
-      "authorization": `Bearer ${body.userToken}`,
-      "content-type": "application/json",
-    },
-    body: JSON.stringify(input),
-    signal,
-  });
-  const payload = await response.json().catch(() => ({ message: `Tool request failed (${response.status})` }));
-  if (!response.ok) {
-    const message = typeof payload === "object" && payload
-      ? "message" in payload ? String(payload.message) : "error" in payload ? String(payload.error) : `Tool request failed (${response.status})`
-      : `Tool request failed (${response.status})`;
-    console.error(JSON.stringify({ event: "roster_tool_failed", path, status: response.status, message }));
-    throw new Error(message);
-  }
-  return payload;
-}
-
-async function prepareRequest(env: RosterAssistantRuntimeEnv, request: AssistantBrowserRequest, userToken: string, signal: AbortSignal): Promise<AssistantRequest> {
-  await assertRosterAssistantDeveloper(env.CLASHKING_API_ORIGIN, userToken, signal);
-  // Only user-authored text crosses the browser trust boundary. The same
-  // transcript is authorized by the API and then forwarded to the model.
-  const messages = buildTrustedUserTranscript(request.messages);
-  const authorizationRequest = {
-    ...request,
-    messages,
-  };
-  const response = await fetch(`${env.CLASHKING_API_ORIGIN.replace(/\/$/, "")}/v2/roster/ai/context`, {
-    method: "POST",
-    headers: {
-      "authorization": `Bearer ${userToken}`,
-      "content-type": "application/json",
-    },
-    body: JSON.stringify(authorizationRequest),
-    signal,
-  });
-	const payload = await response.json() as {
-		requestId?: string;
-		model?: string;
-    context?: AssistantRequest["context"];
-    error?: string;
-    message?: string;
-  };
-	if (!response.ok || !payload.requestId || !payload.model || !payload.context) {
-    throw new ContextRequestError(response.status, payload.message ?? payload.error ?? `Roster context request failed (${response.status})`);
-	}
-	if (payload.model !== MODEL) throw new ContextRequestError(502, "Roster assistant model configuration is out of sync");
-	return {
-    requestId: payload.requestId,
-    model: payload.model,
-    userToken,
-    request: {
-      ...request,
-      messages,
-      rosterIds: payload.context.attachments.map((attachment) => attachment.rosterId),
-    },
-    context: payload.context,
-  };
 }
 
 function latestUserText(messages: UIMessage[]): string {
@@ -291,9 +209,11 @@ const rosterAssistantWorker = {
     if (origin && !ALLOWED_ORIGINS.has(origin)) return json(request, { error: "Origin not allowed" }, 403);
     const token = bearerToken(request);
     if (!token) return json(request, { error: "Unauthorized" }, 401);
-    const browserRequest = await request.json() as AssistantBrowserRequest;
-    if (!browserRequest?.serverId || !Array.isArray(browserRequest.rosterIds) || !Array.isArray(browserRequest.messages) || browserRequest.rosterIds.length < 1 || browserRequest.rosterIds.length > MAX_ROSTERS) {
-      return json(request, { error: `rosterIds must contain 1 to ${MAX_ROSTERS} rosters` }, 400);
+    let browserRequest: AssistantBrowserRequest;
+    try {
+      browserRequest = await decodeAssistantBrowserRequest(request);
+    } catch (error) {
+      return json(request, { error: error instanceof Error ? error.message : "Invalid roster assistant request" }, 400);
     }
     let env: RosterAssistantRuntimeEnv;
     try {
@@ -316,15 +236,15 @@ const rosterAssistantWorker = {
       return json(
         request,
         { error: error instanceof Error ? error.message : "Roster context request failed" },
-        error instanceof ContextRequestError || error instanceof RosterAssistantAuthorizationError ? error.status : 502,
+        error instanceof AssistantApiError || error instanceof RosterAssistantAuthorizationError ? error.status : 502,
       );
     }
 
     const artifacts: Array<{ type: string; data: unknown }> = [];
-    let accountGroupsResult: unknown;
+    let accountGroupsResult: EndpointResponse<typeof DashboardRosterAccountGroupsQueryEndpoint> | undefined;
     let writeProgress: (event: { id: string; name: string; state: "started" | "completed" | "failed"; error?: string }) => void = () => undefined;
     let progressIndex = 0;
-    const call = async (name: string, execute: () => Promise<any>) => {
+    const call = async <A>(name: string, execute: () => Promise<A>): Promise<A> => {
       request.signal.throwIfAborted();
       const id = `${name}-${++progressIndex}`;
       writeProgress({ id, name, state: "started" });
@@ -347,19 +267,19 @@ const rosterAssistantWorker = {
       label: z.string().min(1).max(80),
       metricId: z.string().describe("An exact metric ID from Available metrics"),
       description: z.string().max(240).optional(),
-      parameters: z.record(z.string(), z.unknown()).optional(),
+      parameters: z.record(z.string(), z.json()).optional(),
       format: z.string().max(40).optional(),
     });
     const viewFilter = z.object({
       columnId: stableId,
       operator: z.enum(["eq", "neq", "gt", "gte", "lt", "lte", "in", "contains"]),
-      value: z.unknown(),
+      value: z.json(),
     });
     const viewSort = z.object({ columnId: stableId, direction: z.enum(["asc", "desc"]) });
     const highlightCondition = z.object({
       columnId: stableId.optional(),
       operator: z.enum(["eq", "neq", "gt", "gte", "lt", "lte", "in", "contains"]),
-      value: z.unknown(),
+      value: z.json(),
     });
     const viewHighlight = z.object({
       id: stableId,
@@ -371,7 +291,7 @@ const rosterAssistantWorker = {
     const computedViewRow = z.object({
       rosterId: z.string(),
       playerTag: z.string().min(1),
-      values: z.record(stableId, z.unknown()),
+      values: z.record(stableId, z.json()),
       highlight: z.string().regex(/^#[0-9A-Fa-f]{6}$/).nullable().optional(),
     });
     const viewProgramOutput = z.object({
@@ -419,7 +339,6 @@ const rosterAssistantWorker = {
 	  }
 	});
 	const memberFields = rosterMemberFieldsSchema;
-    const serverQuery = `?server_id=${encodeURIComponent(body.request.serverId)}`;
 
     const executeViewProgram = async (sourceCode: string, sourceVersion: number) => {
       if (sourceVersion !== 1) throw new Error("Unsupported view source version");
@@ -433,30 +352,39 @@ const rosterAssistantWorker = {
           description: "Read fields for every member in the current roster selection. Returns an object with a rows array; each row always has rosterId and playerTag plus only the requested fields.",
           inputSchema: z.object({ fields: memberFields }),
           outputSchema: rosterMembersOutputSchema,
-          execute: (input) => call("get_roster_members", () => apiRequest(env, body, `/v2/roster/members/query${serverQuery}`, { serverId: body.request.serverId, rosterIds: body.request.rosterIds, ...input }, request.signal)),
+          execute: (input) => call("get_roster_members", () => executeAssistantEndpoint(env.CLASHKING_API_ORIGIN, body.userToken, DashboardRosterMembersQueryEndpoint, {
+            path: {}, query: {}, body: { serverId: body.request.serverId, rosterIds: body.request.rosterIds, ...input },
+          }, request.signal).then((data) => rosterMembersOutputSchema.parse(data))),
         }),
         getRosterAccountGroups: tool({
           description: "Group accounts in the selected rosters by anonymous linked Discord owner.",
           inputSchema: z.object({}),
-          execute: () => call("get_roster_account_groups", () => apiRequest(env, body, `/v2/roster/account-groups/query${serverQuery}`, { serverId: body.request.serverId, rosterIds: body.request.rosterIds }, request.signal)),
+          execute: () => call("get_roster_account_groups", () => executeAssistantEndpoint(env.CLASHKING_API_ORIGIN, body.userToken, DashboardRosterAccountGroupsQueryEndpoint, {
+            path: {}, query: {}, body: { serverId: body.request.serverId, rosterIds: body.request.rosterIds },
+          }, request.signal)),
         }),
         getRosterMetric: tool({
           description: "Compute one allowlisted metric for the selected rosters.",
-          inputSchema: z.object({ metricId: z.string(), parameters: z.record(z.string(), z.unknown()).default({}) }),
-          execute: (input) => call("get_roster_metric", () => apiRequest(env, body, `/v2/roster/metrics/query${serverQuery}`, { rosterIds: body.request.rosterIds, ...input, force: false }, request.signal)),
+          inputSchema: z.object({ metricId: z.string(), parameters: z.record(z.string(), z.json()).default({}) }),
+          execute: (input) => call("get_roster_metric", () => executeAssistantEndpoint(env.CLASHKING_API_ORIGIN, body.userToken, DashboardQueryRosterMetricEndpoint, {
+            path: {}, query: { server_id: body.request.serverId }, body: { rosterIds: body.request.rosterIds, ...input, force: false },
+          }, request.signal)),
         }),
         materializeView: tool({
           description: "Materialize predefined metric columns for the selected rosters and return exact rows.",
           inputSchema: viewProgramOutput.omit({ rows: true }).extend({ rows: z.never().optional() }),
           execute: async (input) => {
-            const data = await apiRequest(env, body, `/v2/roster/views/preview${serverQuery}`, {
-              serverId: body.request.serverId,
-              rosterIds: body.request.rosterIds,
-              viewId: body.request.viewId,
-              sourceCode,
-              sourceVersion,
-              ...input,
+            const data = await executeAssistantEndpoint(env.CLASHKING_API_ORIGIN, body.userToken, DashboardPreviewRosterViewEndpoint, {
+              path: {}, query: { server_id: body.request.serverId }, body: {
+                serverId: body.request.serverId,
+                rosterIds: body.request.rosterIds,
+                viewId: body.request.viewId,
+                sourceCode,
+                sourceVersion,
+                ...input,
+              },
             }, request.signal);
+            if (!data.view.spec) throw new Error("Roster view preview did not include a materialized spec");
             return {
               name: data.view.name,
               columns: data.view.spec.columns,
@@ -475,13 +403,15 @@ const rosterAssistantWorker = {
       if (executed.error) throw new Error(`View program failed: ${executed.error}`);
       const parsed = viewProgramOutput.safeParse(executed.result);
       if (!parsed.success) throw new Error(`View program returned an invalid result: ${firstZodIssueMessage(parsed.error)}`);
-      return apiRequest(env, body, `/v2/roster/views/preview${serverQuery}`, {
-        serverId: body.request.serverId,
-        rosterIds: body.request.rosterIds,
-        viewId: body.request.viewId,
-        sourceCode,
-        sourceVersion,
-        ...parsed.data,
+      return executeAssistantEndpoint(env.CLASHKING_API_ORIGIN, body.userToken, DashboardPreviewRosterViewEndpoint, {
+        path: {}, query: { server_id: body.request.serverId }, body: {
+          serverId: body.request.serverId,
+          rosterIds: body.request.rosterIds,
+          viewId: body.request.viewId,
+          sourceCode,
+          sourceVersion,
+          ...parsed.data,
+        },
       }, request.signal);
     };
 
@@ -489,9 +419,11 @@ const rosterAssistantWorker = {
 	  refreshRosterData: tool({
         description: "Refresh explicitly requested roster snapshots.",
         inputSchema: z.object({ rosterIds }),
-        execute: (input) => call("refresh_roster_data", () => apiRequest(env, body, `/v2/roster/refresh-batch${serverQuery}`, {
-          serverId: body.request.serverId,
-          rosterIds: authorizedRosterIds(input.rosterIds, attachedRosterIds),
+        execute: (input) => call("refresh_roster_data", () => executeAssistantEndpoint(env.CLASHKING_API_ORIGIN, body.userToken, DashboardRosterRefreshBatchEndpoint, {
+          path: {}, query: {}, body: {
+            serverId: body.request.serverId,
+            rosterIds: authorizedRosterIds(input.rosterIds, attachedRosterIds),
+          },
         }, request.signal)),
       }),
 	  refreshDiscordIdentity: tool({
@@ -499,34 +431,42 @@ const rosterAssistantWorker = {
 		inputSchema: z.object({ rosterId: z.string(), playerTag: z.string().min(1) }),
 		execute: (input) => call("refresh_discord_identity", () => {
 		  authorizedRosterIds([input.rosterId], attachedRosterIds);
-		  return apiRequest(env, body, `/v2/server/${encodeURIComponent(body.request.serverId)}/rosters/${encodeURIComponent(input.rosterId)}/discord-identity/refresh`, { playerTag: input.playerTag }, request.signal);
+		  return executeAssistantEndpoint(env.CLASHKING_API_ORIGIN, body.userToken, DashboardRefreshRosterDiscordIdentityEndpoint, {
+            path: { serverId: body.request.serverId, rosterId: input.rosterId }, query: {}, body: { playerTag: input.playerTag },
+          }, request.signal);
 		}),
 	  }),
       getRosterMembers: tool({
         description: "Read selected snapshot fields for non-view analysis. Returns { rows }; each row always has rosterId and playerTag plus only the requested fields. Do not copy this result or outer rosterIds into saved view source; that source must read its current selection itself.",
         inputSchema: z.object({ rosterIds, fields: memberFields }),
         outputSchema: rosterMembersOutputSchema,
-        execute: (input) => call("get_roster_members", () => apiRequest(env, body, `/v2/roster/members/query${serverQuery}`, {
-          serverId: body.request.serverId,
-          rosterIds: authorizedRosterIds(input.rosterIds, attachedRosterIds),
-          fields: input.fields,
-        }, request.signal)),
+        execute: (input) => call("get_roster_members", () => executeAssistantEndpoint(env.CLASHKING_API_ORIGIN, body.userToken, DashboardRosterMembersQueryEndpoint, {
+          path: {}, query: {}, body: {
+            serverId: body.request.serverId,
+            rosterIds: authorizedRosterIds(input.rosterIds, attachedRosterIds),
+            fields: input.fields,
+          },
+        }, request.signal).then((data) => rosterMembersOutputSchema.parse(data))),
       }),
       getRosterAccountGroups: tool({ description: "Group linked accounts by anonymous Discord owner. For list/show requests, use the returned multi-account player tags to publish a filtered roster view; do not print the groups as Markdown.", inputSchema: z.object({ rosterIds }), execute: (input) => call("get_roster_account_groups", async () => {
-        accountGroupsResult = await apiRequest(env, body, `/v2/roster/account-groups/query${serverQuery}`, {
-          serverId: body.request.serverId,
-          rosterIds: authorizedRosterIds(input.rosterIds, attachedRosterIds),
+        accountGroupsResult = await executeAssistantEndpoint(env.CLASHKING_API_ORIGIN, body.userToken, DashboardRosterAccountGroupsQueryEndpoint, {
+          path: {}, query: {}, body: {
+            serverId: body.request.serverId,
+            rosterIds: authorizedRosterIds(input.rosterIds, attachedRosterIds),
+          },
         }, request.signal);
         return accountGroupsResult;
       }) }),
       getRosterMetric: tool({
         description: "Compute an allowlisted metric.",
-        inputSchema: z.object({ rosterIds, metricId: z.string(), parameters: z.record(z.string(), z.unknown()).default({}) }),
-        execute: (input) => call("get_roster_metric", () => apiRequest(env, body, `/v2/roster/metrics/query?server_id=${encodeURIComponent(body.request.serverId)}`, {
-          rosterIds: authorizedRosterIds(input.rosterIds, attachedRosterIds),
-          metricId: input.metricId,
-          parameters: input.parameters,
-          force: false,
+        inputSchema: z.object({ rosterIds, metricId: z.string(), parameters: z.record(z.string(), z.json()).default({}) }),
+        execute: (input) => call("get_roster_metric", () => executeAssistantEndpoint(env.CLASHKING_API_ORIGIN, body.userToken, DashboardQueryRosterMetricEndpoint, {
+          path: {}, query: { server_id: body.request.serverId }, body: {
+            rosterIds: authorizedRosterIds(input.rosterIds, attachedRosterIds),
+            metricId: input.metricId,
+            parameters: input.parameters,
+            force: false,
+          },
         }, request.signal)),
       }),
       publishRosterViewProgram: tool({
@@ -552,10 +492,17 @@ const rosterAssistantWorker = {
         inputSchema: z.object({ changes: z.array(z.object({ action: z.enum(["add", "remove", "move"]), playerTag: z.string(), fromRosterId: z.string().nullable(), toRosterId: z.string().nullable(), reason: z.string().max(80).nullable() })).min(1).max(MAX_CHANGES) }),
         execute: (input) => call("propose_roster_membership_changes", async () => {
           assertAuthorizedMembershipChanges(input.changes, attachedRosterIds);
-          const proposal = await apiRequest(env, body, `/v2/roster/membership-changes/validate${serverQuery}`, {
-            serverId: body.request.serverId,
-            rosterIds: body.request.rosterIds,
-            changes: input.changes,
+          const proposal = await executeAssistantEndpoint(env.CLASHKING_API_ORIGIN, body.userToken, DashboardRosterMembershipValidateEndpoint, {
+            path: {}, query: {}, body: {
+              serverId: body.request.serverId,
+              rosterIds: body.request.rosterIds,
+              changes: input.changes.map(({ fromRosterId, toRosterId, reason, ...change }) => ({
+                ...change,
+                ...(fromRosterId === null ? {} : { fromRosterId }),
+                ...(toRosterId === null ? {} : { toRosterId }),
+                ...(reason === null ? {} : { reason }),
+              })),
+            },
           }, request.signal);
           artifacts.push({ type: "membershipProposal", data: proposal });
           return { proposed: proposal.changes?.length ?? 0, requiresApproval: true };
@@ -594,7 +541,7 @@ const rosterAssistantWorker = {
     const scheduleUsageSettlement = (steps: NormalizedAIUsage[], usage = sumAIUsage(steps)): void => {
       if (usageSettlementScheduled || steps.length === 0 || usage.inputTokens + usage.outputTokens <= 0) return;
       usageSettlementScheduled = true;
-      ctx.waitUntil(settleAIUsage(env, "/v2/roster/ai/usage", {
+      ctx.waitUntil(settleAIUsage(env, {
         requestId: body.requestId,
         model: body.model,
         usage,
@@ -657,9 +604,11 @@ const rosterAssistantWorker = {
         await result.totalUsage;
         if (requestsLinkedAccountList(body.request.messages) && !artifacts.some((artifact) => artifact.type === "viewResult")) {
           if (!accountGroupsResult) {
-            accountGroupsResult = await call("get_roster_account_groups", () => apiRequest(env, body, `/v2/roster/account-groups/query${serverQuery}`, {
-              serverId: body.request.serverId,
-              rosterIds: body.request.rosterIds,
+            accountGroupsResult = await call("get_roster_account_groups", () => executeAssistantEndpoint(env.CLASHKING_API_ORIGIN, body.userToken, DashboardRosterAccountGroupsQueryEndpoint, {
+              path: {}, query: {}, body: {
+                serverId: body.request.serverId,
+                rosterIds: body.request.rosterIds,
+              },
             }, request.signal));
           }
           const fallbackSource = `async () => {

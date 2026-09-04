@@ -20,7 +20,7 @@ import { PanelsClient } from './clients/panels-client';
 import { BasesClient } from './clients/bases-client';
 import { ClanCategoriesClient } from './clients/clan-categories-client';
 import { BillingClient } from './clients/billing-client';
-import { ConnectedAppsClient } from './clients/connected-apps-client';
+import { readBrowserRuntimeConfig } from '@/lib/runtime-config';
 
 /**
  * Main API client with all endpoints organized by domain
@@ -42,7 +42,6 @@ export class ClashKingApiClient {
   public readonly bases: BasesClient;
   public readonly clanCategories: ClanCategoriesClient;
   public readonly billing: BillingClient;
-  public readonly connectedApps: ConnectedAppsClient;
 
   constructor(config: ApiConfig) {
     // Initialize all specialized clients with the same config
@@ -62,7 +61,6 @@ export class ClashKingApiClient {
     this.bases = new BasesClient(config);
     this.clanCategories = new ClanCategoriesClient(config);
     this.billing = new BillingClient(config);
-    this.connectedApps = new ConnectedAppsClient(config);
   }
 
   /**
@@ -85,7 +83,6 @@ export class ClashKingApiClient {
     this.bases.setAccessToken(token);
     this.clanCategories.setAccessToken(token);
     this.billing.setAccessToken(token);
-    this.connectedApps.setAccessToken(token);
   }
 
   /**
@@ -108,7 +105,6 @@ export class ClashKingApiClient {
     this.bases.clearTokens();
     this.clanCategories.clearTokens();
     this.billing.clearTokens();
-    this.connectedApps.clearTokens();
   }
 
   /**
@@ -145,14 +141,13 @@ export function getDevelopmentBaseUrl(browserHostname?: string): string {
 }
 
 export function getDefaultBaseUrl(): string {
-  if (process.env.NODE_ENV === 'development') return getDevelopmentBaseUrl();
-  return process.env.NEXT_PUBLIC_CLASHKING_API_ORIGIN || 'https://api.clashk.ing';
+  return readBrowserRuntimeConfig().apiOrigin;
 }
 
 /**
  * Default API client instance
  * Uses environment variables for configuration
  *
- * Browser requests go directly to the Go API.
+ * Browser requests go directly to the API Worker.
  */
 export const apiClient = createApiClient(getDefaultBaseUrl());

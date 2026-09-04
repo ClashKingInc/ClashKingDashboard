@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
+import Image from "@/components/app-image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DiscordUserDisplay } from "@/components/ui/discord-user-display";
@@ -10,6 +10,7 @@ import { ClanProfilePopover } from "@/components/ui/clan-profile-popover";
 import { Trash2, AlertCircle, Clock, RefreshCw, AtSign, ChevronUp, ChevronDown, ChevronsUpDown, Copy } from "lucide-react";
 import type { RosterMember, Clan } from "../_lib/types";
 import { townHallImageUrl } from "@/lib/theme";
+import { RosterTownhallStatus } from "@/components/roster-townhall-status";
 
 const STALE_THRESHOLD_SECONDS = 2 * 24 * 60 * 60; // 2 days
 
@@ -17,6 +18,8 @@ interface MembersTableProps {
   readonly members: RosterMember[];
   readonly columns: string[];
   readonly rosterClanTag?: string | null;
+  readonly minTownhall?: number | null;
+  readonly maxTownhall?: number | null;
   readonly familyClans: Clan[];
   readonly groupDuplicateMap?: Record<string, string[]>;
   readonly onRemoveMember: (tag: string) => void;
@@ -30,6 +33,8 @@ export function MembersTable({
   members,
   columns,
   rosterClanTag,
+  minTownhall,
+  maxTownhall,
   familyClans,
   groupDuplicateMap = {},
   onRemoveMember,
@@ -52,7 +57,13 @@ export function MembersTable({
 
   useEffect(() => {
     setCurrentTimeSeconds(Math.floor(Date.now() / 1000));
+    const timer = window.setInterval(() => setCurrentTimeSeconds(Math.floor(Date.now() / 1000)), 30_000);
+    return () => window.clearInterval(timer);
   }, []);
+
+  const townhallStatus = (member: RosterMember) => <RosterTownhallStatus townhall={member.townhall}
+    minTownhall={minTownhall} maxTownhall={maxTownhall} now={currentTimeSeconds * 1000}
+    refreshedAt={member.member_status === "api_error" ? null : member.refreshed_at} />;
 
   const handleSort = (col: string) => {
     if (sortColumn === col) {
@@ -286,6 +297,7 @@ export function MembersTable({
     <div className="space-y-2 md:hidden">
       {sortedMembers.map((member, index) => (
         <article key={member.tag} className="rounded-2xl bg-muted/35 p-4">
+          {townhallStatus(member)}
           <div className="flex items-start gap-3">
             <span className="pt-0.5 text-xs font-medium text-muted-foreground">{index + 1}</span>
             <div className="min-w-0 flex-1 space-y-3">
@@ -354,10 +366,11 @@ export function MembersTable({
               key={member.tag}
               className="border-b border-border/50 hover:bg-secondary/30 transition-colors"
             >
-              <td className="py-3 px-4 text-muted-foreground text-sm">{index + 1}</td>
-              {columns.map((col) => (
+              <td className="py-3 px-4 text-muted-foreground text-sm">{index + 1}{columns.length === 0 && townhallStatus(member)}</td>
+              {columns.map((col, columnIndex) => (
                 <td key={col} className="py-3 px-4">
                   {renderCell(member, col)}
+                  {columnIndex === 0 && <div>{townhallStatus(member)}</div>}
                 </td>
               ))}
               <td className="py-3 px-4">

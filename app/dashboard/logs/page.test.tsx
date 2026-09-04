@@ -11,12 +11,12 @@ const fixtures = vi.hoisted(() => ({
   logs: [] as Array<Record<string, unknown>>,
 }));
 
-vi.mock("next/navigation", () => ({
+vi.mock("@/lib/navigation", () => ({
   useParams: () => ({ guildId: "123" }),
   useSearchParams: () => new URLSearchParams("guildId=123"),
 }));
 
-vi.mock("next-intl", () => ({
+vi.mock("use-intl", () => ({
   useTranslations: () => (key: string) => key,
 }));
 
@@ -90,9 +90,19 @@ function jsonResponse(body: unknown): Response {
   });
 }
 
-function getPutBody(): Record<string, unknown> | undefined {
-  const call = fetchMock.mock.calls.find(([, init]) => init?.method === "PUT");
-  return call ? JSON.parse(String(call[1]?.body)) as Record<string, unknown> : undefined;
+function capturedRequest(method: string, suffix?: string): Request | undefined {
+  const call = fetchMock.mock.calls.find(([input, init]) => {
+    const request = input instanceof Request ? input : new Request(input, init);
+    return request.method === method && (!suffix || request.url.endsWith(suffix));
+  });
+  if (!call) return undefined;
+  const [input, init] = call;
+  return input instanceof Request ? input : new Request(input, init);
+}
+
+async function getPutBody(): Promise<Record<string, unknown> | undefined> {
+  const request = capturedRequest("PUT");
+  return request ? request.clone().json() as Promise<Record<string, unknown>> : undefined;
 }
 
 async function chooseThread(screen: ReturnType<typeof render>, name: string) {
@@ -115,13 +125,17 @@ describe("LogsPage Discord destinations and family summaries", () => {
     fixtures.clans = [{ tag: "#ABC", name: "Alpha" }];
     fixtures.logs = [];
     vi.stubGlobal("fetch", fetchMock);
-    fetchMock.mockImplementation((input: string | URL | Request, init?: RequestInit) => {
-      const url = String(input);
-      if (init?.method === "PUT") return Promise.resolve(jsonResponse({ message: "updated" }));
-      if (url.endsWith("/countdowns") && (init?.method === "POST" || init?.method === "DELETE")) {
-        return Promise.resolve(jsonResponse({ message: "updated", channel_id: init.method === "POST" ? "789" : undefined }));
+    fetchMock.mockImplementation(async (input: string | URL | Request, init?: RequestInit) => {
+      const request = input instanceof Request ? input : new Request(input, init);
+      const url = request.url;
+      if (request.method === "PUT") return jsonResponse({ message: "updated", server_id: 123 });
+      if (url.endsWith("/countdowns") && (request.method === "POST" || request.method === "DELETE")) {
+        const requestBody = await request.clone().json() as { countdown_type: string };
+        return jsonResponse(request.method === "POST"
+          ? { message: "updated", countdown_type: requestBody.countdown_type, channel_id: "789", channel_name: "countdowns" }
+          : { message: "updated", countdown_type: requestBody.countdown_type });
       }
-      if (url.endsWith("/channels")) return Promise.resolve(jsonResponse({ channels: fixtures.channels }));
+      if (url.endsWith("/channels")) return Promise.resolve(jsonResponse(fixtures.channels));
       if (url.endsWith("/panel")) return Promise.resolve(jsonResponse({
         embed_name: null,
         buttons: [],
@@ -134,19 +148,30 @@ describe("LogsPage Discord destinations and family summaries", () => {
         name: "Test Server",
         icon: null,
       }));
-      if (url.endsWith("/threads")) return Promise.resolve(jsonResponse({ threads: fixtures.threads }));
-      if (url.endsWith("/clans")) return Promise.resolve(jsonResponse(fixtures.clans));
+      if (url.endsWith("/threads")) return Promise.resolve(jsonResponse(fixtures.threads.map((thread) => ({
+        ...thread,
+        parent_channel_name: "Parent",
+        archived: false,
+      }))));
+      if (url.endsWith("/clans")) return Promise.resolve(jsonResponse(fixtures.clans.map((clan) => ({
+        ...clan,
+        added_at: "2026-08-20T20:00:00.000Z",
+        settings: {},
+      }))));
       if (url.endsWith("/logs")) return Promise.resolve(jsonResponse({ logs: fixtures.logs, count: fixtures.logs.length }));
       if (url.includes("/clan/%23ABC/countdowns")) return Promise.resolve(jsonResponse({
+        server_id: "123",
+        clan_tag: "#ABC",
         countdowns: [
-          { type: "war_score", name: "War score", enabled: false, channel_id: null },
-          { type: "war_timer", name: "War timer", enabled: false, channel_id: null },
+          { type: "war_score", name: "War score", enabled: false },
+          { type: "war_timer", name: "War timer", enabled: false },
         ],
       }));
       if (url.endsWith("/countdowns")) return Promise.resolve(jsonResponse({
+        server_id: "123",
         countdowns: [
-          { type: "clan_games_timer", name: "Clan Games", enabled: false, channel_id: null },
-          { type: "cwl_timer", name: "CWL", enabled: false, channel_id: null },
+          { type: "clan_games_timer", name: "Clan Games", enabled: false },
+          { type: "cwl_timer", name: "CWL", enabled: false },
         ],
       }));
       throw new Error(`Unexpected request: ${url}`);
@@ -160,11 +185,12 @@ describe("LogsPage Discord destinations and family summaries", () => {
     fireEvent.click(screen.getByRole("button", { name: "logCard.channelPlaceholder-456" }));
     fireEvent.click(screen.getByRole("button", { name: "logCard.saveDestination" }));
 
-    await waitFor(() => expect(getPutBody()).toEqual({
+    await waitFor(() => expect(capturedRequest("PUT")).toBeDefined());
+    await expect(getPutBody()).resolves.toEqual({
       channel_id: "456",
       thread_id: null,
       log_types: ["reddit_feed"],
-    }));
+    });
   });
 
   it("configures ban_alert in the selected clan scope", async () => {
@@ -173,12 +199,13 @@ describe("LogsPage Discord destinations and family summaries", () => {
     fireEvent.click(screen.getByRole("button", { name: "logCard.channelPlaceholder-456" }));
     fireEvent.click(screen.getByRole("button", { name: "logCard.saveDestination" }));
 
-    await waitFor(() => expect(getPutBody()).toEqual({
+    await waitFor(() => expect(capturedRequest("PUT")).toBeDefined());
+    await expect(getPutBody()).resolves.toEqual({
       clan_tag: "#ABC",
       channel_id: "456",
       thread_id: null,
       log_types: ["ban_alert"],
-    }));
+    });
   });
 
   it("resolves a migrated forum parent and stored child post", async () => {
@@ -235,7 +262,7 @@ describe("LogsPage Discord destinations and family summaries", () => {
 
     expect(screen.getByText("logCard.forumPostRequired")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "logCard.saveDestination" })).toBeDisabled();
-    expect(getPutBody()).toBeUndefined();
+    await expect(getPutBody()).resolves.toBeUndefined();
   });
 
   it("allows an optional child thread for a text channel", async () => {
@@ -246,10 +273,11 @@ describe("LogsPage Discord destinations and family summaries", () => {
     await chooseThread(screen, "text thread");
     fireEvent.click(screen.getByRole("button", { name: "logCard.saveDestination" }));
 
-    await waitFor(() => expect(getPutBody()).toMatchObject({
+    await waitFor(() => expect(capturedRequest("PUT")).toBeDefined());
+    await expect(getPutBody()).resolves.toMatchObject({
       channel_id: "456",
       thread_id: "457",
-    }));
+    });
   });
 
   it("clears the selected child when the parent channel changes", async () => {
@@ -265,10 +293,11 @@ describe("LogsPage Discord destinations and family summaries", () => {
     fireEvent.click(screen.getByRole("button", { name: "logCard.channelPlaceholder-456" }));
     fireEvent.click(screen.getByRole("button", { name: "logCard.saveDestination" }));
 
-    await waitFor(() => expect(getPutBody()).toMatchObject({
+    await waitFor(() => expect(capturedRequest("PUT")).toBeDefined());
+    await expect(getPutBody()).resolves.toMatchObject({
       channel_id: "456",
       thread_id: null,
-    }));
+    });
   });
 
   it("lists broken destinations with their log and clan, then opens the affected configuration", async () => {
@@ -304,12 +333,11 @@ describe("LogsPage Discord destinations and family summaries", () => {
     fireEvent.click((await screen.findAllByRole("switch", { name: "toggle" }))[0]);
 
     await waitFor(() => {
-      const call = fetchMock.mock.calls.find(([input, init]) => String(input).endsWith("/countdowns") && init?.method === "POST");
-      expect(call).toBeDefined();
-      expect(JSON.parse(String(call?.[1]?.body))).toEqual({
+      expect(capturedRequest("POST", "/countdowns")).toBeDefined();
+    });
+    await expect(capturedRequest("POST", "/countdowns")!.clone().json()).resolves.toEqual({
         countdown_type: "war_score",
         clan_tag: "#ABC",
-      });
     });
   });
 
@@ -320,10 +348,9 @@ describe("LogsPage Discord destinations and family summaries", () => {
     fireEvent.click((await screen.findAllByRole("switch", { name: "toggle" }))[0]);
 
     await waitFor(() => {
-      const call = fetchMock.mock.calls.find(([input, init]) => String(input).endsWith("/countdowns") && init?.method === "POST");
-      expect(call).toBeDefined();
-      expect(JSON.parse(String(call?.[1]?.body))).toEqual({ countdown_type: "clan_games_timer" });
+      expect(capturedRequest("POST", "/countdowns")).toBeDefined();
     });
+    await expect(capturedRequest("POST", "/countdowns")!.clone().json()).resolves.toEqual({ countdown_type: "clan_games_timer" });
   });
 
   it("configures the channel-only join panel from the server tabs", async () => {
@@ -334,11 +361,12 @@ describe("LogsPage Discord destinations and family summaries", () => {
     fireEvent.click(await screen.findByRole("switch", { name: "enabled" }));
     fireEvent.click(await screen.findByRole("button", { name: "welcomeChannelPlaceholder-456" }));
 
-    await waitFor(() => expect(getPutBody()).toEqual({
+    await waitFor(() => expect(capturedRequest("PUT")).toBeDefined());
+    await expect(getPutBody()).resolves.toEqual({
       embed_name: null,
       buttons: [],
       button_color: "Grey",
       welcome_channel: "456",
-    }));
+    });
   });
 });

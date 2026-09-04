@@ -1,10 +1,11 @@
 "use client";
 
 import { useGuildId } from "@/lib/dashboard-route";
-import { apiFetch } from "@/lib/api/fetch";
-import Image from "next/image";
+import { dashboardEndpoints } from "@clashking/api-contracts";
+import { executeSharedEndpoint } from "@/lib/api/shared-client";
+import Image from "@/components/app-image";
 import { useState, useEffect, useEffectEvent, useRef } from "react";
-import { useTranslations, useLocale } from "next-intl";
+import { useTranslations, useLocale } from "use-intl";
 import { useQueryClient } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
@@ -135,14 +136,14 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
 
   const [discordRoles, setDiscordRoles] = useState<DiscordRole[]>([]);
   const [roleSettings, setRoleSettings] = useState<RoleSettings>({
-    server_id: Number(guildId),
+    server_id: guildId,
     auto_eval_status: false,
     auto_eval_nickname: false,
     autoeval_triggers: [],
     autoeval_log: undefined,
   });
   const [originalRoleSettings, setOriginalRoleSettings] = useState<RoleSettings>({
-    server_id: Number(guildId),
+    server_id: guildId,
     auto_eval_status: false,
     auto_eval_nickname: false,
     autoeval_triggers: [],
@@ -180,29 +181,20 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
 
   const loadMaxLevels = async () => {
     try {
-      const thEncoded = encodeURIComponent('Town Hall');
-      const thUrl = `/v2/static/buildings/${thEncoded}/max-level`;
-      const bhEncoded = encodeURIComponent('Builder Hall');
-      const bhUrl = `/v2/static/buildings/${bhEncoded}/max-level`;
-      const [thResponse, bhResponse] = await Promise.all([
-        apiFetch(thUrl, { cache: "force-cache" }),
-        apiFetch(bhUrl, { cache: "force-cache" }),
+      const [thData, bhData] = await Promise.all([
+        executeSharedEndpoint(dashboardEndpoints.dashboardStaticMaxLevel, {
+          path: { category: "buildings", itemIdOrName: "Town Hall" },
+          query: {},
+          body: {},
+        }),
+        executeSharedEndpoint(dashboardEndpoints.dashboardStaticMaxLevel, {
+          path: { category: "buildings", itemIdOrName: "Builder Hall" },
+          query: {},
+          body: {},
+        }),
       ]);
-      if (thResponse.ok) {
-        const thData = await thResponse.json() as { max_level: number };
-        setTownHallMaxLevel(thData.max_level);
-      } else {
-        const errorText = await thResponse.text();
-        console.error('Failed to load Town Hall max level:', thResponse.status, thResponse.statusText, errorText);
-      }
-
-      if (bhResponse.ok) {
-        const bhData = await bhResponse.json() as { max_level: number };
-        setBuilderHallMaxLevel(bhData.max_level);
-      } else {
-        const errorText = await bhResponse.text();
-        console.error('Failed to load Builder Hall max level:', bhResponse.status, bhResponse.statusText, errorText);
-      }
+      setTownHallMaxLevel(thData.max_level);
+      setBuilderHallMaxLevel(bhData.max_level);
     } catch (err) {
       console.error("Failed to load max levels:", err);
       // Keep fallback values
@@ -211,7 +203,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
 
   async function loadLeagues() {
     try {
-      // Map next-intl locale codes to CoC API locale codes
+      // Map use-intl locale codes to CoC API locale codes
       const localeMap: Record<string, string> = {
         'en': 'EN',
         'fr': 'FR',
@@ -237,13 +229,14 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
 
       const apiLocale = localeMap[locale] || 'EN';
 
-      // Load league tiers from static data API via Next.js proxy with locale
-      const response = await apiFetch(`/v2/static/league_tiers/names?locale=${apiLocale}`, { cache: "force-cache" });
-      if (response.ok) {
-        const leagueNames: string[] = await response.json();
-        // Transform to {value, label} format for the select
-        setAvailableLeagues(leagueNames.map(name => ({ value: name, label: name })));
-      }
+      // Load localized league tiers directly from the API.
+      const leagueNames = await executeSharedEndpoint(dashboardEndpoints.dashboardStaticCategoryNames, {
+        path: { category: "league_tiers" },
+        query: { locale: apiLocale },
+        body: {},
+      });
+      // Transform to {value, label} format for the select
+      setAvailableLeagues(leagueNames.map(name => ({ value: name, label: name })));
     } catch (err) {
       console.error("Failed to load leagues from static data:", err);
       // Keep empty array if loading fails, will show empty dropdown
@@ -294,7 +287,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
       }
 
       if (discordRolesData) {
-        setDiscordRoles(discordRolesData.roles);
+        setDiscordRoles([...discordRolesData.roles]);
       }
 
       if (clansData) {

@@ -4,12 +4,34 @@ import { ServerClient } from "./server-client";
 describe("ServerClient dashboard access", () => {
   afterEach(() => vi.unstubAllGlobals());
 
+  it.each([false, true])("preserves explicit linking-token policy %s through the shared request and response", async (enabled) => {
+    const settings = { server_id: "9007199254740993123", server: "Fixture", name: "Fixture", countdowns: {}, server_roles: [],
+      require_api_token_when_linking: enabled };
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce(Response.json({ message: "Updated", server_id: settings.server_id, updated_fields: 1 }))
+      .mockResolvedValueOnce(Response.json(settings));
+    vi.stubGlobal("fetch", fetchMock);
+    const client = new ServerClient({ baseUrl: "http://dashboard.test", accessToken: "token" });
+    await client.updateSettings(settings.server_id, { require_api_token_when_linking: enabled });
+    const request = fetchMock.mock.calls[0]?.[0] as Request;
+    expect(request.method).toBe("PATCH");
+    expect(request.url).toBe(`http://dashboard.test/v2/server/${settings.server_id}/settings`);
+    expect(await request.json()).toEqual({ require_api_token_when_linking: enabled });
+    expect((await client.getSettings(settings.server_id)).data?.require_api_token_when_linking).toBe(enabled);
+  });
+
   it("uses the capabilities endpoint", async () => {
-    const fetchMock = vi.fn().mockResolvedValue({ ok: true, status: 200, json: vi.fn().mockResolvedValue({ full_access: true, sections: {} }) });
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({
+      server_id: "123",
+      full_access: true,
+      sections: {},
+    }), { status: 200 }));
     vi.stubGlobal("fetch", fetchMock);
     const client = new ServerClient({ baseUrl: "http://dashboard.test", accessToken: "token" });
     await client.getDashboardCapabilities("123");
-    expect(fetchMock).toHaveBeenCalledWith("http://dashboard.test/v2/server/123/dashboard-capabilities", expect.objectContaining({ method: "GET" }));
+    const request = fetchMock.mock.calls[0]?.[0] as Request;
+    expect(request.url).toBe("http://dashboard.test/v2/server/123/dashboard-capabilities");
+    expect(request.method).toBe("GET");
   });
 
   it("re-enables tracking through the server activity endpoint", async () => {
@@ -19,33 +41,54 @@ describe("ServerClient dashboard access", () => {
 
     await client.reactivateServer("123");
 
-    expect(fetchMock).toHaveBeenCalledWith(
-      "http://dashboard.test/v2/server/123/reactivate",
-      expect.objectContaining({ method: "POST" }),
-    );
+    const request = fetchMock.mock.calls[0]?.[0] as Request;
+    expect(request.url).toBe("http://dashboard.test/v2/server/123/reactivate");
+    expect(request.method).toBe("POST");
   });
 
   it("sends an atomic grant replacement", async () => {
-    const fetchMock = vi.fn().mockResolvedValue({ ok: true, status: 200, json: vi.fn().mockResolvedValue({ grants: [] }) });
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({
+      server_id: "123",
+      roles: [],
+      grants: [],
+      sections: [],
+    }), { status: 200 }));
     vi.stubGlobal("fetch", fetchMock);
     const client = new ServerClient({ baseUrl: "http://dashboard.test", accessToken: "token" });
     await client.updateDashboardAccess("123", [{ role_id: "456", section: "links", access_level: "manage" }]);
-    expect(fetchMock).toHaveBeenCalledWith("http://dashboard.test/v2/server/123/dashboard-access", expect.objectContaining({ method: "PUT", body: JSON.stringify({ grants: [{ role_id: "456", section: "links", access_level: "manage" }] }) }));
+    const request = fetchMock.mock.calls[0]?.[0] as Request;
+    expect(request.url).toBe("http://dashboard.test/v2/server/123/dashboard-access");
+    expect(request.method).toBe("PUT");
+    expect(await request.json()).toEqual({
+      grants: [{ role_id: "456", section: "links", access_level: "manage" }],
+    });
   });
 
   it("updates per-guild bot profile fields", async () => {
-    const fetchMock = vi.fn().mockResolvedValue({ ok: true, status: 200, json: vi.fn().mockResolvedValue({ bio: "Family bot" }) });
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({
+      name: "ClashKing Beta",
+      avatar_url: null,
+      banner_url: null,
+      bio: "Family bot",
+      name_inherited: false,
+      avatar_inherited: true,
+      banner_inherited: true,
+      bio_inherited: false,
+    }), { status: 200 }));
     vi.stubGlobal("fetch", fetchMock);
     const client = new ServerClient({ baseUrl: "http://dashboard.test", accessToken: "token" });
     await client.updateBotGuildProfile("123", { name: "ClashKing Beta", bio: "Family bot" });
-    expect(fetchMock).toHaveBeenCalledWith("http://dashboard.test/v2/server/123/bot-profile", expect.objectContaining({ method: "PATCH", body: JSON.stringify({ name: "ClashKing Beta", bio: "Family bot" }) }));
+    const request = fetchMock.mock.calls[0]?.[0] as Request;
+    expect(request.url).toBe("http://dashboard.test/v2/server/123/bot-profile");
+    expect(request.method).toBe("PATCH");
+    expect(await request.json()).toEqual({ name: "ClashKing Beta", bio: "Family bot" });
   });
 
   it("keeps clan settings category as a string/null request and returns the shared category model", async () => {
-    const category = { id: "category-1", serverId: "123", name: "CWL", clanCount: 1 };
+    const category = { id: "category-1", serverId: "123", name: "CWL", position: 0, clanCount: 1 };
     const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({
       message: "Clan settings updated successfully",
-      server_id: 123,
+      server_id: "123",
       clan_tag: "#ABC",
       updated_fields: 1,
       category,
@@ -55,13 +98,10 @@ describe("ServerClient dashboard access", () => {
 
     const response = await client.updateClanSettings("123", "#ABC", { category: "CWL" });
 
-    expect(fetchMock).toHaveBeenCalledWith(
-      "http://dashboard.test/v2/server/123/clan/%23ABC/settings",
-      expect.objectContaining({
-        method: "PATCH",
-        body: JSON.stringify({ category: "CWL" }),
-      }),
-    );
+    const request = fetchMock.mock.calls[0]?.[0] as Request;
+    expect(request.url).toBe("http://dashboard.test/v2/server/123/clan/%23ABC/settings");
+    expect(request.method).toBe("PATCH");
+    expect(await request.json()).toEqual({ category: "CWL" });
     expect(response.data?.category).toEqual(category);
   });
 
@@ -75,7 +115,7 @@ describe("ServerClient dashboard access", () => {
     };
     const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({
       message: "Server settings updated successfully",
-      server_id: 123,
+      server_id: "123",
       updated_fields: 5,
     }), { status: 200 }));
     vi.stubGlobal("fetch", fetchMock);
@@ -83,13 +123,10 @@ describe("ServerClient dashboard access", () => {
 
     await client.updateSettings("123", { link_parse: linkParse });
 
-    expect(fetchMock).toHaveBeenCalledWith(
-      "http://dashboard.test/v2/server/123/settings",
-      expect.objectContaining({
-        method: "PATCH",
-        body: JSON.stringify({ link_parse: linkParse }),
-      }),
-    );
+    const request = fetchMock.mock.calls[0]?.[0] as Request;
+    expect(request.url).toBe("http://dashboard.test/v2/server/123/settings");
+    expect(request.method).toBe("PATCH");
+    expect(await request.json()).toEqual({ link_parse: linkParse });
     expect(linkParse).not.toHaveProperty("channels");
   });
 
@@ -98,7 +135,6 @@ describe("ServerClient dashboard access", () => {
       id: "giveaway-1",
       serverId: "123",
       prize: "Gold pass",
-      channelId: "456",
       status: "ongoing",
       start: "2026-07-24T12:00:00Z",
       end: "2026-07-25T12:00:00Z",
@@ -107,7 +143,6 @@ describe("ServerClient dashboard access", () => {
       textAboveEmbed: "",
       textInEmbed: "Enter",
       textOnEnd: "Ended",
-      imageUrl: null,
       profilePictureRequired: false,
       cocAccountRequired: true,
       rolesMode: "none",
@@ -115,10 +150,7 @@ describe("ServerClient dashboard access", () => {
       boosters: [],
       entries: ["user-1", "user-1", "user-2", "user-3"],
       updated: false,
-      messageId: "message-1",
       winnersList: [],
-      eventPending: null,
-      eventPendingAt: null,
       createdAt: "2026-07-24T11:00:00Z",
       updatedAt: "2026-07-24T11:00:00Z",
     };
@@ -154,9 +186,8 @@ describe("ServerClient dashboard access", () => {
     expect(created.data).toEqual(mutation);
     expect(entrantResponse.data).toEqual(entries);
     expect(rerolled.data).toEqual(reroll);
-    expect(fetchMock.mock.calls[3][1]).toEqual(expect.objectContaining({
-      method: "POST",
-      body: JSON.stringify({ user_ids_to_replace: ["user-1"] }),
-    }));
+    const rerollRequest = fetchMock.mock.calls[3]?.[0] as Request;
+    expect(rerollRequest.method).toBe("POST");
+    expect(await rerollRequest.json()).toEqual({ user_ids_to_replace: ["user-1"] });
   });
 });

@@ -1,12 +1,11 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { useLocale } from "next-intl";
-import { useRouter } from "next/navigation";
+import { useLocale } from "use-intl";
+import { useRouter } from "@/lib/navigation";
 
 import { useAuthSession } from "@/components/auth-session-provider";
 import { initiateDiscordLogin } from "@/lib/auth/discord-login";
-import { postAuthFallbackPath } from "@/lib/connected-apps";
 
 export default function LoginRedirect() {
   const locale = useLocale();
@@ -23,7 +22,7 @@ export default function LoginRedirect() {
       router.replace(
         returnTo?.startsWith("/")
           ? returnTo
-          : postAuthFallbackPath(globalThis.location.hostname),
+          : "/servers",
       );
       return;
     }

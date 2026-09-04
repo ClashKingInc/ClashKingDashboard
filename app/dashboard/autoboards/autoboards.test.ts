@@ -36,6 +36,8 @@ describe("autoboard contract helpers", () => {
     expect(parseAutoboardCapabilities({ boardTypes: [] })).toEqual({ boardTypes: [] });
     expect(parseAutoboardCapabilities({ boardTypes: [capability] }).boardTypes[0]).toEqual(capability);
     expect(() => parseAutoboardCapabilities({ items: [capability] })).toThrow();
+    expect(() => parseAutoboardCapabilities({ boardTypes: [{ ...capability, allowedModes: ["legacy"] }] })).toThrow();
+    expect(() => parseAutoboardCapabilities({ boardTypes: [{ ...capability, refreshInterval: { ...capability.refreshInterval, minMinutes: "15" } }] })).toThrow();
   });
 
   it("builds a family refresh request with no targets and no send schedule", () => {

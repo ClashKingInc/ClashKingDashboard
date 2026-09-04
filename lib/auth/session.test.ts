@@ -125,6 +125,21 @@ describe("browser auth session", () => {
     expect(getAccessToken()).toBe("existing-access");
   });
 
+  it.each([
+    ["missing", {}],
+    ["numeric", { access_token: 123 }],
+    ["object", { access_token: { value: "invalid" } }],
+    ["null", { access_token: null }],
+    ["empty", { access_token: "" }],
+  ])("rejects a %s refresh token without replacing the existing session", async (_label, payload) => {
+    setAccessToken("existing-access", false);
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(Response.json(payload)));
+
+    await expect(restoreAccessToken("https://dev-api.clashk.ing")).resolves.toBe("unavailable");
+
+    expect(getAccessToken()).toBe("existing-access");
+  });
+
   it("clears the session only when the refresh credential is rejected", async () => {
     setAccessToken("expired-access", false);
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(null, { status: 401 })));

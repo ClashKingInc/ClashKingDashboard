@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
-import { useLocale, useTranslations } from "next-intl";
-import { usePathname, useRouter } from "next/navigation";
+import Image from "@/components/app-image";
+import { useLocale, useTranslations } from "use-intl";
+import { usePathname, useRouter } from "@/lib/navigation";
 import { useRef, useState, useTransition } from "react";
 import { Globe } from "lucide-react";
 import { useAppLocale } from "@/components/locale-provider";

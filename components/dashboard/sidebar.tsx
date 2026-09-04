@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
-import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import Link from "@/components/app-link";
+import Image from "@/components/app-image";
+import { usePathname, useRouter } from "@/lib/navigation";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { ArrowUpRight, Check, ChevronDown, TriangleAlert } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -14,8 +14,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "use-intl";
 import type { GuildInfo } from "@/lib/api/types/server";
 import { useDashboardAccess } from "./dashboard-access-provider";
 import { dashboardHref } from "@/lib/dashboard-route";

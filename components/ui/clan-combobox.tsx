@@ -1,9 +1,9 @@
 "use client"
 
 import * as React from "react"
-import Image from "next/image"
+import Image from "@/components/app-image"
 import { Check, ChevronsUpDown } from "lucide-react"
-import { useTranslations } from "next-intl"
+import { useTranslations } from "use-intl"
 
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"

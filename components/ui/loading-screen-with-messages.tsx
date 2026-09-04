@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "next-themes";
 import { clashKingAssets } from "@/lib/theme";
-import Image from "next/image";
+import Image from "@/components/app-image";
 
 interface LoadingScreenWithMessagesProps {
   messages: Record<string, string>;

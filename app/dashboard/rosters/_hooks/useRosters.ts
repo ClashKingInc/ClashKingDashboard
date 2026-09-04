@@ -55,8 +55,8 @@ export function useRosters(serverId: string): UseRostersResult {
       setClans(clansData.map((clan) => ({
         tag: clan.tag,
         name: clan.name,
-        badge: clan.badge ?? undefined,
-        badge_url: clan.badge_url ?? clan.clan_badge_url ?? null,
+        badge: clan.badge_url,
+        badge_url: clan.badge_url ?? null,
       })));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load data');

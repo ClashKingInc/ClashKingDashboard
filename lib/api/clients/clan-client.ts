@@ -1,74 +1,51 @@
-/**
- * Clan API client
- */
+/** Clan API client backed by the shared endpoint contracts. */
 
-import { BaseApiClient } from '../core/base-client';
-import type { ApiResponse, PaginatedResponse } from '../types/common';
-import type {
-  ClanRanking,
-  ClanBoardTotals,
-  ClanDonation,
-  ClanComposition,
-  ClanSearchResult,
-} from '../types/clan';
+import {
+  BotClanRankingsEndpoint,
+  DashboardClanSearchEndpoint,
+  ProxyClanEndpoint,
+} from "@clashking/api-contracts";
+
+import { BaseApiClient } from "../core/base-client";
+import type { ApiResponse, PaginatedResponse } from "../types/common";
+import type { ClanRanking, ClanSearchResult } from "../types/clan";
 
 export class ClanClient extends BaseApiClient {
-  async getClanInfo(clanTag: string): Promise<ApiResponse<Record<string, unknown>>> {
-    return this.request(`/proxy/v1/clans/${encodeURIComponent(clanTag)}`, { method: 'GET' });
+  async getClanInfo(clanTag: string) {
+    return this.executeEndpoint(ProxyClanEndpoint, {
+      path: { clanTag },
+      query: {},
+      body: {},
+    });
   }
 
-  /**
-   * GET /v2/clan/{clan_tag}/ranking
-   */
+  /** Uses the canonical plural `/v2/clan/:clanTag/rankings` route. */
   async getRanking(clanTag: string): Promise<ApiResponse<ClanRanking>> {
-    return this.request(`/v2/clan/${clanTag}/ranking`, { method: 'GET' });
-  }
-
-  /**
-   * GET /v2/clan/{clan_tag}/board/totals
-   */
-  async getBoardTotals(clanTag: string, playerTags: string[]): Promise<ApiResponse<ClanBoardTotals>> {
-    return this.request(`/v2/clan/${clanTag}/board/totals`, {
-      method: 'GET',
-      body: JSON.stringify({ player_tags: playerTags }),
+    return this.executeEndpoint(BotClanRankingsEndpoint, {
+      path: { tag: clanTag },
+      query: {},
+      body: {},
     });
   }
 
-  /**
-   * GET /v2/clan/{clan_tag}/donations/{season}
-   */
-  async getDonations(clanTag: string, season: string): Promise<ApiResponse<PaginatedResponse<ClanDonation>>> {
-    return this.request(`/v2/clan/${clanTag}/donations/${season}`, { method: 'GET' });
-  }
-
-  /**
-   * GET /v2/clan/compo
-   */
-  async getComposition(clanTags: string[]): Promise<ApiResponse<ClanComposition>> {
-    const query = this.buildQueryString({ clan_tags: clanTags });
-    return this.request(`/v2/clan/compo${query}`, { method: 'GET' });
-  }
-
-  /**
-   * GET /v2/clan/donations/{season}
-   */
-  async getMultipleDonations(
-    season: string,
-    clanTags: string[],
-    onlyCurrentMembers?: boolean
-  ): Promise<ApiResponse<PaginatedResponse<ClanDonation>>> {
-    const query = this.buildQueryString({
-      clan_tags: clanTags,
-      only_current_members: onlyCurrentMembers,
+  /** Uses canonical `/v2/clan/search`; legacy user/guild hints no longer affect search. */
+  async search(
+    query: string,
+    _userId?: string,
+    _guildId?: string,
+  ): Promise<ApiResponse<PaginatedResponse<ClanSearchResult>>> {
+    const response = await this.executeEndpoint(DashboardClanSearchEndpoint, {
+      path: {},
+      query: { query },
+      body: {},
     });
-    return this.request(`/v2/clan/donations/${season}${query}`, { method: 'GET' });
-  }
-
-  /**
-   * GET /v2/search/clan
-   */
-  async search(query: string, userId?: number, guildId?: number): Promise<ApiResponse<PaginatedResponse<ClanSearchResult>>> {
-    const params = this.buildQueryString({ query, user_id: userId, guild_id: guildId });
-    return this.request(`/v2/search/clan${params}`, { method: 'GET' });
+    if (response.data === undefined) {
+      const { data: _data, ...rest } = response;
+      return rest;
+    }
+    return {
+      ...response,
+      data: { items: [...response.data.items], limit: response.data.pagination.limit },
+    };
   }
 }

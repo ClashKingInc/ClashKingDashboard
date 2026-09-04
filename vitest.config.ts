@@ -9,8 +9,8 @@ export default defineConfig({
     globals: true,
     setupFiles: ["./vitest.setup.ts"],
     env: {
-      NEXT_PUBLIC_CLASHKING_API_ORIGIN: "http://localhost:8000",
-      NEXT_PUBLIC_DISCORD_CLIENT_ID: "test_discord_client_id",
+      VITE_CLASHKING_API_ORIGIN: "http://localhost:8000",
+      VITE_DISCORD_CLIENT_ID: "test_discord_client_id",
     },
     coverage: {
       provider: "v8",
