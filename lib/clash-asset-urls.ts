@@ -1,10 +1,13 @@
 const ASSET_BASE_URL = "https://assets.clashk.ing";
 const CLAN_BADGE_BASE_URL = "https://badges.clashk.ing";
 
-export function clanBadgeUrl(tag: string): string {
+export type ClanBadgeSize = "small" | "medium" | "large" | 64 | 128 | 256 | 512;
+export type ClanBadgeFormat = "png" | "avif";
+
+export function clanBadgeUrl(tag: string, size: ClanBadgeSize = 128, format: ClanBadgeFormat = "png"): string {
   const trimmed = tag.trim();
   const normalized = (trimmed.startsWith("#") ? trimmed.slice(1) : trimmed).toUpperCase();
-  return normalized ? `${CLAN_BADGE_BASE_URL}/${encodeURIComponent(normalized)}` : "";
+  return normalized ? `${CLAN_BADGE_BASE_URL}/${encodeURIComponent(normalized)}.${format}?size=${size}` : "";
 }
 
 export function townHallImageUrl(level: number): string {
@@ -21,4 +24,17 @@ export function playerLeagueImageUrl(name: string): string {
   const tierNumber = tier ? (romanTier[tier[1]] ?? Number(tier[1])) : null;
   const filename = tierNumber ? `${slug}_${tierNumber}` : slug;
   return `${ASSET_BASE_URL}/leagues/league-tier/${filename || "unranked"}.png`;
+}
+
+/** Normalize only our badge service; external artwork URLs remain untouched. */
+export function clanBadgeSources(src: string): { png: string; avif: string } | null {
+  let url: URL;
+  try { url = new URL(src); } catch { return null; }
+  if (url.origin !== CLAN_BADGE_BASE_URL) return null;
+  let tag: string;
+  try { tag = decodeURIComponent(url.pathname.slice(1)).replace(/\.(png|avif)$/i, ""); } catch { return null; }
+  const requested = url.searchParams.get("size") ?? "128";
+  const sizes = ["small", "medium", "large", "64", "128", "256", "512"];
+  const size = (sizes.includes(requested) ? requested : "128") as ClanBadgeSize;
+  return { png: clanBadgeUrl(tag, size), avif: clanBadgeUrl(tag, size, "avif") };
 }

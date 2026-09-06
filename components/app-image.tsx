@@ -1,3 +1,4 @@
+import { clanBadgeSources } from "@/lib/clash-asset-urls";
 import { forwardRef, type ComponentPropsWithoutRef, type CSSProperties } from "react";
 
 type NativeImageProps = Omit<ComponentPropsWithoutRef<"img">, "height" | "src" | "width">;
@@ -22,17 +23,19 @@ const AppImage = forwardRef<HTMLImageElement, AppImageProps>(function AppImage(
   { fill = false, height, priority = false, src, style, unoptimized: _unoptimized, width, ...props },
   ref,
 ) {
-  return (
+  const badge = clanBadgeSources(src);
+  const image = (
     <img
       {...props}
       ref={ref}
-      src={src}
+      src={badge?.png ?? src}
       width={fill ? undefined : width}
       height={fill ? undefined : height}
       style={fill ? { ...fillStyle, ...style } : style}
       fetchPriority={priority ? "high" : props.fetchPriority}
     />
   );
+  return badge ? <picture style={{ display: "contents" }}><source type="image/avif" srcSet={badge.avif} />{image}</picture> : image;
 });
 
 export default AppImage;
