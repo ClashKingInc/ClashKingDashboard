@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { apiClient } from "@/lib/api/client";
 import type { GuildInfo } from "@/lib/api/types/server";
+import { requiresServerReactivation } from "@/lib/server-activity";
 
 interface InactiveServerDialogProps {
   readonly guild: GuildInfo | null;
@@ -52,7 +53,7 @@ export function InactiveServerDialog({ guild, locale, onClose, onReactivated }: 
 
   return (
     <AlertDialog
-      open={guild !== null}
+      open={guild !== null && requiresServerReactivation(guild)}
       onOpenChange={(open) => {
         if (!open && !reactivating) onClose();
       }}
@@ -62,13 +63,13 @@ export function InactiveServerDialog({ guild, locale, onClose, onReactivated }: 
           <AlertDialogTitle>{t("title")}</AlertDialogTitle>
           <AlertDialogDescription>
             {t("description")}
-            <span className="mt-3 block text-foreground">
-              {t("lastUsed", {
-                date: guild?.last_command_at
-                  ? new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(new Date(guild.last_command_at))
-                  : t("unknown"),
-              })}
-            </span>
+            {guild?.last_command_at && (
+              <span className="mt-3 block text-foreground">
+                {t("lastUsed", {
+                  date: new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(new Date(guild.last_command_at)),
+                })}
+              </span>
+            )}
             {error && <span className="mt-3 block text-destructive">{error}</span>}
           </AlertDialogDescription>
         </AlertDialogHeader>

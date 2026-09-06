@@ -37,8 +37,10 @@ export async function handleDashboardRequest(
   request: Request,
   env: { readonly ASSETS: Pick<Fetcher, "fetch"> },
 ): Promise<Response> {
-  const redirectUrl = resolveDomainRedirect(new URL(request.url));
+  const requestUrl = new URL(request.url);
+  const redirectUrl = resolveDomainRedirect(requestUrl);
   if (redirectUrl) return Response.redirect(redirectUrl.toString(), 308);
+  if (requestUrl.pathname === "/api/tenor-media") return resolveTenorMedia(request);
   return env.ASSETS.fetch(request);
 }
 
@@ -47,3 +49,4 @@ export default {
     return handleDashboardRequest(request, env);
   },
 } satisfies ExportedHandler<Env>;
+import { resolveTenorMedia } from "../../lib/tenor-media";

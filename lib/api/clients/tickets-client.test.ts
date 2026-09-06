@@ -6,16 +6,13 @@ describe("TicketsClient operational panel and embed routes", () => {
   afterEach(() => vi.unstubAllGlobals());
 
   it("keeps panel list and update calls on the canonical ticket routes", async () => {
-    const panelId = "018f1d6b-8c50-7e8d-9c31-aef6f6f1a100";
-    const buttonId = "018f1d6b-8c50-7e8d-9c31-aef6f6f1a101";
-    const customId = `ck:ticket:open:${panelId}:${buttonId}`;
+    const customId = "Recruitment / EU_1";
     const fetchMock = vi.fn()
       .mockResolvedValueOnce(new Response(JSON.stringify({
         items: [{
-          id: panelId,
           name: "Recruitment / EU",
           server_id: "123",
-          components: [{ id: buttonId, custom_id: customId, label: "Apply", style: 1, type: 2 }],
+          components: [{ custom_id: customId, label: "Apply", style: 1, type: 2 }],
           button_settings: {},
           approve_messages: [],
         }],
@@ -31,8 +28,8 @@ describe("TicketsClient operational panel and embed routes", () => {
     await client.updatePanel("123", "Recruitment / EU", { open_category: "456" });
 
     expect(panels.data?.items[0]).toMatchObject({
-      id: panelId,
-      components: [{ id: buttonId, custom_id: customId }],
+      name: "Recruitment / EU",
+      components: [{ custom_id: customId }],
     });
 
     const listRequest = fetchMock.mock.calls[0]?.[0] as Request;
@@ -66,10 +63,8 @@ describe("TicketsClient operational panel and embed routes", () => {
     });
   });
 
-  it("encodes canonical ticket component IDs as one path segment", async () => {
-    const panelId = "018f1d6b-8c50-7e8d-9c31-aef6f6f1a100";
-    const buttonId = "018f1d6b-8c50-7e8d-9c31-aef6f6f1a101";
-    const customId = `ck:ticket:open:${panelId}:${buttonId}`;
+  it("encodes the existing ticket custom ID as one path segment", async () => {
+    const customId = "Recruitment / EU_1";
     const fetchMock = vi.fn().mockResolvedValue(
       new Response(JSON.stringify({ message: "updated" }), { status: 200 }),
     );
@@ -105,7 +100,7 @@ describe("TicketsClient operational panel and embed routes", () => {
     const messages = Array.from({ length: count }, (_, index) => ({ name: `Template ${index + 1}`, message: `  Content ${index}\n ` }));
     const fetchMock = vi.fn()
       .mockResolvedValueOnce(new Response(JSON.stringify({ items: [{
-        id: "018f1d6b-8c50-7e8d-9c31-aef6f6f1a100", name: "Recruitment / EU", server_id: "123",
+        name: "Recruitment / EU", server_id: "123",
         components: [], button_settings: {}, approve_messages: messages,
       }], total: 1, available_embeds: [], townhall_requirement_fields: [] }), { status: 200 }))
       .mockResolvedValueOnce(new Response(JSON.stringify({ message: "updated" }), { status: 200 }));
@@ -119,16 +114,15 @@ describe("TicketsClient operational panel and embed routes", () => {
     expect(await request.json()).toEqual({ messages });
   });
 
-  it("rejects 26 templates before sending a request and does not mutate the caller's list", async () => {
+  it("preserves existing lists over 25 templates when sending to the baseline API", async () => {
     const messages = Array.from({ length: 26 }, (_, index) => ({ name: `Template ${index}`, message: "Content" }));
-    const fetchMock = vi.fn();
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({ message: "updated" }), { status: 200 }));
     vi.stubGlobal("fetch", fetchMock);
     const client = new TicketsClient({ baseUrl: "http://dashboard.test", accessToken: "token" });
     const result = await client.updateApproveMessages("123", "Recruitment", { messages });
-    expect(result.status).toBe(0);
-    expect(result.error).toBeDefined();
-    expect(result.data).toBeUndefined();
-    expect(fetchMock).not.toHaveBeenCalled();
+    expect(result.status).toBe(200);
+    expect(result.error).toBeUndefined();
+    expect(await (fetchMock.mock.calls[0][0] as Request).json()).toEqual({ messages });
     expect(messages).toHaveLength(26);
   });
 

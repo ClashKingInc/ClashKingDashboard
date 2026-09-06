@@ -1,5 +1,6 @@
 import { forwardRef, type AnchorHTMLAttributes, type MouseEvent } from "react";
 import { useRouter } from "@tanstack/react-router";
+import { canonicalDashboardHref } from "@/lib/dashboard-origin";
 
 export type AppLinkProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & {
   readonly href: string;
@@ -25,12 +26,13 @@ const AppLink = forwardRef<HTMLAnchorElement, AppLinkProps>(function AppLink(
   ref,
 ) {
   const router = useRouter();
+  const canonicalHref = canonicalDashboardHref(href, globalThis.location.href);
 
   const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
     onClick?.(event);
     if (shouldUseBrowserNavigation(event, href) || target === "_blank") return;
 
-    const destination = new URL(href, globalThis.location.href);
+    const destination = new URL(canonicalHref, globalThis.location.href);
     if (destination.origin !== globalThis.location.origin) return;
 
     event.preventDefault();
@@ -39,7 +41,7 @@ const AppLink = forwardRef<HTMLAnchorElement, AppLinkProps>(function AppLink(
     else router.history.push(route);
   };
 
-  return <a {...props} ref={ref} href={href} target={target} onClick={handleClick} />;
+  return <a {...props} ref={ref} href={canonicalHref} target={target} onClick={handleClick} />;
 });
 
 export default AppLink;

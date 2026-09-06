@@ -35,8 +35,8 @@
     "@ai-sdk/openai": "^4.0.27",
     "@ai-sdk/react": "^4.0.50",
     "@cloudflare/codemode": "^0.5.1",
-    "@clashking/api-client": "0.1.0-rc.0",
-    "@clashking/api-contracts": "0.1.0-rc.0",
+    "@clashking/api-client": "file:vendor/clashking-api-client-0.1.0-rc.4.tgz",
+    "@clashking/api-contracts": "file:vendor/clashking-api-contracts-0.1.0-rc.4.tgz",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
@@ -110,7 +110,7 @@
     "typescript": "7.0.2",
     "vite": "^8.2.1",
     "vitest": "^4.1.10",
-    "wrangler": "^4.116.0"
+    "wrangler": "4.128.0"
   },
   "overrides": {
     "postcss": "$postcss",

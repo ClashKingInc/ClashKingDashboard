@@ -18,6 +18,28 @@ function jwtExpiringAt(epochSeconds: number): string {
 }
 
 describe("browser auth session", () => {
+  it("discards a successful refresh that completes after logout", async () => {
+    let resolve!: (response: Response) => void;
+    vi.stubGlobal('fetch', vi.fn(() => new Promise<Response>((done) => { resolve = done; })));
+    const pending = restoreAccessToken('https://api.example.test');
+    await vi.waitFor(() => expect(resolve).toBeDefined());
+    clearSession();
+    resolve(Response.json({ access_token: 'stale-token' }));
+    await expect(pending).resolves.toBe('anonymous');
+    expect(getAccessToken()).toBeUndefined();
+  });
+
+  it("does not start a queued refresh after logout while waiting for a browser lock", async () => {
+    let acquire!: () => Promise<unknown>;
+    vi.stubGlobal('navigator', { locks: { request: (_name: string, callback: () => Promise<unknown>) => new Promise((resolve) => { acquire = async () => resolve(await callback()); }) } });
+    const fetcher = vi.fn();
+    vi.stubGlobal('fetch', fetcher);
+    const pending = restoreAccessToken('https://api.example.test');
+    clearSession();
+    await acquire();
+    await expect(pending).resolves.toBe('anonymous');
+    expect(fetcher).not.toHaveBeenCalled();
+  });
   beforeEach(() => {
     clearSession(false);
     localStorage.clear();

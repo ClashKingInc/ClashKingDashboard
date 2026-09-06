@@ -20,6 +20,7 @@ import { useDashboardAccess } from "./dashboard-access-provider";
 import { dashboardHref } from "@/lib/dashboard-route";
 import { dashboardNavigationSections } from "./dashboard-navigation";
 import { InactiveServerDialog } from "./inactive-server-dialog";
+import { requiresServerReactivation } from "@/lib/server-activity";
 
 interface SidebarProps {
   readonly guildId: string;
@@ -40,7 +41,7 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, availableGuilds
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [inactiveGuild, setInactiveGuild] = useState<GuildInfo | null>(null);
   const selectGuild = (guild: GuildInfo) => {
-    if (guild.inactive) {
+    if (requiresServerReactivation(guild)) {
       setIsDropdownOpen(false);
       setInactiveGuild(guild);
       return;
@@ -120,7 +121,7 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, availableGuilds
                     </AvatarFallback>
                   </Avatar>
                   <span className="min-w-0 flex-1 truncate font-medium">{guild.name}</span>
-                  {guild.inactive && (
+                  {requiresServerReactivation(guild) && (
                     <TriangleAlert className="h-4 w-4 shrink-0 text-amber-500" aria-label={t("inactiveServer")} />
                   )}
                   {guild.id === guildId && <Check className="h-4 w-4 shrink-0 text-primary" />}

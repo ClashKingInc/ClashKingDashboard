@@ -3,6 +3,7 @@
 import { useGuildId } from "@/lib/dashboard-route";
 import { dashboardEndpoints, type EndpointResponse } from "@clashking/api-contracts";
 import { executeSharedEndpoint } from "@/lib/api/shared-client";
+import { ApiResponseError } from "@clashking/api-client";
 
 
 import Image from "@/components/app-image";
@@ -118,6 +119,14 @@ function mutableReminder(reminder: ContractReminder): ReminderConfig {
   };
 }
 
+function authorizedReminderError(error: unknown): string | undefined {
+  if (!(error instanceof ApiResponseError) || (error.status !== 401 && error.status !== 403)) return undefined;
+  if (typeof error.body !== "object" || error.body === null) return undefined;
+  const body = error.body as { detail?: unknown; message?: unknown; error?: unknown };
+  return [body.detail, body.message, body.error]
+    .find((value): value is string => typeof value === "string" && value.trim().length > 0);
+}
+
 interface Clan {
   tag: string;
   name: string;
@@ -217,6 +226,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
   const [clans, setClans] = useState<Clan[]>([]);
   const [channels, setChannels] = useState<Channel[]>([]);
   const [threads, setThreads] = useState<Thread[]>([]);
+  const [destinationMetadataAvailable, setDestinationMetadataAvailable] = useState(false);
   const [selectedClan, setSelectedClan] = useState<string>("all");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -237,17 +247,13 @@ export default function RemindersPage() { // NOSONAR — React page component: c
   useEffect(() => {
     const fetchReminders = async () => {
       try {
-        const clansPromise = queryClient
-          .fetchQuery(dashboardQueryOptions.clans(guildId))
-          .catch((clanError) => {
-            // Keep reminders usable even if clan metadata is temporarily unavailable.
-            console.warn("Failed to fetch clans for reminders page:", clanError);
-            return [] as Clan[];
-          });
-
-        // Shared metadata queries deduplicate these requests across dashboard routes.
-        const [clansRes, channelsRes, threadsRes, remindersRes] = await Promise.all([
-          clansPromise,
+        setError(null);
+        // Clan and Discord destination metadata improve the editor, but they do
+        // not determine whether an existing reminder may be displayed. Load
+        // each resource independently so a Discord provider failure cannot
+        // replace the whole page with an authorization error.
+        const [clansResult, channelsResult, threadsResult, remindersResult] = await Promise.allSettled([
+          queryClient.fetchQuery(dashboardQueryOptions.clans(guildId)),
           queryClient.fetchQuery(dashboardQueryOptions.channels(guildId)),
           queryClient.fetchQuery(dashboardQueryOptions.threads(guildId)),
           queryClient.fetchQuery({
@@ -259,6 +265,44 @@ export default function RemindersPage() { // NOSONAR — React page component: c
             ),
           }),
         ]);
+
+        const clansRes = clansResult.status === "fulfilled"
+          ? clansResult.value
+          : queryClient.getQueryData<Clan[]>(dashboardQueryKeys.clans(guildId)) ?? [];
+        const cachedChannels = queryClient.getQueryData(dashboardQueryKeys.channels(guildId));
+        const cachedThreads = queryClient.getQueryData(dashboardQueryKeys.threads(guildId));
+        const channelsRes = channelsResult.status === "fulfilled"
+          ? channelsResult.value
+          : cachedChannels ?? [];
+        const threadsRes = threadsResult.status === "fulfilled"
+          ? threadsResult.value
+          : cachedThreads ?? [];
+        setDestinationMetadataAvailable(
+          (channelsResult.status === "fulfilled" || cachedChannels !== undefined)
+          && (threadsResult.status === "fulfilled" || cachedThreads !== undefined),
+        );
+
+        for (const [label, result] of [
+          ["clans", clansResult],
+          ["Discord channels", channelsResult],
+          ["Discord threads", threadsResult],
+        ] as const) {
+          if (result.status === "rejected") {
+            console.warn(`Failed to fetch ${label} for reminders page:`, result.reason);
+          }
+        }
+
+        let remindersRes: EndpointResponse<typeof dashboardEndpoints.serverReminders>;
+        if (remindersResult.status === "fulfilled") {
+          remindersRes = remindersResult.value;
+        } else {
+          const cachedReminders = queryClient.getQueryData<EndpointResponse<typeof dashboardEndpoints.serverReminders>>(
+            dashboardQueryKeys.route("reminders", guildId),
+          );
+          if (cachedReminders === undefined) throw remindersResult.reason;
+          console.warn("Failed to refresh reminders; showing the last loaded copy:", remindersResult.reason);
+          remindersRes = cachedReminders;
+        }
 
         // Parse clans
         setClans(clansRes || []);
@@ -277,7 +321,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
         });
       } catch (err) {
         console.error("Error fetching data:", err);
-        setError(err instanceof Error ? err.message : t('toast.errorLoadingReminders'));
+        setError(authorizedReminderError(err) ?? t('toast.errorLoadingReminders'));
         toast({
           title: t('toast.errorTitle'),
           description: t('toast.errorLoadingReminders'),
@@ -399,6 +443,25 @@ export default function RemindersPage() { // NOSONAR — React page component: c
     setCloneClanTag("");
   };
 
+  const refreshRemindersAfterMutation = async () => {
+    try {
+      const data = await executeSharedEndpoint(dashboardEndpoints.serverReminders, {
+        path: { serverId: guildId }, query: {}, body: {},
+      });
+      queryClient.setQueryData(dashboardQueryKeys.route("reminders", guildId), data);
+      setReminders({
+        war_reminders: data.war_reminders.map(mutableReminder),
+        capital_reminders: data.capital_reminders.map(mutableReminder),
+        clan_games_reminders: data.clan_games_reminders.map(mutableReminder),
+        inactivity_reminders: data.inactivity_reminders.map(mutableReminder),
+      });
+    } catch (refreshError) {
+      // The mutation already succeeded. Keep its success state instead of
+      // leaving the create/clone dialog open and inviting a duplicate write.
+      console.error("Failed to refresh reminders after saving:", refreshError);
+    }
+  };
+
   const cloneReminder = async () => {
     if (!cloningReminder || !cloneClanTag || cloneClanTag === cloningReminder.clan_tag) return;
 
@@ -426,18 +489,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
         body: createRequest,
       });
 
-      const data = await executeSharedEndpoint(dashboardEndpoints.serverReminders, {
-        path: { serverId: guildId },
-        query: {},
-        body: {},
-      });
-      queryClient.setQueryData(dashboardQueryKeys.route("reminders", guildId), data);
-      setReminders({
-        war_reminders: data.war_reminders.map(mutableReminder),
-        capital_reminders: data.capital_reminders.map(mutableReminder),
-        clan_games_reminders: data.clan_games_reminders.map(mutableReminder),
-        inactivity_reminders: data.inactivity_reminders.map(mutableReminder),
-      });
+      await refreshRemindersAfterMutation();
 
       toast({
         title: t('toast.successTitle'),
@@ -714,18 +766,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
       }
 
       // Refresh reminders from API
-      const data = await executeSharedEndpoint(dashboardEndpoints.serverReminders, {
-        path: { serverId: guildId },
-        query: {},
-        body: {},
-      });
-      queryClient.setQueryData(dashboardQueryKeys.route("reminders", guildId), data);
-      setReminders({
-        war_reminders: data.war_reminders.map(mutableReminder),
-        capital_reminders: data.capital_reminders.map(mutableReminder),
-        clan_games_reminders: data.clan_games_reminders.map(mutableReminder),
-        inactivity_reminders: data.inactivity_reminders.map(mutableReminder),
-      });
+      await refreshRemindersAfterMutation();
 
       // Close dialog
       setIsDialogOpen(false);
@@ -784,12 +825,14 @@ export default function RemindersPage() { // NOSONAR — React page component: c
     ...reminders.clan_games_reminders,
     ...reminders.inactivity_reminders,
   ];
-  const remindersWithIssues = allReminders.filter((reminder) => !isDestinationValid(
-    reminder.channel_id,
-    reminder.thread_id ?? undefined,
-    channels,
-    threads,
-  ));
+  const remindersWithIssues = destinationMetadataAvailable
+    ? allReminders.filter((reminder) => !isDestinationValid(
+      reminder.channel_id,
+      reminder.thread_id ?? undefined,
+      channels,
+      threads,
+    ))
+    : [];
   const tabDefinitions: Array<{
     value: string;
     label: string;

@@ -19,6 +19,7 @@ import {
   GiveawaysResponse as GiveawaysResponseSchema,
   GiveawayWinner as GiveawayWinnerSchema,
   GuildsEndpoint,
+  GuildEndpoint,
   LinkParseSettings as LinkParseSettingsSchema,
   PlayerStrikeSummaryEndpoint,
   RemoveServerStrikeEndpoint,
@@ -56,6 +57,7 @@ export type StrikeAddResponse = EndpointResponse<typeof AddServerStrikeEndpoint>
 export type StrikeDeleteResponse = EndpointResponse<typeof RemoveServerStrikeEndpoint>;
 export type StrikeSummary = EndpointResponse<typeof PlayerStrikeSummaryEndpoint>;
 export type GuildInfo = EndpointResponse<typeof GuildsEndpoint>[number];
+export type GuildDetails = EndpointResponse<typeof GuildEndpoint>;
 export type ServerLinksResponse = EndpointResponse<typeof ServerLinksEndpoint>;
 export type GiveawayBooster = (typeof GiveawayBoosterSchema)["Type"];
 export type GiveawayWinner = (typeof GiveawayWinnerSchema)["Type"];

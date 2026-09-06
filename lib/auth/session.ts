@@ -169,7 +169,7 @@ async function coordinateRefresh(baseUrl: string): Promise<SessionRestoreResult>
     : undefined;
   if (locks) {
     return locks.request(LOCK_NAME, async () => {
-      if (runtime.generation !== observedGeneration && runtime.accessToken) return "restored";
+      if (runtime.generation !== observedGeneration) return runtime.accessToken ? "restored" : "anonymous";
       return performRefresh(baseUrl, observedGeneration);
     });
   }
@@ -179,26 +179,28 @@ async function coordinateRefresh(baseUrl: string): Promise<SessionRestoreResult>
 async function performRefresh(baseUrl: string, observedGeneration: number): Promise<SessionRestoreResult> {
   const runtime = getRuntime();
   try {
+    if (runtime.generation !== observedGeneration) return runtime.accessToken ? "restored" : "anonymous";
     let response = await fetch(`${baseUrl}/v2/auth/web/refresh`, {
       method: "POST",
       credentials: "include",
     });
     if (response.status === 401 && await wasAlreadyRefreshed(response)) {
       await new Promise((resolve) => setTimeout(resolve, ROTATION_RACE_RETRY_MS));
+      if (runtime.generation !== observedGeneration) return runtime.accessToken ? "restored" : "anonymous";
       response = await fetch(`${baseUrl}/v2/auth/web/refresh`, {
         method: "POST",
         credentials: "include",
       });
     }
     if (response.status === 401 || response.status === 403) {
-      if (runtime.generation !== observedGeneration && runtime.accessToken) return "restored";
+      if (runtime.generation !== observedGeneration) return runtime.accessToken ? "restored" : "anonymous";
       clearSession();
       return "anonymous";
     }
     if (!response.ok) return "unavailable";
     const data = await Schema.decodeUnknownPromise(DashboardAuthWebRefreshResponse)(await response.json());
     if (!data.access_token) return "unavailable";
-    if (runtime.generation !== observedGeneration && runtime.accessToken) return "restored";
+    if (runtime.generation !== observedGeneration) return runtime.accessToken ? "restored" : "anonymous";
     setAccessToken(data.access_token);
     return "restored";
   } catch {
@@ -229,7 +231,7 @@ async function withStorageLease(
       const acquired = readLease();
       if (acquired?.owner === runtime.tabId) {
         try {
-          if (runtime.generation !== observedGeneration && runtime.accessToken) return "restored";
+          if (runtime.generation !== observedGeneration) return runtime.accessToken ? "restored" : "anonymous";
           return await action();
         } finally {
           if (readLease()?.owner === runtime.tabId) localStorage.removeItem(LEASE_KEY);
@@ -237,7 +239,7 @@ async function withStorageLease(
       }
     }
     await new Promise((resolve) => setTimeout(resolve, 100));
-    if (runtime.generation !== observedGeneration && runtime.accessToken) return "restored";
+    if (runtime.generation !== observedGeneration) return runtime.accessToken ? "restored" : "anonymous";
   }
   return "unavailable";
 }

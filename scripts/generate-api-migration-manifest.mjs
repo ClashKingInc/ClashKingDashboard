@@ -208,8 +208,8 @@ async function directCallers() {
 const manifest = {
   generatedFrom: "ClashKingDashboard current shared descriptor callers and remaining raw transport boundaries",
   packageTargets: {
-    contracts: "@clashking/api-contracts@0.1.0-rc.0",
-    client: "@clashking/api-client@0.1.0-rc.0",
+    contracts: "@clashking/api-contracts@0.1.0-rc.4",
+    client: "@clashking/api-client@0.1.0-rc.4",
   },
   queryToPostRoutes: [
     "/v2/home/activity",
@@ -221,7 +221,7 @@ const manifest = {
   ],
   notes: [
     "No current Dashboard source caller references any of the six query-to-POST routes.",
-    "The local /api/tenor-media route was removed; reminders use the typed API-owned Tenor endpoint.",
+    "The original GET /api/tenor-media resolver remains on the Dashboard frontend Worker; it is not a central API operation.",
     "localTypeLocations points to facade aliases or UI projections; wire types are derived from shared contracts.",
     "The auth refresh raw transport is independently schema-validated to avoid a circular refresh dependency.",
   ],

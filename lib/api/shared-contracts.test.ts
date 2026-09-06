@@ -12,12 +12,4 @@ describe("coordinated API contracts", () => {
     expect(endpoints[name]).toMatchObject({ method: "POST", path, bodyMode: "json" });
   });
 
-  it("uses the API-owned Tenor resolver", () => {
-    expect(endpoints.tenorMedia).toMatchObject({
-      operationId: "resolveTenorMedia",
-      method: "POST",
-      path: "/v2/media/tenor/resolve",
-      bodyMode: "json",
-    });
-  });
 });

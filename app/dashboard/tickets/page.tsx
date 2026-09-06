@@ -4,8 +4,6 @@ import { useGuildId } from "@/lib/dashboard-route";
 import { type Dispatch, type ReactNode, type SetStateAction, useCallback, useEffect, useEffectEvent, useMemo, useRef, useState } from "react";
 import Link from "@/components/app-link";
 import { useTranslations } from "use-intl";
-import { UpdateApproveMessagesRequest } from "@clashking/api-contracts";
-import { Schema } from "effect";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   ArrowDown,
@@ -340,7 +338,7 @@ function TicketPanelTab({
                 <div className="pt-2 flex flex-wrap gap-2">
                   {previewButtons.map((button) => (
                     <span
-                      key={`draft-${button.id}`}
+                      key={`draft-${button.custom_id}`}
                       className={cn(
                         "inline-flex h-8 items-center gap-1.5 rounded px-3 text-xs font-medium transition-colors",
                         getPreviewButtonClass(button.style),
@@ -420,7 +418,7 @@ function TicketPanelTab({
             <div className="pt-2 flex flex-wrap gap-2">
               {previewButtons.map((button) => (
                 <span
-                  key={button.id}
+                  key={button.custom_id}
                   className={cn(
                     "inline-flex h-8 items-center gap-1.5 rounded px-3 text-xs font-medium transition-colors",
                     getPreviewButtonClass(button.style),
@@ -1286,7 +1284,10 @@ export function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; r
   };
 
   const updateMessageField = (index: number, field: "name" | "message", value: string) => {
-    setDraftMessages((prev) => prev.map((msg, idx) => (idx === index ? { ...msg, [field]: value } : msg)));
+    const limitedValue = field === "name"
+      ? value.slice(0, MAX_APPROVE_MESSAGE_NAME_LENGTH)
+      : value.slice(0, MAX_APPROVE_MESSAGE_CONTENT_LENGTH);
+    setDraftMessages((prev) => prev.map((msg, idx) => (idx === index ? { ...msg, [field]: limitedValue } : msg)));
   };
 
   const addMessage = () => {
@@ -1329,17 +1330,16 @@ export function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; r
 
   const handleSave = async () => {
     if (isSaving) return;
-    const payload = { messages: draftMessages.map(({ name, message }) => ({ name, message })) };
-    if (!Schema.is(UpdateApproveMessagesRequest)(payload)) {
-      toast({ title: tCommon("error"), description: t("messagesInvalid"), variant: "destructive" });
+    if (draftMessages.some((message) => !message.name.trim())) {
+      toast({ title: tCommon("error"), description: t("messageNameRequired"), variant: "destructive" });
       return;
     }
+    const payload = { messages: draftMessages.map(({ name, message }) => ({ name, message })) };
     setIsSaving(true);
     try {
       const res = await apiClient.tickets.updateApproveMessages(guildId, panel.name, payload);
       if (res.error !== undefined) throw new Error(res.error || tCommon("loadError"));
-      // The API trims names, while message whitespace and array order are significant.
-      const valid = draftMessages.map((message) => ({ ...message, name: message.name.trim() }));
+      const valid = draftMessages;
       setMessages(valid);
       setDraftMessages(cloneMessages(valid));
       setExpandedPreviewIds(new Set());
@@ -1445,6 +1445,7 @@ export function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; r
                               className="h-9 bg-background border-border font-medium"
                               value={msg.name}
                               onChange={(e) => updateMessageField(i, "name", e.target.value)}
+                              maxLength={MAX_APPROVE_MESSAGE_NAME_LENGTH}
                               placeholder={t("messageName")}
                             />
                             <div className="flex items-center justify-between gap-2">
@@ -1456,6 +1457,7 @@ export function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; r
                               className="bg-background border-border"
                               value={msg.message}
                               onChange={(e) => updateMessageField(i, "message", e.target.value)}
+                              maxLength={MAX_APPROVE_MESSAGE_CONTENT_LENGTH}
                               placeholder={t("messageContent")}
                               rows={4}
                             />
@@ -1607,7 +1609,7 @@ function PanelCard({
       // Reload panel data by fetching fresh panels
       apiCache.invalidate(getTicketsPanelsCacheKey(guildId));
       const panelsRes = await apiCache.get(getTicketsPanelsCacheKey(guildId), () => apiClient.tickets.getPanels(guildId));
-      const fresh = panelsRes.data?.items.find(p => p.id === panel.id);
+      const fresh = panelsRes.data?.items.find(p => p.name === panel.name);
       if (fresh) setComponents(fresh.components);
       setAddButtonOpen(false);
       setNewButtonLabel("");
@@ -1736,12 +1738,12 @@ function PanelCard({
                   ) : (
                     <div className="space-y-3">
                       {components.map((btn) => (
-                        <ButtonCard key={btn.id} customId={btn.custom_id} label={btn.label} style={btn.style}
+                        <ButtonCard key={btn.custom_id} customId={btn.custom_id} label={btn.label} style={btn.style}
                           settings={panel.button_settings[btn.custom_id] ?? createDefaultButtonSettings()}
                           panelName={panel.name} guildId={guildId} roles={roles} availableEmbeds={availableEmbeds} embeds={embeds}
                           townhallRequirementFields={townhallRequirementFields}
-                          onDeleted={() => setComponents((prev) => prev.filter(c => c.id !== btn.id))} // NOSONAR — structural JSX complexity from framework nesting
-                          onAppearanceUpdated={(newLabel, newStyle) => setComponents((prev) => prev.map(c => c.id === btn.id ? { ...c, label: newLabel, style: newStyle } : c))} // NOSONAR — JSX inline handler nesting is structural, not logic complexity
+                          onDeleted={() => setComponents((prev) => prev.filter(c => c.custom_id !== btn.custom_id))} // NOSONAR — structural JSX complexity from framework nesting
+                          onAppearanceUpdated={(newLabel, newStyle) => setComponents((prev) => prev.map(c => c.custom_id === btn.custom_id ? { ...c, label: newLabel, style: newStyle } : c))} // NOSONAR — JSX inline handler nesting is structural, not logic complexity
                         />
                       ))}
                     </div>
@@ -1818,7 +1820,7 @@ function PanelCard({
           {components.length > 0 ? (
             <div className={cn("flex flex-wrap gap-2", hasPanelPreview && "mt-3 pl-0 sm:pl-12")}>
               {components.map((button) => (
-                <span key={button.id} className={cn("inline-flex h-8 items-center rounded px-3 text-xs font-medium", getPreviewButtonClass(button.style))}>
+                <span key={button.custom_id} className={cn("inline-flex h-8 items-center rounded px-3 text-xs font-medium", getPreviewButtonClass(button.style))}>
                   {button.label}
                 </span>
               ))}
@@ -1975,10 +1977,10 @@ function ConfigTab({ guildId }: { readonly guildId: string }) {
           </div>
         ) : (
           panels.map((panel) => (
-            <PanelCard key={panel.id} panel={panel} categories={categories} textChannels={textChannels} roles={roles} guildId={guildId} availableEmbeds={availableEmbeds} embeds={embeds}
+            <PanelCard key={panel.name} panel={panel} categories={categories} textChannels={textChannels} roles={roles} guildId={guildId} availableEmbeds={availableEmbeds} embeds={embeds}
               townhallRequirementFields={townhallRequirementFields}
               onConfigure={() => { void loadDiscordMetadata(); }}
-              onDeleted={() => setPanels((prev) => prev.filter(p => p.id !== panel.id))} // NOSONAR — JSX inline handler nesting is structural, not logic complexity
+              onDeleted={() => setPanels((prev) => prev.filter(p => p.name !== panel.name))} // NOSONAR — JSX inline handler nesting is structural, not logic complexity
             />
           ))
         )}

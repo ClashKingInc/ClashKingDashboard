@@ -7,10 +7,9 @@ const serverId = "9007199254740993123";
 const roster = {
   id: "019c1e4a-5be7-7a6d-82a3-81d014eb21d7", server_id: serverId, alias: "Main",
   roster_type: "clan", signup_scope: "clan-only", columns: [], sort: [], revision: 1,
-  capacity: 50, roster_role_id: null, member_groups: [],
   created_at: "2026-09-03T00:00:00Z", updated_at: "2026-09-03T00:00:00Z",
   members: [{ name: "Test", tag: "#ABC", townhall: 17, hero_level_sum: 200,
-    member_group_id: null, is_substitute: false, refreshed_at: "2026-09-03T00:00:00Z",
+    refreshed_at: "2026-09-03T00:00:00Z",
     last_updated: "2026-09-03T00:00:00Z", answers: { availability: "yes" } }],
 };
 const jsonResponse = (value: unknown, status = 200) => new Response(JSON.stringify(value), {
@@ -37,7 +36,7 @@ describe("roster contract callers", () => {
     expect(result).toMatchObject([{ id: roster.id, server_id: serverId, members: [{
       hero_lvs: 200, last_updated: Date.parse("2026-09-03T00:00:00Z") / 1000,
       signup_answers: { availability: "yes" },
-      refreshed_at: "2026-09-03T00:00:00Z", member_group_id: null, is_substitute: false,
+      refreshed_at: "2026-09-03T00:00:00Z",
     }] }]);
     const request = fetchMock.mock.calls[0]?.[0] as Request;
     expect(request.url).toBe(`${getDefaultBaseUrl()}/v2/roster/${serverId}/list?group_id=group-9`);

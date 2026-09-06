@@ -44,7 +44,9 @@ function appendManagedLink(rel: string, href: string, hreflang?: string): void {
 }
 
 function clearManagedHead(): void {
-  document.head.querySelectorAll("[data-clashking-managed='true']").forEach((element) => element.remove());
+  document.head.querySelectorAll(
+    "[data-clashking-managed='true'], link[rel='canonical'], link[rel='alternate'][hreflang], meta[property^='og:'], meta[name^='twitter:']",
+  ).forEach((element) => element.remove());
 }
 
 export function DocumentMetadata() {

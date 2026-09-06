@@ -1,5 +1,6 @@
 import { generateCodeVerifier, generateCodeChallenge } from "@/lib/pkce";
 import { readBrowserRuntimeConfig } from "@/lib/runtime-config";
+import { canonicalDashboardHref } from "@/lib/dashboard-origin";
 
 /**
  * Initiates Discord OAuth2 login flow with PKCE
@@ -8,6 +9,11 @@ import { readBrowserRuntimeConfig } from "@/lib/runtime-config";
  */
 export async function initiateDiscordLogin(locale: string = 'en') {
   try {
+    const loginUrl = canonicalDashboardHref('/login', globalThis.window.location.origin);
+    if (loginUrl !== '/login') {
+      globalThis.window.location.href = loginUrl;
+      return;
+    }
     // Generate PKCE code verifier and challenge
     const codeVerifier = generateCodeVerifier();
     const codeChallenge = await generateCodeChallenge(codeVerifier);

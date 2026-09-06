@@ -1,0 +1,213 @@
+{
+  "baseline": {
+    "repository": "ClashKingDashboard",
+    "commit": "2cb5bf0b5207346a08d2207515d972e6f8f048c7",
+    "repositoryUrl": "https://github.com/ClashKingInc/ClashKingDashboard.git",
+    "branch": "main",
+    "auditRef": "refs/audit/origin-main-20260904",
+    "checkedAt": "2026-09-04T16:13:02Z",
+    "commitTime": "2026-09-01T10:19:48-05:00",
+    "basis": "Freshly fetched GitHub main source tree; not a saved implementation snapshot or evidence of deployed state"
+  },
+  "pages": [
+    {
+      "path": "/admin/creators",
+      "source": "app/admin/creators/page.tsx"
+    },
+    {
+      "path": "/auth/callback",
+      "source": "app/auth/callback/page.tsx"
+    },
+    {
+      "path": "/concepts/clan-signal",
+      "source": "app/concepts/clan-signal/page.tsx"
+    },
+    {
+      "path": "/dashboard/autoboards",
+      "source": "app/dashboard/autoboards/page.tsx"
+    },
+    {
+      "path": "/dashboard/bans-and-strikes",
+      "source": "app/dashboard/bans-and-strikes/page.tsx"
+    },
+    {
+      "path": "/dashboard/bases",
+      "source": "app/dashboard/bases/page.tsx"
+    },
+    {
+      "path": "/dashboard/clans",
+      "source": "app/dashboard/clans/page.tsx"
+    },
+    {
+      "path": "/dashboard/embeds",
+      "source": "app/dashboard/embeds/page.tsx"
+    },
+    {
+      "path": "/dashboard/family-settings",
+      "source": "app/dashboard/family-settings/page.tsx"
+    },
+    {
+      "path": "/dashboard/general",
+      "source": "app/dashboard/general/page.tsx"
+    },
+    {
+      "path": "/dashboard/giveaways",
+      "source": "app/dashboard/giveaways/page.tsx"
+    },
+    {
+      "path": "/dashboard/graphics",
+      "source": "app/dashboard/graphics/page.tsx"
+    },
+    {
+      "path": "/dashboard/links",
+      "source": "app/dashboard/links/page.tsx"
+    },
+    {
+      "path": "/dashboard/logs",
+      "source": "app/dashboard/logs/page.tsx"
+    },
+    {
+      "path": "/dashboard",
+      "source": "app/dashboard/page.tsx"
+    },
+    {
+      "path": "/dashboard/panels",
+      "source": "app/dashboard/panels/page.tsx"
+    },
+    {
+      "path": "/dashboard/reminders",
+      "source": "app/dashboard/reminders/page.tsx"
+    },
+    {
+      "path": "/dashboard/roles",
+      "source": "app/dashboard/roles/page.tsx"
+    },
+    {
+      "path": "/dashboard/rosters/builder",
+      "source": "app/dashboard/rosters/builder/page.tsx"
+    },
+    {
+      "path": "/dashboard/rosters/compare",
+      "source": "app/dashboard/rosters/compare/page.tsx"
+    },
+    {
+      "path": "/dashboard/rosters/cwl-bonuses",
+      "source": "app/dashboard/rosters/cwl-bonuses/page.tsx"
+    },
+    {
+      "path": "/dashboard/rosters/detail",
+      "source": "app/dashboard/rosters/detail/page.tsx"
+    },
+    {
+      "path": "/dashboard/rosters",
+      "source": "app/dashboard/rosters/page.tsx"
+    },
+    {
+      "path": "/dashboard/settings/billing",
+      "source": "app/dashboard/settings/billing/page.tsx"
+    },
+    {
+      "path": "/dashboard/settings",
+      "source": "app/dashboard/settings/page.tsx"
+    },
+    {
+      "path": "/dashboard/support-us",
+      "source": "app/dashboard/support-us/page.tsx"
+    },
+    {
+      "path": "/dashboard/support",
+      "source": "app/dashboard/support/page.tsx"
+    },
+    {
+      "path": "/dashboard/tickets",
+      "source": "app/dashboard/tickets/page.tsx"
+    },
+    {
+      "path": "/dashboard/tickets/settings",
+      "source": "app/dashboard/tickets/settings/page.tsx"
+    },
+    {
+      "path": "/features",
+      "source": "app/features/page.tsx"
+    },
+    {
+      "path": "/fr",
+      "source": "app/fr/page.tsx"
+    },
+    {
+      "path": "/fr/privacy",
+      "source": "app/fr/privacy/page.tsx"
+    },
+    {
+      "path": "/fr/terms",
+      "source": "app/fr/terms/page.tsx"
+    },
+    {
+      "path": "/help",
+      "source": "app/help/page.tsx"
+    },
+    {
+      "path": "/login",
+      "source": "app/login/page.tsx"
+    },
+    {
+      "path": "/nl",
+      "source": "app/nl/page.tsx"
+    },
+    {
+      "path": "/nl/privacy",
+      "source": "app/nl/privacy/page.tsx"
+    },
+    {
+      "path": "/nl/terms",
+      "source": "app/nl/terms/page.tsx"
+    },
+    {
+      "path": "/open-source",
+      "source": "app/open-source/page.tsx"
+    },
+    {
+      "path": "/",
+      "source": "app/page.tsx"
+    },
+    {
+      "path": "/privacy",
+      "source": "app/privacy/page.tsx"
+    },
+    {
+      "path": "/roster",
+      "source": "app/roster/page.tsx"
+    },
+    {
+      "path": "/servers",
+      "source": "app/servers/page.tsx"
+    },
+    {
+      "path": "/support-us",
+      "source": "app/support-us/page.tsx"
+    },
+    {
+      "path": "/support",
+      "source": "app/support/page.tsx"
+    },
+    {
+      "path": "/terms",
+      "source": "app/terms/page.tsx"
+    },
+    {
+      "path": "/view",
+      "source": "app/view/page.tsx"
+    }
+  ],
+  "approvedRemovals": [
+    {
+      "path": "/connect",
+      "reason": "User explicitly retired connected-app approval; it is also absent from freshly fetched main. Ordinary login remains."
+    },
+    {
+      "path": "/admin/creators",
+      "reason": "User explicitly confirmed creator review is retired. Its page and navigation remain in fetched main, but that stale source does not override the retirement decision."
+    }
+  ],
+  "unresolved": []
+}

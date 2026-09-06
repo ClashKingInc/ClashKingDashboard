@@ -63,7 +63,7 @@ const templates = (count: number): ApproveMessage[] => Array.from({ length: coun
 
 function renderMessages(messages: ApproveMessage[]) {
   const panel: TicketPanel = {
-    id: "018f1d6b-8c50-7e8d-9c31-aef6f6f1a100", name: "Recruitment / EU", server_id: "123",
+    name: "Recruitment / EU", server_id: "123",
     components: [], button_settings: {}, approve_messages: messages,
   };
   const view = render(<MessagesTab panel={panel} guildId="123" />);
@@ -88,17 +88,14 @@ describe("approval and denial message editor", () => {
     await waitFor(() => expect(view.queryByRole("dialog")).not.toBeInTheDocument());
   });
 
-  it("keeps all 26 loaded rows, blocks saving, and allows removing the last row to recover", async () => {
+  it("keeps the existing add limit but saves all 26 previously loaded rows", async () => {
     const messages = templates(26);
     const view = renderMessages(messages);
     expect(view.editor.getAllByRole("button", { name: /^delete:/ })).toHaveLength(26);
     expect(view.editor.getByRole("button", { name: "addMessage" })).toBeDisabled();
     fireEvent.click(view.editor.getByRole("button", { name: "save" }));
-    expect(updateApproveMessages).not.toHaveBeenCalled();
-    expect(toast).toHaveBeenCalledWith(expect.objectContaining({ description: "messagesInvalid" }));
-    fireEvent.click(view.editor.getByRole("button", { name: "delete: 26. Template 26" }));
-    fireEvent.click(view.editor.getByRole("button", { name: "save" }));
-    await waitFor(() => expect(updateApproveMessages).toHaveBeenCalledWith("123", "Recruitment / EU", { messages: messages.slice(0, 25) }));
+    await waitFor(() => expect(updateApproveMessages).toHaveBeenCalledWith("123", "Recruitment / EU", { messages }));
+    await waitFor(() => expect(view.queryByRole("dialog")).not.toBeInTheDocument());
   });
 
   it("adds, edits, reorders, and removes nonfirst rows using stable local identity", async () => {
@@ -121,31 +118,37 @@ describe("approval and denial message editor", () => {
     await waitFor(() => expect(view.queryByRole("dialog")).not.toBeInTheDocument());
     fireEvent.click(view.getByRole("button", { name: "editMessagesButton" }));
     fireEvent.click(within(view.getByRole("dialog")).getByRole("button", { name: "Denial", exact: true }));
-    expect(view.getByRole("textbox", { name: "messageName: 2" })).toHaveValue("Denial");
+    expect(view.getByRole("textbox", { name: "messageName: 2" })).toHaveValue("  Denial  ");
+  });
+
+  it("preserves the original required-name check without dropping the invalid row", () => {
+    const view = renderMessages([{ name: " ", message: "Content" }]);
+    fireEvent.click(view.editor.getByRole("button", { name: "save" }));
+    expect(updateApproveMessages).not.toHaveBeenCalled();
+    expect(view.editor.getAllByRole("button", { name: /^delete:/ })).toHaveLength(1);
+    expect(toast).toHaveBeenCalledWith(expect.objectContaining({ description: "messageNameRequired" }));
   });
 
   it.each([
-    [{ name: " ", message: "Content" }],
     [{ name: "Name", message: "\n " }],
     [{ name: "x".repeat(101), message: "Content" }],
     [{ name: "Name", message: "x".repeat(2001) }],
     [{ name: "Name", message: "One" }, { name: " Name ", message: "Two" }],
-  ])("rejects invalid drafts without dropping or truncating rows: %j", async (...messages) => {
+  ])("preserves previously saved content without new server-side restrictions: %j", async (...messages) => {
     const view = renderMessages(messages);
     fireEvent.click(view.editor.getByRole("button", { name: "save" }));
-    expect(updateApproveMessages).not.toHaveBeenCalled();
-    expect(view.editor.getAllByRole("button", { name: /^delete:/ })).toHaveLength(messages.length);
-    expect(toast).toHaveBeenCalledWith(expect.objectContaining({ description: "messagesInvalid" }));
+    await waitFor(() => expect(updateApproveMessages).toHaveBeenCalledWith("123", "Recruitment / EU", { messages }));
+    await waitFor(() => expect(view.queryByRole("dialog")).not.toBeInTheDocument());
   });
 
-  it("preserves oversized typed content and accepts exact limits with case-sensitive names", async () => {
+  it("preserves the original input limits and case-sensitive names", async () => {
     const messages = [{ name: "A".repeat(100), message: "x".repeat(2000) }, { name: "a".repeat(100), message: "Other" }];
     const view = renderMessages(messages);
     fireEvent.click(view.editor.getByRole("button", { name: messages[0].name, exact: true }));
     const input = view.editor.getByRole("textbox", { name: "contentLabel: 1" });
     fireEvent.change(input, { target: { value: "x".repeat(2001) } });
-    fireEvent.click(view.editor.getByRole("button", { name: "save" }));
-    expect(input).toHaveValue("x".repeat(2001));
+    expect(input).toHaveValue("x".repeat(2000));
+    expect(input).toHaveAttribute("maxlength", "2000");
     expect(updateApproveMessages).not.toHaveBeenCalled();
     fireEvent.change(input, { target: { value: messages[0].message } });
     fireEvent.click(view.editor.getByRole("button", { name: "save" }));
@@ -193,9 +196,9 @@ describe("approval and denial message editor", () => {
     expect(view.editor.getByRole("button", { name: `${t.moveMessageDown}: 1. Template 1` })).toBeEnabled();
     expect(view.editor.getByRole("button", { name: germanMessages.Common.close })).toBeInTheDocument();
     fireEvent.click(view.editor.getByRole("button", { name: "Template 2", exact: true }));
-    fireEvent.change(view.editor.getByRole("textbox", { name: `${t.contentLabel}: 2` }), { target: { value: "" } });
+    fireEvent.change(view.editor.getByRole("textbox", { name: `${t.messageName}: 2` }), { target: { value: "" } });
     fireEvent.click(view.editor.getByRole("button", { name: germanMessages.Common.save }));
-    expect(toast).toHaveBeenCalledWith(expect.objectContaining({ description: t.messagesInvalid }));
+    expect(toast).toHaveBeenCalledWith(expect.objectContaining({ description: t.messageNameRequired }));
     translations.german = false;
   });
 });

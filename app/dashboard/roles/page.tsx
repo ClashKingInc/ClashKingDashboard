@@ -3,6 +3,7 @@
 import { useGuildId } from "@/lib/dashboard-route";
 import { dashboardEndpoints } from "@clashking/api-contracts";
 import { executeSharedEndpoint } from "@/lib/api/shared-client";
+import { loadRoleMaxLevels } from "./role-max-levels";
 import Image from "@/components/app-image";
 import { useState, useEffect, useEffectEvent, useRef } from "react";
 import { useTranslations, useLocale } from "use-intl";
@@ -181,20 +182,17 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
 
   const loadMaxLevels = async () => {
     try {
-      const [thData, bhData] = await Promise.all([
+      const [thResult, bhResult] = await loadRoleMaxLevels((building) =>
         executeSharedEndpoint(dashboardEndpoints.dashboardStaticMaxLevel, {
-          path: { category: "buildings", itemIdOrName: "Town Hall" },
+          path: { category: "buildings", itemIdOrName: building },
           query: {},
           body: {},
         }),
-        executeSharedEndpoint(dashboardEndpoints.dashboardStaticMaxLevel, {
-          path: { category: "buildings", itemIdOrName: "Builder Hall" },
-          query: {},
-          body: {},
-        }),
-      ]);
-      setTownHallMaxLevel(thData.max_level);
-      setBuilderHallMaxLevel(bhData.max_level);
+      );
+      if (thResult.status === "fulfilled") setTownHallMaxLevel(thResult.value.max_level);
+      else console.error("Failed to load Town Hall max level:", thResult.reason);
+      if (bhResult.status === "fulfilled") setBuilderHallMaxLevel(bhResult.value.max_level);
+      else console.error("Failed to load Builder Hall max level:", bhResult.reason);
     } catch (err) {
       console.error("Failed to load max levels:", err);
       // Keep fallback values

@@ -265,8 +265,8 @@ export default function FamilySettingsPage() {
         setInitialSettings(loadedSettings);
         setShowSaved(false);
       }
-    } catch (err: any) {
-      setError(err.message || "Failed to load settings");
+    } catch (err) {
+      setError(tCommon("loadError"));
       console.error("Failed to load settings:", err);
     } finally {
       setIsLoading(false);

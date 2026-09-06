@@ -30,6 +30,19 @@ describe('initiateDiscordLogin', () => {
     expect(sessionStorage.getItem('discord_code_verifier')).toBe('mock_verifier_abc123');
   });
 
+  it('moves marketing login to the dashboard before generating origin-bound state', async () => {
+    Object.defineProperty(window, 'location', { value: { origin: 'https://clashk.ing', href: '' }, configurable: true });
+    await initiateDiscordLogin('en');
+    expect(window.location.href).toBe('https://dash.clashk.ing/login');
+    expect(sessionStorage.getItem('discord_code_verifier')).toBeNull();
+    expect(sessionStorage.getItem('discord_oauth_state')).toBeNull();
+    const dashboardOrigin = new URL(window.location.href).origin;
+    Object.defineProperty(window, 'location', { value: { origin: dashboardOrigin, href: '' }, configurable: true });
+    await initiateDiscordLogin('en');
+    expect(new URL(window.location.href).searchParams.get('redirect_uri')).toBe('https://dash.clashk.ing/auth/callback');
+    expect(sessionStorage.getItem('discord_code_verifier')).toBe('mock_verifier_abc123');
+  });
+
   it('stores the locale in sessionStorage', async () => {
     await initiateDiscordLogin('fr');
     expect(sessionStorage.getItem('auth_locale')).toBe('fr');

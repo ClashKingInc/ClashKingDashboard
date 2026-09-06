@@ -1,5 +1,7 @@
 # Dashboard migration handoff
 
+> Historical snapshot only. Superseded by [implementation-review.md](implementation-review.md) and the coordinator's replacement plan. The old API-owned bot delivery requirements, creator-review retirement claim, and central Tenor move below are not current implementation instructions or acceptance gates.
+
 The Dashboard is a TypeScript 7, Vite/React/TanStack frontend with shared Effect API contracts. Its edge Worker only redirects canonical hosts and serves static assets. No production cutover is authorized by this migration.
 
 ## Release gates

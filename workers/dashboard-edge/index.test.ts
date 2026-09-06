@@ -1,5 +1,7 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { handleDashboardRequest, resolveDomainRedirect } from "./index";
+
+afterEach(() => vi.unstubAllGlobals());
 
 describe("resolveDomainRedirect", () => {
   it("sends the dashboard root through login restoration", () => {
@@ -34,6 +36,20 @@ describe("resolveDomainRedirect", () => {
 });
 
 describe("SPA asset routing", () => {
+  it("resolves the original Tenor GET before static assets, without central API auth", async () => {
+    const providerFetch = vi.fn().mockResolvedValue(new Response('<meta property="og:image" content="https://media.tenor.com/example/roster.gif">'));
+    vi.stubGlobal("fetch", providerFetch);
+    const assetFetch = vi.fn();
+    const response = await handleDashboardRequest(
+      new Request("https://dash.clashk.ing/api/tenor-media?url=https%3A%2F%2Ftenor.com%2Fview%2Fexample-42"),
+      { ASSETS: { fetch: assetFetch } },
+    );
+    expect(response.status).toBe(307);
+    expect(response.headers.get("Location")).toBe("https://media.tenor.com/example/roster.gif");
+    expect(providerFetch).toHaveBeenCalledOnce();
+    expect(assetFetch).not.toHaveBeenCalled();
+  });
+
   it("passes an allowed request to the generated assets binding", async () => {
     const fetch = vi.fn().mockResolvedValue(new Response("spa"));
     const request = new Request("https://dash.clashk.ing/dashboard/general?guildId=123");

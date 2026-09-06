@@ -55,6 +55,7 @@ import type {
   GiveawayRerollResponse,
   GiveawaysResponse,
   GuildInfo,
+  GuildDetails,
   SearchBannedPlayersResponse,
   ServerClanListItem,
   ServerLinksResponse,
@@ -143,7 +144,7 @@ export class ServerClient extends BaseApiClient {
     return { data: [...response.data], status: response.status };
   }
 
-  async getGuild(guildId: string, signal?: AbortSignal): Promise<ApiResponse<GuildInfo>> {
+  async getGuild(guildId: string, signal?: AbortSignal): Promise<ApiResponse<GuildDetails>> {
     return this.executeEndpoint(GuildEndpoint, {
       path: { guildId },
       query: {},

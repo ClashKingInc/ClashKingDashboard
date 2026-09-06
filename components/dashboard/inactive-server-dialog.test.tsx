@@ -34,6 +34,7 @@ const inactiveGuild = {
   features: [],
   has_bot: true,
   inactive: true,
+  last_command_at: "2026-01-01T00:00:00.000Z",
 };
 
 describe("InactiveServerDialog", () => {
@@ -61,5 +62,19 @@ describe("InactiveServerDialog", () => {
       id: "inactive-server",
       inactive: false,
     }));
+  });
+
+  it("does not offer reactivation when the server has no command history", () => {
+    render(
+      <InactiveServerDialog
+        guild={{ ...inactiveGuild, last_command_at: undefined }}
+        locale="en"
+        onClose={vi.fn()}
+        onReactivated={vi.fn()}
+      />,
+    );
+
+    expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument();
+    expect(screen.queryByText("No command history")).not.toBeInTheDocument();
   });
 });

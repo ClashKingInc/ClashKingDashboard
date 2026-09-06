@@ -4,9 +4,13 @@ import {
   createRoute,
   createRouter,
   lazyRouteComponent,
+  useLocation,
+  type RouteComponent,
 } from "@tanstack/react-router";
 import type { ComponentType } from "react";
 
+import DashboardRouteLoading from "@/app/dashboard/loading";
+import GiveawaysLoadingPage from "@/app/dashboard/giveaways/loading";
 import { AuthSessionProvider } from "@/components/auth-session-provider";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { DocumentMetadata } from "@/components/document-metadata";
@@ -18,9 +22,10 @@ type PageModule = { default: ComponentType };
 type PageImporter = () => Promise<PageModule>;
 
 function RootLayout() {
+  const pathname = useLocation({ select: (location) => location.pathname });
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-      <LocaleProvider>
+      <LocaleProvider pathname={pathname}>
         <AuthSessionProvider>
           <DocumentMetadata />
           <Outlet />
@@ -58,11 +63,16 @@ const dashboardRoute = createRoute({
   component: DashboardLayout,
 });
 
-function dashboardPage<const TPath extends string>(path: TPath, importer: PageImporter) {
+function dashboardPage<const TPath extends string>(
+  path: TPath,
+  importer: PageImporter,
+  pendingComponent: RouteComponent = DashboardRouteLoading,
+) {
   return createRoute({
     getParentRoute: () => dashboardRoute,
     path,
     component: lazyRouteComponent(importer),
+    pendingComponent,
   });
 }
 
@@ -101,7 +111,7 @@ const dashboardRoutes = [
   dashboardPage("embeds", () => import("@/app/dashboard/embeds/page")),
   dashboardPage("family-settings", () => import("@/app/dashboard/family-settings/page")),
   dashboardPage("general", () => import("@/app/dashboard/general/page")),
-  dashboardPage("giveaways", () => import("@/app/dashboard/giveaways/page")),
+  dashboardPage("giveaways", () => import("@/app/dashboard/giveaways/page"), GiveawaysLoadingPage),
   dashboardPage("graphics", () => import("@/app/dashboard/graphics/page")),
   dashboardPage("links", () => import("@/app/dashboard/links/page")),
   dashboardPage("logs", () => import("@/app/dashboard/logs/page")),

@@ -1,8 +1,8 @@
 {
   "generatedFrom": "ClashKingDashboard current shared descriptor callers and remaining raw transport boundaries",
   "packageTargets": {
-    "contracts": "@clashking/api-contracts@0.1.0-rc.0",
-    "client": "@clashking/api-client@0.1.0-rc.0"
+    "contracts": "@clashking/api-contracts@0.1.0-rc.4",
+    "client": "@clashking/api-client@0.1.0-rc.4"
   },
   "queryToPostRoutes": [
     "/v2/home/activity",
@@ -14,7 +14,7 @@
   ],
   "notes": [
     "No current Dashboard source caller references any of the six query-to-POST routes.",
-    "The local /api/tenor-media route was removed; reminders use the typed API-owned Tenor endpoint.",
+    "The original GET /api/tenor-media resolver remains on the Dashboard frontend Worker; it is not a central API operation.",
     "localTypeLocations points to facade aliases or UI projections; wire types are derived from shared contracts.",
     "The auth refresh raw transport is independently schema-validated to avoid a circular refresh dependency."
   ],
@@ -1610,7 +1610,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<DashboardCapabilities>>",
       "parameters": "serverId: string, signal?: AbortSignal",
-      "source": "lib/api/clients/server-client.ts:87",
+      "source": "lib/api/clients/server-client.ts:88",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1631,7 +1631,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<DashboardAccessConfig>>",
       "parameters": "serverId: string",
-      "source": "lib/api/clients/server-client.ts:98",
+      "source": "lib/api/clients/server-client.ts:99",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1652,7 +1652,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<DashboardAccessConfig>>",
       "parameters": "serverId: string, grants: DashboardAccessGrant[]",
-      "source": "lib/api/clients/server-client.ts:106",
+      "source": "lib/api/clients/server-client.ts:107",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1677,7 +1677,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<BotGuildProfile>>",
       "parameters": "serverId: string",
-      "source": "lib/api/clients/server-client.ts:117",
+      "source": "lib/api/clients/server-client.ts:118",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1698,7 +1698,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<BotGuildProfile>>",
       "parameters": "serverId: string, profile: BotGuildProfileUpdate",
-      "source": "lib/api/clients/server-client.ts:125",
+      "source": "lib/api/clients/server-client.ts:126",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1723,7 +1723,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<GuildInfo[]>>",
       "parameters": "signal?: AbortSignal",
-      "source": "lib/api/clients/server-client.ts:136",
+      "source": "lib/api/clients/server-client.ts:137",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1742,16 +1742,16 @@
       "path": "/v2/guild/:guildId",
       "contract": "GuildEndpoint",
       "validatedBySharedClient": true,
-      "responseType": "Promise<ApiResponse<GuildInfo>>",
+      "responseType": "Promise<ApiResponse<GuildDetails>>",
       "parameters": "guildId: string, signal?: AbortSignal",
-      "source": "lib/api/clients/server-client.ts:146",
+      "source": "lib/api/clients/server-client.ts:147",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
           "path": "lib/api/types/common.ts"
         },
         {
-          "name": "GuildInfo",
+          "name": "GuildDetails",
           "path": "lib/api/types/server.ts"
         }
       ]
@@ -1765,7 +1765,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<{ message: string }>>",
       "parameters": "serverId: string",
-      "source": "lib/api/clients/server-client.ts:154",
+      "source": "lib/api/clients/server-client.ts:155",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1782,7 +1782,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<ServerSettings>>",
       "parameters": "serverId: string, clanSettings = false, signal?: AbortSignal",
-      "source": "lib/api/clients/server-client.ts:162",
+      "source": "lib/api/clients/server-client.ts:163",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1803,7 +1803,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<ServerSettingsResponse>>",
       "parameters": "serverId: string, settings: ServerSettingsUpdate",
-      "source": "lib/api/clients/server-client.ts:174",
+      "source": "lib/api/clients/server-client.ts:175",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1828,7 +1828,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<ClanSettings>>",
       "parameters": "serverId: string, clanTag: string",
-      "source": "lib/api/clients/server-client.ts:185",
+      "source": "lib/api/clients/server-client.ts:186",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1849,7 +1849,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<ClanSettingsResponse>>",
       "parameters": "serverId: string, clanTag: string, settings: ClanSettingsUpdate",
-      "source": "lib/api/clients/server-client.ts:193",
+      "source": "lib/api/clients/server-client.ts:194",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1874,7 +1874,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<ServerClanListItem[]>>",
       "parameters": "serverId: string, signal?: AbortSignal",
-      "source": "lib/api/clients/server-client.ts:205",
+      "source": "lib/api/clients/server-client.ts:206",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1895,7 +1895,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<{ message: string }>>",
       "parameters": "serverId: string, hexCode: string",
-      "source": "lib/api/clients/server-client.ts:218",
+      "source": "lib/api/clients/server-client.ts:219",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1912,7 +1912,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<PaginatedResponse<BannedPlayer>>>",
       "parameters": "serverId: string, userId?: string",
-      "source": "lib/api/clients/server-client.ts:229",
+      "source": "lib/api/clients/server-client.ts:230",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1937,7 +1937,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<BanResponse>>",
       "parameters": "serverId: string, playerTag: string, data: BanRequest, userId?: string",
-      "source": "lib/api/clients/server-client.ts:245",
+      "source": "lib/api/clients/server-client.ts:246",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1962,7 +1962,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<BanResponse>>",
       "parameters": "serverId: string, playerTag: string, userId?: string",
-      "source": "lib/api/clients/server-client.ts:258",
+      "source": "lib/api/clients/server-client.ts:259",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1983,7 +1983,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<SearchBannedPlayersResponse>>",
       "parameters": "guildId: string, query: string",
-      "source": "lib/api/clients/server-client.ts:270",
+      "source": "lib/api/clients/server-client.ts:271",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -2004,7 +2004,7 @@
       "validatedBySharedClient": true,
       "responseType": "inferred from shared descriptor",
       "parameters": "serverId: string",
-      "source": "lib/api/clients/server-client.ts:281",
+      "source": "lib/api/clients/server-client.ts:282",
       "localTypeLocations": []
     },
     {
@@ -2016,7 +2016,7 @@
       "validatedBySharedClient": true,
       "responseType": "inferred from shared descriptor",
       "parameters": "serverId: string, logsConfig: EndpointRequest<typeof SaveServerLogsEndpoint>[\"body\"]",
-      "source": "lib/api/clients/server-client.ts:289",
+      "source": "lib/api/clients/server-client.ts:290",
       "localTypeLocations": []
     },
     {
@@ -2028,7 +2028,7 @@
       "validatedBySharedClient": true,
       "responseType": "inferred from shared descriptor",
       "parameters": "serverId: string, signal?: AbortSignal",
-      "source": "lib/api/clients/server-client.ts:297",
+      "source": "lib/api/clients/server-client.ts:298",
       "localTypeLocations": []
     },
     {
@@ -2040,7 +2040,7 @@
       "validatedBySharedClient": true,
       "responseType": "inferred from shared descriptor",
       "parameters": "serverId: string, signal?: AbortSignal",
-      "source": "lib/api/clients/server-client.ts:305",
+      "source": "lib/api/clients/server-client.ts:306",
       "localTypeLocations": []
     },
     {
@@ -2052,7 +2052,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<ServerLinksResponse>>",
       "parameters": "serverId: string, params?: { limit?: number; offset?: number; query?: string; account_filter?: \"none\" }",
-      "source": "lib/api/clients/server-client.ts:313",
+      "source": "lib/api/clients/server-client.ts:314",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -2073,7 +2073,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<PaginatedResponse<Strike>>>",
       "parameters": "serverId: string, playerTag?: string, viewExpired = false",
-      "source": "lib/api/clients/server-client.ts:324",
+      "source": "lib/api/clients/server-client.ts:325",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -2098,7 +2098,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<StrikeAddResponse>>",
       "parameters": "serverId: string, playerTag: string, data: StrikeRequest",
-      "source": "lib/api/clients/server-client.ts:344",
+      "source": "lib/api/clients/server-client.ts:345",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -2123,7 +2123,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<StrikeDeleteResponse>>",
       "parameters": "serverId: string, strikeId: string",
-      "source": "lib/api/clients/server-client.ts:356",
+      "source": "lib/api/clients/server-client.ts:357",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -2144,7 +2144,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<StrikeSummary>>",
       "parameters": "serverId: string, playerTag: string",
-      "source": "lib/api/clients/server-client.ts:367",
+      "source": "lib/api/clients/server-client.ts:368",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -2165,7 +2165,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<{ roles: DiscordRole[] }>>",
       "parameters": "serverId: string",
-      "source": "lib/api/clients/server-client.ts:378",
+      "source": "lib/api/clients/server-client.ts:379",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -2186,7 +2186,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<GiveawaysResponse>>",
       "parameters": "serverId: string",
-      "source": "lib/api/clients/server-client.ts:388",
+      "source": "lib/api/clients/server-client.ts:389",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -2207,7 +2207,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<GiveawayMutationResponse>>",
       "parameters": "serverId: string, body: FormData",
-      "source": "lib/api/clients/server-client.ts:396",
+      "source": "lib/api/clients/server-client.ts:397",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -2228,7 +2228,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<GiveawayMutationResponse>>",
       "parameters": "serverId: string, giveawayId: string, body: FormData",
-      "source": "lib/api/clients/server-client.ts:407",
+      "source": "lib/api/clients/server-client.ts:408",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -2249,7 +2249,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<GiveawayMutationResponse>>",
       "parameters": "serverId: string, giveawayId: string",
-      "source": "lib/api/clients/server-client.ts:419",
+      "source": "lib/api/clients/server-client.ts:420",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -2270,7 +2270,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<GiveawayEntriesResponse>>",
       "parameters": "serverId: string, giveawayId: string",
-      "source": "lib/api/clients/server-client.ts:430",
+      "source": "lib/api/clients/server-client.ts:431",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -2291,7 +2291,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<GiveawayRerollResponse>>",
       "parameters": "serverId: string, giveawayId: string, userIdsToReplace: string[]",
-      "source": "lib/api/clients/server-client.ts:441",
+      "source": "lib/api/clients/server-client.ts:442",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -2833,7 +2833,7 @@
       "path": "/v2/links/server/:serverId",
       "contract": "CreateServerLinkEndpoint",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/links/page.tsx:234"
+      "source": "app/dashboard/links/page.tsx:236"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2842,7 +2842,7 @@
       "path": "/proxy/v1/players/:playerTag",
       "contract": "ProxyPlayerEndpoint",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/links/page.tsx:300"
+      "source": "app/dashboard/links/page.tsx:304"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2851,7 +2851,7 @@
       "path": "/v2/links/server/:serverId",
       "contract": "DeleteServerLinkEndpoint",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/links/page.tsx:309"
+      "source": "app/dashboard/links/page.tsx:313"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2860,7 +2860,7 @@
       "path": "/v2/links/server/:serverId",
       "contract": "dashboardEndpoints.serverLinks",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/links/page.tsx:92"
+      "source": "app/dashboard/links/page.tsx:93"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2950,16 +2950,7 @@
       "path": "/v2/server/:serverId/reminders",
       "contract": "dashboardEndpoints.serverReminders",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/reminders/page.tsx:255"
-    },
-    {
-      "helper": "executeSharedEndpoint",
-      "operationId": "createServerReminder",
-      "method": "POST",
-      "path": "/v2/server/:serverId/reminders",
-      "contract": "dashboardEndpoints.createServerReminder",
-      "validatedBySharedClient": true,
-      "source": "app/dashboard/reminders/page.tsx:423"
+      "source": "app/dashboard/reminders/page.tsx:261"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2968,7 +2959,16 @@
       "path": "/v2/server/:serverId/reminders",
       "contract": "dashboardEndpoints.serverReminders",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/reminders/page.tsx:429"
+      "source": "app/dashboard/reminders/page.tsx:448"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "createServerReminder",
+      "method": "POST",
+      "path": "/v2/server/:serverId/reminders",
+      "contract": "dashboardEndpoints.createServerReminder",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/reminders/page.tsx:486"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2977,7 +2977,7 @@
       "path": "/v2/server/:serverId/reminders/:reminderId",
       "contract": "dashboardEndpoints.deleteServerReminder",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/reminders/page.tsx:550"
+      "source": "app/dashboard/reminders/page.tsx:602"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2986,7 +2986,7 @@
       "path": "/v2/server/:serverId/reminders",
       "contract": "dashboardEndpoints.createServerReminder",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/reminders/page.tsx:679"
+      "source": "app/dashboard/reminders/page.tsx:731"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2995,16 +2995,7 @@
       "path": "/v2/server/:serverId/reminders/:reminderId",
       "contract": "dashboardEndpoints.updateServerReminder",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/reminders/page.tsx:704"
-    },
-    {
-      "helper": "executeSharedEndpoint",
-      "operationId": "serverReminders",
-      "method": "GET",
-      "path": "/v2/server/:serverId/reminders",
-      "contract": "dashboardEndpoints.serverReminders",
-      "validatedBySharedClient": true,
-      "source": "app/dashboard/reminders/page.tsx:717"
+      "source": "app/dashboard/reminders/page.tsx:756"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -3013,16 +3004,7 @@
       "path": "/v2/static/:category/:itemIdOrName/max-level",
       "contract": "dashboardEndpoints.dashboardStaticMaxLevel",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/roles/page.tsx:185"
-    },
-    {
-      "helper": "executeSharedEndpoint",
-      "operationId": "dashboardStaticMaxLevel",
-      "method": "GET",
-      "path": "/v2/static/:category/:itemIdOrName/max-level",
-      "contract": "dashboardEndpoints.dashboardStaticMaxLevel",
-      "validatedBySharedClient": true,
-      "source": "app/dashboard/roles/page.tsx:190"
+      "source": "app/dashboard/roles/page.tsx:186"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -3031,7 +3013,7 @@
       "path": "/v2/static/:category/names",
       "contract": "dashboardEndpoints.dashboardStaticCategoryNames",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/roles/page.tsx:233"
+      "source": "app/dashboard/roles/page.tsx:231"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -3274,7 +3256,7 @@
       "path": "/v2/public/rosters/:publicShareId",
       "contract": "dashboardEndpoints.dashboardPublicRoster",
       "validatedBySharedClient": true,
-      "source": "app/roster/page.tsx:55"
+      "source": "app/roster/page.tsx:60"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -3304,27 +3286,18 @@
       "source": "components/dashboard/player-search-combobox.tsx:56"
     },
     {
-      "helper": "executeSharedEndpoint",
-      "operationId": "resolveTenorMedia",
+      "helper": "fetch",
       "method": "POST",
-      "path": "/v2/media/tenor/resolve",
-      "contract": "endpoints.tenorMedia",
-      "validatedBySharedClient": true,
-      "source": "components/tenor-media.tsx:16"
+      "path": "{baseUrl}/v2/auth/web/refresh",
+      "validatedBySharedClient": false,
+      "source": "lib/auth/session.ts:183"
     },
     {
       "helper": "fetch",
       "method": "POST",
       "path": "{baseUrl}/v2/auth/web/refresh",
       "validatedBySharedClient": false,
-      "source": "lib/auth/session.ts:182"
-    },
-    {
-      "helper": "fetch",
-      "method": "POST",
-      "path": "{baseUrl}/v2/auth/web/refresh",
-      "validatedBySharedClient": false,
-      "source": "lib/auth/session.ts:188"
+      "source": "lib/auth/session.ts:190"
     },
     {
       "helper": "executeAssistantEndpoint",

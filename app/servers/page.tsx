@@ -17,6 +17,7 @@ import { ServersHeader } from "@/components/servers-header";
 import { useAuthSession } from "@/components/auth-session-provider";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { InactiveServerDialog } from "@/components/dashboard/inactive-server-dialog";
+import { requiresServerReactivation } from "@/lib/server-activity";
 
 const ROLE_STYLES: Record<string, string> = {
   Owner: "bg-green-500/20 text-green-600 dark:text-green-400",
@@ -135,7 +136,7 @@ export default function ServersPage() {
 
   const handleGuildClick = (guild: GuildInfo) => {
     if (guild.has_bot) {
-      if (guild.inactive) {
+      if (requiresServerReactivation(guild)) {
         setInactiveGuild(guild);
         return;
       }
@@ -266,7 +267,7 @@ export default function ServersPage() {
                         <CardTitle className="text-lg sm:text-xl text-foreground truncate">
                           {guild.name}
                         </CardTitle>
-                        {guild.inactive && (
+                        {requiresServerReactivation(guild) && (
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger asChild>

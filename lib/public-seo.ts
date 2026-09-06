@@ -1,8 +1,5 @@
-import englishMessages from "@/messages/en.json";
-import frenchMessages from "@/messages/fr.json";
-import dutchMessages from "@/messages/nl.json";
+import messages from "virtual:public-seo-copy";
 import { publicPath, type PublicLocale } from "@/lib/locale-preference";
-import { withEnglishFallback, type MessageCatalog } from "@/lib/message-catalog";
 
 export type PublicPage = "home" | "privacy" | "terms";
 
@@ -20,12 +17,6 @@ export interface PublicMetadata {
 
 const SITE_ORIGIN = "https://clashk.ing";
 const SOCIAL_IMAGE = `${SITE_ORIGIN}/og/clashking-landing.png`;
-
-const messages = {
-  en: englishMessages,
-  fr: withEnglishFallback(frenchMessages),
-  nl: withEnglishFallback(dutchMessages),
-} satisfies Record<PublicLocale, MessageCatalog>;
 
 const pagePaths = {
   home: "/",
