@@ -17,7 +17,9 @@ import { ServersHeader } from "@/components/servers-header";
 import { useAuthSession } from "@/components/auth-session-provider";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { InactiveServerDialog } from "@/components/dashboard/inactive-server-dialog";
-import { requiresServerReactivation } from "@/lib/server-activity";
+import { dashboardGuilds, requiresServerReactivation } from "@/lib/server-activity";
+import { GuildsEndpoint } from "@clashking/api-contracts";
+import { Schema } from "effect";
 
 const ROLE_STYLES: Record<string, string> = {
   Owner: "bg-green-500/20 text-green-600 dark:text-green-400",
@@ -67,20 +69,15 @@ export default function ServersPage() {
         const prefetched = sessionStorage.getItem('prefetched_guilds');
         if (prefetched) {
           try {
-            const guildsData = JSON.parse(prefetched);
-            setGuilds(guildsData);
+            const guildsData = Schema.decodeUnknownSync(GuildsEndpoint.response)(JSON.parse(prefetched));
+            setGuilds(dashboardGuilds(guildsData));
             setLoading(false);
             sessionStorage.removeItem('prefetched_guilds'); // Clean up
 
             // Fetch fresh data in background
             const response = await apiClient.servers.getGuilds();
             if (response.data) {
-              const sortedGuilds = response.data.toSorted((a, b) => {
-                if (a.has_bot && !b.has_bot) return -1;
-                if (!a.has_bot && b.has_bot) return 1;
-                return a.name.localeCompare(b.name);
-              });
-              setGuilds(sortedGuilds);
+              setGuilds(dashboardGuilds(response.data));
             }
             return;
           } catch (err) {
@@ -102,17 +99,7 @@ export default function ServersPage() {
           throw new Error(response.error || "Failed to fetch guilds");
         }
 
-        // Sort guilds: servers with bot first, then by name
-        const sortedGuilds = response.data.toSorted((a, b) => {
-          // Primary sort: has_bot (true first)
-          if (a.has_bot && !b.has_bot) return -1;
-          if (!a.has_bot && b.has_bot) return 1;
-
-          // Secondary sort: alphabetically by name
-          return a.name.localeCompare(b.name);
-        });
-
-        setGuilds(sortedGuilds);
+        setGuilds(dashboardGuilds(response.data));
       } catch (err) {
         console.error("Error fetching guilds:", err);
         setError(err instanceof Error ? err.message : "Failed to load servers");
@@ -242,19 +229,13 @@ export default function ServersPage() {
             {guilds.map((guild) => (
               <Card
                 key={guild.id}
-                className={`border-2 bg-card/95 backdrop-blur transition-all duration-300 ${guild.has_bot
-                  ? "border-border hover:border-primary hover:shadow-[0_0_10px_var(--primary)]/30"
-                  : "border-border opacity-75"
-                  } rounded-xl overflow-hidden`}
+                className="rounded-xl border-2 border-border bg-card/95 backdrop-blur transition-all duration-300 hover:border-primary hover:shadow-[0_0_10px_var(--primary)]/30 overflow-hidden"
               >
                 <CardHeader className="flex min-h-[106px] sm:min-h-[138px] flex-row items-center justify-between gap-3 sm:gap-4 p-4 sm:p-6">
                   {/* Left side: avatar + info */}
                   <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
                     <Avatar
-                      className={`h-12 w-12 sm:h-16 sm:w-16 border-2 transition-transform duration-300 flex-shrink-0 ${guild.has_bot
-                        ? "border-primary group-hover:scale-105"
-                        : "border-border"
-                        }`}
+                      className="h-12 w-12 sm:h-16 sm:w-16 border-2 border-primary transition-transform duration-300 flex-shrink-0 group-hover:scale-105"
                     >
                       <AvatarImage src={getGuildIconUrl(guild) || undefined} />
                       <AvatarFallback className="text-xl sm:text-2xl bg-muted text-foreground">
@@ -301,26 +282,12 @@ export default function ServersPage() {
 
                   {/* Right side: action button */}
                   <div className="flex-shrink-0">
-                    {guild.has_bot ? (
-                      <Button
-                        onClick={() => handleGuildClick(guild)}
-                        className="w-24 sm:w-28 bg-green-600 hover:bg-green-700 text-white cursor-pointer text-xs sm:text-sm h-9 sm:h-10"
-                      >
-                        {t("configure")}
-                      </Button>
-                    ) : (
-                      <a
-                        href={`https://discord.com/application-directory/824653933347209227?guild_id=${guild.id}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                        className="block"
-                      >
-                        <Button className="w-24 sm:w-28 bg-primary hover:bg-primary/90 text-white cursor-pointer text-xs sm:text-sm h-9 sm:h-10">
-                          {t("invite")}
-                        </Button>
-                      </a>
-                    )}
+                    <Button
+                      onClick={() => handleGuildClick(guild)}
+                      className="w-24 sm:w-28 bg-green-600 hover:bg-green-700 text-white cursor-pointer text-xs sm:text-sm h-9 sm:h-10"
+                    >
+                      {t("configure")}
+                    </Button>
                   </div>
                 </CardHeader>
               </Card>

@@ -150,6 +150,7 @@ describe("ServerClient dashboard access", () => {
       boosters: [],
       entries: ["user-1", "user-1", "user-2", "user-3"],
       updated: false,
+      disabled: false,
       winnersList: [],
       createdAt: "2026-07-24T11:00:00Z",
       updatedAt: "2026-07-24T11:00:00Z",

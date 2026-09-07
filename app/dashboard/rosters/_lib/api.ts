@@ -279,7 +279,7 @@ export async function fetchClanMembers(clanTag: string): Promise<ClanMember[]> {
   const clan = await executeSharedEndpoint(ProxyClanEndpoint, {
     path: { clanTag }, query: {}, body: {},
   });
-  return clan.memberList.map((member) => ({
+  return (clan.memberList ?? []).map((member) => ({
     tag: member.tag, name: member.name, townhall: member.townHallLevel,
     clan_tag: clan.tag, clan_name: clan.name,
   }));

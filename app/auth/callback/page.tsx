@@ -7,6 +7,7 @@ import { useTranslations } from "use-intl";
 import { useTheme } from "next-themes";
 import LoadingScreenWithMessages from "@/components/ui/loading-screen-with-messages";
 import { apiClient } from "@/lib/api/client";
+import { dashboardGuilds } from "@/lib/server-activity";
 import { clashKingAssets } from "@/lib/theme";
 import { cacheUser, setAccessToken } from "@/lib/auth/session";
 
@@ -116,15 +117,7 @@ export default function AuthCallbackPage() {
         try {
           const guildsResponse = await apiClient.servers.getGuilds();
           if (guildsResponse.data) {
-            // Sort guilds: servers with bot first, then by name
-            const sortedGuilds = guildsResponse.data.toSorted((a, b) => {
-              // Primary sort: has_bot (true first)
-              if (a.has_bot && !b.has_bot) return -1;
-              if (!a.has_bot && b.has_bot) return 1;
-              // Secondary sort: alphabetically by name
-              return a.name.localeCompare(b.name);
-            });
-            sessionStorage.setItem('prefetched_guilds', JSON.stringify(sortedGuilds));
+            sessionStorage.setItem('prefetched_guilds', JSON.stringify(dashboardGuilds(guildsResponse.data)));
           }
         } catch (err) {
           console.error('Failed to prefetch guilds:', err);

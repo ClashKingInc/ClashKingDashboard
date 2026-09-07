@@ -24,6 +24,7 @@ import {
   calculateCwlRewards,
   calculateCwlStandings,
   calculateCwlPlayerPerformance,
+  cwlSeasonLabel,
   resolveCwlLeagueMovement,
   resolveCwlWarSize,
   selectableCwlSeasons,
@@ -41,15 +42,6 @@ const CWL_ASSETS = {
   star: "https://assets.clashk.ing/bot/icons/war_star.png",
   medal: "https://assets.clashk.ing/bot/icons/cwl_medal.png",
 } as const;
-
-function seasonLabel(item: CwlSeasonItem, locale: string, unknownLeague: string): string {
-  const [year, month] = item.season.split("-").map(Number);
-  const date = year && month ? new Date(Date.UTC(year, month - 1, 1)) : null;
-  const label = date && !Number.isNaN(date.getTime())
-    ? new Intl.DateTimeFormat(locale, { month: "long", year: "numeric", timeZone: "UTC" }).format(date)
-    : item.season;
-  return `${label} · ${item.warLeague?.name ?? unknownLeague}`;
-}
 
 interface SummaryItemProps {
   readonly label: string;
@@ -246,7 +238,7 @@ export default function CwlBonusesPage() {
                 {selectedSeason ? (
                   <div className="flex min-w-0 flex-1 items-center gap-2.5 text-left">
                     <Image src={cwlLeagueImageUrl(selectedSeason.warLeague?.name)} alt="" width={32} height={32} unoptimized className="h-8 w-8 shrink-0 object-contain" />
-                    <span className="truncate">{seasonLabel(selectedSeason, locale, t("unknownLeague"))}</span>
+                    <span className="truncate">{cwlSeasonLabel(selectedSeason, locale, t("unknownLeague"))}</span>
                   </div>
                 ) : <SelectValue placeholder={t("noStoredSeasons")} />}
               </SelectTrigger>
@@ -255,7 +247,7 @@ export default function CwlBonusesPage() {
                   <SelectItem key={item.season} value={item.season}>
                     <span className="flex items-center gap-2.5">
                       <Image src={cwlLeagueImageUrl(item.warLeague?.name)} alt="" width={30} height={30} unoptimized className="h-[30px] w-[30px] shrink-0 object-contain" />
-                      <span>{seasonLabel(item, locale, t("unknownLeague"))}</span>
+                      <span>{cwlSeasonLabel(item, locale, t("unknownLeague"))}</span>
                     </span>
                   </SelectItem>
                 ))}

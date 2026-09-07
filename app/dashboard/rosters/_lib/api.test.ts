@@ -67,9 +67,10 @@ describe("roster contract callers", () => {
       tag: "#CLAN", name: "Clan", type: "inviteOnly", description: "", isFamilyFriendly: true,
       badgeUrls: { small: "https://example.test/s.png", medium: "https://example.test/m.png", large: "https://example.test/l.png" },
       clanLevel: 10, clanPoints: 1000, clanBuilderBasePoints: 1000, clanCapitalPoints: 1000,
+      clanCapital: { clanGoldSinkTotal: 0 },
       requiredTrophies: 0, warFrequency: "always", warWinStreak: 0, warWins: 10, isWarLogPublic: true,
       members: 1, labels: [], memberList: [{ tag: "#ABC", name: "Test", role: "member", townHallLevel: 17,
-        expLevel: 200, trophies: 5000, donations: 0, donationsReceived: 0 }],
+        expLevel: 200, trophies: 5000, donations: 0, donationsReceived: 0, clanRank: 1, previousClanRank: 1 }],
     }));
     await expect(fetchClanMembers("#CLAN")).resolves.toEqual([{
       tag: "#ABC", name: "Test", townhall: 17, clan_tag: "#CLAN", clan_name: "Clan",

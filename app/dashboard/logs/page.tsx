@@ -65,14 +65,7 @@ interface ClanSummary {
   name: string;
 }
 
-interface ServerLog {
-  clan_tag?: string;
-  type: string;
-  webhook_id: string;
-  channel_id?: string;
-  thread_id?: string | null;
-  disabled: boolean;
-}
+type ServerLog = EndpointResponse<typeof dashboardEndpoints.serverLogs>["logs"][number];
 
 interface LogTypeDefinition {
   keys: string[];
@@ -499,6 +492,8 @@ export default function LogsPage() {
     const isStatusLoading = statusLoading || (!serverScoped && !currentClan);
     const isConfigured = isLogConfigured(logDef.keys, serverScoped);
     const isEnabled = isLogEnabled(logDef.keys, serverScoped);
+    const selectedLog = getSelectedLog(logDef.keys, serverScoped);
+    const disabledReason = selectedLog?.disabled ? selectedLog.disabled_reason : null;
     const selectedChannel = getSelectedChannelForLogs(logDef.keys, serverScoped);
     const selectedThread = getSelectedThreadForLogs(logDef.keys, serverScoped);
     const colors = getLogColorClasses(logDef.color);
@@ -639,6 +634,17 @@ export default function LogsPage() {
             </div>
           ) : (
             <div className="space-y-3">
+              {selectedLog?.disabled && (
+                <div className="flex flex-col gap-3 rounded-2xl bg-orange-500/10 px-3 py-3 text-sm text-orange-700 dark:text-orange-300 sm:flex-row sm:items-center">
+                  <div className="flex min-w-0 flex-1 items-start gap-2">
+                    <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+                    <span className="break-words">{disabledReason || t('logCard.disabled')}</span>
+                  </div>
+                  <Button type="button" size="sm" variant="secondary" disabled={isSaving} onClick={() => void handleDisabledChange(logDef.keys, false, serverScoped)}>
+                    {t('logCard.enable')}
+                  </Button>
+                </div>
+              )}
               <div className="space-y-1.5">
                 <Label className="text-sm font-medium">{t('logCard.channel')}</Label>
                 <ChannelCombobox

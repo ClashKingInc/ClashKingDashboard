@@ -20,6 +20,7 @@ const giveaway = {
   boosters: [{ value: 2, roles: ["role-1"] }],
   entries: ["user-1", "user-1", "user-2"],
   updated: false,
+  disabled: false,
   winnersList: [{
     userId: "user-1",
     username: "Winner",

@@ -1,7 +1,7 @@
 "use client";
 
 import { useGuildId } from "@/lib/dashboard-route";
-import { dashboardEndpoints, type EndpointResponse } from "@clashking/api-contracts";
+import { dashboardEndpoints, type EndpointRequest, type EndpointResponse } from "@clashking/api-contracts";
 import { executeSharedEndpoint } from "@/lib/api/shared-client";
 import { ApiResponseError } from "@clashking/api-client";
 
@@ -83,6 +83,8 @@ interface ReminderConfig {
   attack_threshold?: number;
   roster_id?: string;
   ping_type?: string;
+  disabled: boolean;
+  disabled_reason?: string | null;
 }
 
 interface ServerRemindersResponse {
@@ -90,23 +92,10 @@ interface ServerRemindersResponse {
   capital_reminders: ReminderConfig[];
   clan_games_reminders: ReminderConfig[];
   inactivity_reminders: ReminderConfig[];
+  roster_reminders: ReminderConfig[];
 }
 
-interface CreateReminderRequest {
-  type: string;
-  clan_tag?: string;
-  channel_id: string;
-  thread_id: string | null;
-  time: string;
-  custom_text?: string;
-  townhall_filter?: number[];
-  roles?: string[];
-  war_types?: string[];
-  point_threshold?: number;
-  attack_threshold?: number;
-  roster_id?: string;
-  ping_type?: string;
-}
+type CreateReminderRequest = EndpointRequest<typeof dashboardEndpoints.createServerReminder>["body"];
 
 type ContractReminder = EndpointResponse<typeof dashboardEndpoints.serverReminders>["war_reminders"][number];
 
@@ -222,6 +211,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
     capital_reminders: [],
     clan_games_reminders: [],
     inactivity_reminders: [],
+    roster_reminders: [],
   });
   const [clans, setClans] = useState<Clan[]>([]);
   const [channels, setChannels] = useState<Channel[]>([]);
@@ -318,6 +308,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
           capital_reminders: remindersData.capital_reminders.map(mutableReminder),
           clan_games_reminders: remindersData.clan_games_reminders.map(mutableReminder),
           inactivity_reminders: remindersData.inactivity_reminders.map(mutableReminder),
+          roster_reminders: remindersData.roster_reminders.map(mutableReminder),
         });
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -454,6 +445,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
         capital_reminders: data.capital_reminders.map(mutableReminder),
         clan_games_reminders: data.clan_games_reminders.map(mutableReminder),
         inactivity_reminders: data.inactivity_reminders.map(mutableReminder),
+        roster_reminders: data.roster_reminders.map(mutableReminder),
       });
     } catch (refreshError) {
       // The mutation already succeeded. Keep its success state instead of
@@ -825,14 +817,14 @@ export default function RemindersPage() { // NOSONAR — React page component: c
     ...reminders.clan_games_reminders,
     ...reminders.inactivity_reminders,
   ];
-  const remindersWithIssues = destinationMetadataAvailable
-    ? allReminders.filter((reminder) => !isDestinationValid(
+  const remindersWithIssues = allReminders.filter((reminder) => reminder.disabled || (
+    destinationMetadataAvailable && !isDestinationValid(
       reminder.channel_id,
       reminder.thread_id ?? undefined,
       channels,
       threads,
-    ))
-    : [];
+    )
+  ));
   const tabDefinitions: Array<{
     value: string;
     label: string;
@@ -902,7 +894,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                             <p className="truncate text-xs text-muted-foreground">
                               {clan?.name ?? reminder.clan_tag ?? t('card.notSet')}
                               {" · "}
-                              {channelExists ? t('issues.threadMissing') : t('issues.channelMissing', { channelId: reminder.channel_id ?? "—" })}
+                              {reminder.disabled_reason ?? (channelExists ? t('issues.threadMissing') : t('issues.channelMissing', { channelId: reminder.channel_id ?? "—" }))}
                             </p>
                           </div>
                           <Button
@@ -1107,6 +1099,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                                         {extractHours(reminder.time)} {t('card.hoursRemaining')}
                                       </span>
                                       {isNew && <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-medium">{t('card.new')}</span>}
+                                      {reminder.disabled && <Badge variant="outline" className="border-orange-500/40 bg-orange-500/10 text-orange-700 dark:text-orange-300">{tCommon('disabled')}</Badge>}
                                     </div>
                                     <p className="mt-1 truncate text-sm text-muted-foreground">
                                       {clanName ? `${clanName} · ${reminder.clan_tag}` : reminder.clan_tag ?? t('card.notSet')}
@@ -1129,6 +1122,14 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                                         </span>
                                       )}
                                     </div>
+                                    {reminder.disabled && (
+                                      <div className="mt-3 flex flex-col gap-2 rounded-2xl bg-orange-500/10 px-3 py-2.5 text-sm text-orange-700 dark:text-orange-300 sm:flex-row sm:items-center">
+                                        <span className="min-w-0 flex-1 break-words">{reminder.disabled_reason || tCommon('disabled')}</span>
+                                        <Button type="button" size="sm" variant="secondary" onClick={() => editReminder(reminder)}>
+                                          <Edit2 className="mr-2 h-4 w-4" />{t('actions.edit')}
+                                        </Button>
+                                      </div>
+                                    )}
                                     {customMessageImageUrl ? (
                                       <div className="mt-3 overflow-hidden rounded-2xl bg-muted/45">
                                         <Image

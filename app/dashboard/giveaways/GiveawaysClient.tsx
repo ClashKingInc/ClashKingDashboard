@@ -275,7 +275,7 @@ function GiveawaysMainContent({
   );
 }
 
-function GiveawaysList({
+export function GiveawaysList({
   items,
   shownEnded,
   tableLoading,
@@ -365,6 +365,11 @@ function GiveawaysList({
                               </Tooltip>
                             </TooltipProvider>
                           )}
+                          {g.disabled && (
+                            <Badge variant="outline" className="shrink-0 border-orange-500/40 bg-orange-500/10 text-[10px] text-orange-700 dark:text-orange-300">
+                              {tCommon("disabled")}
+                            </Badge>
+                          )}
                           {g.profilePictureRequired && (
                             <TooltipProvider delayDuration={200}><Tooltip><TooltipTrigger asChild><User className="h-3 w-3" /></TooltipTrigger><TooltipContent>{t("preview.profileRequired")}</TooltipContent></Tooltip></TooltipProvider>
                           )}
@@ -375,6 +380,12 @@ function GiveawaysList({
                             <TooltipProvider delayDuration={200}><Tooltip><TooltipTrigger asChild><CheckCircle2 className="h-3 w-3" /></TooltipTrigger><TooltipContent>{t("table.boosters", { count: g.boosters.length })}</TooltipContent></Tooltip></TooltipProvider>
                           )}
                         </div>
+                        {g.disabled && (
+                          <div className="mt-2 flex items-start gap-1.5 rounded-xl bg-orange-500/10 px-2.5 py-2 text-xs text-orange-700 dark:text-orange-300">
+                            <AlertCircle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                            <span className="break-words">{g.disabled_reason || tCommon("disabled")}</span>
+                          </div>
+                        )}
                     </div>
                     <Badge className={cn("shrink-0 border-0 px-2.5 py-1 shadow-none xl:self-center", isOngoing && "bg-emerald-500/12 text-emerald-700 hover:bg-emerald-500/12 dark:text-emerald-300", g.status === "scheduled" && "bg-amber-500/12 text-amber-700 hover:bg-amber-500/12 dark:text-amber-300", isEnded && "bg-muted text-muted-foreground hover:bg-muted")}>{t(`status.${g.status}`)}</Badge>
                   </div>
@@ -428,8 +439,8 @@ function GiveawaysList({
                   </div>
                   <div className="flex items-center gap-1.5 border-t border-border/50 pt-3 xl:justify-end xl:border-0 xl:pt-0">
                       <Button variant="secondary" size="sm" className="min-w-0 flex-1 border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted xl:flex-none" onClick={() => onOpenEdit(g)}>
-                        {isEnded ? <Eye className="h-4 w-4" /> : <Pencil className="h-4 w-4" />}
-                        {isEnded ? t("table.viewGiveaway") : t("table.editGiveaway")}
+                        {isEnded && !g.disabled ? <Eye className="h-4 w-4" /> : <Pencil className="h-4 w-4" />}
+                        {isEnded && !g.disabled ? t("table.viewGiveaway") : t("table.editGiveaway")}
                       </Button>
                       {g.messageId && g.channelId && (
                         <TooltipProvider delayDuration={200}>

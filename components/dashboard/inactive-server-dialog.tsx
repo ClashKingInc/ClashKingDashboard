@@ -24,9 +24,10 @@ interface InactiveServerDialogProps {
 }
 
 export function InactiveServerDialog({ guild, locale, onClose, onReactivated }: InactiveServerDialogProps) {
-  const t = useTranslations("ServersPage.inactive");
+  const t = useTranslations("ServersPage");
   const [reactivating, setReactivating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const firstActivation = guild !== null && !guild.last_command_at;
 
   useEffect(() => {
     setError(null);
@@ -60,12 +61,12 @@ export function InactiveServerDialog({ guild, locale, onClose, onReactivated }: 
     >
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{t("title")}</AlertDialogTitle>
+          <AlertDialogTitle>{firstActivation ? t("configure") : t("inactive.title")}</AlertDialogTitle>
           <AlertDialogDescription>
-            {t("description")}
+            {firstActivation ? t("inactive.unknown") : t("inactive.description")}
             {guild?.last_command_at && (
               <span className="mt-3 block text-foreground">
-                {t("lastUsed", {
+                {t("inactive.lastUsed", {
                   date: new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(new Date(guild.last_command_at)),
                 })}
               </span>
@@ -74,7 +75,7 @@ export function InactiveServerDialog({ guild, locale, onClose, onReactivated }: 
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={reactivating}>{t("cancel")}</AlertDialogCancel>
+          <AlertDialogCancel disabled={reactivating}>{t("inactive.cancel")}</AlertDialogCancel>
           <AlertDialogAction
             disabled={reactivating}
             onClick={(event) => {
@@ -82,7 +83,7 @@ export function InactiveServerDialog({ guild, locale, onClose, onReactivated }: 
               void reactivate();
             }}
           >
-            {reactivating ? t("reactivating") : t("confirm")}
+            {reactivating ? t("inactive.reactivating") : firstActivation ? t("configure") : t("inactive.confirm")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

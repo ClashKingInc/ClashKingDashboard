@@ -103,6 +103,13 @@ function capturedRequest(method: string): Request | undefined {
   return input instanceof Request ? input : new Request(input, init);
 }
 
+function reminderPayload() {
+  return Object.fromEntries(Object.entries(fixtures.reminders).map(([key, items]) => [
+    key,
+    items.map((item) => ({ disabled: false, ...item })),
+  ]));
+}
+
 describe("RemindersPage Discord destinations", () => {
   beforeEach(() => {
     clearSession(false);
@@ -159,7 +166,7 @@ describe("RemindersPage Discord destinations", () => {
         if (fixtures.failRefreshAfterSave && capturedRequest("POST")) {
           return Promise.resolve(jsonResponse({ message: "Temporarily unavailable" }, 503));
         }
-        return Promise.resolve(jsonResponse(fixtures.reminders));
+        return Promise.resolve(jsonResponse(reminderPayload()));
       }
       if (url.endsWith("/reminders") && request.method === "POST") {
         return Promise.resolve(jsonResponse({ message: "created", reminder_id: "new", server_id: "123" }));
@@ -218,6 +225,27 @@ describe("RemindersPage Discord destinations", () => {
     const screen = renderRemindersPage();
 
     expect(await screen.findByText("Discord guild authorization failed")).toBeInTheDocument();
+  });
+
+  it("keeps a disabled reminder visible with its reason and repair action", async () => {
+    fixtures.reminders.war_reminders = [{
+      id: "disabled-war",
+      type: "War",
+      clan_tag: "#ABC",
+      channel_id: "100",
+      thread_id: null,
+      time: "6 hr",
+      war_types: ["Random"],
+      disabled: true,
+      disabled_reason: "Discord channel was deleted",
+    }];
+    const screen = renderRemindersPage();
+
+    const reason = await screen.findByText("Discord channel was deleted");
+    const card = reason.closest("article");
+    expect(card).not.toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "actions.edit" }));
+    expect(await screen.findByText("dialog.editTitle")).toBeInTheDocument();
   });
 
   it("allows a text parent without a thread and sends nullable thread_id", async () => {

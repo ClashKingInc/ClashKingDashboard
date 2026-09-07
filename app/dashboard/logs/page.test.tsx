@@ -129,6 +129,7 @@ describe("LogsPage Discord destinations and family summaries", () => {
       const request = input instanceof Request ? input : new Request(input, init);
       const url = request.url;
       if (request.method === "PUT") return jsonResponse({ message: "updated", server_id: 123 });
+      if (request.method === "PATCH") return jsonResponse({ message: "updated", server_id: 123 });
       if (url.endsWith("/countdowns") && (request.method === "POST" || request.method === "DELETE")) {
         const requestBody = await request.clone().json() as { countdown_type: string };
         return jsonResponse(request.method === "POST"
@@ -251,6 +252,27 @@ describe("LogsPage Discord destinations and family summaries", () => {
 
     expect(warning).toHaveAttribute("href", "https://discord.com/channels/123/301");
     expect(warning).toHaveAttribute("target", "_blank");
+  });
+
+  it("keeps an automatically disabled log visible with a re-enable action", async () => {
+    fixtures.logs = [{
+      clan_tag: "#ABC",
+      type: "join_log",
+      webhook_id: "1",
+      channel_id: "456",
+      disabled: true,
+      disabled_reason: "Webhook no longer exists",
+    }];
+    const screen = renderLogsPage();
+
+    expect(await screen.findByText("Webhook no longer exists")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "logCard.enable" }));
+    await waitFor(() => expect(capturedRequest("PATCH", "/logs")).toBeDefined());
+    await expect(capturedRequest("PATCH", "/logs")!.clone().json()).resolves.toEqual({
+      clan_tag: "#ABC",
+      log_types: ["join_log"],
+      disabled: false,
+    });
   });
 
   it("blocks a forum parent until a child post is selected", async () => {

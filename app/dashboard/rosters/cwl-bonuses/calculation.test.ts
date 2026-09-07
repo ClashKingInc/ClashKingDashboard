@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { calculateCwlPlayerPerformance, calculateCwlRewards, calculateCwlStandings, resolveCwlLeagueMovement, resolveCwlWarSize, selectableCwlSeasons, sortCwlMembersByPerformance } from "./calculation";
+import { calculateCwlPlayerPerformance, calculateCwlRewards, calculateCwlStandings, cwlSeasonLabel, resolveCwlLeagueMovement, resolveCwlWarSize, selectableCwlSeasons, sortCwlMembersByPerformance } from "./calculation";
 import type { CwlGroupResponse, CwlWarLeagueStaticItem } from "@/lib/api/types/war";
 
 describe("CWL bonus calculation", () => {
@@ -51,12 +51,18 @@ describe("CWL bonus calculation", () => {
     expect(resolveCwlWarSize(group, 30)).toBe(30);
   });
 
-  it("removes active wars from the season choices", () => {
+  it("keeps the active season available for live read-only standings", () => {
     const seasons = [
-      { season: "2026-08", state: "inWar", warSize: 15, warLeague: null },
-      { season: "2026-07", state: "ended", warSize: 15, warLeague: null },
+      { season: "2026-09-01", state: "inWar", warSize: 15, warLeague: null },
+      { season: "2026-09-03", state: "preparation", warSize: 15, warLeague: null },
+      { season: "2026-09-02", state: "inWar", warSize: 15, warLeague: null },
     ];
-    expect(selectableCwlSeasons(seasons)).toEqual([seasons[1]]);
+    expect(selectableCwlSeasons(seasons)).toEqual(seasons);
+    expect(seasons.map((item) => cwlSeasonLabel(item, "en", "Unknown"))).toEqual([
+      "September 1, 2026 · Unknown",
+      "September 3, 2026 · Unknown",
+      "September 2, 2026 · Unknown",
+    ]);
   });
 
   it("maps final rank to promotion, demotion, or unchanged", () => {
