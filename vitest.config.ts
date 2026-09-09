@@ -15,10 +15,9 @@ export default defineConfig({
     },
     coverage: {
       provider: "v8",
-      reporter: ["text", "lcov"],
-      reportsDirectory: "./coverage",
+      reporter: ["text"],
       exclude: [
-        // Thin wrappers with no logic — excluded from coverage in sonar-project.properties too
+        // Thin wrappers with no branching logic.
         "lib/api/clients/**",
         "lib/api/index.ts",
       ],
