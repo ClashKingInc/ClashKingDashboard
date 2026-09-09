@@ -1,8 +1,8 @@
 {
   "generatedFrom": "ClashKingDashboard current shared descriptor callers and remaining raw transport boundaries",
   "packageTargets": {
-    "contracts": "@clashking/api-contracts@0.1.0-rc.12",
-    "client": "@clashking/api-client@0.1.0-rc.12"
+    "contracts": "@clashking/api-contracts@0.1.0-rc.14",
+    "client": "@clashking/api-client@0.1.0-rc.14"
   },
   "queryToPostRoutes": [
     "/v2/home/activity"
@@ -2777,7 +2777,7 @@
       "path": "/v2/server/:serverId/autoboards",
       "contract": "ServerAutoboardsEndpoint",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/autoboards/page.tsx:168"
+      "source": "app/dashboard/autoboards/page.tsx:167"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2786,7 +2786,7 @@
       "path": "/v2/server/:serverId/autoboards/capabilities",
       "contract": "AutoboardCapabilitiesEndpoint",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/autoboards/page.tsx:169"
+      "source": "app/dashboard/autoboards/page.tsx:168"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2795,7 +2795,7 @@
       "path": "/v2/server/:serverId/autoboards/:autoboardId",
       "contract": "ReplaceAutoboardEndpoint",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/autoboards/page.tsx:304"
+      "source": "app/dashboard/autoboards/page.tsx:303"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2804,7 +2804,7 @@
       "path": "/v2/server/:serverId/autoboards",
       "contract": "CreateAutoboardEndpoint",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/autoboards/page.tsx:308"
+      "source": "app/dashboard/autoboards/page.tsx:307"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2813,7 +2813,7 @@
       "path": "/v2/server/:serverId/autoboards/:autoboardId",
       "contract": "DeleteAutoboardEndpoint",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/autoboards/page.tsx:328"
+      "source": "app/dashboard/autoboards/page.tsx:327"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2840,7 +2840,7 @@
       "path": "/v2/links/server/:serverId",
       "contract": "CreateServerLinkEndpoint",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/links/page.tsx:236"
+      "source": "app/dashboard/links/page.tsx:237"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2849,7 +2849,7 @@
       "path": "/proxy/v1/players/:playerTag",
       "contract": "ProxyPlayerEndpoint",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/links/page.tsx:304"
+      "source": "app/dashboard/links/page.tsx:303"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2858,7 +2858,7 @@
       "path": "/v2/links/server/:serverId",
       "contract": "DeleteServerLinkEndpoint",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/links/page.tsx:313"
+      "source": "app/dashboard/links/page.tsx:312"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2867,7 +2867,7 @@
       "path": "/v2/links/server/:serverId",
       "contract": "dashboardEndpoints.serverLinks",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/links/page.tsx:93"
+      "source": "app/dashboard/links/page.tsx:94"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2876,7 +2876,7 @@
       "path": "/v2/server/:serverId/clan/:clanTag/countdowns",
       "contract": "dashboardEndpoints.clanCountdowns",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/logs/page.tsx:140"
+      "source": "app/dashboard/logs/page.tsx:133"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2885,7 +2885,7 @@
       "path": "/v2/server/:serverId/countdowns",
       "contract": "dashboardEndpoints.serverCountdowns",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/logs/page.tsx:145"
+      "source": "app/dashboard/logs/page.tsx:138"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2894,7 +2894,7 @@
       "path": "/v2/server/:serverId/countdowns",
       "contract": "dashboardEndpoints.enableCountdown",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/logs/page.tsx:169"
+      "source": "app/dashboard/logs/page.tsx:162"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2903,7 +2903,7 @@
       "path": "/v2/server/:serverId/countdowns",
       "contract": "dashboardEndpoints.disableCountdown",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/logs/page.tsx:181"
+      "source": "app/dashboard/logs/page.tsx:174"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2912,7 +2912,7 @@
       "path": "/v2/server/:serverId/logs",
       "contract": "dashboardEndpoints.serverLogs",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/logs/page.tsx:324"
+      "source": "app/dashboard/logs/page.tsx:317"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2921,7 +2921,7 @@
       "path": "/v2/server/:serverId/logs",
       "contract": "dashboardEndpoints.saveServerLogs",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/logs/page.tsx:406"
+      "source": "app/dashboard/logs/page.tsx:399"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2930,7 +2930,7 @@
       "path": "/v2/server/:serverId/logs",
       "contract": "dashboardEndpoints.serverLogs",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/logs/page.tsx:412"
+      "source": "app/dashboard/logs/page.tsx:405"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2939,7 +2939,7 @@
       "path": "/v2/server/:serverId/logs",
       "contract": "dashboardEndpoints.updateServerLogsState",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/logs/page.tsx:431"
+      "source": "app/dashboard/logs/page.tsx:424"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2948,7 +2948,7 @@
       "path": "/v2/server/:serverId/logs",
       "contract": "dashboardEndpoints.serverLogs",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/logs/page.tsx:441"
+      "source": "app/dashboard/logs/page.tsx:434"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2957,7 +2957,7 @@
       "path": "/v2/server/:serverId/reminders",
       "contract": "dashboardEndpoints.serverReminders",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/reminders/page.tsx:261"
+      "source": "app/dashboard/reminders/page.tsx:251"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2966,7 +2966,7 @@
       "path": "/v2/server/:serverId/reminders",
       "contract": "dashboardEndpoints.serverReminders",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/reminders/page.tsx:448"
+      "source": "app/dashboard/reminders/page.tsx:439"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2975,7 +2975,7 @@
       "path": "/v2/server/:serverId/reminders",
       "contract": "dashboardEndpoints.createServerReminder",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/reminders/page.tsx:486"
+      "source": "app/dashboard/reminders/page.tsx:478"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2984,7 +2984,7 @@
       "path": "/v2/server/:serverId/reminders/:reminderId",
       "contract": "dashboardEndpoints.deleteServerReminder",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/reminders/page.tsx:602"
+      "source": "app/dashboard/reminders/page.tsx:594"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2993,7 +2993,7 @@
       "path": "/v2/server/:serverId/reminders",
       "contract": "dashboardEndpoints.createServerReminder",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/reminders/page.tsx:731"
+      "source": "app/dashboard/reminders/page.tsx:723"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -3002,7 +3002,7 @@
       "path": "/v2/server/:serverId/reminders/:reminderId",
       "contract": "dashboardEndpoints.updateServerReminder",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/reminders/page.tsx:756"
+      "source": "app/dashboard/reminders/page.tsx:748"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -3297,14 +3297,7 @@
       "method": "POST",
       "path": "{baseUrl}/v2/auth/web/refresh",
       "validatedBySharedClient": false,
-      "source": "lib/auth/session.ts:183"
-    },
-    {
-      "helper": "fetch",
-      "method": "POST",
-      "path": "{baseUrl}/v2/auth/web/refresh",
-      "validatedBySharedClient": false,
-      "source": "lib/auth/session.ts:190"
+      "source": "lib/auth/session.ts:188"
     },
     {
       "helper": "executeAssistantEndpoint",

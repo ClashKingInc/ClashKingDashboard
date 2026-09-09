@@ -86,6 +86,7 @@ const fetchWithTransientGetRetry: typeof fetch = async (input, init) => {
 const apiOrigin = readBrowserRuntimeConfig().apiOrigin;
 const browserTransport = withUnauthorizedRefresh({
   transport: httpTransport(fetchWithTransientGetRetry),
+  shouldRefresh: (request) => !new URL(request.url).pathname.startsWith("/v2/auth/"),
   refresh: async () => {
     await refreshAccessToken(apiOrigin);
   },

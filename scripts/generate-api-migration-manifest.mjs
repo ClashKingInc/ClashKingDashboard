@@ -208,8 +208,8 @@ async function directCallers() {
 const manifest = {
   generatedFrom: "ClashKingDashboard current shared descriptor callers and remaining raw transport boundaries",
   packageTargets: {
-    contracts: "@clashking/api-contracts@0.1.0-rc.12",
-    client: "@clashking/api-client@0.1.0-rc.12",
+    contracts: "@clashking/api-contracts@0.1.0-rc.14",
+    client: "@clashking/api-client@0.1.0-rc.14",
   },
   queryToPostRoutes: [
     "/v2/home/activity",
