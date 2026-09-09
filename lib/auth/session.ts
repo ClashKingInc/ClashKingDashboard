@@ -176,31 +176,56 @@ async function coordinateRefresh(baseUrl: string): Promise<SessionRestoreResult>
   return withStorageLease(observedGeneration, () => performRefresh(baseUrl, observedGeneration));
 }
 
+function resultAfterConcurrentSessionChange(
+  runtime: AuthRuntime,
+  observedGeneration: number,
+): SessionRestoreResult | undefined {
+  if (runtime.generation === observedGeneration) return undefined;
+  return runtime.accessToken ? "restored" : "anonymous";
+}
+
+function requestRefresh(baseUrl: string): Promise<Response> {
+  return fetch(`${baseUrl}/v2/auth/web/refresh`, {
+    method: "POST",
+    credentials: "include",
+  });
+}
+
+async function retryRotationRace(
+  response: Response,
+  baseUrl: string,
+  runtime: AuthRuntime,
+  observedGeneration: number,
+): Promise<Response | SessionRestoreResult> {
+  if (response.status !== 401 || !await wasAlreadyRefreshed(response)) return response;
+  await new Promise((resolve) => setTimeout(resolve, ROTATION_RACE_RETRY_MS));
+  return resultAfterConcurrentSessionChange(runtime, observedGeneration) ?? requestRefresh(baseUrl);
+}
+
 async function performRefresh(baseUrl: string, observedGeneration: number): Promise<SessionRestoreResult> {
   const runtime = getRuntime();
   try {
-    if (runtime.generation !== observedGeneration) return runtime.accessToken ? "restored" : "anonymous";
-    let response = await fetch(`${baseUrl}/v2/auth/web/refresh`, {
-      method: "POST",
-      credentials: "include",
-    });
-    if (response.status === 401 && await wasAlreadyRefreshed(response)) {
-      await new Promise((resolve) => setTimeout(resolve, ROTATION_RACE_RETRY_MS));
-      if (runtime.generation !== observedGeneration) return runtime.accessToken ? "restored" : "anonymous";
-      response = await fetch(`${baseUrl}/v2/auth/web/refresh`, {
-        method: "POST",
-        credentials: "include",
-      });
-    }
+    const existingResult = resultAfterConcurrentSessionChange(runtime, observedGeneration);
+    if (existingResult) return existingResult;
+    const refreshResult = await retryRotationRace(
+      await requestRefresh(baseUrl),
+      baseUrl,
+      runtime,
+      observedGeneration,
+    );
+    if (typeof refreshResult === "string") return refreshResult;
+    const response = refreshResult;
     if (response.status === 401 || response.status === 403) {
-      if (runtime.generation !== observedGeneration) return runtime.accessToken ? "restored" : "anonymous";
+      const concurrentResult = resultAfterConcurrentSessionChange(runtime, observedGeneration);
+      if (concurrentResult) return concurrentResult;
       clearSession();
       return "anonymous";
     }
     if (!response.ok) return "unavailable";
     const data = await Schema.decodeUnknownPromise(DashboardAuthWebRefreshResponse)(await response.json());
     if (!data.access_token) return "unavailable";
-    if (runtime.generation !== observedGeneration) return runtime.accessToken ? "restored" : "anonymous";
+    const concurrentResult = resultAfterConcurrentSessionChange(runtime, observedGeneration);
+    if (concurrentResult) return concurrentResult;
     setAccessToken(data.access_token);
     return "restored";
   } catch {

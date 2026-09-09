@@ -4,6 +4,7 @@ import { forwardRef, type ComponentPropsWithoutRef, type CSSProperties } from "r
 type NativeImageProps = Omit<ComponentPropsWithoutRef<"img">, "height" | "src" | "width">;
 
 export type AppImageProps = NativeImageProps & {
+  readonly alt: string;
   readonly src: string;
   readonly width?: number | string;
   readonly height?: number | string;
@@ -20,13 +21,14 @@ const fillStyle: CSSProperties = {
 };
 
 const AppImage = forwardRef<HTMLImageElement, AppImageProps>(function AppImage(
-  { fill = false, height, priority = false, src, style, unoptimized: _unoptimized, width, ...props },
+  { alt, fill = false, height, priority = false, src, style, unoptimized: _unoptimized, width, ...props },
   ref,
 ) {
   const badge = clanBadgeSources(src);
   const image = (
     <img
       {...props}
+      alt={alt}
       ref={ref}
       src={badge?.png ?? src}
       width={fill ? undefined : width}

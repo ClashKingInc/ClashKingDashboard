@@ -1,9 +1,8 @@
 "use client";
 
-import { useLocale } from "use-intl";
+import { useLocale, useTranslations } from "use-intl";
 import { useGuildId } from "@/lib/dashboard-route";
 import Image from "@/components/app-image";
-import { useTranslations } from "use-intl";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   AlertCircle,

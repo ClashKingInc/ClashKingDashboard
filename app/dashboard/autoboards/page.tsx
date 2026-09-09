@@ -1,13 +1,12 @@
 "use client";
 
 import Image from "@/components/app-image";
-import { useLocale } from "use-intl";
+import { useLocale, useTranslations } from "use-intl";
 import { useGuildId } from "@/lib/dashboard-route";
 import { AutoboardCapabilitiesEndpoint, ServerAutoboardsEndpoint, CreateAutoboardEndpoint, ReplaceAutoboardEndpoint, DeleteAutoboardEndpoint } from "@clashking/api-contracts";
 import { executeSharedEndpoint } from "@/lib/api/shared-client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useTranslations } from "use-intl";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   AlertCircle,

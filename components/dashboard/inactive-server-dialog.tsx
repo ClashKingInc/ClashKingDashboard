@@ -28,6 +28,9 @@ export function InactiveServerDialog({ guild, locale, onClose, onReactivated }: 
   const [reactivating, setReactivating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const firstActivation = guild !== null && !guild.last_command_at;
+  let actionLabel = t("inactive.confirm");
+  if (firstActivation) actionLabel = t("configure");
+  if (reactivating) actionLabel = t("inactive.reactivating");
 
   useEffect(() => {
     setError(null);
@@ -83,7 +86,7 @@ export function InactiveServerDialog({ guild, locale, onClose, onReactivated }: 
               void reactivate();
             }}
           >
-            {reactivating ? t("inactive.reactivating") : firstActivation ? t("configure") : t("inactive.confirm")}
+            {actionLabel}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

@@ -328,6 +328,30 @@ export default function LinksManagementPage() {
   const totalPages = Math.max(1, Math.ceil((data?.filtered_members || 0) / ITEMS_PER_PAGE));
   const linkedPercent = data?.total_members ? Math.round((data.members_with_links / data.total_members) * 100) : 0;
   const initialLoading = loading && data === null;
+  const memberResults = data?.members.length ? (
+    <div className="space-y-3" aria-busy={loading}>
+      {data.members.map(member => (
+        <MemberCard
+          key={member.user_id}
+          member={member}
+          expanded={expandedMembers.has(member.user_id)}
+          pendingAccount={pendingAccount}
+          onToggle={() => setExpandedMembers(current => {
+            const next = new Set(current);
+            if (next.has(member.user_id)) next.delete(member.user_id); else next.add(member.user_id);
+            return next;
+          })}
+          onAdd={() => { setAddTarget(member); setAddTag(""); setAddApiToken(""); }}
+          onLoad={loadPlayer}
+        />
+      ))}
+    </div>
+  ) : (
+    <div className="rounded-[24px] bg-muted/45 py-12 text-center text-muted-foreground">
+      <p className="font-medium">No members matched</p>
+      <p className="text-sm">Try a different member, tag, role, or verification filter.</p>
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
@@ -431,30 +455,7 @@ export default function LinksManagementPage() {
               </div>
             </div>
 
-            {initialLoading ? <MemberSkeleton /> : data?.members.length ? (
-              <div className="space-y-3" aria-busy={loading}>
-                {data.members.map(member => (
-                  <MemberCard
-                    key={member.user_id}
-                    member={member}
-                    expanded={expandedMembers.has(member.user_id)}
-                    pendingAccount={pendingAccount}
-                    onToggle={() => setExpandedMembers(current => {
-                      const next = new Set(current);
-                      if (next.has(member.user_id)) next.delete(member.user_id); else next.add(member.user_id);
-                      return next;
-                    })}
-                    onAdd={() => { setAddTarget(member); setAddTag(""); setAddApiToken(""); }}
-                    onLoad={loadPlayer}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="rounded-[24px] bg-muted/45 py-12 text-center text-muted-foreground">
-                <p className="font-medium">No members matched</p>
-                <p className="text-sm">Try a different member, tag, role, or verification filter.</p>
-              </div>
-            )}
+            {initialLoading ? <MemberSkeleton /> : memberResults}
 
             {!initialLoading && (data?.filtered_members || 0) > 0 && (
               <div className="flex items-center justify-between pt-2">

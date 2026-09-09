@@ -32,6 +32,3 @@ export type DiscordAuthRequest = Extract<
   EndpointRequest<typeof AuthWebDiscordEndpoint>["body"],
   { readonly code: string; readonly code_verifier: string }
 >;
-
-/** @deprecated The authoritative API no longer registers a Discord-link route. */
-export type LinkDiscordRequest = never;
