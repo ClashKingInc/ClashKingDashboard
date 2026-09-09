@@ -229,13 +229,13 @@ export default function ServersPage() {
             {guilds.map((guild) => (
               <Card
                 key={guild.id}
-                className="rounded-xl border-2 border-border bg-card/95 backdrop-blur transition-all duration-300 hover:border-primary hover:shadow-[0_0_10px_var(--primary)]/30 overflow-hidden"
+                className={`rounded-xl border-2 border-border bg-card/95 backdrop-blur transition-all duration-300 overflow-hidden ${guild.has_bot ? "hover:border-primary hover:shadow-[0_0_10px_var(--primary)]/30" : "opacity-75"}`}
               >
                 <CardHeader className="flex min-h-[106px] sm:min-h-[138px] flex-row items-center justify-between gap-3 sm:gap-4 p-4 sm:p-6">
                   {/* Left side: avatar + info */}
                   <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
                     <Avatar
-                      className="h-12 w-12 sm:h-16 sm:w-16 border-2 border-primary transition-transform duration-300 flex-shrink-0 group-hover:scale-105"
+                      className={`h-12 w-12 sm:h-16 sm:w-16 border-2 transition-transform duration-300 flex-shrink-0 ${guild.has_bot ? "border-primary group-hover:scale-105" : "border-border"}`}
                     >
                       <AvatarImage src={getGuildIconUrl(guild) || undefined} />
                       <AvatarFallback className="text-xl sm:text-2xl bg-muted text-foreground">
@@ -282,12 +282,25 @@ export default function ServersPage() {
 
                   {/* Right side: action button */}
                   <div className="flex-shrink-0">
-                    <Button
-                      onClick={() => handleGuildClick(guild)}
-                      className="w-24 sm:w-28 bg-green-600 hover:bg-green-700 text-white cursor-pointer text-xs sm:text-sm h-9 sm:h-10"
-                    >
-                      {t("configure")}
-                    </Button>
+                    {guild.has_bot ? (
+                      <Button
+                        onClick={() => handleGuildClick(guild)}
+                        className="w-24 sm:w-28 bg-green-600 hover:bg-green-700 text-white cursor-pointer text-xs sm:text-sm h-9 sm:h-10"
+                      >
+                        {t("configure")}
+                      </Button>
+                    ) : (
+                      <a
+                        href={`https://discord.com/application-directory/824653933347209227?guild_id=${guild.id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block"
+                      >
+                        <Button className="w-24 sm:w-28 bg-primary hover:bg-primary/90 text-white cursor-pointer text-xs sm:text-sm h-9 sm:h-10">
+                          {t("invite")}
+                        </Button>
+                      </a>
+                    )}
                   </div>
                 </CardHeader>
               </Card>

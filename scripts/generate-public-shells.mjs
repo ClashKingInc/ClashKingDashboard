@@ -14,9 +14,15 @@ const locales = {
 
 const pagePaths = {
   home: "",
+  features: "/features",
+  help: "/help",
+  "open-source": "/open-source",
   privacy: "/privacy",
+  support: "/support",
   terms: "/terms",
 };
+
+const localizedPages = new Set(["home", "privacy", "terms"]);
 
 const escapeHtml = (value) => value
   .replaceAll("&", "&amp;")
@@ -33,6 +39,21 @@ function pageCopy(messages, page) {
       imageAlt: messages.PublicSeo.imageAlt,
     };
   }
+  if (!localizedPages.has(page)) {
+    const content = page === "features"
+      ? { heading: messages.FeaturesPage.hero.title, description: messages.FeaturesPage.hero.subtitle }
+      : page === "help"
+        ? { heading: messages.HelpPage.title, description: messages.HelpPage.subtitle }
+        : page === "open-source"
+          ? { heading: messages.OpenSourcePage.title, description: messages.OpenSourcePage.subtitle }
+          : { heading: messages.SupportPage.title, description: messages.SupportPage.subtitle };
+    return {
+      title: `${content.heading} | ClashKing`,
+      openGraphTitle: content.heading,
+      description: content.description,
+      imageAlt: messages.PublicSeo.imageAlt,
+    };
+  }
   return { ...messages.PublicSeo[page], imageAlt: messages.PublicSeo.imageAlt };
 }
 
@@ -43,19 +64,24 @@ function localizedPath(locale, page) {
 for (const [locale, localeConfig] of Object.entries(locales)) {
   const messages = JSON.parse(await readFile(resolve(`messages/${locale}.json`), "utf8"));
   for (const page of Object.keys(pagePaths)) {
+    if (locale !== "en" && !localizedPages.has(page)) continue;
     const copy = pageCopy(messages, page);
     const pathname = localizedPath(locale, page);
     const canonical = `${siteOrigin}${pathname}`;
-    const alternates = [
-      ...Object.keys(locales).map((alternateLocale) =>
-        `<link rel="alternate" hreflang="${alternateLocale}" href="${siteOrigin}${localizedPath(alternateLocale, page)}" />`),
-      `<link rel="alternate" hreflang="x-default" href="${siteOrigin}${localizedPath("en", page)}" />`,
-    ].join("\n    ");
-    const alternateOpenGraph = Object.values(locales)
-      .map(({ openGraph }) => openGraph)
-      .filter((openGraph) => openGraph !== localeConfig.openGraph)
-      .map((openGraph) => `<meta property="og:locale:alternate" content="${openGraph}" />`)
-      .join("\n    ");
+    const alternates = localizedPages.has(page)
+      ? [
+          ...Object.keys(locales).map((alternateLocale) =>
+            `<link rel="alternate" hreflang="${alternateLocale}" href="${siteOrigin}${localizedPath(alternateLocale, page)}" />`),
+          `<link rel="alternate" hreflang="x-default" href="${siteOrigin}${localizedPath("en", page)}" />`,
+        ].join("\n    ")
+      : `<link rel="alternate" hreflang="en" href="${canonical}" />\n    <link rel="alternate" hreflang="x-default" href="${canonical}" />`;
+    const alternateOpenGraph = localizedPages.has(page)
+      ? Object.values(locales)
+          .map(({ openGraph }) => openGraph)
+          .filter((openGraph) => openGraph !== localeConfig.openGraph)
+          .map((openGraph) => `<meta property="og:locale:alternate" content="${openGraph}" />`)
+          .join("\n    ")
+      : "";
     const head = `
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="${canonical}" />
@@ -85,4 +111,4 @@ for (const [locale, localeConfig] of Object.entries(locales)) {
   }
 }
 
-console.log("Generated localized public HTML shells for /, /fr, /nl, privacy, and terms.");
+console.log("Generated public HTML shells for landing, information, privacy, and terms pages.");

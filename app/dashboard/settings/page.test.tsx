@@ -117,7 +117,7 @@ describe("AccountSettingsPage", () => {
     await waitFor(() => expect(screen.getByLabelText("Subscription server")).toBeDisabled());
     expect(screen.getByRole("link", { name: /Learn more/ })).toHaveAttribute(
       "href",
-      "/dashboard/support-us?guildId=923764211845312533",
+      "/dashboard/support?guildId=923764211845312533",
     );
     expect(screen.getByText("Usage for ClashKing this month.")).toBeInTheDocument();
     expect(screen.queryByText("923764211845312533")).not.toBeInTheDocument();

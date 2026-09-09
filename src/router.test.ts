@@ -14,10 +14,17 @@ describe("application route inventory", () => {
     expect(Object.keys(router.routesByPath)).toContain(path);
   });
 
-  it("keeps both explicitly retired pages out of the required inventory", () => {
-    expect([...approvedRemovals]).toEqual(["/connect", "/admin/creators"]);
+  it("keeps explicitly retired pages out of the required inventory", () => {
+    expect([...approvedRemovals]).toEqual([
+      "/connect",
+      "/admin/creators",
+      "/support-us",
+      "/dashboard/support-us",
+    ]);
     expect(Object.keys(router.routesByPath)).not.toContain("/connect");
     expect(Object.keys(router.routesByPath)).not.toContain("/admin/creators");
+    expect(Object.keys(router.routesByPath)).not.toContain("/support-us");
+    expect(Object.keys(router.routesByPath)).not.toContain("/dashboard/support-us");
     expect(required.map(({ path }) => path)).toEqual(expect.arrayContaining(["/login", "/servers", "/auth/callback"]));
   });
 
@@ -31,7 +38,7 @@ describe("application route inventory", () => {
     expect(baseline.baseline.branch).toBe("main");
     expect(baseline.baseline.repositoryUrl).toBe("https://github.com/ClashKingInc/ClashKingDashboard.git");
     expect(baseline.pages).toHaveLength(47);
-    expect(required).toHaveLength(46);
+    expect(required).toHaveLength(44);
     expect(baseline.pages.map(({ path }) => path)).not.toContain("/connect");
   });
 

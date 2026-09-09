@@ -185,7 +185,7 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, availableGuilds
 
       <div className="border-t border-border bg-card p-3">
         <Link
-          href={dashboardHref("support-us", guildId)}
+          href={dashboardHref("support", guildId)}
           prefetch={false}
           className="group flex min-h-10 items-center justify-between rounded-xl bg-muted/55 px-3 py-2 text-sm font-semibold text-foreground shadow-sm shadow-black/5 outline-none transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
         >

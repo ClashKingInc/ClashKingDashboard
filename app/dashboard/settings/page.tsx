@@ -180,7 +180,7 @@ export default function AccountSettingsPage() {
   const usagePercent = useMemo(() => limit ? Math.min(100, ((spent ?? 0) / limit) * 100) : 0, [limit, spent]);
   const assignableGuilds = guilds.filter((guild) => !guild.inactive);
   const selectedGuild = guilds.find((guild) => guild.id === selectedServerId);
-  const supportHref = dashboardHref("support-us", routeGuildId);
+  const supportHref = dashboardHref("support", routeGuildId);
   const checkoutUnavailable = !loading && subscription?.active !== true && subscription?.checkoutEnabled !== true;
 
   return (

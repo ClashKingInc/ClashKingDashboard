@@ -74,20 +74,51 @@ describe("shared Dashboard transport", () => {
 
   it("preserves undeclared HTTP errors", async () => {
     const body = { detail: "Unavailable" };
-    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(Response.json(body, { status: 503 })));
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(Response.json(body, { status: 501 })));
 
     await expect(executeSharedApiResult(endpoint, input)).resolves.toEqual({
-      error: "Unavailable", errorData: body, status: 503,
+      error: "Unavailable", errorData: body, status: 501,
     });
+  });
+
+  it("retries a transient GET response once", async () => {
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce(Response.json({ detail: "Unavailable" }, { status: 503 }))
+      .mockResolvedValueOnce(Response.json({ message: "recovered" }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(executeSharedApiResult(endpoint, input)).resolves.toEqual({
+      data: { message: "recovered" }, status: 200,
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
+  it("retries a GET network failure once", async () => {
+    const fetchMock = vi.fn()
+      .mockRejectedValueOnce(new TypeError("network unavailable"))
+      .mockResolvedValueOnce(Response.json({ message: "recovered" }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(executeSharedEndpoint(endpoint, input)).resolves.toEqual({ message: "recovered" });
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
+  it("does not retry an aborted GET", async () => {
+    const abortError = new DOMException("The operation was aborted", "AbortError");
+    const fetchMock = vi.fn().mockRejectedValue(abortError);
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(executeSharedApiResult(endpoint, input)).resolves.toMatchObject({ status: 0 });
+    expect(fetchMock).toHaveBeenCalledOnce();
   });
 
   it("keeps blank HTTP error messages truthy and uses the next usable error field", async () => {
     vi.stubGlobal("fetch", vi.fn()
       .mockResolvedValueOnce(Response.json({ message: " ", retryable: false }, { status: 409 }))
-      .mockResolvedValueOnce(Response.json({ detail: "", message: "Try again" }, { status: 503 })));
+      .mockResolvedValueOnce(Response.json({ detail: "", message: "Try again" }, { status: 501 })));
 
     await expect(executeSharedApiResult(endpoint, input)).resolves.toMatchObject({ error: "HTTP 409", status: 409 });
-    await expect(executeSharedApiResult(endpoint, input)).resolves.toMatchObject({ error: "Try again", status: 503 });
+    await expect(executeSharedApiResult(endpoint, input)).resolves.toMatchObject({ error: "Try again", status: 501 });
   });
 
   it("reauthorizes one 401 replay and returns the replay's actual status", async () => {

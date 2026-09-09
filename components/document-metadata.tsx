@@ -11,7 +11,11 @@ function publicRoute(pathname: string): PublicRoute | null {
   const locale: PublicLocale = segments[0] === "fr" || segments[0] === "nl" ? segments.shift() as PublicLocale : "en";
   const path = `/${segments.join("/")}`;
   if (path === "/") return { locale, page: "home" };
+  if (locale === "en" && path === "/features") return { locale, page: "features" };
+  if (locale === "en" && path === "/help") return { locale, page: "help" };
+  if (locale === "en" && path === "/open-source") return { locale, page: "open-source" };
   if (path === "/privacy") return { locale, page: "privacy" };
+  if (locale === "en" && path === "/support") return { locale, page: "support" };
   if (path === "/terms") return { locale, page: "terms" };
   return null;
 }

@@ -2,6 +2,17 @@ import { describe, expect, it } from "vitest";
 import { getPublicMetadata } from "./public-seo";
 
 describe("public SEO metadata", () => {
+  it("creates canonical metadata without nonexistent locale alternates for information pages", () => {
+    const metadata = getPublicMetadata("en", "support");
+
+    expect(metadata.canonical).toBe("https://clashk.ing/support");
+    expect(metadata.languageAlternates).toEqual({
+      en: "https://clashk.ing/support",
+      "x-default": "https://clashk.ing/support",
+    });
+    expect(metadata.alternateOpenGraphLocales).toEqual([]);
+  });
+
   it("uses localized canonical and hreflang URLs", () => {
     const metadata = getPublicMetadata("fr", "privacy");
 

@@ -23,4 +23,12 @@ describe('metadata ownership across static shells and client navigation', () => 
     expect(document.head.querySelector('meta[property="og:url"]')).toBeNull();
     expect(document.head.querySelector('meta[name="robots"]')?.getAttribute('content')).toBe('noindex, nofollow');
   });
+
+  it('keeps public information pages indexable', () => {
+    route.pathname = '/features';
+    render(<DocumentMetadata />);
+
+    expect(document.head.querySelector('meta[name="robots"]')?.getAttribute('content')).toBe('index, follow');
+    expect(document.head.querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe('https://clashk.ing/features');
+  });
 });

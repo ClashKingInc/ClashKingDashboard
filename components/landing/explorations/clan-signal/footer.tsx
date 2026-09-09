@@ -9,6 +9,7 @@ import { isPublicLocale, publicPath, type SupportedLocale } from "@/lib/locale-p
 export function ClanSignalFooter() {
   const locale = useLocale() as SupportedLocale;
   const t = useTranslations("ClanSignal");
+  const navigation = useTranslations("Navigation");
   const publicLocale = isPublicLocale(locale) ? locale : "en";
 
   return (
@@ -32,6 +33,10 @@ export function ClanSignalFooter() {
           <a href="https://docs.clashk.ing/">{t("footer.docs")}</a>
           <a href="https://github.com/ClashKingInc">GitHub</a>
           <a href="https://go.api.clashk.ing/">API</a>
+          <Link href="/features">{navigation("features")}</Link>
+          <Link href="/help">{navigation("help")}</Link>
+          <Link href="/open-source">{navigation("openSource")}</Link>
+          <Link href="/support">{navigation("support")}</Link>
           <Link href={publicPath(publicLocale, "/privacy")}>{t("footer.privacy")}</Link>
           <Link href={publicPath(publicLocale, "/terms")}>{t("footer.terms")}</Link>
         </div>

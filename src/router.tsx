@@ -82,7 +82,6 @@ const publicRoutes = [
   rootPage("help", () => import("@/app/help/page")),
   rootPage("open-source", () => import("@/app/open-source/page")),
   rootPage("support", () => import("@/app/support/page")),
-  rootPage("support-us", () => import("@/app/support-us/page")),
   rootPage("privacy", () => import("@/app/privacy/page")),
   rootPage("terms", () => import("@/app/terms/page")),
   rootPage("fr", () => import("@/app/fr/page")),
@@ -126,7 +125,6 @@ const dashboardRoutes = [
   dashboardPage("settings", () => import("@/app/dashboard/settings/page")),
   dashboardPage("settings/billing", () => import("@/app/dashboard/settings/billing/page")),
   dashboardPage("support", () => import("@/app/dashboard/support/page")),
-  dashboardPage("support-us", () => import("@/app/dashboard/support-us/page")),
   dashboardPage("tickets", () => import("@/app/dashboard/tickets/page")),
   dashboardPage("tickets/settings", () => import("@/app/dashboard/tickets/settings/page")),
 ] as const;

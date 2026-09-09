@@ -1,7 +1,7 @@
 import messages from "virtual:public-seo-copy";
-import { publicPath, type PublicLocale } from "@/lib/locale-preference";
+import { publicPath, type PublicLocale, type PublicPagePath } from "@/lib/locale-preference";
 
-export type PublicPage = "home" | "privacy" | "terms";
+export type PublicPage = "home" | "features" | "help" | "open-source" | "privacy" | "support" | "terms";
 
 export interface PublicMetadata {
   readonly title: string;
@@ -20,9 +20,15 @@ const SOCIAL_IMAGE = `${SITE_ORIGIN}/og/clashking-landing.png`;
 
 const pagePaths = {
   home: "/",
+  features: "/features",
+  help: "/help",
+  "open-source": "/open-source",
   privacy: "/privacy",
+  support: "/support",
   terms: "/terms",
 } as const;
+
+const localizedPages = new Set<PublicPage>(["home", "privacy", "terms"]);
 
 const openGraphLocales: Record<PublicLocale, string> = {
   en: "en_US",
@@ -43,8 +49,27 @@ export function getPublicPageCopy(locale: PublicLocale, page: PublicPage) {
     };
   }
 
+  if (!localizedPages.has(page)) {
+    const english = messages.en;
+    const content = page === "features"
+      ? { heading: english.FeaturesPage.hero.title, description: english.FeaturesPage.hero.subtitle }
+      : page === "help"
+        ? { heading: english.HelpPage.title, description: english.HelpPage.subtitle }
+        : page === "open-source"
+          ? { heading: english.OpenSourcePage.title, description: english.OpenSourcePage.subtitle }
+          : { heading: english.SupportPage.title, description: english.SupportPage.subtitle };
+    return {
+      title: `${content.heading} | ClashKing`,
+      openGraphTitle: content.heading,
+      description: content.description,
+      heading: content.heading,
+      eyebrow: "ClashKing",
+      imageAlt: english.PublicSeo.imageAlt,
+    };
+  }
+
   return {
-    ...localized.PublicSeo[page],
+    ...localized.PublicSeo[page as "privacy" | "terms"],
     imageAlt: localized.PublicSeo.imageAlt,
   };
 }
@@ -52,14 +77,17 @@ export function getPublicPageCopy(locale: PublicLocale, page: PublicPage) {
 export function getPublicMetadata(locale: PublicLocale, page: PublicPage): PublicMetadata {
   const copy = getPublicPageCopy(locale, page);
   const pagePath = pagePaths[page];
-  const localizedPath = publicPath(locale, pagePath);
+  const isLocalized = localizedPages.has(page);
+  const localizedPath = isLocalized ? publicPath(locale, pagePath as PublicPagePath) : pagePath;
   const canonical = `${SITE_ORIGIN}${localizedPath === "/" ? "/" : localizedPath}`;
-  const languageAlternates = {
-    en: `${SITE_ORIGIN}${publicPath("en", pagePath)}`,
-    fr: `${SITE_ORIGIN}${publicPath("fr", pagePath)}`,
-    nl: `${SITE_ORIGIN}${publicPath("nl", pagePath)}`,
-    "x-default": `${SITE_ORIGIN}${publicPath("en", pagePath)}`,
-  };
+  const languageAlternates: Readonly<Record<string, string>> = isLocalized
+    ? {
+        en: `${SITE_ORIGIN}${publicPath("en", pagePath as PublicPagePath)}`,
+        fr: `${SITE_ORIGIN}${publicPath("fr", pagePath as PublicPagePath)}`,
+        nl: `${SITE_ORIGIN}${publicPath("nl", pagePath as PublicPagePath)}`,
+        "x-default": `${SITE_ORIGIN}${publicPath("en", pagePath as PublicPagePath)}`,
+      }
+    : { en: canonical, "x-default": canonical };
 
   return {
     title: copy.title,
@@ -67,10 +95,10 @@ export function getPublicMetadata(locale: PublicLocale, page: PublicPage): Publi
     canonical,
     languageAlternates,
     openGraphTitle: copy.openGraphTitle,
-    openGraphLocale: openGraphLocales[locale],
-    alternateOpenGraphLocales: Object.values(openGraphLocales).filter(
-      (candidate) => candidate !== openGraphLocales[locale],
-    ),
+    openGraphLocale: isLocalized ? openGraphLocales[locale] : openGraphLocales.en,
+    alternateOpenGraphLocales: isLocalized
+      ? Object.values(openGraphLocales).filter((candidate) => candidate !== openGraphLocales[locale])
+      : [],
     socialImage: SOCIAL_IMAGE,
     socialImageAlt: copy.imageAlt,
   };

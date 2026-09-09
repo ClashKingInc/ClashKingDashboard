@@ -7,14 +7,18 @@ import { publicPath, type PublicLocale } from "@/lib/locale-preference";
 import "../../../../app/explorations/clan-signal.css";
 
 
-export function ClanSignalLegalShell({
+export function ClanSignalPageShell({
   title,
   eyebrow,
+  description,
+  contentClassName,
   locale = "en",
   children,
 }: Readonly<{
   title: string;
   eyebrow: string;
+  description?: string;
+  contentClassName: string;
   locale?: PublicLocale;
   children: React.ReactNode;
 }>) {
@@ -49,11 +53,23 @@ export function ClanSignalLegalShell({
         <div>
           <p className="cs-legal-eyebrow">{eyebrow}</p>
           <h1>{title}</h1>
+          {description && <p className="cs-page-description">{description}</p>}
         </div>
       </section>
 
-      <article className="cs-legal-document">{children}</article>
+      <article className={contentClassName}>{children}</article>
       <ClanSignalFooter />
     </main>
   );
+}
+
+export function ClanSignalLegalShell(
+  props: Readonly<{
+    title: string;
+    eyebrow: string;
+    locale?: PublicLocale;
+    children: React.ReactNode;
+  }>,
+) {
+  return <ClanSignalPageShell {...props} contentClassName="cs-legal-document" />;
 }

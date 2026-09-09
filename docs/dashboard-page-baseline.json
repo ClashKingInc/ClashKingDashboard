@@ -207,6 +207,14 @@
     {
       "path": "/admin/creators",
       "reason": "User explicitly confirmed creator review is retired. Its page and navigation remain in fetched main, but that stale source does not override the retirement decision."
+    },
+    {
+      "path": "/support-us",
+      "reason": "User explicitly consolidated the public support page at /support."
+    },
+    {
+      "path": "/dashboard/support-us",
+      "reason": "User explicitly consolidated the dashboard support page at /dashboard/support while retaining its dashboard-specific layout."
     }
   ],
   "unresolved": []

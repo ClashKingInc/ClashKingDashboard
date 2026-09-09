@@ -12,6 +12,9 @@ import { Effect } from "effect";
 import { getAccessToken, refreshAccessToken } from "@/lib/auth/session";
 import { readBrowserRuntimeConfig } from "@/lib/runtime-config";
 
+const TRANSIENT_GET_STATUSES = new Set([500, 502, 503, 504]);
+const TRANSIENT_GET_RETRY_DELAY_MS = 250;
+
 export interface SharedApiResult<A> {
   readonly data?: A;
   readonly error?: string;
@@ -30,9 +33,59 @@ function errorMessage(body: unknown, status: number): string {
   return `HTTP ${status}`;
 }
 
+function isAbortError(error: unknown): boolean {
+  return typeof error === "object"
+    && error !== null
+    && "name" in error
+    && error.name === "AbortError";
+}
+
+function waitForRetryBackoff(signal: AbortSignal): Promise<boolean> {
+  if (signal.aborted) return Promise.resolve(false);
+
+  return new Promise((resolve) => {
+    const timeout = globalThis.setTimeout(() => {
+      signal.removeEventListener("abort", handleAbort);
+      resolve(true);
+    }, TRANSIENT_GET_RETRY_DELAY_MS);
+    const handleAbort = () => {
+      globalThis.clearTimeout(timeout);
+      resolve(false);
+    };
+    signal.addEventListener("abort", handleAbort, { once: true });
+  });
+}
+
+const fetchWithTransientGetRetry: typeof fetch = async (input, init) => {
+  const request = input instanceof Request && init === undefined
+    ? input
+    : new Request(input, init);
+  try {
+    const response = await globalThis.fetch(request);
+    if (
+      request.method === "GET"
+      && TRANSIENT_GET_STATUSES.has(response.status)
+      && await waitForRetryBackoff(request.signal)
+    ) {
+      return globalThis.fetch(request);
+    }
+    return response;
+  } catch (error) {
+    if (
+      request.method !== "GET"
+      || request.signal.aborted
+      || isAbortError(error)
+      || !await waitForRetryBackoff(request.signal)
+    ) {
+      throw error;
+    }
+    return globalThis.fetch(request);
+  }
+};
+
 const apiOrigin = readBrowserRuntimeConfig().apiOrigin;
 const browserTransport = withUnauthorizedRefresh({
-  transport: httpTransport((request) => globalThis.fetch(request)),
+  transport: httpTransport(fetchWithTransientGetRetry),
   refresh: async () => {
     await refreshAccessToken(apiOrigin);
   },

@@ -2,8 +2,10 @@ import type { GuildInfo } from "@/lib/api/types/server";
 
 export function dashboardGuilds(guilds: readonly GuildInfo[]): GuildInfo[] {
   return guilds
-    .filter((guild) => guild.has_bot)
-    .toSorted((left, right) => left.name.localeCompare(right.name));
+    .toSorted((left, right) => {
+      if (left.has_bot !== right.has_bot) return left.has_bot ? -1 : 1;
+      return left.name.localeCompare(right.name);
+    });
 }
 
 export function requiresServerReactivation(
