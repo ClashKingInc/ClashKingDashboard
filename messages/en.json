@@ -1433,7 +1433,7 @@
     },
     "leagues": {
       "all": "All",
-      "legendLeague": "Inaccurate data?",
+      "legendLeague": "Legend League",
       "titanLeagueI": "Titan League I",
       "titanLeagueII": "Titan League II",
       "titanLeagueIII": "Titan League III"
@@ -1683,7 +1683,7 @@
       "leagueSuperfan": "League Superfan",
       "leagueFanatic": "League Fanatic",
       "leagueMaster": "League Master",
-      "legendLeague": "Inaccurate data?",
+      "legendLeague": "Legend League",
       "humiliator": "Humiliator",
       "notSoEasyThisTime": "Not So Easy This Time",
       "unionBuster": "Union Buster",
