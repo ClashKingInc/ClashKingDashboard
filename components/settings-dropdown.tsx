@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
+import Image from "@/components/app-image";
 import { useEffect, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "use-intl";
 import { useTheme } from "next-themes";
 import { Computer, Globe, Moon, Settings, Sun } from "lucide-react";
 import { cn } from "@/lib/utils";

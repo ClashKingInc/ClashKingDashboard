@@ -69,8 +69,8 @@ export function AuthSessionProvider({ children }: { children: React.ReactNode })
         setUser(current.data);
       }
       // A restored result means the credentialed endpoint issued and installed
-      // an access token. Do not re-infer auth from a second module snapshot;
-      // Vinext can replace client modules while preserving this provider.
+      // an access token. The user lookup may refresh display data, but it does
+      // not redefine whether the refresh exchange succeeded.
       setStatus("authenticated");
     };
 

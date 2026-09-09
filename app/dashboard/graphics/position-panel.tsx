@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+import Image from "@/components/app-image";
 import {
   closestCenter,
   DndContext,
@@ -27,9 +27,7 @@ import {
   AlignStartHorizontal,
   AlignStartVertical,
   BringToFront,
-  Braces,
   GripVertical,
-  ImageIcon,
   Layers3,
   Lock,
   SendToBack,

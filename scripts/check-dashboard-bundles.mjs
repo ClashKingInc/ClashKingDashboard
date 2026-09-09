@@ -9,6 +9,23 @@ const failures = [];
 
 const MAX_CHUNK_GZIP_BYTES = 225 * 1024;
 const MAX_PREVIEW_RAW_BYTES = 64 * 1024;
+const MAX_INITIAL_GZIP_BYTES = 300 * 1024;
+
+for (const [key, entry] of Object.entries(manifest)) {
+  if (!entry.isEntry) continue;
+  const dependencies = new Set();
+  const visit = (dependency) => {
+    if (dependencies.has(dependency)) return;
+    dependencies.add(dependency);
+    for (const imported of manifest[dependency]?.imports ?? []) visit(imported);
+  };
+  visit(key);
+  const gzipBytes = [...dependencies].reduce((total, dependency) => {
+    const file = manifest[dependency]?.file;
+    return total + (file?.endsWith('.js') ? gzipSync(readFileSync(join(clientRoot, file))).byteLength : 0);
+  }, 0);
+  if (gzipBytes > MAX_INITIAL_GZIP_BYTES) failures.push(`${key} and its static dependencies total ${(gzipBytes / 1024).toFixed(1)} KiB gzip (limit: ${MAX_INITIAL_GZIP_BYTES / 1024} KiB)`);
+}
 
 for (const entry of Object.values(manifest)) {
   if (typeof entry.file !== "string" || !entry.file.endsWith(".js")) continue;

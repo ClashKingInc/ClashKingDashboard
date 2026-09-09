@@ -21,11 +21,25 @@ describe('initiateDiscordLogin', () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
+    vi.unstubAllEnvs();
     sessionStorage.clear();
   });
 
   it('stores code_verifier in sessionStorage', async () => {
     await initiateDiscordLogin('en');
+    expect(sessionStorage.getItem('discord_code_verifier')).toBe('mock_verifier_abc123');
+  });
+
+  it('moves marketing login to the dashboard before generating origin-bound state', async () => {
+    Object.defineProperty(window, 'location', { value: { origin: 'https://clashk.ing', href: '' }, configurable: true });
+    await initiateDiscordLogin('en');
+    expect(window.location.href).toBe('https://dash.clashk.ing/login');
+    expect(sessionStorage.getItem('discord_code_verifier')).toBeNull();
+    expect(sessionStorage.getItem('discord_oauth_state')).toBeNull();
+    const dashboardOrigin = new URL(window.location.href).origin;
+    Object.defineProperty(window, 'location', { value: { origin: dashboardOrigin, href: '' }, configurable: true });
+    await initiateDiscordLogin('en');
+    expect(new URL(window.location.href).searchParams.get('redirect_uri')).toBe('https://dash.clashk.ing/auth/callback');
     expect(sessionStorage.getItem('discord_code_verifier')).toBe('mock_verifier_abc123');
   });
 
@@ -46,12 +60,25 @@ describe('initiateDiscordLogin', () => {
     expect(window.location.href).toContain('code_challenge_method=S256');
   });
 
+  it('initiates local login with the configured public ID and exact local callback', async () => {
+    vi.stubEnv('VITE_DISCORD_CLIENT_ID', '824653933347209227');
+    Object.defineProperty(window, 'location', {
+      value: { origin: 'http://localhost:3002', hostname: 'localhost', href: '' },
+      configurable: true,
+    });
+    await initiateDiscordLogin('en');
+    const authorization = new URL(window.location.href);
+    expect(authorization.origin).toBe('https://discord.com');
+    expect(authorization.searchParams.get('client_id')).toBe('824653933347209227');
+    expect(authorization.searchParams.get('redirect_uri')).toBe('http://localhost:3002/auth/callback');
+    expect(authorization.searchParams.get('state')).toBe(sessionStorage.getItem('discord_oauth_state'));
+    expect(window.alert).not.toHaveBeenCalled();
+  });
+
   it('calls alert and logs error when client ID is missing', async () => {
-    const originalId = process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID;
-    delete process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID;
+    vi.stubEnv('VITE_DISCORD_CLIENT_ID', '');
     await initiateDiscordLogin('en');
     expect(console.error).toHaveBeenCalled();
     expect(window.alert).toHaveBeenCalled();
-    process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID = originalId;
   });
 });

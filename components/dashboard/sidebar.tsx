@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
-import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import Link from "@/components/app-link";
+import Image from "@/components/app-image";
+import { usePathname, useRouter } from "@/lib/navigation";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { ArrowUpRight, Check, ChevronDown, TriangleAlert } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -14,13 +14,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "use-intl";
 import type { GuildInfo } from "@/lib/api/types/server";
 import { useDashboardAccess } from "./dashboard-access-provider";
 import { dashboardHref } from "@/lib/dashboard-route";
 import { dashboardNavigationSections } from "./dashboard-navigation";
 import { InactiveServerDialog } from "./inactive-server-dialog";
+import { requiresServerReactivation } from "@/lib/server-activity";
 
 interface SidebarProps {
   readonly guildId: string;
@@ -41,7 +41,7 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, availableGuilds
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [inactiveGuild, setInactiveGuild] = useState<GuildInfo | null>(null);
   const selectGuild = (guild: GuildInfo) => {
-    if (guild.inactive) {
+    if (requiresServerReactivation(guild)) {
       setIsDropdownOpen(false);
       setInactiveGuild(guild);
       return;
@@ -121,7 +121,7 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, availableGuilds
                     </AvatarFallback>
                   </Avatar>
                   <span className="min-w-0 flex-1 truncate font-medium">{guild.name}</span>
-                  {guild.inactive && (
+                  {requiresServerReactivation(guild) && (
                     <TriangleAlert className="h-4 w-4 shrink-0 text-amber-500" aria-label={t("inactiveServer")} />
                   )}
                   {guild.id === guildId && <Check className="h-4 w-4 shrink-0 text-primary" />}
@@ -185,7 +185,7 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, availableGuilds
 
       <div className="border-t border-border bg-card p-3">
         <Link
-          href={dashboardHref("support-us", guildId)}
+          href={dashboardHref("support", guildId)}
           prefetch={false}
           className="group flex min-h-10 items-center justify-between rounded-xl bg-muted/55 px-3 py-2 text-sm font-semibold text-foreground shadow-sm shadow-black/5 outline-none transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
         >

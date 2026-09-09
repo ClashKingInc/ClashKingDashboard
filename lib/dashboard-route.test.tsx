@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 
 import { dashboardHref, useGuildId, useRosterId } from "./dashboard-route";
 
-vi.mock("next/navigation", () => ({
+vi.mock("@/lib/navigation", () => ({
   useSearchParams: () => new URLSearchParams(),
 }));
 
@@ -16,7 +16,7 @@ function DashboardParams() {
 }
 
 describe("dashboard route state", () => {
-  it("reads query state from the browser when Vinext provides an empty static snapshot", () => {
+  it("reads query state from the authoritative browser URL", () => {
     globalThis.history.replaceState(
       {},
       "",

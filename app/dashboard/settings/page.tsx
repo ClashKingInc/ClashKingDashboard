@@ -1,11 +1,11 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
+import Image from "@/components/app-image";
+import Link from "@/components/app-link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Check, ExternalLink, Loader2, LockKeyhole } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useLocale, useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "use-intl";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -180,7 +180,7 @@ export default function AccountSettingsPage() {
   const usagePercent = useMemo(() => limit ? Math.min(100, ((spent ?? 0) / limit) * 100) : 0, [limit, spent]);
   const assignableGuilds = guilds.filter((guild) => !guild.inactive);
   const selectedGuild = guilds.find((guild) => guild.id === selectedServerId);
-  const supportHref = dashboardHref("support-us", routeGuildId);
+  const supportHref = dashboardHref("support", routeGuildId);
   const checkoutUnavailable = !loading && subscription?.active !== true && subscription?.checkoutEnabled !== true;
 
   return (

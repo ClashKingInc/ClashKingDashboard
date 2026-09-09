@@ -1,12 +1,12 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useLocale, useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "use-intl";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ExternalLink } from "lucide-react";
 import { townHallImageUrl } from "@/lib/theme";
-import Image from "next/image";
+import Image from "@/components/app-image";
 
 interface PlayerProfilePopoverProps {
   playerName: string;

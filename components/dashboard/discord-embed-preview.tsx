@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useLocale } from "next-intl";
-import Image from "next/image";
+import { useLocale } from "use-intl";
+import Image from "@/components/app-image";
 import { ChevronDown, ExternalLink, Paperclip } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { clashKingAssets } from "@/lib/theme";
@@ -716,7 +716,6 @@ export function DiscordEmbedPreview({ embed, className, mentionContext }: Props)
         {embed.author?.name && (
           <div className="flex items-center gap-1.5">
             {embed.author.icon_url && (
-              // eslint-disable-next-line @next/next/no-img-element
               <img src={embed.author.icon_url} alt="" className="w-5 h-5 rounded-full object-cover" />
             )}
             <span className="text-xs font-semibold text-[#dbdee1]">
@@ -766,7 +765,6 @@ export function DiscordEmbedPreview({ embed, className, mentionContext }: Props)
 
           {/* Thumbnail */}
           {embed.thumbnail?.url && (
-            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={embed.thumbnail.url}
               alt=""
@@ -777,7 +775,6 @@ export function DiscordEmbedPreview({ embed, className, mentionContext }: Props)
 
         {/* Image */}
         {embed.image?.url && (
-          // eslint-disable-next-line @next/next/no-img-element
           <img src={embed.image.url} alt="" className="rounded max-w-full mt-1" />
         )}
 
@@ -785,7 +782,6 @@ export function DiscordEmbedPreview({ embed, className, mentionContext }: Props)
         {(embed.footer?.text || embed.timestamp) && (
           <div className="flex items-center gap-1.5 mt-0.5">
             {embed.footer?.icon_url && (
-              // eslint-disable-next-line @next/next/no-img-element
               <img src={embed.footer.icon_url} alt="" className="w-4 h-4 rounded-full object-cover" />
             )}
             <span className="text-[0.7rem] text-[#949ba4]">
@@ -821,7 +817,6 @@ export function DiscordMessagePreview({ profile, content, embeds, components, is
   return (
     <div className={cn("max-w-[520px]", messageContent ? "space-y-2" : "space-y-0", className)}>
       <div className="flex items-start gap-2">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={avatarUrl} alt="" className="mt-0.5 h-10 w-10 rounded-full object-cover" />
         <div className="min-w-0">
           <div className="flex items-center gap-1.5">
@@ -1033,7 +1028,6 @@ function V2MediaGalleryPreview({ component }: { readonly component: MediaGallery
             items.length === 3 && i === 0 ? "col-span-2" : "",
           )}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={item.media.url} alt={item.description ?? ""} className="w-full h-full object-cover" />
         </div>
       ))}
@@ -1056,7 +1050,6 @@ function V2SectionPreview({ component, mentionContext, locale }: { readonly comp
       </div>
       {isThumbnail && (accessory as ThumbnailComponent).media.url && ( // NOSONAR
         <div className="w-[85px] h-[85px] shrink-0 overflow-hidden rounded-lg">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={(accessory as ThumbnailComponent).media.url} // NOSONAR
             alt={(accessory as ThumbnailComponent).description ?? ""} // NOSONAR

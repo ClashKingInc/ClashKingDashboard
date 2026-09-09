@@ -23,6 +23,7 @@ const giveaway: Giveaway = {
   boosters: [{ value: 2, roles: ["role-3"] }],
   entries: ["user-1", "user-1", "user-2", "user-3", "user-4"],
   updated: true,
+  disabled: false,
   messageId: "message-1",
   winnersList: [],
   eventPending: "giveaway_update",

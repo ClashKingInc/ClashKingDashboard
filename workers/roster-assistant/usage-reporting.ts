@@ -1,12 +1,10 @@
 import type { LanguageModelUsage } from "ai";
+import { TransportError } from "@clashking/api-client";
+import { DashboardRosterAIUsageEndpoint, type DashboardRosterAITokenUsage, type EndpointRequest } from "@clashking/api-contracts";
+import { AssistantApiError, executeAssistantEndpoint } from "./api-client";
 
-export interface NormalizedAIUsage {
-  inputTokens: number;
-  cachedInputTokens: number;
-  cacheWriteTokens: number;
-  outputTokens: number;
-  reasoningTokens: number;
-}
+export type NormalizedAIUsage = typeof DashboardRosterAITokenUsage.Type;
+type UsagePayload = EndpointRequest<typeof DashboardRosterAIUsageEndpoint>["body"];
 
 interface AIUsageSettlementOptions {
   fetcher?: typeof fetch;
@@ -55,36 +53,28 @@ function wait(delayMs: number): Promise<void> {
 
 export async function settleAIUsage(
   env: RosterAssistantRuntimeEnv,
-  endpoint: string,
-  payload: unknown,
+  payload: UsagePayload,
   options: AIUsageSettlementOptions = {},
 ): Promise<void> {
-  const fetcher = options.fetcher ?? fetch;
   const attempts = Math.max(1, options.attempts ?? 3);
   const retryDelayMs = Math.max(0, options.retryDelayMs ?? 250);
-  const url = `${env.CLASHKING_API_ORIGIN.replace(/\/$/, "")}${endpoint}`;
+  const headers = aiUsageSettlementHeaders(env);
   let lastError: Error | undefined;
 
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
-    let response: Response;
     try {
-      response = await fetcher(url, {
-        method: "POST",
-        headers: aiUsageSettlementHeaders(env),
-        body: JSON.stringify(payload),
-      });
+      await executeAssistantEndpoint(env.CLASHKING_API_ORIGIN, undefined, DashboardRosterAIUsageEndpoint, {
+        path: {}, query: {}, body: payload,
+      }, undefined, { headers, fetcher: options.fetcher });
+      return;
     } catch (error) {
-      lastError = error instanceof Error ? error : new Error(String(error));
-      if (attempt >= attempts) throw lastError;
+      lastError = error instanceof AssistantApiError
+        ? new Error(`AI usage settlement failed (${error.status}): ${error.message}`)
+        : error instanceof Error ? error : new Error(String(error));
+      const retryable = error instanceof TransportError || error instanceof AssistantApiError && error.status >= 500;
+      if (!retryable || attempt >= attempts) throw lastError;
       if (retryDelayMs > 0) await wait(retryDelayMs * attempt);
-      continue;
     }
-
-    if (response.ok) return;
-    const detail = (await response.text().catch(() => "")).trim().slice(0, 500);
-    lastError = new Error(`AI usage settlement failed (${response.status})${detail ? `: ${detail}` : ""}`);
-    if (response.status < 500 || attempt >= attempts) throw lastError;
-    if (attempt < attempts && retryDelayMs > 0) await wait(retryDelayMs * attempt);
   }
 
   throw lastError ?? new Error("AI usage settlement failed");

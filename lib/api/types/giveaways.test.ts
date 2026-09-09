@@ -20,21 +20,20 @@ const giveaway = {
   boosters: [{ value: 2, roles: ["role-1"] }],
   entries: ["user-1", "user-1", "user-2"],
   updated: false,
+  disabled: false,
   winnersList: [{
     userId: "user-1",
     username: "Winner",
-    avatarUrl: null,
     inServer: true,
     status: "winner",
     timestamp: "2026-07-25T12:00:00Z",
-    reason: null,
   }],
   createdAt: "2026-07-24T11:00:00Z",
   updatedAt: "2026-07-24T11:00:00Z",
 };
 
 describe("giveaway response contract", () => {
-  it("accepts the exact Go API giveaway collection, including omitted optional fields", () => {
+  it("accepts the exact API giveaway collection, including omitted optional fields", () => {
     expect(isGiveaway(giveaway)).toBe(true);
     expect(isGiveawaysResponse({
       ongoing: [giveaway],

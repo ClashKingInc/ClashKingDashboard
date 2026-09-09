@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { useRouter } from "@/lib/navigation";
+import Image from "@/components/app-image";
+import { useTranslations } from "use-intl";
 import { useTheme } from "next-themes";
 import LoadingScreenWithMessages from "@/components/ui/loading-screen-with-messages";
 import { apiClient } from "@/lib/api/client";
+import { dashboardGuilds } from "@/lib/server-activity";
 import { clashKingAssets } from "@/lib/theme";
 import { cacheUser, setAccessToken } from "@/lib/auth/session";
 
@@ -30,9 +31,8 @@ export default function AuthCallbackPage() {
 
     hasHandledCallbackRef.current = true;
 
-    // The callback URL is the authoritative OAuth response. During hydration,
-    // Vinext's statically generated useSearchParams snapshot can briefly be
-    // empty even though the browser URL already contains Discord's response.
+    // The callback URL is the authoritative OAuth response, independent of
+    // any router state that was captured before this effect ran.
     const callbackParams = new URLSearchParams(globalThis.location.search);
     const code = callbackParams.get("code");
     const errorParam = callbackParams.get("error");
@@ -117,15 +117,7 @@ export default function AuthCallbackPage() {
         try {
           const guildsResponse = await apiClient.servers.getGuilds();
           if (guildsResponse.data) {
-            // Sort guilds: servers with bot first, then by name
-            const sortedGuilds = guildsResponse.data.toSorted((a, b) => {
-              // Primary sort: has_bot (true first)
-              if (a.has_bot && !b.has_bot) return -1;
-              if (!a.has_bot && b.has_bot) return 1;
-              // Secondary sort: alphabetically by name
-              return a.name.localeCompare(b.name);
-            });
-            sessionStorage.setItem('prefetched_guilds', JSON.stringify(sortedGuilds));
+            sessionStorage.setItem('prefetched_guilds', JSON.stringify(dashboardGuilds(guildsResponse.data)));
           }
         } catch (err) {
           console.error('Failed to prefetch guilds:', err);
@@ -134,7 +126,11 @@ export default function AuthCallbackPage() {
 
         const returnTo = sessionStorage.getItem("auth_return_to");
         sessionStorage.removeItem("auth_return_to");
-        router.push(returnTo?.startsWith("/") ? returnTo : "/servers");
+        router.push(
+          returnTo?.startsWith("/")
+            ? returnTo
+            : "/servers",
+        );
       } catch (err) {
         console.error("Authentication error:", err);
         setError(err instanceof Error ? err.message : t("errorAuthenticateFailed"));

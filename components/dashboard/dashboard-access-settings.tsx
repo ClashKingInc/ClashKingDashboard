@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Check, Loader2, Plus, Trash2 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "use-intl";
 import { apiClient } from "@/lib/api/client";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -49,7 +49,7 @@ export function DashboardAccessSettings({ guildId }: { guildId: string }) {
       return;
     }
     setConfig(response.data);
-    setGrants(response.data.grants);
+    setGrants([...response.data.grants]);
     savedFingerprint.current = serializeDashboardAccessGrants(response.data.grants);
     setSaveStatus("idle");
   }, [guildId, t]);
@@ -58,7 +58,9 @@ export function DashboardAccessSettings({ guildId }: { guildId: string }) {
 
   const selectedRoleIds = useMemo(() => [...new Set(grants.map((grant) => grant.role_id))], [grants]);
   const availableRoles = config?.roles.filter((role) => !selectedRoleIds.includes(role.id)) ?? [];
-  const visibleSections = config?.sections.filter((section) => section !== "wars" && section !== "leaderboards" && section !== "panels") ?? [];
+  const visibleSections = (config?.sections.filter((section): section is DashboardSection =>
+    section in sectionMessageKeys && section !== "wars" && section !== "leaderboards" && section !== "panels"
+  ) ?? []);
   const fingerprint = useMemo(() => serializeDashboardAccessGrants(grants), [grants]);
 
   useEffect(() => {
@@ -150,7 +152,7 @@ export function DashboardAccessSettings({ guildId }: { guildId: string }) {
   );
 }
 
-export function serializeDashboardAccessGrants(grants: DashboardAccessGrant[]) {
+export function serializeDashboardAccessGrants(grants: readonly DashboardAccessGrant[]) {
   return JSON.stringify([...grants].sort((left, right) => `${left.role_id}:${left.section}`.localeCompare(`${right.role_id}:${right.section}`)));
 }
 

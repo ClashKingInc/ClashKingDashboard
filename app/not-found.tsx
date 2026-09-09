@@ -1,17 +1,14 @@
-import { getTranslations, getMessages } from "next-intl/server";
-import { NextIntlClientProvider } from "next-intl";
-import Link from "next/link";
+import { useTranslations } from "use-intl";
+import Link from "@/components/app-link";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/landing/navbar";
 import { Footer } from "@/components/landing/footer";
 
-export default async function NotFound() {
-  const t = await getTranslations("NotFound");
-  const messages = await getMessages();
+export default function NotFound() {
+  const t = useTranslations("NotFound");
 
   return (
-    <NextIntlClientProvider messages={messages}>
-      <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
         <Navbar />
         <div className="flex-1 flex items-center justify-center px-4 pt-20 pb-10">
           <div className="text-center space-y-6 max-w-md">
@@ -24,7 +21,6 @@ export default async function NotFound() {
           </div>
         </div>
         <Footer />
-      </div>
-    </NextIntlClientProvider>
+    </div>
   );
 }

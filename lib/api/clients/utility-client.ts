@@ -1,72 +1,71 @@
-/**
- * Utility API client (dates, legends, search)
- */
+/** Utility API client backed by the shared endpoint contracts. */
 
-import { BaseApiClient } from '../core/base-client';
-import type { ApiResponse, PaginatedResponse } from '../types/common';
+import {
+  DashboardCurrentDatesEndpoint,
+  DashboardRaidWeekendDatesEndpoint,
+  DashboardSeasonBoundsEndpoint,
+  DashboardSeasonDatesEndpoint,
+  DashboardSeasonRaidDatesEndpoint,
+} from "@clashking/api-contracts";
+
+import { BaseApiClient } from "../core/base-client";
+import type { ApiResponse } from "../types/common";
+
+function mapData<A, B>(response: ApiResponse<A>, transform: (data: A) => B): ApiResponse<B> {
+  if (response.data === undefined) {
+    const { data: _data, ...rest } = response;
+    return rest;
+  }
+  return { ...response, data: transform(response.data) };
+}
 
 export class UtilityClient extends BaseApiClient {
-  // ============================================================================
-  // Dates
-  // ============================================================================
-
-  async getSeasonDates(numberOfSeasons = 0, asText = false): Promise<ApiResponse<PaginatedResponse<any>>> {
-    const query = this.buildQueryString({ number_of_seasons: numberOfSeasons, as_text: asText });
-    return this.request(`/v2/dates/seasons${query}`, { method: 'GET' });
+  async getSeasonDates(
+    numberOfSeasons = 0,
+    asText = false,
+  ) {
+    const response = await this.executeEndpoint(DashboardSeasonDatesEndpoint, {
+      path: {},
+      query: { number_of_seasons: numberOfSeasons, as_text: asText },
+      body: {},
+    });
+    return mapData(response, (data) => ({ ...data, items: [...data.items] }));
   }
 
-  async getRaidWeekendDates(numberOfWeeks = 0): Promise<ApiResponse<PaginatedResponse<any>>> {
-    const query = this.buildQueryString({ number_of_weeks: numberOfWeeks });
-    return this.request(`/v2/dates/raid-weekends${query}`, { method: 'GET' });
+  async getRaidWeekendDates(numberOfWeeks = 0) {
+    const response = await this.executeEndpoint(DashboardRaidWeekendDatesEndpoint, {
+      path: {},
+      query: { number_of_weeks: numberOfWeeks },
+      body: {},
+    });
+    return mapData(response, (data) => ({ ...data, items: [...data.items] }));
   }
 
-  async getCurrentDates(): Promise<ApiResponse<any>> {
-    return this.request('/v2/dates/current', { method: 'GET' });
+  async getCurrentDates() {
+    return this.executeEndpoint(DashboardCurrentDatesEndpoint, {
+      path: {},
+      query: {},
+      body: {},
+    });
   }
 
-  async getSeasonStartEnd(season = '', goldPassSeason = false): Promise<ApiResponse<{ season_start: any; season_end: any }>> {
-    const query = this.buildQueryString({ season, gold_pass_season: goldPassSeason });
-    return this.request(`/v2/dates/season-start-end${query}`, { method: 'GET' });
+  async getSeasonStartEnd(
+    season = "",
+    goldPassSeason = false,
+  ) {
+    return this.executeEndpoint(DashboardSeasonBoundsEndpoint, {
+      path: {},
+      query: { season, gold_pass_season: goldPassSeason },
+      body: {},
+    });
   }
 
-  async getSeasonRaidDates(season = ''): Promise<ApiResponse<PaginatedResponse<any>>> {
-    const query = this.buildQueryString({ season });
-    return this.request(`/v2/dates/season-raid-dates${query}`, { method: 'GET' });
-  }
-
-  // ============================================================================
-  // Legends
-  // ============================================================================
-
-  async getLegendsDay(day: string, players?: string[]): Promise<ApiResponse<any[]>> {
-    const query = this.buildQueryString({ players });
-    return this.request(`/v2/legends/players/day/${day}${query}`, { method: 'GET' });
-  }
-
-  async getLegendsSeason(season: string, players?: string[]): Promise<ApiResponse<any[]>> {
-    const query = this.buildQueryString({ players });
-    return this.request(`/v2/legends/players/season/${season}${query}`, { method: 'GET' });
-  }
-
-  // ============================================================================
-  // Search
-  // ============================================================================
-
-  async bookmarkSearch(userId: number, type: number, tag: string): Promise<ApiResponse<{ success: boolean }>> {
-    return this.request(`/v2/search/bookmark/${userId}/${type}/${tag}`, { method: 'POST' });
-  }
-
-  async addRecentSearch(userId: number, type: number, tag: string): Promise<ApiResponse<{ success: boolean }>> {
-    return this.request(`/v2/search/recent/${userId}/${type}/${tag}`, { method: 'POST' });
-  }
-
-  // ============================================================================
-  // UI
-  // ============================================================================
-
-  async getRosterDashboard(serverId: number, token: string, rosterId?: string): Promise<Response> {
-    const query = this.buildQueryString({ server_id: serverId, token, roster_id: rosterId });
-    const url = `${this.config.baseUrl}/ui/roster/dashboard${query}`;
-    return fetch(url);
+  async getSeasonRaidDates(season = "") {
+    const response = await this.executeEndpoint(DashboardSeasonRaidDatesEndpoint, {
+      path: {},
+      query: { season },
+      body: {},
+    });
+    return mapData(response, (data) => ({ ...data, items: [...data.items] }));
   }
 }

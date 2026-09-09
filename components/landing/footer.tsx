@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
-import Image from "next/image";
-import { useTranslations } from "next-intl";
+import Link from "@/components/app-link";
+import Image from "@/components/app-image";
+import { useTranslations } from "use-intl";
 import { useTheme } from "next-themes";
 import { useState, useEffect } from "react";
 import { clashKingAssets } from "@/lib/theme";
@@ -59,7 +59,7 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href={`/support-us`} className="text-muted-foreground hover:text-primary transition-colors">
+                <Link href="/support" className="text-muted-foreground hover:text-primary transition-colors">
                   {t("about.support")}
                 </Link>
               </li>

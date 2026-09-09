@@ -112,8 +112,7 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
     // that the roster endpoint already returned.
     api.fetchClans(serverId).then(setClans).catch(() => setClans([]));
 
-    // Fetch clan members separately — calls an external proxy (proxy.clashk.ing)
-    // not routed through Next.js, so a failure must not block the page.
+    // Fetch clan members separately; a proxy failure must not block the page.
     if (clanTag) {
       api.fetchClanMembers(clanTag).then(setClanMembers).catch(() => {});
     }

@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { useLocale } from "next-intl";
+import { useLocale } from "use-intl";
 import { beforeEach, describe, expect, it } from "vitest";
 import { LocaleProvider, useAppLocale } from "./locale-provider";
 import {

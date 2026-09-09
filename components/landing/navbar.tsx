@@ -1,16 +1,16 @@
 "use client";
 
-import Link from "next/link";
-import Image from "next/image";
+import Link from "@/components/app-link";
+import Image from "@/components/app-image";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/navigation";
 import { Menu, X, LogOut, ArrowRight, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { initiateDiscordLogin } from "@/lib/auth/discord-login";
 import { logout } from "@/lib/auth/logout";
-import { useLocale, useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "use-intl";
 import { useTheme } from "next-themes";
 import type { UserInfo } from "@/lib/api/types/auth";
 import { SettingsDropdown } from "@/components/settings-dropdown";
@@ -71,7 +71,7 @@ export function Navbar() {
             <Link href={`/help`} className="text-foreground hover:text-primary transition-colors font-medium">
               {t("help")}
             </Link>
-            <Link href={`/support-us`} className="text-foreground hover:text-primary transition-colors font-medium">
+            <Link href="/support" className="text-foreground hover:text-primary transition-colors font-medium">
               {t("support")}
             </Link>
           </div>
@@ -144,7 +144,7 @@ export function Navbar() {
             <Link href={`/help`} className="block py-2 text-foreground hover:text-primary font-medium">
               {t("help")}
             </Link>
-            <Link href={`/support-us`} className="block py-2 text-foreground hover:text-primary font-medium">
+            <Link href="/support" className="block py-2 text-foreground hover:text-primary font-medium">
               {t("support")}
             </Link>
             <div className="pt-4 space-y-2">

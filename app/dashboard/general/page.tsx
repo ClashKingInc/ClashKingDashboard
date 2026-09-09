@@ -4,9 +4,10 @@ import { useGuildId } from "@/lib/dashboard-route";
 
 
 import React, { useState, useEffect, useEffectEvent } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "use-intl";
 import { useQueryClient } from "@tanstack/react-query";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -56,10 +57,12 @@ export default function GeneralSettingsPage() {
   const [settings, setSettings] = useState({
     embed_color: 14223113, // #D90709 as integer
     full_whitelist_role: undefined as string | undefined,
+    require_api_token_when_linking: false,
   });
 
   const [discordRoles, setDiscordRoles] = useState<Array<{ id: string; name: string; color?: number }>>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [hasLoadedSettings, setHasLoadedSettings] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [tempColor, setTempColor] = useState(settings.embed_color);
@@ -75,19 +78,24 @@ export default function GeneralSettingsPage() {
   const loadSettings = async () => {
     try {
       setIsLoading(true);
+      setHasLoadedSettings(false);
       setError(null);
 
       const settingsPayload = await queryClient.fetchQuery(dashboardQueryOptions.settings(guildId));
       const settingsData = normalizeServerSettingsPayload(settingsPayload);
 
       if (settingsData) {
+        const parsedEmbedColor = Number(settingsData.embed_color ?? 14223113);
+        const embedColor = Number.isFinite(parsedEmbedColor) ? parsedEmbedColor : 14223113;
         const newSettings = {
-          embed_color: settingsData.embed_color ?? 14223113,
+          embed_color: embedColor,
           full_whitelist_role: settingsData.full_whitelist_role?.toString(),
+          require_api_token_when_linking: settingsData.require_api_token_when_linking,
         };
         setSettings(newSettings);
         setTempColor(newSettings.embed_color);
         setTempHex(intToHex(newSettings.embed_color));
+        setHasLoadedSettings(true);
       }
     } catch (err: any) {
       setError(err.message || "Failed to load settings");
@@ -101,7 +109,7 @@ export default function GeneralSettingsPage() {
     try {
       // Use cache to prevent duplicate requests
       const rolesPayload = await queryClient.fetchQuery(dashboardQueryOptions.roles(guildId));
-      setDiscordRoles(normalizeDiscordRolesPayload(rolesPayload));
+      setDiscordRoles([...normalizeDiscordRolesPayload(rolesPayload)]);
     } catch (err) {
       console.error("Failed to load Discord roles:", err);
     }
@@ -191,14 +199,14 @@ export default function GeneralSettingsPage() {
 
 
   const saveSettings = async (
-    nextSettings: typeof settings,
+    updatedFields: Partial<typeof settings>,
     previousSettings?: typeof settings
   ) => {
     try {
       setIsSaving(true);
       setError(null);
 
-      const response = await apiClient.servers.updateSettings(guildId, nextSettings);
+      const response = await apiClient.servers.updateSettings(guildId, updatedFields);
       if (response.error) throw new Error(response.error);
 
       await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.settings(guildId), exact: true });
@@ -219,7 +227,7 @@ export default function GeneralSettingsPage() {
   };
 
   const applySettingsChange = async (updatedFields: Partial<typeof settings>) => {
-    if (isSaving) {
+    if (isSaving || isLoading || !hasLoadedSettings || !editable) {
       return;
     }
 
@@ -227,7 +235,7 @@ export default function GeneralSettingsPage() {
     const nextSettings = { ...settings, ...updatedFields };
 
     setSettings(nextSettings);
-    await saveSettings(nextSettings, previousSettings);
+    await saveSettings(updatedFields, previousSettings);
   };
 
   return (
@@ -296,6 +304,15 @@ export default function GeneralSettingsPage() {
                 <SelectTrigger id="whitelist-role" className="border-0 bg-muted/55 shadow-sm shadow-black/5" disabled={!editable || isSaving}><SelectValue /></SelectTrigger>
                 <SelectContent><SelectItem value="none">{t("security.noRole")}</SelectItem>{discordRoles.map((role) => <SelectItem key={role.id} value={role.id}><span style={{ color: role.color ? intToHex(role.color) : "#99AAB5" }}>@{role.name}</span></SelectItem>)}</SelectContent>
               </Select>
+              <div className="flex items-start justify-between gap-4">
+                <div className="min-w-0 space-y-1">
+                  <Label htmlFor="linking-api-token" className="text-sm font-medium">{t("security.requireLinkingToken")}</Label>
+                  <p id="linking-api-token-description" className="text-xs text-muted-foreground">{t("security.requireLinkingTokenDescription")}</p>
+                </div>
+                <Switch id="linking-api-token" aria-describedby="linking-api-token-description"
+                  checked={settings.require_api_token_when_linking} disabled={!editable || isLoading || !hasLoadedSettings || isSaving}
+                  onCheckedChange={(checked) => void applySettingsChange({ require_api_token_when_linking: checked })} />
+              </div>
             </div>
           </section>
           {fullAccess && <DashboardAccessSettings guildId={guildId} />}

@@ -2,7 +2,6 @@
 
 FROM node:26.1.0-alpine AS base
 WORKDIR /app
-ENV NEXT_TELEMETRY_DISABLED=1
 RUN --mount=type=cache,target=/root/.npm npm install --global npm@12.0.1
 
 FROM base AS dependencies
@@ -10,15 +9,15 @@ COPY package.json package-lock.json ./
 RUN --mount=type=cache,target=/root/.npm npm ci
 
 FROM base AS builder
-ARG NEXT_PUBLIC_CLASHKING_API_ORIGIN=https://api.clashk.ing
-ARG NEXT_PUBLIC_CLASHKING_AI_ORIGIN=https://ai.clashk.ing
-ARG NEXT_PUBLIC_DISCORD_CLIENT_ID=824653933347209227
-ENV NEXT_PUBLIC_CLASHKING_API_ORIGIN=$NEXT_PUBLIC_CLASHKING_API_ORIGIN
-ENV NEXT_PUBLIC_CLASHKING_AI_ORIGIN=$NEXT_PUBLIC_CLASHKING_AI_ORIGIN
-ENV NEXT_PUBLIC_DISCORD_CLIENT_ID=$NEXT_PUBLIC_DISCORD_CLIENT_ID
+ARG VITE_CLASHKING_API_ORIGIN=https://api.clashk.ing
+ARG VITE_CLASHKING_AI_ORIGIN=https://ai.clashk.ing
+ARG VITE_DISCORD_CLIENT_ID=824653933347209227
+ENV VITE_CLASHKING_API_ORIGIN=$VITE_CLASHKING_API_ORIGIN
+ENV VITE_CLASHKING_AI_ORIGIN=$VITE_CLASHKING_AI_ORIGIN
+ENV VITE_DISCORD_CLIENT_ID=$VITE_DISCORD_CLIENT_ID
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY . .
-RUN --mount=type=cache,target=/app/.vinext npm run build
+RUN npm run build
 
 FROM nginx:1.29-alpine AS runner
 COPY docker/nginx.conf /etc/nginx/conf.d/default.conf

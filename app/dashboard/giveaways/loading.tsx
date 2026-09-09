@@ -1,8 +1,8 @@
-import { getTranslations } from "next-intl/server";
+import { useTranslations } from "use-intl";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default async function GiveawaysLoadingPage() {
-  const t = await getTranslations("GiveawaysPage");
+export default function GiveawaysLoadingPage() {
+  const t = useTranslations("GiveawaysPage");
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">

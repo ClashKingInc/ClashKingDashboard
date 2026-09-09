@@ -1,3 +1,13 @@
+import {
+  CreateServerRoleEndpoint,
+  DeleteServerRoleEndpoint,
+  DiscordRolesEndpoint,
+  RoleSettingsEndpoint,
+  ServerRolesEndpoint,
+  UpdateRoleSettingsEndpoint,
+  UpdateServerRoleEndpoint,
+} from "@clashking/api-contracts";
+
 import { BaseApiClient } from '../core/base-client';
 import type { ApiResponse } from '../types/common';
 import type {
@@ -12,57 +22,75 @@ import type {
 } from '../types/roles';
 
 export class RolesClient extends BaseApiClient {
-  async getDiscordRoles(serverId: string | number, signal?: AbortSignal): Promise<ApiResponse<DiscordRolesResponse>> {
-    return this.request(`/v2/server/${serverId}/discord-roles`, { method: 'GET', signal });
+  async getDiscordRoles(serverId: string, signal?: AbortSignal): Promise<ApiResponse<DiscordRolesResponse>> {
+    return this.executeEndpoint(DiscordRolesEndpoint, {
+      path: { serverId },
+      query: {},
+      body: {},
+    }, { signal });
   }
 
-  async getRoleSettings(serverId: string | number): Promise<ApiResponse<RoleSettings>> {
-    return this.request(`/v2/server/${serverId}/role-settings`, { method: 'GET' });
+  async getRoleSettings(serverId: string): Promise<ApiResponse<RoleSettings>> {
+    return this.executeEndpoint(RoleSettingsEndpoint, {
+      path: { serverId },
+      query: {},
+      body: {},
+    });
   }
 
   async updateRoleSettings(
-    serverId: string | number,
+    serverId: string,
     settings: RoleSettingsUpdate
-  ): Promise<ApiResponse<{ message: string; server_id: number }>> {
-    return this.request(`/v2/server/${serverId}/role-settings`, {
-      method: 'PATCH',
-      body: JSON.stringify(settings),
+  ) {
+    return this.executeEndpoint(UpdateRoleSettingsEndpoint, {
+      path: { serverId },
+      query: {},
+      body: settings,
     });
   }
 
   async getServerRoles(
-    serverId: string | number,
+    serverId: string,
     filters: { type?: RoleType; clan_tag?: string } = {}
   ): Promise<ApiResponse<ServerRolesResponse>> {
-    const query = this.buildQueryString(filters);
-    return this.request(`/v2/server/${serverId}/server-roles${query}`, { method: 'GET' });
+    return this.executeEndpoint(ServerRolesEndpoint, {
+      path: { serverId },
+      query: filters,
+      body: {},
+    });
   }
 
   async createServerRole(
-    serverId: string | number,
+    serverId: string,
     role: ServerRoleInput
   ): Promise<ApiResponse<ServerRoleResponse>> {
-    return this.request(`/v2/server/${serverId}/server-roles`, {
-      method: 'POST',
-      body: JSON.stringify({ ...role, mode: role.mode ?? 'both' }),
+    return this.executeEndpoint(CreateServerRoleEndpoint, {
+      path: { serverId },
+      query: {},
+      body: { ...role, mode: role.mode ?? 'both' },
     });
   }
 
   async updateServerRole(
-    serverId: string | number,
+    serverId: string,
     roleId: string,
     update: ServerRoleUpdate
   ): Promise<ApiResponse<ServerRoleResponse>> {
-    return this.request(`/v2/server/${serverId}/server-roles/${roleId}`, {
-      method: 'PATCH',
-      body: JSON.stringify(update),
+    return this.executeEndpoint(UpdateServerRoleEndpoint, {
+      path: { serverId, roleId },
+      query: {},
+      body: update,
     });
   }
 
   async deleteServerRole(
-    serverId: string | number,
+    serverId: string,
     roleId: string
   ): Promise<ApiResponse<ServerRoleResponse>> {
-    return this.request(`/v2/server/${serverId}/server-roles/${roleId}`, { method: 'DELETE' });
+    return this.executeEndpoint(DeleteServerRoleEndpoint, {
+      path: { serverId, roleId },
+      query: {},
+      body: {},
+    });
   }
 }

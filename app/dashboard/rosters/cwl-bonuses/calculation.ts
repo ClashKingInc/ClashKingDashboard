@@ -8,6 +8,28 @@ export interface CwlClanStanding {
   rank: number;
 }
 
+export function cwlSeasonLabel(item: CwlSeasonItem, locale: string, unknownLeague: string): string {
+  const parts = item.season.split("-").map(Number);
+  const [year, month, day] = parts;
+  const date = year && month
+    ? new Date(Date.UTC(year, month - 1, day || 1))
+    : null;
+  const dateMatches = date !== null
+    && !Number.isNaN(date.getTime())
+    && date.getUTCFullYear() === year
+    && date.getUTCMonth() === month - 1
+    && (day === undefined || date.getUTCDate() === day);
+  const label = dateMatches
+    ? new Intl.DateTimeFormat(locale, {
+      month: "long",
+      ...(day === undefined ? {} : { day: "numeric" as const }),
+      year: "numeric",
+      timeZone: "UTC",
+    }).format(date)
+    : item.season;
+  return `${label} · ${item.warLeague?.name ?? unknownLeague}`;
+}
+
 function winner(war: CwlStoredWar): "clan" | "opponent" | null {
   if (war.clan.stars !== war.opponent.stars) return war.clan.stars > war.opponent.stars ? "clan" : "opponent";
   if (war.clan.destructionPercentage !== war.opponent.destructionPercentage) {
@@ -115,5 +137,5 @@ export function resolveCwlWarSize(group: CwlGroupResponse | undefined, storedWar
 }
 
 export function selectableCwlSeasons(items: CwlSeasonItem[]): CwlSeasonItem[] {
-  return items.filter((item) => item.state !== "inWar");
+  return [...items];
 }

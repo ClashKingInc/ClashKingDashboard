@@ -9,8 +9,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useTranslations, useLocale } from "next-intl";
-import Image from "next/image";
+import { useTranslations, useLocale } from "use-intl";
+import Image from "@/components/app-image";
 import { useAppLocale } from "@/components/locale-provider";
 import { LANGUAGE_OPTIONS } from "@/lib/locale-preference";
 

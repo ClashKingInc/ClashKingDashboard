@@ -1,5 +1,8 @@
 "use client";
 
+import { DashboardAuthWebRefreshResponse } from "@clashking/api-contracts";
+import { Schema } from "effect";
+
 import type { UserInfo } from "@/lib/api/types/auth";
 
 const CHANNEL_NAME = "clashking-auth";
@@ -29,7 +32,6 @@ type AuthRuntime = {
   refreshTimer?: ReturnType<typeof setTimeout>;
 };
 
-const AUTH_RUNTIME_KEY = "__clashkingAuthRuntime";
 const serverRuntime = createRuntime(false);
 
 function createTabId(enableChannel: boolean): string {
@@ -167,36 +169,63 @@ async function coordinateRefresh(baseUrl: string): Promise<SessionRestoreResult>
     : undefined;
   if (locks) {
     return locks.request(LOCK_NAME, async () => {
-      if (runtime.generation !== observedGeneration && runtime.accessToken) return "restored";
+      if (runtime.generation !== observedGeneration) return runtime.accessToken ? "restored" : "anonymous";
       return performRefresh(baseUrl, observedGeneration);
     });
   }
   return withStorageLease(observedGeneration, () => performRefresh(baseUrl, observedGeneration));
 }
 
+function resultAfterConcurrentSessionChange(
+  runtime: AuthRuntime,
+  observedGeneration: number,
+): SessionRestoreResult | undefined {
+  if (runtime.generation === observedGeneration) return undefined;
+  return runtime.accessToken ? "restored" : "anonymous";
+}
+
+function requestRefresh(baseUrl: string): Promise<Response> {
+  return fetch(`${baseUrl}/v2/auth/web/refresh`, {
+    method: "POST",
+    credentials: "include",
+  });
+}
+
+async function retryRotationRace(
+  response: Response,
+  baseUrl: string,
+  runtime: AuthRuntime,
+  observedGeneration: number,
+): Promise<Response | SessionRestoreResult> {
+  if (response.status !== 401 || !await wasAlreadyRefreshed(response)) return response;
+  await new Promise((resolve) => setTimeout(resolve, ROTATION_RACE_RETRY_MS));
+  return resultAfterConcurrentSessionChange(runtime, observedGeneration) ?? requestRefresh(baseUrl);
+}
+
 async function performRefresh(baseUrl: string, observedGeneration: number): Promise<SessionRestoreResult> {
   const runtime = getRuntime();
   try {
-    let response = await fetch(`${baseUrl}/v2/auth/web/refresh`, {
-      method: "POST",
-      credentials: "include",
-    });
-    if (response.status === 401 && await wasAlreadyRefreshed(response)) {
-      await new Promise((resolve) => setTimeout(resolve, ROTATION_RACE_RETRY_MS));
-      response = await fetch(`${baseUrl}/v2/auth/web/refresh`, {
-        method: "POST",
-        credentials: "include",
-      });
-    }
+    const existingResult = resultAfterConcurrentSessionChange(runtime, observedGeneration);
+    if (existingResult) return existingResult;
+    const refreshResult = await retryRotationRace(
+      await requestRefresh(baseUrl),
+      baseUrl,
+      runtime,
+      observedGeneration,
+    );
+    if (typeof refreshResult === "string") return refreshResult;
+    const response = refreshResult;
     if (response.status === 401 || response.status === 403) {
-      if (runtime.generation !== observedGeneration && runtime.accessToken) return "restored";
+      const concurrentResult = resultAfterConcurrentSessionChange(runtime, observedGeneration);
+      if (concurrentResult) return concurrentResult;
       clearSession();
       return "anonymous";
     }
     if (!response.ok) return "unavailable";
-    const data = (await response.json()) as { access_token?: string };
+    const data = await Schema.decodeUnknownPromise(DashboardAuthWebRefreshResponse)(await response.json());
     if (!data.access_token) return "unavailable";
-    if (runtime.generation !== observedGeneration && runtime.accessToken) return "restored";
+    const concurrentResult = resultAfterConcurrentSessionChange(runtime, observedGeneration);
+    if (concurrentResult) return concurrentResult;
     setAccessToken(data.access_token);
     return "restored";
   } catch {
@@ -206,7 +235,7 @@ async function performRefresh(baseUrl: string, observedGeneration: number): Prom
 
 async function wasAlreadyRefreshed(response: Response): Promise<boolean> {
   try {
-    const body = await response.json() as { message?: unknown };
+    const body = Schema.decodeUnknownSync(Schema.Struct({ message: Schema.String }))(await response.json());
     return body.message === "Browser session was already refreshed";
   } catch {
     return false;
@@ -227,7 +256,7 @@ async function withStorageLease(
       const acquired = readLease();
       if (acquired?.owner === runtime.tabId) {
         try {
-          if (runtime.generation !== observedGeneration && runtime.accessToken) return "restored";
+          if (runtime.generation !== observedGeneration) return runtime.accessToken ? "restored" : "anonymous";
           return await action();
         } finally {
           if (readLease()?.owner === runtime.tabId) localStorage.removeItem(LEASE_KEY);
@@ -235,7 +264,7 @@ async function withStorageLease(
       }
     }
     await new Promise((resolve) => setTimeout(resolve, 100));
-    if (runtime.generation !== observedGeneration && runtime.accessToken) return "restored";
+    if (runtime.generation !== observedGeneration) return runtime.accessToken ? "restored" : "anonymous";
   }
   return "unavailable";
 }

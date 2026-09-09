@@ -6,7 +6,7 @@ const testState = vi.hoisted(() => ({
   replace: vi.fn(),
 }));
 
-vi.mock("next/navigation", () => ({
+vi.mock("@/lib/navigation", () => ({
   useRouter: () => ({ replace: testState.replace }),
 }));
 

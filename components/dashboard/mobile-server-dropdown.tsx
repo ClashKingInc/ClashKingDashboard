@@ -1,9 +1,9 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/navigation";
 import { useState } from "react";
 import { Check, ChevronDown, TriangleAlert } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "use-intl";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -16,6 +16,7 @@ import { cn } from "@/lib/utils";
 import type { GuildInfo } from "@/lib/api/types/server";
 import { dashboardHref } from "@/lib/dashboard-route";
 import { InactiveServerDialog } from "./inactive-server-dialog";
+import { requiresServerReactivation } from "@/lib/server-activity";
 
 interface MobileServerDropdownProps {
   readonly locale: string;
@@ -40,7 +41,7 @@ export function MobileServerDropdown({
   const [inactiveGuild, setInactiveGuild] = useState<GuildInfo | null>(null);
 
   const selectGuild = (guild: GuildInfo) => {
-    if (guild.inactive) {
+    if (requiresServerReactivation(guild)) {
       setIsDropdownOpen(false);
       setInactiveGuild(guild);
       return;
@@ -104,7 +105,7 @@ export function MobileServerDropdown({
                 </AvatarFallback>
               </Avatar>
               <span className="min-w-0 flex-1 truncate font-medium">{guild.name}</span>
-              {guild.inactive && (
+              {requiresServerReactivation(guild) && (
                 <TriangleAlert className="h-4 w-4 shrink-0 text-amber-500" aria-label={t("inactiveServer")} />
               )}
               {guild.id === guildId && <Check className="h-4 w-4 shrink-0 text-primary" />}

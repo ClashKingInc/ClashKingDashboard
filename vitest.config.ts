@@ -1,23 +1,23 @@
 import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
 import path from "path";
+import { publicSeoCopyPlugin } from "./scripts/public-seo-copy-plugin";
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [publicSeoCopyPlugin(), react()],
   test: {
     environment: "jsdom",
     globals: true,
     setupFiles: ["./vitest.setup.ts"],
     env: {
-      NEXT_PUBLIC_CLASHKING_API_ORIGIN: "http://localhost:8000",
-      NEXT_PUBLIC_DISCORD_CLIENT_ID: "test_discord_client_id",
+      VITE_CLASHKING_API_ORIGIN: "http://localhost:8000",
+      VITE_DISCORD_CLIENT_ID: "test_discord_client_id",
     },
     coverage: {
       provider: "v8",
-      reporter: ["text", "lcov"],
-      reportsDirectory: "./coverage",
+      reporter: ["text"],
       exclude: [
-        // Thin wrappers with no logic — excluded from coverage in sonar-project.properties too
+        // Thin wrappers with no branching logic.
         "lib/api/clients/**",
         "lib/api/index.ts",
       ],

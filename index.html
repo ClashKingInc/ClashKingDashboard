@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en" data-scroll-behavior="smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Configure your ClashKing bot settings" />
+    <meta name="theme-color" content="#0b1020" />
+    <link rel="icon" href="/icon.png" />
+    <link
+      rel="preload"
+      href="/fonts/clashking.woff2?v=4ab9fae1"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <script>
+      (() => {
+        const userAgent = navigator.userAgent;
+        const platform = navigator.platform;
+        const touchPoints = navigator.maxTouchPoints || 0;
+        const mobilePlatform = /android/i.test(userAgent)
+          ? "android"
+          : /iPhone|iPad|iPod/i.test(userAgent) || (/Mac/i.test(platform) && touchPoints > 1)
+            ? "ios"
+            : "unknown";
+        document.documentElement.dataset.mobilePlatform = mobilePlatform;
+      })();
+    </script>
+    <title>ClashKing Dashboard</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

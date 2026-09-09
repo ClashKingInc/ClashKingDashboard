@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "@/components/app-image";
 
 const IOS_URL = "https://testflight.apple.com/join/6Q8dfnMX";
 const ANDROID_URL = "https://play.google.com/store/apps/details?id=com.clashking.clashkingapp";

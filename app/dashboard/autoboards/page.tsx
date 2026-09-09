@@ -1,13 +1,12 @@
 "use client";
 
-import Image from "next/image";
-import { useLocale } from "next-intl";
+import Image from "@/components/app-image";
+import { useLocale, useTranslations } from "use-intl";
 import { useGuildId } from "@/lib/dashboard-route";
-import { apiFetch } from "@/lib/api/fetch";
-
+import { AutoboardCapabilitiesEndpoint, ServerAutoboardsEndpoint, CreateAutoboardEndpoint, ReplaceAutoboardEndpoint, DeleteAutoboardEndpoint } from "@clashking/api-contracts";
+import { executeSharedEndpoint } from "@/lib/api/shared-client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useTranslations } from "next-intl";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   AlertCircle,
@@ -71,8 +70,6 @@ import {
   autoboardArtworkUrl,
   createEditAutoboardForm,
   createInitialAutoboardForm,
-  extractApiError,
-  parseAutoboardCapabilities,
   validateAutoboardForm,
   type AutoboardBoardTypeCapability,
   type AutoboardDeliveryMode,
@@ -132,7 +129,7 @@ export default function AutoboardsPage() {
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<AutoboardsResponse | null>(null);
-  const [capabilities, setCapabilities] = useState<AutoboardBoardTypeCapability[]>([]);
+  const [capabilities, setCapabilities] = useState<readonly AutoboardBoardTypeCapability[]>([]);
   const [channels, setChannels] = useState<DiscordDestinationChannel[]>([]);
   const [threads, setThreads] = useState<DiscordDestinationThread[]>([]);
   const [destinationsLoading, setDestinationsLoading] = useState(true);
@@ -162,35 +159,22 @@ export default function AutoboardsPage() {
   );
   const requiresThread = destinationNeedsThread(form?.channelId, channels);
 
-  const request = useCallback(async (path: string, init?: RequestInit) => {
-    const response = await apiFetch(path, {
-      ...init,
-      headers: {
-        "Content-Type": "application/json",
-        ...init?.headers,
-      },
-    });
-    const payload: unknown = await response.json().catch(() => null);
-    if (!response.ok) throw new Error(extractApiError(payload, t("errors.request")));
-    return payload;
-  }, [t]);
-
   const load = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
       const [boardsPayload, capabilityPayload] = await Promise.all([
-        request(`/v2/server/${guildId}/autoboards`),
-        request(`/v2/server/${guildId}/autoboards/capabilities`),
+        executeSharedEndpoint(ServerAutoboardsEndpoint, { path: { serverId: guildId }, query: {}, body: {} }),
+        executeSharedEndpoint(AutoboardCapabilitiesEndpoint, { path: { serverId: guildId }, query: {}, body: {} }),
       ]);
-      setData(boardsPayload as AutoboardsResponse);
-      setCapabilities(parseAutoboardCapabilities(capabilityPayload).boardTypes);
+      setData(boardsPayload);
+      setCapabilities(capabilityPayload.boardTypes);
     } catch (loadError) {
       setError(loadError instanceof Error ? loadError.message : t("errors.load"));
     } finally {
       setLoading(false);
     }
-  }, [guildId, request, t]);
+  }, [guildId, t]);
 
   const loadDestinations = useCallback(async () => {
     setDestinationsLoading(true);
@@ -314,13 +298,16 @@ export default function AutoboardsPage() {
     setSaving(true);
     setFormError(null);
     try {
-      const path = editing
-        ? `/v2/server/${guildId}/autoboards/${editing.id}`
-        : `/v2/server/${guildId}/autoboards`;
-      await request(path, {
-        method: editing ? "PUT" : "POST",
-        body: JSON.stringify(buildAutoboardRequest(form)),
-      });
+      const body = buildAutoboardRequest(form);
+      if (editing) {
+        await executeSharedEndpoint(ReplaceAutoboardEndpoint, {
+          path: { serverId: guildId, autoboardId: editing.id }, body, query: {},
+        });
+      } else {
+        await executeSharedEndpoint(CreateAutoboardEndpoint, {
+          path: { serverId: guildId }, body, query: {},
+        });
+      }
       setDialogOpen(false);
       toast({
         title: editing ? t("feedback.updated") : t("feedback.created"),
@@ -337,8 +324,9 @@ export default function AutoboardsPage() {
     if (!deleteTarget) return;
     setDeleting(true);
     try {
-      await request(`/v2/server/${guildId}/autoboards/${deleteTarget.id}`, {
-        method: "DELETE",
+      await executeSharedEndpoint(DeleteAutoboardEndpoint, {
+        path: { serverId: guildId, autoboardId: deleteTarget.id },
+        query: {}, body: {},
       });
       setDeleteTarget(null);
       toast({ title: t("feedback.deleted") });

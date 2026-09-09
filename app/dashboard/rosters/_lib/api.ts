@@ -1,8 +1,7 @@
-import { getAccessToken } from "@/lib/auth/session";
-import { apiFetch } from "@/lib/api/fetch";
+import { dashboardEndpoints, ProxyClanEndpoint, type EndpointRequest, type EndpointResponse } from "@clashking/api-contracts";
+import { executeSharedEndpoint } from "@/lib/api/shared-client";
 // Roster API - Centralized API functions for the rosters module
 
-import { normalizeChannelsPayload } from '@/lib/dashboard-cache';
 import type {
   Roster,
   RosterMember,
@@ -14,26 +13,110 @@ import type {
   CreateRosterFormData,
   CloneRosterFormData,
   DiscordChannel,
+  AutomationActionType,
 } from './types';
 
 // ============================================
 // Helper
 // ============================================
 
-function getAuthHeaders(): HeadersInit {
-  const token = globalThis.window === undefined ? null : getAccessToken();
+type ContractRoster = EndpointResponse<typeof dashboardEndpoints.dashboardGetRoster>["roster"];
+type ContractRosterMember = ContractRoster["members"][number];
+type ContractRosterGroup = EndpointResponse<typeof dashboardEndpoints.dashboardGetRosterGroup>["group"];
+type ContractRosterAutomation = EndpointResponse<typeof dashboardEndpoints.dashboardCreateRosterAutomation>["rule"];
+
+function timestampSeconds(value: string | null | undefined): number | undefined {
+  if (value === null || value === undefined) return undefined;
+  const milliseconds = Date.parse(value);
+  return Number.isFinite(milliseconds) ? milliseconds / 1000 : undefined;
+}
+
+function toRosterMember(member: ContractRosterMember): RosterMember {
+  const { last_online, added_at, last_updated, answers, ...rest } = member;
   return {
-    'Content-Type': 'application/json',
-    Authorization: token ? `Bearer ${token}` : '',
+    ...rest,
+    hero_lvs: member.hero_level_sum,
+    current_league: member.league_name,
+    last_online: timestampSeconds(last_online),
+    added_at: timestampSeconds(added_at),
+    last_updated: timestampSeconds(last_updated),
+    signup_answers: typeof answers === "object" && answers !== null && !Array.isArray(answers)
+      ? Object.fromEntries(Object.entries(answers)) : undefined,
   };
 }
 
-async function handleResponse<T>(response: Response): Promise<T> {
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({ error: 'Unknown error' }));
-    throw new Error(error.error || error.message || `HTTP ${response.status}`);
+function toRoster(roster: ContractRoster): Roster {
+  return {
+    ...roster,
+    members: roster.members.map(toRosterMember),
+    columns: [...roster.columns],
+    sort: [...roster.sort],
+    signup_questions: roster.signup_questions?.map((question) => ({
+      ...question,
+      options: question.options ? [...question.options] : undefined,
+    })),
+  };
+}
+
+function toRosterGroup(group: ContractRosterGroup): RosterGroup {
+  return {
+    group_id: group.group_id,
+    server_id: group.server_id,
+    alias: group.alias ?? group.name,
+    description: group.description,
+    max_accounts_per_user: group.max_accounts_per_user,
+    min_signups: group.min_signups,
+    roster_count: group.rosters?.length,
+    rosters: group.rosters?.map((roster) => ({
+      id: roster.id,
+      alias: roster.alias,
+      clan_name: roster.clan_name ?? undefined,
+      updated_at: roster.updated_at,
+    })),
+  };
+}
+
+function toRosterAutomation(rule: ContractRosterAutomation): RosterAutomation {
+  return {
+    automation_id: rule.automation_id,
+    server_id: rule.server_id,
+    roster_id: rule.roster_id,
+    group_id: rule.group_id,
+    action_type: parseAutomationActionType(rule.action_type),
+    scheduled_at: rule.scheduled_at,
+    discord_channel_id: rule.discord_channel_id,
+    options: rule.options,
+    active: rule.active,
+    executed: rule.executed,
+    executed_at: rule.executed_at,
+    last_triggered_at: rule.last_triggered_at,
+    execution_status: parseAutomationStatus(rule.execution_status),
+    last_missed_at: rule.last_missed_at,
+  };
+}
+
+function parseAutomationActionType(value: string): AutomationActionType {
+  switch (value) {
+    case "roster_signup": return value;
+    case "roster_signup_close": return value;
+    case "roster_post": return value;
+    case "roster_ping": return value;
+    case "roster_delete": return value;
+    case "roster_clear": return value;
+    case "roster_archive": return value;
+    default: throw new Error(`Unsupported roster automation action: ${value}`);
   }
-  return response.json();
+}
+
+function parseAutomationStatus(value: string | undefined): RosterAutomation["execution_status"] {
+  switch (value) {
+    case "pending": return value;
+    case "processing": return value;
+    case "completed": return value;
+    case "failed": return value;
+    case "missed": return value;
+    default: return undefined;
+  }
 }
 
 // ============================================
@@ -41,78 +124,53 @@ async function handleResponse<T>(response: Response): Promise<T> {
 // ============================================
 
 export async function fetchRosters(serverId: string, groupId?: string): Promise<Roster[]> {
-  const params = new URLSearchParams();
-  if (groupId) params.append('group_id', groupId);
-  const queryString = params.toString();
-  const querySuffix = queryString ? `?${queryString}` : '';
-  const url = `/v2/roster/${serverId}/list${querySuffix}`;
-
-  const response = await apiFetch(url, {
-    headers: getAuthHeaders(),
+  const response = await executeSharedEndpoint(dashboardEndpoints.dashboardListRosters, {
+    path: { serverId },
+    query: groupId ? { group_id: groupId } : {},
+    body: {},
   });
-  const data = await handleResponse<{ items?: Roster[]; rosters?: Roster[] } | Roster[]>(response);
-  if (Array.isArray(data)) return data;
-  return data.rosters || data.items || [];
+  return response.rosters.map(toRoster);
 }
 
 export async function fetchRoster(rosterId: string, serverId: string): Promise<Roster> {
-  const response = await apiFetch(`/v2/roster/${encodeURIComponent(rosterId)}?server_id=${encodeURIComponent(serverId)}`, {
-    headers: getAuthHeaders(),
+  const response = await executeSharedEndpoint(dashboardEndpoints.dashboardGetRoster, {
+    path: { rosterId }, query: { server_id: serverId }, body: {},
   });
-  const data = await handleResponse<{ roster?: Roster } | Roster>(response);
-  if ('roster' in data && data.roster) {
-    return data.roster;
-  }
-  return data as Roster;
+  return toRoster(response.roster);
 }
 
 export async function createRoster(serverId: string, data: CreateRosterFormData): Promise<Roster> {
-  const response = await apiFetch(`/v2/roster?server_id=${serverId}`, {
-    method: 'POST',
-    headers: getAuthHeaders(),
-    body: JSON.stringify({
-      server_id: serverId,
-      ...data,
-    }),
+  const response = await executeSharedEndpoint(dashboardEndpoints.dashboardCreateRoster, {
+    path: {}, query: { server_id: serverId }, body: data,
   });
-  return handleResponse<Roster>(response);
+  return toRoster(response.roster);
 }
 
 export async function updateRoster(
   rosterId: string,
   serverId: string,
-  data: Partial<Roster>
+  data: EndpointRequest<typeof dashboardEndpoints.dashboardUpdateRoster>["body"]
 ): Promise<Roster> {
-  const response = await apiFetch(`/v2/roster/${rosterId}?server_id=${serverId}`, {
-    method: 'PATCH',
-    headers: getAuthHeaders(),
-    body: JSON.stringify(data),
+  const response = await executeSharedEndpoint(dashboardEndpoints.dashboardUpdateRoster, {
+    path: { rosterId }, query: { server_id: serverId }, body: data,
   });
-  const result = await handleResponse<{ roster?: Roster } | Roster>(response);
-  if ('roster' in result && result.roster) {
-    return result.roster;
-  }
-  return result as Roster;
+  return response.roster ? toRoster(response.roster) : fetchRoster(rosterId, serverId);
 }
 
 export async function deleteRoster(rosterId: string, serverId: string): Promise<void> {
-  const response = await apiFetch(`/v2/roster/${rosterId}?server_id=${serverId}`, {
-    method: 'DELETE',
-    headers: getAuthHeaders(),
+  await executeSharedEndpoint(dashboardEndpoints.dashboardDeleteRoster, {
+    path: { rosterId },
+    query: { server_id: serverId },
+    body: {},
   });
-  if (!response.ok) {
-    throw new Error('Failed to delete roster');
-  }
 }
 
 export async function clearRosterMembers(rosterId: string, serverId: string): Promise<void> {
-  const response = await apiFetch(`/v2/roster/${rosterId}?server_id=${serverId}&members_only=true`, {
-    method: 'DELETE',
-    headers: getAuthHeaders(),
+  await executeSharedEndpoint(dashboardEndpoints.dashboardDeleteRoster, {
+    path: { rosterId },
+    query: { server_id: serverId, members_only: true },
+    body: {},
   });
-  if (!response.ok) {
-    throw new Error('Failed to clear roster members');
-  }
 }
 
 export async function cloneRoster(
@@ -120,23 +178,18 @@ export async function cloneRoster(
   serverId: string,
   data: CloneRosterFormData
 ): Promise<Roster> {
-  const response = await apiFetch(`/v2/roster/${rosterId}/clone?server_id=${serverId}`, {
-    method: 'POST',
-    headers: getAuthHeaders(),
-    body: JSON.stringify(data),
+  const response = await executeSharedEndpoint(dashboardEndpoints.dashboardCloneRoster, {
+    path: { rosterId }, query: { server_id: serverId }, body: data,
   });
-  return handleResponse<Roster>(response);
+  return toRoster(response.roster);
 }
 
 export async function refreshRoster(rosterId: string, serverId: string): Promise<Roster> {
-  const response = await apiFetch(
-    `/v2/roster/refresh?roster_id=${rosterId}&server_id=${serverId}`,
-    {
-      method: 'POST',
-      headers: getAuthHeaders(),
-    }
-  );
-  return handleResponse<Roster>(response);
+  const response = await executeSharedEndpoint(dashboardEndpoints.dashboardRefreshRosters, {
+    path: {}, query: { roster_id: rosterId, server_id: serverId }, body: {},
+  });
+  const roster = response.refreshed_rosters.find((item) => item.id === rosterId);
+  return roster ? toRoster(roster) : fetchRoster(rosterId, serverId);
 }
 
 // ============================================
@@ -151,14 +204,11 @@ export async function addRosterMembers(
   // Transform tags array to the format expected by the API
   const addMembers = tags.map(tag => ({ tag }));
 
-  const response = await apiFetch(`/v2/roster/${rosterId}/members?server_id=${serverId}`, {
-    method: 'POST',
-    headers: getAuthHeaders(),
-    body: JSON.stringify({ add: addMembers }),
+  await executeSharedEndpoint(dashboardEndpoints.dashboardManageRosterMembers, {
+    path: { rosterId },
+    query: { server_id: serverId },
+    body: { add: addMembers },
   });
-  if (!response.ok) {
-    throw new Error('Failed to add members');
-  }
 }
 
 export async function removeRosterMember(
@@ -166,16 +216,11 @@ export async function removeRosterMember(
   serverId: string,
   memberTag: string
 ): Promise<void> {
-  const response = await apiFetch(
-    `/v2/roster/${rosterId}/members/${encodeURIComponent(memberTag)}?server_id=${serverId}`,
-    {
-      method: 'DELETE',
-      headers: getAuthHeaders(),
-    }
-  );
-  if (!response.ok) {
-    throw new Error('Failed to remove member');
-  }
+  await executeSharedEndpoint(dashboardEndpoints.dashboardRemoveRosterMember, {
+    path: { rosterId, memberTag },
+    query: { server_id: serverId },
+    body: {},
+  });
 }
 
 export async function refreshRosterMember(
@@ -183,16 +228,10 @@ export async function refreshRosterMember(
   serverId: string,
   memberTag: string
 ): Promise<RosterMember> {
-  const response = await apiFetch(
-    `/v2/roster/${rosterId}/members/${encodeURIComponent(memberTag)}/refresh?server_id=${serverId}`,
-    {
-      method: 'POST',
-      headers: getAuthHeaders(),
-    }
-  );
-  if (!response.ok) throw new Error('Failed to refresh member');
-  const data = await response.json();
-  return data.member;
+  const response = await executeSharedEndpoint(dashboardEndpoints.dashboardRefreshRosterMember, {
+    path: { rosterId, memberTag }, query: { server_id: serverId }, body: {},
+  });
+  return toRosterMember(response.member);
 }
 
 export async function refreshRosterDiscordIdentity(
@@ -200,16 +239,11 @@ export async function refreshRosterDiscordIdentity(
 	serverId: string,
 	memberTag: string,
 ): Promise<Pick<RosterMember, "discord" | "discord_username" | "discord_avatar_url">> {
-	const response = await apiFetch(
-		`/v2/server/${encodeURIComponent(serverId)}/rosters/${encodeURIComponent(rosterId)}/discord-identity/refresh`,
-		{
-			method: "POST",
-			headers: getAuthHeaders(),
-			body: JSON.stringify({ playerTag: memberTag }),
-		},
-	);
-	if (!response.ok) throw new Error("Failed to refresh Discord identity");
-	const data = await response.json();
+	const data = await executeSharedEndpoint(dashboardEndpoints.dashboardRefreshRosterDiscordIdentity, {
+		path: { serverId, rosterId },
+		query: {},
+		body: { playerTag: memberTag },
+	});
 	return {
 		discord: data.discordUserId,
 		discord_username: data.discordUsername,
@@ -222,14 +256,12 @@ export async function fetchMissingMembers(
   rosterId?: string,
   groupId?: string
 ): Promise<MissingMembersResult> {
-  const params = new URLSearchParams({ server_id: serverId });
-  if (rosterId) params.append('roster_id', rosterId);
-  if (groupId) params.append('group_id', groupId);
-
-  const response = await apiFetch(`/v2/roster/missing-members?${params.toString()}`, {
-    headers: getAuthHeaders(),
+  const response = await executeSharedEndpoint(dashboardEndpoints.dashboardMissingRosterMembers, {
+    path: {},
+    query: { server_id: serverId, ...(rosterId ? { roster_id: rosterId } : {}), ...(groupId ? { group_id: groupId } : {}) },
+    body: {},
   });
-  return handleResponse<MissingMembersResult>(response);
+  return { ...response, results: response.results.map((result) => ({ ...result, missing_members: [...result.missing_members] })) };
 }
 
 // ============================================
@@ -237,19 +269,20 @@ export async function fetchMissingMembers(
 // ============================================
 
 export async function fetchServerMembers(serverId: string): Promise<ClanMember[]> {
-  const response = await apiFetch(`/v2/roster/server/${serverId}/members`, {
-    headers: getAuthHeaders(),
+  const response = await executeSharedEndpoint(dashboardEndpoints.dashboardServerClanMembers, {
+    path: { serverId }, query: {}, body: {},
   });
-  const data = await handleResponse<{ members?: ClanMember[] } | ClanMember[]>(response);
-  return Array.isArray(data) ? data : data.members || [];
+  return [...response.members];
 }
 
 export async function fetchClanMembers(clanTag: string): Promise<ClanMember[]> {
-  const response = await apiFetch(`https://proxy.clashk.ing/v1/clans/${encodeURIComponent(clanTag)}/members`, {
-    headers: getAuthHeaders(),
+  const clan = await executeSharedEndpoint(ProxyClanEndpoint, {
+    path: { clanTag }, query: {}, body: {},
   });
-  const data = await handleResponse<{ items?: ClanMember[]; members?: ClanMember[]; clan_tag?: string } | ClanMember[]>(response);
-  return Array.isArray(data) ? data : data.items || data.members || [];
+  return (clan.memberList ?? []).map((member) => ({
+    tag: member.tag, name: member.name, townhall: member.townHallLevel,
+    clan_tag: clan.tag, clan_name: clan.name,
+  }));
 }
 
 // ============================================
@@ -257,11 +290,16 @@ export async function fetchClanMembers(clanTag: string): Promise<ClanMember[]> {
 // ============================================
 
 export async function fetchClans(serverId: string): Promise<Clan[]> {
-  const response = await apiFetch(`/v2/server/${serverId}/clans`, {
-    headers: getAuthHeaders(),
+  const response = await executeSharedEndpoint(dashboardEndpoints.serverClans, {
+    path: { serverId },
+    query: {},
+    body: {},
   });
-  const data = await handleResponse<{ items?: Clan[] } | Clan[]>(response);
-  return Array.isArray(data) ? data : data.items || [];
+  return response.map((clan) => ({
+    tag: clan.tag,
+    name: clan.name,
+    badge_url: clan.badge_url,
+  }));
 }
 
 // ============================================
@@ -273,29 +311,36 @@ export async function fetchAutomations(
   rosterId?: string,
   groupId?: string
 ): Promise<RosterAutomation[]> {
-  const params = new URLSearchParams({ server_id: serverId });
-  if (rosterId) params.append('roster_id', rosterId);
-  if (groupId) params.append('group_id', groupId);
-
-  const response = await apiFetch(`/v2/roster-automation/list?${params.toString()}`, {
-    headers: getAuthHeaders(),
+  const response = await executeSharedEndpoint(dashboardEndpoints.dashboardListRosterAutomations, {
+    path: {},
+    query: {
+      server_id: serverId,
+      ...(rosterId ? { roster_id: rosterId } : {}),
+      ...(groupId ? { group_id: groupId } : {}),
+    },
+    body: {},
   });
-  const data = await handleResponse<{ items?: RosterAutomation[] }>(response);
-  return data.items || [];
+  return response.items.map(toRosterAutomation);
 }
 
 export async function createAutomation(
   data: Omit<RosterAutomation, 'automation_id' | 'executed' | 'created_at' | 'updated_at'>
 ): Promise<RosterAutomation> {
   const { server_id: serverId, ...payload } = data;
-  const response = await apiFetch(`/v2/roster-automation?server_id=${encodeURIComponent(String(serverId))}`, {
-    method: 'POST',
-    headers: getAuthHeaders(),
-    body: JSON.stringify(payload),
+  const response = await executeSharedEndpoint(dashboardEndpoints.dashboardCreateRosterAutomation, {
+    path: {},
+    query: { server_id: serverId },
+    body: {
+      action_type: payload.action_type,
+      scheduled_at: payload.scheduled_at,
+      ...(payload.roster_id !== undefined ? { roster_id: payload.roster_id } : {}),
+      ...(payload.group_id !== undefined ? { group_id: payload.group_id } : {}),
+      ...(payload.discord_channel_id !== undefined ? { discord_channel_id: payload.discord_channel_id } : {}),
+      ...(payload.options !== undefined ? { options: payload.options } : {}),
+      ...(payload.active !== undefined ? { active: payload.active } : {}),
+    },
   });
-  const result = await handleResponse<{ rule?: RosterAutomation } | RosterAutomation>(response);
-  if ('rule' in result && result.rule) return result.rule;
-  return result as RosterAutomation;
+  return toRosterAutomation(response.rule);
 }
 
 export async function updateAutomation(
@@ -303,23 +348,29 @@ export async function updateAutomation(
   serverId: string,
   data: Partial<RosterAutomation>
 ): Promise<RosterAutomation> {
-  const response = await apiFetch(`/v2/roster-automation/${automationId}?server_id=${serverId}`, {
-    method: 'PATCH',
-    headers: getAuthHeaders(),
-    body: JSON.stringify(data),
+  const response = await executeSharedEndpoint(dashboardEndpoints.dashboardUpdateRosterAutomation, {
+    path: { automationId },
+    query: { server_id: serverId },
+    body: {
+      ...(data.roster_id !== undefined ? { roster_id: data.roster_id } : {}),
+      ...(data.group_id !== undefined ? { group_id: data.group_id } : {}),
+      ...(data.action_type !== undefined ? { action_type: data.action_type } : {}),
+      ...(data.scheduled_at !== undefined ? { scheduled_at: data.scheduled_at } : {}),
+      ...(data.discord_channel_id !== undefined ? { discord_channel_id: data.discord_channel_id } : {}),
+      ...(data.options !== undefined ? { options: data.options } : {}),
+      ...(data.active !== undefined ? { active: data.active } : {}),
+    },
   });
-  return handleResponse<RosterAutomation>(response);
+  return toRosterAutomation(response.rule);
 }
 
 
 export async function deleteAutomation(automationId: string, serverId: string): Promise<void> {
-  const response = await apiFetch(`/v2/roster-automation/${automationId}?server_id=${serverId}`, {
-    method: 'DELETE',
-    headers: getAuthHeaders(),
+  await executeSharedEndpoint(dashboardEndpoints.dashboardDeleteRosterAutomation, {
+    path: { automationId },
+    query: { server_id: serverId },
+    body: {},
   });
-  if (!response.ok) {
-    throw new Error('Failed to delete automation');
-  }
 }
 
 // ============================================
@@ -327,26 +378,27 @@ export async function deleteAutomation(automationId: string, serverId: string): 
 // ============================================
 
 export async function fetchGroups(serverId: string): Promise<RosterGroup[]> {
-  const response = await apiFetch(`/v2/roster-group/list?server_id=${serverId}`, {
-    headers: getAuthHeaders(),
+  const response = await executeSharedEndpoint(dashboardEndpoints.dashboardListRosterGroups, {
+    path: {},
+    query: { server_id: serverId },
+    body: {},
   });
-  const data = await handleResponse<{ items?: RosterGroup[] } | RosterGroup[]>(response);
-  return Array.isArray(data) ? data : data.items || [];
+  return response.items.map(toRosterGroup);
 }
 
 export async function createGroup(
   serverId: string,
   alias: string
 ): Promise<RosterGroup> {
-  const response = await apiFetch(`/v2/roster-group?server_id=${serverId}`, {
-    method: 'POST',
-    headers: getAuthHeaders(),
-    body: JSON.stringify({
+  const response = await executeSharedEndpoint(dashboardEndpoints.dashboardCreateRosterGroup, {
+    path: {},
+    query: { server_id: serverId },
+    body: {
       server_id: serverId,
       alias,
-    }),
+    },
   });
-  return handleResponse<RosterGroup>(response);
+  return toRosterGroup(response.group);
 }
 
 export async function updateGroup(
@@ -354,22 +406,20 @@ export async function updateGroup(
   serverId: string,
   data: Partial<RosterGroup>
 ): Promise<RosterGroup> {
-  const response = await apiFetch(`/v2/roster-group/${groupId}?server_id=${serverId}`, {
-    method: 'PATCH',
-    headers: getAuthHeaders(),
-    body: JSON.stringify(data),
+  const response = await executeSharedEndpoint(dashboardEndpoints.dashboardUpdateRosterGroup, {
+    path: { groupId },
+    query: { server_id: serverId },
+    body: data,
   });
-  return handleResponse<RosterGroup>(response);
+  return toRosterGroup(response.group);
 }
 
 export async function deleteGroup(groupId: string, serverId: string): Promise<void> {
-  const response = await apiFetch(`/v2/roster-group/${groupId}?server_id=${serverId}`, {
-    method: 'DELETE',
-    headers: getAuthHeaders(),
+  await executeSharedEndpoint(dashboardEndpoints.dashboardDeleteRosterGroup, {
+    path: { groupId },
+    query: { server_id: serverId },
+    body: {},
   });
-  if (!response.ok) {
-    throw new Error('Failed to delete group');
-  }
 }
 
 // ============================================
@@ -377,8 +427,10 @@ export async function deleteGroup(groupId: string, serverId: string): Promise<vo
 // ============================================
 
 export async function fetchChannels(serverId: string): Promise<DiscordChannel[]> {
-  const response = await apiFetch(`/v2/server/${serverId}/channels`, {
-    headers: getAuthHeaders(),
+  const response = await executeSharedEndpoint(dashboardEndpoints.serverChannels, {
+    path: { serverId },
+    query: {},
+    body: {},
   });
-  return normalizeChannelsPayload(await handleResponse<unknown>(response)) as DiscordChannel[];
+  return response.map((channel) => ({ ...channel }));
 }

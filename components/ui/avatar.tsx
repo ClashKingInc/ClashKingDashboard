@@ -3,6 +3,8 @@
 import * as React from "react"
 import * as AvatarPrimitive from "@radix-ui/react-avatar"
 
+import { clanBadgeSources } from "@/lib/clash-asset-urls"
+
 import { cn } from "@/lib/utils"
 
 const Avatar = React.forwardRef<
@@ -23,13 +25,18 @@ Avatar.displayName = AvatarPrimitive.Root.displayName
 const AvatarImage = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Image>,
   React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Image>
->(({ className, ...props }, ref) => (
+>(({ className, ...props }, ref) => {
+  const badge = props.src ? clanBadgeSources(props.src) : null
+  const image = (
   <AvatarPrimitive.Image
     ref={ref}
     className={cn("aspect-square h-full w-full", className)}
     {...props}
+    src={badge?.png ?? props.src}
   />
-))
+  )
+  return badge ? <picture style={{ display: "contents" }}><source type="image/avif" srcSet={badge.avif} />{image}</picture> : image
+})
 AvatarImage.displayName = AvatarPrimitive.Image.displayName
 
 const AvatarFallback = React.forwardRef<

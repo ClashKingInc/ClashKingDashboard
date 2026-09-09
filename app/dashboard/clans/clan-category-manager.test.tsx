@@ -24,7 +24,7 @@ vi.mock("@/components/ui/use-toast", () => ({
   useToast: () => ({ toast: toastMock }),
 }));
 
-vi.mock("next-intl", () => ({
+vi.mock("use-intl", () => ({
   useTranslations: () => (key: string, values?: Record<string, unknown>) => {
     if (!values) return key;
     const suffix = Object.entries(values)

@@ -11,12 +11,12 @@ const testState = vi.hoisted(() => ({
   replace: vi.fn(),
 }));
 
-vi.mock("next/navigation", () => ({
+vi.mock("@/lib/navigation", () => ({
   usePathname: () => testState.pathname,
   useRouter: () => ({ push: testState.push, replace: testState.replace }),
 }));
 
-vi.mock("next-intl", () => ({
+vi.mock("use-intl", () => ({
   useLocale: () => "en",
   useTranslations: () => (key: string) => key,
 }));

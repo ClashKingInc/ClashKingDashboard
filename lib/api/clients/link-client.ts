@@ -1,59 +1,59 @@
-/**
- * Account linking API client
- */
+/** Account-linking API client backed by the shared endpoint contracts. */
 
-import { BaseApiClient } from '../core/base-client';
-import type { ApiResponse } from '../types/common';
-import type { CocAccountRequest, LinkedAccount, LinkedAccountsResponse } from '../types/link';
+import {
+  DashboardLinksAddEndpoint,
+  DashboardLinksListEndpoint,
+  DashboardLinksOrderEndpoint,
+  DashboardLinksRemoveEndpoint,
+  DashboardLinksVisibilityEndpoint,
+} from "@clashking/api-contracts";
 
-const encodePathSegment = (value: string): string => encodeURIComponent(value);
-const toLinkAccountPayload = (data: CocAccountRequest): CocAccountRequest => ({
-  player_tag: data.player_tag,
-  ...(data.api_token ? { api_token: data.api_token } : {}),
-});
+import { BaseApiClient } from "../core/base-client";
+import type { ApiResponse } from "../types/common";
+import type { CocAccountRequest, LinkedAccount, LinkedAccountsResponse } from "../types/link";
 
 export class LinkClient extends BaseApiClient {
-  /**
-   * POST /v2/links/{id}
-   */
-  async linkAccount(id: string, data: CocAccountRequest): Promise<ApiResponse<any>> {
-    return this.request(`/v2/links/${encodePathSegment(id)}`, {
-      method: 'POST',
-      body: JSON.stringify(toLinkAccountPayload(data)),
+  async linkAccount(id: string, data: CocAccountRequest) {
+    return this.executeEndpoint(DashboardLinksAddEndpoint, {
+      path: { userId: id },
+      query: {},
+      body: data,
     });
   }
 
-  /**
-   * GET /v2/links/{id}
-   */
   async getLinkedAccounts(id: string): Promise<ApiResponse<LinkedAccountsResponse>> {
-    return this.request(`/v2/links/${encodePathSegment(id)}`, { method: 'GET' });
-  }
-
-  /**
-   * DELETE /v2/links/{id}/{player_tag}
-   */
-  async unlinkAccount(id: string, playerTag: string): Promise<ApiResponse<{ message: string }>> {
-    return this.request(`/v2/links/${encodePathSegment(id)}/${encodePathSegment(playerTag)}`, { method: 'DELETE' });
-  }
-
-  /**
-   * PATCH /v2/links/{id}/{player_tag}
-   */
-  async setAccountHidden(id: string, playerTag: string, hidden: boolean): Promise<ApiResponse<LinkedAccount>> {
-    return this.request(`/v2/links/${encodePathSegment(id)}/${encodePathSegment(playerTag)}`, {
-      method: 'PATCH',
-      body: JSON.stringify({ hidden }),
+    return this.executeEndpoint(DashboardLinksListEndpoint, {
+      path: { userId: id },
+      query: {},
+      body: {},
     });
   }
 
-  /**
-   * PUT /v2/links/{id}/order
-   */
+  async unlinkAccount(id: string, playerTag: string): Promise<ApiResponse<{ message: string }>> {
+    return this.executeEndpoint(DashboardLinksRemoveEndpoint, {
+      path: { userId: id, playerTag },
+      query: {},
+      body: {},
+    });
+  }
+
+  async setAccountHidden(
+    id: string,
+    playerTag: string,
+    hidden: boolean,
+  ): Promise<ApiResponse<LinkedAccount>> {
+    return this.executeEndpoint(DashboardLinksVisibilityEndpoint, {
+      path: { userId: id, playerTag },
+      query: {},
+      body: { hidden },
+    });
+  }
+
   async reorderAccounts(id: string, orderedTags: string[]): Promise<ApiResponse<{ message: string }>> {
-    return this.request(`/v2/links/${encodePathSegment(id)}/order`, {
-      method: 'PUT',
-      body: JSON.stringify({ ordered_tags: orderedTags }),
+    return this.executeEndpoint(DashboardLinksOrderEndpoint, {
+      path: { userId: id },
+      query: {},
+      body: { ordered_tags: orderedTags },
     });
   }
 }

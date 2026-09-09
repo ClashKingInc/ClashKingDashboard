@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { NextIntlClientProvider } from "next-intl";
+import { IntlProvider } from "use-intl";
 import englishMessages from "@/messages/en.json";
 import {
   DASHBOARD_LOCALE_MODE_STORAGE_KEY,
@@ -15,8 +15,8 @@ import {
 
 type Messages = typeof englishMessages;
 
-const loadMessages = async (loader: () => Promise<{ default: unknown }>): Promise<Messages> =>
-  (await loader()).default as Messages;
+const loadMessages = async (loader: () => Promise<{ default: Messages }>): Promise<Messages> =>
+  (await loader()).default;
 
 const messageLoaders: Record<SupportedLocale, () => Promise<Messages>> = {
   en: async () => englishMessages,
@@ -78,7 +78,7 @@ export function updateDashboardLocale(locale: SupportedLocale, mode: LocaleMode)
   }));
 }
 
-export function LocaleProvider({ children }: { readonly children: React.ReactNode }) {
+export function LocaleProvider({ children, pathname = globalThis.location.pathname }: { readonly children: React.ReactNode; readonly pathname?: string }) {
   const [locale, setLocale] = useState<SupportedLocale>("en");
   const [messages, setMessages] = useState<Messages>(englishMessages);
   const [mode, setMode] = useState<LocaleMode>("manual");
@@ -105,7 +105,6 @@ export function LocaleProvider({ children }: { readonly children: React.ReactNod
   );
 
   useEffect(() => {
-    const pathname = globalThis.location.pathname;
     const publicRoute = getFixedPublicRoute(pathname);
     if (publicRoute) {
       void applyLocale(publicRoute.locale);
@@ -124,7 +123,7 @@ export function LocaleProvider({ children }: { readonly children: React.ReactNod
 
     setMode(preference.mode);
     void applyLocale(preference.locale);
-  }, [applyLocale, children]);
+  }, [applyLocale, pathname]);
 
   useEffect(() => {
     const handleStorage = (event: StorageEvent) => {
@@ -185,9 +184,9 @@ export function LocaleProvider({ children }: { readonly children: React.ReactNod
 
   return (
     <LocaleContext.Provider value={value}>
-      <NextIntlClientProvider locale={locale} messages={messages}>
+      <IntlProvider locale={locale} messages={messages}>
         {children}
-      </NextIntlClientProvider>
+      </IntlProvider>
     </LocaleContext.Provider>
   );
 }

@@ -1,5 +1,5 @@
-import Link from "next/link";
-import { getTranslations } from "next-intl/server";
+import Link from "@/components/app-link";
+import { useTranslations } from "use-intl";
 import { ClanSignalWordmark } from "./brand";
 import { ClanSignalFooter } from "./footer";
 import { LandingLanguageSwitcher } from "./language-switcher";
@@ -7,18 +7,22 @@ import { publicPath, type PublicLocale } from "@/lib/locale-preference";
 import "../../../../app/explorations/clan-signal.css";
 
 
-export async function ClanSignalLegalShell({
+export function ClanSignalPageShell({
   title,
   eyebrow,
+  description,
+  contentClassName,
   locale = "en",
   children,
 }: Readonly<{
   title: string;
   eyebrow: string;
+  description?: string;
+  contentClassName: string;
   locale?: PublicLocale;
   children: React.ReactNode;
 }>) {
-  const t = await getTranslations({ locale, namespace: "ClanSignal" });
+  const t = useTranslations("ClanSignal");
   const landingTheme = "day";
 
   return (
@@ -49,11 +53,23 @@ export async function ClanSignalLegalShell({
         <div>
           <p className="cs-legal-eyebrow">{eyebrow}</p>
           <h1>{title}</h1>
+          {description && <p className="cs-page-description">{description}</p>}
         </div>
       </section>
 
-      <article className="cs-legal-document">{children}</article>
+      <article className={contentClassName}>{children}</article>
       <ClanSignalFooter />
     </main>
   );
+}
+
+export function ClanSignalLegalShell(
+  props: Readonly<{
+    title: string;
+    eyebrow: string;
+    locale?: PublicLocale;
+    children: React.ReactNode;
+  }>,
+) {
+  return <ClanSignalPageShell {...props} contentClassName="cs-legal-document" />;
 }

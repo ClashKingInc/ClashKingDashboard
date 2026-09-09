@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "use-intl";
 import {
   closestCenter,
   DndContext,
@@ -209,8 +209,8 @@ export function ClanCategoryManager({
       setLoading(false);
       return;
     }
-    setCategories(response.data.items);
-    onCategoriesChange(response.data.items);
+    setCategories([...response.data.items]);
+    onCategoriesChange([...response.data.items]);
     setLoading(false);
   };
 
@@ -350,8 +350,8 @@ export function ClanCategoryManager({
       setReordering(false);
       return;
     }
-    setCategories(response.data.items);
-    onCategoriesChange(response.data.items);
+    setCategories([...response.data.items]);
+    onCategoriesChange([...response.data.items]);
     toast({ title: tCommon("success"), description: t("reordered") });
     setReordering(false);
   };

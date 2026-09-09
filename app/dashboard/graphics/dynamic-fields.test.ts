@@ -57,7 +57,7 @@ describe("graphic dynamic field catalogs", () => {
       "war_opponent_member_3_map_position",
     ]));
     expect(warKeys).not.toContain("war_clan_member_4_name");
-    expect(warKeys.some((key) => key.startsWith("player_") || /^clan_/.test(key))).toBe(false);
+    expect(warKeys.some((key) => key.startsWith("player_") || key.startsWith("clan_"))).toBe(false);
   });
 
   it("falls back to five member slots for unsupported legacy war sizes", () => {

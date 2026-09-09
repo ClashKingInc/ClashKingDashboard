@@ -36,24 +36,11 @@ export type {
   ForgotPasswordRequest,
   ResetPasswordRequest,
   DiscordAuthRequest,
-  LinkDiscordRequest,
 } from './types/auth';
-
-// Player types
-export type {
-  PlayerTagsRequest,
-  PlayerLocation,
-  PlayerSorted,
-  PlayerSummaryTop,
-  PlayerList,
-} from './types/player';
 
 // Clan types
 export type {
   ClanRanking,
-  ClanBoardTotals,
-  ClanDonation,
-  ClanComposition,
   ClanSearchResult,
 } from './types/clan';
 
@@ -81,8 +68,6 @@ export type {
 
 // War types
 export type {
-  PreviousWarsOptions,
-  ClanWarStatsOptions,
   PlayerWarhitsFilter,
   LeagueReference,
   CwlSeasonItem,
@@ -134,12 +119,8 @@ export type {
 
 // Link types
 export type { CocAccountRequest } from './types/link';
-
 // Leaderboard types
 export type {
-  LeaderboardEntry,
-  LeaderboardResponse,
-  LeaderboardQueryParams,
   LeaderboardCategory,
   LeaderboardEntityType,
   PlayerCapitalMetric,

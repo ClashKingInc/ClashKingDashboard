@@ -1,136 +1,106 @@
-/**
- * Authentication API client
- */
+/** Authentication API client backed by the shared endpoint contracts. */
 
-import { BaseApiClient } from '../core/base-client';
-import type { ApiResponse } from '../types/common';
+import {
+  AuthForgotPasswordEndpoint,
+  AuthMeEndpoint,
+  AuthRegisterEndpoint,
+  AuthResendVerificationEndpoint,
+  AuthWebDiscordEndpoint,
+  AuthWebEmailEndpoint,
+  AuthWebLogoutEndpoint,
+  AuthWebRefreshEndpoint,
+  AuthWebResetPasswordEndpoint,
+  AuthWebVerifyEmailEndpoint,
+} from "@clashking/api-contracts";
+
+import { BaseApiClient } from "../core/base-client";
+import type { ApiResponse } from "../types/common";
 import type {
   AuthResponse,
-  UserInfo,
-  EmailRegisterRequest,
+  DiscordAuthRequest,
   EmailAuthRequest,
+  EmailRegisterRequest,
   ForgotPasswordRequest,
   ResetPasswordRequest,
-  DiscordAuthRequest,
-  LinkDiscordRequest,
-} from '../types/auth';
+  UserInfo,
+} from "../types/auth";
+
+const emptyRequest = { path: {}, query: {}, body: {} } as const;
 
 export class AuthClient extends BaseApiClient {
-  /**
-   * POST /v2/auth/verify-email-code
-   */
   async verifyEmailCode(email: string, code: string): Promise<ApiResponse<AuthResponse>> {
-    return this.request('/v2/auth/web/verify-email-code', {
-      method: 'POST',
-      credentials: 'include',
-      body: JSON.stringify({ email, code }),
+    return this.executeEndpoint(AuthWebVerifyEmailEndpoint, {
+      path: {},
+      query: {},
+      body: { email, code },
     });
   }
 
-  /**
-   * GET /v2/auth/me
-   */
   async getCurrentUser(): Promise<ApiResponse<UserInfo>> {
-    return this.request('/v2/auth/me', { method: 'GET' });
+    return this.executeEndpoint(AuthMeEndpoint, emptyRequest);
   }
 
-  /**
-   * POST /v2/auth/discord
-   */
   async authenticateWithDiscord(data: DiscordAuthRequest): Promise<ApiResponse<AuthResponse>> {
-    return this.request('/v2/auth/web/discord', {
-      method: 'POST',
-      credentials: 'include',
-      body: JSON.stringify(data),
+    return this.executeEndpoint(AuthWebDiscordEndpoint, {
+      path: {},
+      query: {},
+      body: data,
     });
   }
 
-  /**
-   * POST /v2/auth/refresh
-   */
   async refreshToken(): Promise<ApiResponse<{ access_token: string }>> {
-    return this.request('/v2/auth/web/refresh', {
-      method: 'POST',
-      credentials: 'include',
+    return this.executeEndpoint(AuthWebRefreshEndpoint, emptyRequest);
+  }
+
+  async registerWithEmail(
+    data: EmailRegisterRequest,
+  ): Promise<ApiResponse<{ message: string; verification_code?: string }>> {
+    return this.executeEndpoint(AuthRegisterEndpoint, {
+      path: {},
+      query: {},
+      body: data,
     });
   }
 
-  /**
-   * POST /v2/auth/register
-   */
-  async registerWithEmail(data: EmailRegisterRequest): Promise<ApiResponse<{ message: string; verification_code?: string }>> {
-    return this.request('/v2/auth/register', {
-      method: 'POST',
-      body: JSON.stringify(data),
+  async resendVerification(
+    email: string,
+  ): Promise<ApiResponse<{ message: string; verification_code?: string }>> {
+    return this.executeEndpoint(AuthResendVerificationEndpoint, {
+      path: {},
+      query: {},
+      body: { email },
     });
   }
 
-  /**
-   * POST /v2/auth/resend-verification
-   */
-  async resendVerification(email: string): Promise<ApiResponse<{ message: string; verification_code?: string }>> {
-    return this.request('/v2/auth/resend-verification', {
-      method: 'POST',
-      body: JSON.stringify({ email }),
-    });
-  }
-
-  /**
-   * POST /v2/auth/email
-   */
   async loginWithEmail(data: EmailAuthRequest): Promise<ApiResponse<AuthResponse>> {
-    return this.request('/v2/auth/web/email', {
-      method: 'POST',
-      credentials: 'include',
-      body: JSON.stringify(data),
+    return this.executeEndpoint(AuthWebEmailEndpoint, {
+      path: {},
+      query: {},
+      body: data,
     });
   }
 
-  /**
-   * POST /v2/auth/link-discord
-   */
-  async linkDiscord(data: LinkDiscordRequest): Promise<ApiResponse<{ detail: string }>> {
-    return this.request('/v2/auth/link-discord', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    });
-  }
-
-  /**
-   * POST /v2/auth/link-email
-   */
-  async linkEmail(data: EmailRegisterRequest): Promise<ApiResponse<{ detail: string }>> {
-    return this.request('/v2/auth/link-email', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    });
-  }
-
-  /**
-   * POST /v2/auth/forgot-password
-   */
   async forgotPassword(data: ForgotPasswordRequest): Promise<ApiResponse<{ message: string }>> {
-    return this.request('/v2/auth/forgot-password', {
-      method: 'POST',
-      body: JSON.stringify(data),
+    return this.executeEndpoint(AuthForgotPasswordEndpoint, {
+      path: {},
+      query: {},
+      body: data,
     });
   }
 
-  /**
-   * POST /v2/auth/reset-password
-   */
   async resetPassword(data: ResetPasswordRequest): Promise<ApiResponse<AuthResponse>> {
-    return this.request('/v2/auth/web/reset-password', {
-      method: 'POST',
-      credentials: 'include',
-      body: JSON.stringify(data),
+    return this.executeEndpoint(AuthWebResetPasswordEndpoint, {
+      path: {},
+      query: {},
+      body: data,
     });
   }
 
   async logout(): Promise<ApiResponse<null>> {
-    return this.request('/v2/auth/web/logout', {
-      method: 'POST',
-      credentials: 'include',
-    });
+    const response = await this.executeEndpoint(AuthWebLogoutEndpoint, emptyRequest);
+    if (response.error !== undefined) {
+      return { error: response.error, errorData: response.errorData, status: response.status };
+    }
+    return { data: null, status: response.status };
   }
 }

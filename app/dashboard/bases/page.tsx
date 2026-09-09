@@ -1,9 +1,8 @@
 "use client";
 
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "use-intl";
 import { useGuildId } from "@/lib/dashboard-route";
-import Image from "next/image";
-import { useTranslations } from "next-intl";
+import Image from "@/components/app-image";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   AlertCircle,
@@ -104,7 +103,7 @@ interface CreateFeedback {
   message: string;
   retryable: boolean;
   code: string;
-  requestId: string;
+  requestId?: string;
   cleanup: DiscordMessageCreateCleanup;
   discordMessageCreated: boolean;
   discordMessageId?: string;
@@ -169,7 +168,7 @@ export default function BasesPage() {
       setLoading(false);
       return;
     }
-    setBases(response.data.items);
+    setBases([...response.data.items]);
     setTotal(response.data.total);
     setLoading(false);
   }, [guildId, offset, t]);

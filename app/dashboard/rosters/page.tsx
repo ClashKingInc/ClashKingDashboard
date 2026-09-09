@@ -1,12 +1,11 @@
 "use client";
 
-import { useLocale } from "next-intl";
 import { useGuildId } from "@/lib/dashboard-route";
 import { dashboardHref } from "@/lib/dashboard-route";
 import React, { useState, useEffect, useMemo, useRef, useCallback } from "react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
+import Image from "@/components/app-image";
+import { useRouter } from "@/lib/navigation";
+import { useTranslations } from "use-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -270,7 +269,7 @@ function RosterCard({
                 <Copy className="mr-2 h-4 w-4" />
                 {t("rosterCard.clone")}
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={onDelete} className="text-destructive focus:text-destructive">
+              <DropdownMenuItem disabled={deleting === roster.id} onClick={onDelete} className="text-destructive focus:text-destructive">
                 <Trash2 className="mr-2 h-4 w-4" />
                 {t("rosterCard.delete")}
               </DropdownMenuItem>
@@ -336,7 +335,6 @@ export default function RostersPage() { // NOSONAR — React page component: com
   const { user } = useAuthSession();
   const canUseRosterBuilder = isDeveloperUserId(user?.user_id);
   const { toast } = useToast();
-  const locale = useLocale();
   const t = useTranslations("RostersPage");
   const tCommon = useTranslations("Common");
 

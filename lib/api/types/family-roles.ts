@@ -1,38 +1,33 @@
-/**
- * Family Roles types
- */
+import type { RoleMode, ServerRole, ServerRoleResponse } from "./roles";
 
+// These groupings are a Dashboard view over the canonical server-role API.
 export type FamilyRoleType =
-  | "family" // Has at least one account in family
-  | "not_family" // Has no accounts in family
-  | "family_elder" // Elder position in clan
-  | "family_coleader" // Co-Leader position in clan
-  | "family_leader"; // Leader position in clan
+  | "family"
+  | "not_family"
+  | "family_elder"
+  | "family_coleader"
+  | "family_leader";
 
-export interface FamilyRole {
-  id: string;
-  role_id: string;
-  mode: import('./roles').RoleMode;
-}
+export type FamilyRole = Pick<ServerRole, "id" | "role_id" | "mode">;
 
-export interface FamilyRolesResponse {
-  server_id: number;
+export type FamilyRolesResponse = {
+  server_id: ServerRole["server_id"];
   family_roles: FamilyRole[];
   not_family_roles: FamilyRole[];
   family_elder_roles: FamilyRole[];
   family_coleader_roles: FamilyRole[];
   family_leader_roles: FamilyRole[];
-}
+};
 
-export interface FamilyRoleAdd {
-  role: string;
+export type FamilyRoleAdd = {
+  role: ServerRole["role_id"];
   type: FamilyRoleType;
-  mode?: import('./roles').RoleMode;
-}
+  mode?: RoleMode;
+};
 
-export interface FamilyRoleOperationResponse {
-  message: string;
-  server_id: number;
-  role_type: string;
-  role_id: string;
-}
+export type FamilyRoleOperationResponse = {
+  message: ServerRoleResponse["message"];
+  server_id: ServerRole["server_id"];
+  role_type: FamilyRoleType;
+  role_id: ServerRole["role_id"];
+};

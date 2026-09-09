@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Image from "next/image";
-import { useLocale, useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
+import Image from "@/components/app-image";
+import { useLocale, useTranslations } from "use-intl";
+import { useRouter } from "@/lib/navigation";
 import { AlertTriangle, ArrowLeft, Check, Loader2 } from "lucide-react";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -13,7 +13,8 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 import { apiClient } from "@/lib/api/client";
-import type { CwlGroupResponse, CwlSeasonItem, CwlWarLeagueStaticItem } from "@/lib/api/types/war";
+import { CwlWarLeaguesStaticResponse, type CwlGroupResponse, type CwlSeasonItem, type CwlWarLeagueStaticItem } from "@/lib/api/types/war";
+import { Schema } from "effect";
 import { dashboardHref, useGuildId } from "@/lib/dashboard-route";
 import { cwlLeagueImageUrl, townHallImageUrl } from "@/lib/theme";
 import { cn } from "@/lib/utils";
@@ -23,6 +24,7 @@ import {
   calculateCwlRewards,
   calculateCwlStandings,
   calculateCwlPlayerPerformance,
+  cwlSeasonLabel,
   resolveCwlLeagueMovement,
   resolveCwlWarSize,
   selectableCwlSeasons,
@@ -40,15 +42,6 @@ const CWL_ASSETS = {
   star: "https://assets.clashk.ing/bot/icons/war_star.png",
   medal: "https://assets.clashk.ing/bot/icons/cwl_medal.png",
 } as const;
-
-function seasonLabel(item: CwlSeasonItem, locale: string, unknownLeague: string): string {
-  const [year, month] = item.season.split("-").map(Number);
-  const date = year && month ? new Date(Date.UTC(year, month - 1, 1)) : null;
-  const label = date && !Number.isNaN(date.getTime())
-    ? new Intl.DateTimeFormat(locale, { month: "long", year: "numeric", timeZone: "UTC" }).format(date)
-    : item.season;
-  return `${label} · ${item.warLeague?.name ?? unknownLeague}`;
-}
 
 interface SummaryItemProps {
   readonly label: string;
@@ -139,7 +132,7 @@ export default function CwlBonusesPage() {
       apiClient.wars.getCwlBonusRecipients(guildId, clanTag, season),
       fetch(WAR_LEAGUES_URL, { cache: "force-cache" }).then(async (response) => {
         if (!response.ok) throw new Error(t("loadMedalRulesError"));
-        return response.json() as Promise<{ items: CwlWarLeagueStaticItem[] }>;
+        return Schema.decodeUnknownPromise(CwlWarLeaguesStaticResponse)(await response.json());
       }),
     ]).then(([groupResponse, savedResponse, staticData]) => {
       if (cancelled) return;
@@ -147,7 +140,7 @@ export default function CwlBonusesPage() {
       if (savedResponse.error) throw new Error(savedResponse.error);
       setGroup(groupResponse.data);
       setSelected((savedResponse.data?.items ?? []).map((item) => item.playerTag));
-      setRules(staticData.items);
+      setRules([...staticData.items]);
     }).catch((loadError) => {
       if (!cancelled) setError(loadError instanceof Error ? loadError.message : t("loadDataError"));
     }).finally(() => {
@@ -164,7 +157,7 @@ export default function CwlBonusesPage() {
   const rewards = warSize && standing && rule ? calculateCwlRewards(rule, standing, warSize) : undefined;
   const clan = group?.clans.find((item) => item.tag === clanTag);
   const playerPerformance = useMemo(() => group ? calculateCwlPlayerPerformance(group) : {}, [group]);
-  const members = useMemo(() => sortCwlMembersByPerformance(clan?.members ?? [], playerPerformance), [clan?.members, playerPerformance]);
+  const members = useMemo(() => sortCwlMembersByPerformance([...(clan?.members ?? [])], playerPerformance), [clan?.members, playerPerformance]);
   const selectionEnabled = Boolean(standings?.complete && rewards);
   const ready = Boolean(selectionEnabled && clan && selected.length === rewards?.bonusSlots);
   const movement = resolveCwlLeagueMovement(rule, standing?.rank);
@@ -245,7 +238,7 @@ export default function CwlBonusesPage() {
                 {selectedSeason ? (
                   <div className="flex min-w-0 flex-1 items-center gap-2.5 text-left">
                     <Image src={cwlLeagueImageUrl(selectedSeason.warLeague?.name)} alt="" width={32} height={32} unoptimized className="h-8 w-8 shrink-0 object-contain" />
-                    <span className="truncate">{seasonLabel(selectedSeason, locale, t("unknownLeague"))}</span>
+                    <span className="truncate">{cwlSeasonLabel(selectedSeason, locale, t("unknownLeague"))}</span>
                   </div>
                 ) : <SelectValue placeholder={t("noStoredSeasons")} />}
               </SelectTrigger>
@@ -254,7 +247,7 @@ export default function CwlBonusesPage() {
                   <SelectItem key={item.season} value={item.season}>
                     <span className="flex items-center gap-2.5">
                       <Image src={cwlLeagueImageUrl(item.warLeague?.name)} alt="" width={30} height={30} unoptimized className="h-[30px] w-[30px] shrink-0 object-contain" />
-                      <span>{seasonLabel(item, locale, t("unknownLeague"))}</span>
+                      <span>{cwlSeasonLabel(item, locale, t("unknownLeague"))}</span>
                     </span>
                   </SelectItem>
                 ))}

@@ -2,7 +2,7 @@ import { queryOptions } from "@tanstack/react-query";
 
 import { apiClient } from "@/lib/api/client";
 import type { DashboardCapabilities } from "@/lib/api/types/dashboard-access";
-import type { GuildInfo, ServerClanListItem, ServerSettings } from "@/lib/api/types/server";
+import type { GuildInfo, GuildDetails, ServerClanListItem, ServerSettings } from "@/lib/api/types/server";
 import type { DiscordRolesResponse } from "@/lib/api/types/roles";
 import { dashboardQueryKeys } from "@/lib/dashboard-query";
 
@@ -17,7 +17,7 @@ export const dashboardQueryOptions = {
   guild: (guildId: string) => queryOptions({
     queryKey: dashboardQueryKeys.guild(guildId),
     staleTime: 120_000,
-    queryFn: async ({ signal }) => unwrap<GuildInfo>(await apiClient.servers.getGuild(guildId, signal), "server"),
+    queryFn: async ({ signal }) => unwrap<GuildDetails>(await apiClient.servers.getGuild(guildId, signal), "server"),
   }),
   guilds: () => queryOptions({
     queryKey: dashboardQueryKeys.guilds(),
@@ -32,7 +32,7 @@ export const dashboardQueryOptions = {
   channels: (guildId: string) => queryOptions({
     queryKey: dashboardQueryKeys.channels(guildId),
     staleTime: 30_000,
-    queryFn: async ({ signal }) => unwrap<unknown>(await apiClient.servers.getChannels(guildId, signal), "Discord channels"),
+    queryFn: async ({ signal }) => unwrap(await apiClient.servers.getChannels(guildId, signal), "Discord channels"),
   }),
   roles: (guildId: string) => queryOptions({
     queryKey: dashboardQueryKeys.roles(guildId),
@@ -42,7 +42,7 @@ export const dashboardQueryOptions = {
   threads: (guildId: string) => queryOptions({
     queryKey: dashboardQueryKeys.threads(guildId),
     staleTime: 30_000,
-    queryFn: async ({ signal }) => unwrap<unknown>(await apiClient.servers.getThreads(guildId, signal), "Discord threads"),
+    queryFn: async ({ signal }) => unwrap(await apiClient.servers.getThreads(guildId, signal), "Discord threads"),
   }),
   clans: (guildId: string) => queryOptions({
     queryKey: dashboardQueryKeys.clans(guildId),

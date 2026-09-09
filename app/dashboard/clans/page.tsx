@@ -3,15 +3,16 @@
 import { useGuildId } from "@/lib/dashboard-route";
 import { dashboardHref } from "@/lib/dashboard-route";
 import { getAccessToken } from "@/lib/auth/session";
-import { apiFetch } from "@/lib/api/fetch";
+import { dashboardEndpoints } from "@clashking/api-contracts";
+import { executeSharedEndpoint } from "@/lib/api/shared-client";
 import { clanBadgeUrl } from "@/lib/clash-asset-urls";
 
 
 import { useEffect, useMemo, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import Image from "next/image";
-import Link from "next/link";
-import { useLocale, useTranslations } from "next-intl";
+import Image from "@/components/app-image";
+import Link from "@/components/app-link";
+import { useLocale, useTranslations } from "use-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
@@ -204,10 +205,10 @@ export default function ClansPage() {
         if (clansResult.status === "rejected") throw clansResult.reason;
         setClans(normalizeClansPayload(clansResult.value));
         if (rolesResult.status === "fulfilled") {
-          setDiscordRoles(normalizeDiscordRolesPayload(rolesResult.value));
+          setDiscordRoles([...normalizeDiscordRolesPayload(rolesResult.value)]);
         }
         if (categoriesResult.status === "fulfilled" && isClanCategoriesResponse(categoriesResult.value.data)) {
-          setClanCategories(categoriesResult.value.data.items);
+          setClanCategories([...categoriesResult.value.data.items]);
         }
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -243,19 +244,11 @@ export default function ClansPage() {
       setSaving(true);
       const accessToken = getAccessToken();
 
-      const response = await apiFetch(`/v2/server/${guildId}/clans`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ tag: newClanTag }),
+      await executeSharedEndpoint(dashboardEndpoints.addServerClan, {
+        path: { serverId: guildId },
+        query: {},
+        body: { tag: newClanTag },
       });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || t("toast.errorAddingClan"));
-      }
 
       toast({
         title: tCommon("success"),
@@ -283,19 +276,11 @@ export default function ClansPage() {
     try {
       setSaving(true);
       const accessToken = getAccessToken();
-      const encodedTag = encodeURIComponent(clanTag);
-
-      const response = await apiFetch(`/v2/server/${guildId}/clan/${encodedTag}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
+      await executeSharedEndpoint(dashboardEndpoints.removeServerClan, {
+        path: { serverId: guildId, clanTag },
+        query: {},
+        body: {},
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to delete clan');
-      }
 
       toast({
         title: tCommon("success"),
@@ -328,7 +313,7 @@ export default function ClansPage() {
       const rulesResponse = await apiClient.roles.getServerRoles(guildId, { type: 'clan_role', clan_tag: clanTag });
       if (rulesResponse.error) throw new Error(rulesResponse.error);
       const roles = rulesResponse.data?.roles || [];
-      setClanServerRoles(roles);
+      setClanServerRoles([...roles]);
       const member = roles.find((role) => role.option === 'member');
       const leader = roles.find((role) => role.option === 'leader');
       setMemberRole({ role_id: member?.role_id || null, mode: member?.mode || 'both' });
@@ -356,9 +341,11 @@ export default function ClansPage() {
 
       if (Object.keys(clanSettings).length > 0) {
         const settingsPayload = {
-          ...clanSettings,
           ...(Object.hasOwn(clanSettings, 'category')
             ? { category: clanSettings.category ?? '' }
+            : {}),
+          ...(Object.hasOwn(clanSettings, 'abbreviation')
+            ? { abbreviation: clanSettings.abbreviation ?? '' }
             : {}),
         };
         const response = await apiClient.servers.updateClanSettings(
@@ -753,7 +740,7 @@ export default function ClansPage() {
                       <Label>{t("clanAbbreviation")}</Label>
                       <InfoPopover
                         content={t.rich("fieldHelp.clanAbbreviation", {
-                          familySettingsLink: (chunks) => ( // NOSONAR — framework-required inline render prop (next-intl rich / ReactMarkdown)
+                          familySettingsLink: (chunks) => ( // NOSONAR — framework-required inline render prop (use-intl rich / ReactMarkdown)
                             <Link href={dashboardHref("family-settings", guildId)} className="font-medium underline underline-offset-2">
                               {chunks}
                             </Link>

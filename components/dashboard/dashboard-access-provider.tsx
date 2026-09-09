@@ -2,7 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "@/lib/navigation";
 import { ShieldAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { DashboardCapabilities, DashboardSection } from "@/lib/api/types/dashboard-access";

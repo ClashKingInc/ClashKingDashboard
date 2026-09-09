@@ -146,8 +146,8 @@ describe("v2 components", () => {
         id: "ar1",
         type: "action_row",
         buttons: [
-          { id: "b1", label: "Click me", style: 1, url: "", disabled: false },
-          { id: "b2", label: "Visit", style: 5, url: "https://example.com", disabled: false },
+          { id: "b1", customId: "click-me", label: "Click me", style: 1, url: "", disabled: false },
+          { id: "b2", customId: "visit", label: "Visit", style: 5, url: "https://example.com", disabled: false },
         ],
       },
     ];

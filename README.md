@@ -1,64 +1,53 @@
 # ClashKing Dashboard
 
-Vinext/React dashboard and static ClashKing marketing site.
+TypeScript 7, React 19, TanStack Router/Query, and Effect 4 frontend deployed as a Cloudflare Worker with static assets.
 
 ## Architecture
 
-- `clashk.ing` serves the statically prerendered marketing homepage and legal pages.
-- `dash.clashk.ing` serves the static dashboard application.
-- Production browser API calls go directly to `https://api.clashk.ing`; local development calls the Go API directly on `http://localhost:8000`.
-- Dashboard routes are finite static shells. Guild context is carried as `?guildId=...`; roster detail uses `?guildId=...&rosterId=...`.
-- The Go API owns Discord and email authentication, refresh-cookie rotation, Discohook resolution, uploads, and all application data.
+- `clashk.ing` serves the marketing homepage and legal pages.
+- `dash.clashk.ing` serves authentication and the dashboard application.
+- The browser calls the API Worker directly at `api.clashk.ing` through the shared `@clashking/api-client` and `@clashking/api-contracts` packages. This Worker never proxies API traffic.
+- TanStack Router owns client navigation and code-splits each route; TanStack Query owns remote data state.
+- Effect validates runtime configuration and is executed only at application boundaries.
+
+The edge Worker in `workers/dashboard-edge` owns hostname redirects and then delegates documents and fingerprinted assets to Workers Static Assets. The build emits localized metadata shells for the indexable marketing and legal URLs; Cloudflare's SPA fallback serves the application shell for all other deep links.
 
 Browser access tokens exist only in memory. The rotating refresh credential is a host-only `Secure`, `HttpOnly`, `SameSite=Strict` cookie set by `/v2/auth/web/*`. Startup restores the session through `/v2/auth/web/refresh`; `device_id` and non-authoritative user display data may remain in browser storage.
 
-English, French, and Dutch messages remain in `messages/*.json`. Public language variants use real static paths (`/`, `/fr`, `/nl`, and their `/privacy` and `/terms` pages). Dashboard and authentication URLs stay locale-neutral; their locale preference is stored in `localStorage`, and the matching JSON bundle is loaded in the browser.
+Public language variants use `/`, `/fr`, `/nl`, and their `/privacy` and `/terms` pages. Dashboard and authentication URLs stay locale-neutral; their locale preference is stored in `localStorage`, and the matching catalog is loaded in the browser.
 
 ## Development
 
 Requirements: Node.js 26.1+ and npm 12+.
 
 ```bash
-npm install
+npm ci
+cp .env.example .env.local
 npm run dev
 ```
 
-The development server listens on `http://localhost:3002`. Configure `.env.local` from `.env.example`; the Go API listens on `http://localhost:8000`. Those ports are separate origins, so credentialed CORS still applies, but they share the localhost site and its host-only development refresh cookie. Production builds override the local API URL.
+The Vite server listens on `http://localhost:3002`. The default example points API calls at `http://localhost:8000` and the roster assistant at `http://localhost:8788`; credentialed API CORS must explicitly allow the dashboard origin.
 
-The roster AI assistant is a separate Cloudflare Worker. Copy `.dev.vars.example` to the ignored `.dev.vars`, add the OpenAI project key and the same `AI_USAGE_SECRET` used by the Go API, then run `npm run assistant:dev`. The roster builder streams through `http://localhost:8788/chat` and attaches the short-lived web access token. GPT-5.6 Luna runs through the OpenAI Responses API, with server-side compaction for long roster conversations. The graphics editor does not use this Worker or expose an AI assistant.
+The roster AI assistant remains a separate Cloudflare Worker. Copy `.dev.vars.example` to the ignored `.dev.vars`, add the OpenAI project key and the same `AI_USAGE_SECRET` used by the API Worker, then run `npm run assistant:dev`.
 
 ## Validation
 
 ```bash
+npm run typecheck
 npm run lint
-npm run validate:messages
 npm test
-npx tsc --noEmit
-npm run build
+npm run build:production
 ```
 
-`npm run validate:messages` requires French and Dutch to have the same keys, value types, and ICU placeholders as English. It runs automatically before every Vinext static build. `npm run preview` serves the generated assets with Wrangler. Deployment is intentionally separate and is not performed by validation.
+`validate:messages` checks every locale for the same keys, value types, ICU placeholders, and valid plural selectors as English, and runs automatically before each production build. The build also enforces route-level bundle budgets. No validation command deploys or changes production traffic.
 
 ## Deployment
 
-One Cloudflare Worker serves the static build on `clashk.ing`, `dash.clashk.ing`, and `www.clashk.ing`. The Worker redirects the dashboard hostname root to `/login`, where an existing session continues to `/servers`; it also moves application routes from the marketing hostname to the dashboard hostname and redirects `www` to the apex.
-
-A second Worker in `workers/roster-assistant` serves `ai.clashk.ing`. Its `/chat` route asks `https://api.clashk.ing` to authorize and meter roster requests, then exposes only typed roster tools to a network-disabled Dynamic Worker. `OPENAI_API_KEY` and `AI_USAGE_SECRET` must be stored as Cloudflare Worker secrets; `AI_USAGE_SECRET` must exactly match the API value.
-
-Production builds pin the browser API and Discord application configuration before uploading assets, so a developer's `.env.local` cannot leak into a deployment:
+`wrangler.jsonc` defines the single dashboard Worker and its three custom domains. Production builds pin only public browser configuration:
 
 ```bash
 npm run build:production
-npm run deploy:assistant
-npm run deploy:dashboard
-# or deploy both Workers in that order
-npm run deploy
+npx wrangler deploy --dry-run --config dist/clashking_dashboard/wrangler.json
 ```
 
-Cloudflare serves the generated HTML, JavaScript, CSS, and media from Workers Static Assets. Fingerprinted `/_next/static/*` files use immutable browser caching; HTML keeps Cloudflare's revalidation behavior so new deployments and rollbacks take effect without leaving stale documents in browsers.
-
-Vinext reads `wrangler.jsonc` while prerendering. Production deployment uses `wrangler.deploy.jsonc` so the hostname-routing Worker can wrap those assets without replacing Vinext's build-time server.
-
-## SEO
-
-The homepage, privacy policy, and terms are static in English, French, and Dutch, with localized titles, descriptions, canonical URLs, `hreflang`, Open Graph/Twitter metadata, `robots.txt`, and sitemap alternates. Cloudflare applies `X-Robots-Tag: noindex, nofollow` to every dashboard-host response; private application routes also carry page-level `noindex` metadata.
+Fingerprinted `/assets/*` files use immutable caching. The HTML shell is revalidated so a deployment or rollback cannot strand browsers on stale entry points. See [docs/production-release.md](docs/production-release.md) for coordinated release and rollback steps; do not run `npm run deploy:dashboard` until the API, contracts, and CORS release is ready.

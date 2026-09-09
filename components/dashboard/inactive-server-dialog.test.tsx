@@ -6,15 +6,16 @@ const testState = vi.hoisted(() => ({
   reactivateServer: vi.fn(),
 }));
 
-vi.mock("next-intl", () => ({
+vi.mock("use-intl", () => ({
   useTranslations: () => (key: string) => ({
-    title: "Re-enable server tracking?",
-    description: "Tracking was disabled.",
-    lastUsed: "Last command",
-    unknown: "No command history",
-    cancel: "Not now",
-    confirm: "Re-enable",
-    reactivating: "Re-enabling...",
+    configure: "Configure",
+    "inactive.title": "Re-enable server tracking?",
+    "inactive.description": "Tracking was disabled.",
+    "inactive.lastUsed": "Last command",
+    "inactive.unknown": "No command history",
+    "inactive.cancel": "Not now",
+    "inactive.confirm": "Re-enable",
+    "inactive.reactivating": "Re-enabling...",
   }[key] ?? key),
 }));
 
@@ -34,6 +35,7 @@ const inactiveGuild = {
   features: [],
   has_bot: true,
   inactive: true,
+  last_command_at: "2026-01-01T00:00:00.000Z",
 };
 
 describe("InactiveServerDialog", () => {
@@ -61,5 +63,24 @@ describe("InactiveServerDialog", () => {
       id: "inactive-server",
       inactive: false,
     }));
+  });
+
+  it("offers first-time activation without claiming command history", async () => {
+    const onReactivated = vi.fn();
+    render(
+      <InactiveServerDialog
+        guild={{ ...inactiveGuild, last_command_at: undefined }}
+        locale="en"
+        onClose={vi.fn()}
+        onReactivated={onReactivated}
+      />,
+    );
+
+    expect(screen.getByRole("alertdialog")).toBeInTheDocument();
+    expect(screen.getByText("No command history")).toBeInTheDocument();
+    expect(screen.queryByText("Tracking was disabled.")).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Configure" }));
+    await waitFor(() => expect(testState.reactivateServer).toHaveBeenCalledWith("inactive-server"));
+    expect(onReactivated).toHaveBeenCalled();
   });
 });

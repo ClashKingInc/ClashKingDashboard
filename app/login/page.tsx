@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { useLocale } from "next-intl";
-import { useRouter } from "next/navigation";
+import { useLocale } from "use-intl";
+import { useRouter } from "@/lib/navigation";
 
 import { useAuthSession } from "@/components/auth-session-provider";
 import { initiateDiscordLogin } from "@/lib/auth/discord-login";
@@ -19,7 +19,11 @@ export default function LoginRedirect() {
     if (authStatus === "authenticated") {
       const returnTo = sessionStorage.getItem("auth_return_to");
       sessionStorage.removeItem("auth_return_to");
-      router.replace(returnTo?.startsWith("/") ? returnTo : "/servers");
+      router.replace(
+        returnTo?.startsWith("/")
+          ? returnTo
+          : "/servers",
+      );
       return;
     }
 

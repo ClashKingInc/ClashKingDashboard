@@ -256,7 +256,7 @@ export function RosterAssistantChart({ spec }: { readonly spec: RosterAssistantC
         <XAxis type="number" domain={[0, yMaximum]} tickCount={4} allowDecimals={false} tick={valueTick} tickLine={false} axisLine={false} tickFormatter={integerTick} label={axisLabel(spec.xAxisLabel, "x")} />
         <YAxis type="category" dataKey="label" width={112} tick={categoryTick} tickLine={false} axisLine={false} tickMargin={10} tickFormatter={shortLabel} label={axisLabel(spec.yAxisLabel, "y")} />
         {commonTooltip}
-        {spec.series.map((series, index) => (
+        {spec.series.map((series) => (
           <Bar key={series.key} dataKey={series.key} fill={`var(--color-${series.key})`} stackId={spec.stacked ? "values" : undefined} radius={spec.stacked ? 0 : [0, 5, 5, 0]} {...animation} />
         ))}
       </BarChart>

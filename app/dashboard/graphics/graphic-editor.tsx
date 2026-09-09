@@ -9,7 +9,7 @@ import {
   useRef,
   useState,
 } from "react";
-import Image from "next/image";
+import Image from "@/components/app-image";
 import {
   ArrowLeft,
   Braces,
@@ -690,7 +690,8 @@ export function GraphicEditor() {
       }
       if (command && event.key.toLowerCase() === "z") {
         event.preventDefault();
-        event.shiftKey ? redo() : undo();
+        if (event.shiftKey) redo();
+        else undo();
         return;
       }
       if (command && event.key.toLowerCase() === "y") {
@@ -1293,10 +1294,10 @@ function PreviewModeControl({ guildId, document, mode, onBindings, onMode, onSta
       onStatus(message);
       return;
     }
-    const payload = response.data as unknown as Record<string, unknown>;
+    const payload = response.data;
     if (kind === "war") {
       const expectedSize = normalizeGraphicWarSize(document.warSize);
-      const actualSize = typeof payload.teamSize === "number" ? payload.teamSize : undefined;
+      const actualSize = "teamSize" in payload && typeof payload.teamSize === "number" ? payload.teamSize : undefined;
       if (actualSize !== undefined && actualSize !== expectedSize) {
         const message = `This is a ${actualSize}v${actualSize} war, but this graphic is configured for ${expectedSize}v${expectedSize}.`;
         setError(message);

@@ -2,8 +2,8 @@
 
 import { useEffect, useEffectEvent, useMemo, useRef, useState, type ReactNode } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import Link from "next/link";
-import { useLocale, useTranslations } from "next-intl";
+import Link from "@/components/app-link";
+import { useLocale, useTranslations } from "use-intl";
 import {
   AlertTriangle,
   ArrowDownAZ,

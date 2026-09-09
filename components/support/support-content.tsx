@@ -1,9 +1,9 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
+import Image from "@/components/app-image";
+import Link from "@/components/app-link";
 import { ArrowRight, Check, ExternalLink } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "use-intl";
 import { dashboardHref, useGuildId } from "@/lib/dashboard-route";
 import {
   AUTOBOARD_FREE_LIMIT,
@@ -12,6 +12,7 @@ import {
 
 interface SupportContentProps {
   readonly compact?: boolean;
+  readonly showHeader?: boolean;
 }
 
 const SUBSCRIPTION_PERKS = [
@@ -22,7 +23,7 @@ const SUBSCRIPTION_PERKS = [
   "crossPlatform",
 ] as const;
 
-export function SupportContent({ compact = false }: SupportContentProps) {
+export function SupportContent({ compact = false, showHeader = true }: SupportContentProps) {
   const t = useTranslations("SupportPage");
   const guildId = useGuildId();
   const subscriptionHref = compact && guildId
@@ -32,15 +33,15 @@ export function SupportContent({ compact = false }: SupportContentProps) {
       : "/login";
 
   return (
-    <main className={`container mx-auto max-w-5xl px-4 ${compact ? "py-8 md:px-6 md:py-10" : "py-20 md:py-24"}`}>
-      <header className="mb-10 max-w-2xl md:mb-12">
+    <div className={compact ? "container mx-auto max-w-5xl px-4 py-8 md:px-6 md:py-10" : "cs-support-content"}>
+      {showHeader && <header className="mb-10 max-w-2xl md:mb-12">
         <h1 className="text-3xl font-bold text-foreground md:text-4xl">
           {t("title")}
         </h1>
         <p className="mt-3 text-base leading-7 text-muted-foreground md:text-lg">
           {t("subtitle")}
         </p>
-      </header>
+      </header>}
 
       <div className="grid gap-5 min-[900px]:grid-cols-[minmax(0,1.15fr)_minmax(280px,0.85fr)]">
         <section className="flex flex-col rounded-3xl bg-card p-6 shadow-sm shadow-black/5 sm:p-8" aria-labelledby="subscription-title">
@@ -122,6 +123,6 @@ export function SupportContent({ compact = false }: SupportContentProps) {
           {t("whySupport.description")}
         </p>
       </section>
-    </main>
+    </div>
   );
 }

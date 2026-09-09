@@ -11,15 +11,14 @@ const apiMock = vi.hoisted(() => ({
   getGuilds: vi.fn(),
 }));
 
-vi.mock("next/navigation", () => ({
+vi.mock("@/lib/navigation", () => ({
   useRouter: () => ({ push: navigationMock.push }),
-  // Model Vinext's empty static search-param snapshot. The callback must use
-  // the actual browser URL, which already contains Discord's response.
+  // The callback must use the browser URL, which already contains Discord's response.
   useSearchParams: () => new URLSearchParams(),
   useParams: () => ({ locale: navigationMock.locale }),
 }));
 
-vi.mock("next-intl", () => ({
+vi.mock("use-intl", () => ({
   useTranslations: () => (key: string, values?: Record<string, string>) =>
     values?.reason ? `${key}:${values.reason}` : key,
 }));
@@ -28,7 +27,7 @@ vi.mock("next-themes", () => ({
   useTheme: () => ({ theme: "dark" }),
 }));
 
-vi.mock("next/image", () => ({
+vi.mock("@/components/app-image", () => ({
   default: ({ alt }: { alt: string }) => <span data-testid={`image-${alt}`} />,
 }));
 
@@ -66,6 +65,7 @@ describe("AuthCallbackPage PKCE cleanup", () => {
     localStorage.clear();
     sessionStorage.clear();
     localStorage.setItem("device_id", "device-id");
+    apiMock.getGuilds.mockResolvedValue({ data: [] });
   });
 
   it("clears the PKCE verifier for Discord error callbacks", async () => {
@@ -125,6 +125,29 @@ describe("AuthCallbackPage PKCE cleanup", () => {
         redirect_uri: "http://localhost:3000/auth/callback",
       });
       expect(sessionStorage.getItem("discord_code_verifier")).toBeNull();
+    });
+  });
+
+  it("uses the server list as the default destination after authentication", async () => {
+    window.history.replaceState(
+      {},
+      "",
+      "/auth/callback?code=auth-code&state=expected-state",
+    );
+    sessionStorage.setItem("discord_code_verifier", "verifier");
+    sessionStorage.setItem("discord_oauth_state", "expected-state");
+    apiMock.authenticateWithDiscord.mockResolvedValue({
+      data: {
+        access_token: "access-token",
+        user: { id: "1", username: "Magic Jr." },
+      },
+      error: null,
+    });
+
+    render(<AuthCallbackPage />);
+
+    await waitFor(() => {
+      expect(navigationMock.push).toHaveBeenCalledWith("/servers");
     });
   });
 });

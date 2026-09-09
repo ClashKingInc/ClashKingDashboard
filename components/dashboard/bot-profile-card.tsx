@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
+import Image from "@/components/app-image";
+import Link from "@/components/app-link";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Camera, Lock, Pencil, RotateCcw } from "lucide-react";
 import ReactMarkdown from "react-markdown";

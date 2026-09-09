@@ -2,7 +2,7 @@
 
 import { useGuildId } from "@/lib/dashboard-route";
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "use-intl";
 import { Check, Loader2, LayoutTemplate, Save, Settings2 } from "lucide-react";
 
 import { apiClient } from "@/lib/api/client";
@@ -226,11 +226,11 @@ export function JoinPanelSettings({ embedded = false }: Readonly<{ embedded?: bo
       embed_name: panel.embed_name ?? null,
       buttons: panel.buttons ?? [],
       button_color: (panel.button_color as ButtonColor) ?? "Grey",
-      welcome_channel: panel.welcome_channel ? String(panel.welcome_channel) : null,
+      welcome_channel: panel.welcome_channel ?? null,
     };
     panelSnapshotRef.current = { ...nextPayload, buttons: [...nextPayload.buttons] };
     setEmbedName(nextPayload.embed_name ?? "");
-    setButtons(nextPayload.buttons);
+    setButtons([...nextPayload.buttons]);
     setButtonColor(nextPayload.button_color);
     setWelcomeChannel(nextPayload.welcome_channel ?? "");
     setIsPanelEnabled(Boolean(nextPayload.welcome_channel));

@@ -1,4 +1,6 @@
 import { normalizeAllChannelsPayload } from "@/lib/dashboard-cache";
+import { ServerThreadsEndpoint } from "@clashking/api-contracts";
+import { Schema } from "effect";
 
 export interface DiscordDestinationChannel {
   id: string;
@@ -14,18 +16,6 @@ export interface DiscordDestinationThread {
   parent_channel_name?: string;
 }
 
-function unwrapCollection(payload: unknown, key: string): unknown[] {
-  if (Array.isArray(payload)) return payload;
-  if (!payload || typeof payload !== "object") return [];
-
-  const value = "data" in payload ? (payload as { data?: unknown }).data : payload;
-  if (Array.isArray(value)) return value;
-  if (value && typeof value === "object" && Array.isArray((value as Record<string, unknown>)[key])) {
-    return (value as Record<string, unknown>)[key] as unknown[];
-  }
-  return [];
-}
-
 export function normalizeDestinationChannels(payload: unknown): DiscordDestinationChannel[] {
   return normalizeAllChannelsPayload(payload).filter((channel) => {
     const type = channel.type.toLowerCase();
@@ -34,18 +24,7 @@ export function normalizeDestinationChannels(payload: unknown): DiscordDestinati
 }
 
 export function normalizeDestinationThreads(payload: unknown): DiscordDestinationThread[] {
-  return unwrapCollection(payload, "threads").flatMap((value) => {
-    if (!value || typeof value !== "object") return [];
-    const thread = value as Record<string, unknown>;
-    if (!thread.id || !thread.name || !thread.parent_channel_id) return [];
-    return [{
-      ...thread,
-      id: String(thread.id),
-      name: String(thread.name),
-      parent_channel_id: String(thread.parent_channel_id),
-      parent_channel_name: thread.parent_channel_name ? String(thread.parent_channel_name) : undefined,
-    } as DiscordDestinationThread];
-  });
+  return [...Schema.decodeUnknownSync(ServerThreadsEndpoint.response)(payload)];
 }
 
 export function isForumChannel(channel: DiscordDestinationChannel | undefined): boolean {

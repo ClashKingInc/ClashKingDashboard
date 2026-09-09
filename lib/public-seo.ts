@@ -1,25 +1,34 @@
-import type { Metadata } from "next";
-import englishMessages from "@/messages/en.json";
-import frenchMessages from "@/messages/fr.json";
-import dutchMessages from "@/messages/nl.json";
-import { publicPath, type PublicLocale } from "@/lib/locale-preference";
+import messages from "virtual:public-seo-copy";
+import { publicPath, type PublicLocale, type PublicPagePath } from "@/lib/locale-preference";
 
-export type PublicPage = "home" | "privacy" | "terms";
+export type PublicPage = "home" | "features" | "help" | "open-source" | "privacy" | "support" | "terms";
+
+export interface PublicMetadata {
+  readonly title: string;
+  readonly description: string;
+  readonly canonical: string;
+  readonly languageAlternates: Readonly<Record<string, string>>;
+  readonly openGraphTitle: string;
+  readonly openGraphLocale: string;
+  readonly alternateOpenGraphLocales: readonly string[];
+  readonly socialImage: string;
+  readonly socialImageAlt: string;
+}
 
 const SITE_ORIGIN = "https://clashk.ing";
 const SOCIAL_IMAGE = `${SITE_ORIGIN}/og/clashking-landing.png`;
 
-const messages = {
-  en: englishMessages,
-  fr: frenchMessages,
-  nl: dutchMessages,
-} satisfies Record<PublicLocale, typeof englishMessages>;
-
 const pagePaths = {
   home: "/",
+  features: "/features",
+  help: "/help",
+  "open-source": "/open-source",
   privacy: "/privacy",
+  support: "/support",
   terms: "/terms",
 } as const;
+
+const localizedPages = new Set<PublicPage>(["home", "privacy", "terms"]);
 
 const openGraphLocales: Record<PublicLocale, string> = {
   en: "en_US",
@@ -40,59 +49,57 @@ export function getPublicPageCopy(locale: PublicLocale, page: PublicPage) {
     };
   }
 
+  if (!localizedPages.has(page)) {
+    const english = messages.en;
+    const content = page === "features"
+      ? { heading: english.FeaturesPage.hero.title, description: english.FeaturesPage.hero.subtitle }
+      : page === "help"
+        ? { heading: english.HelpPage.title, description: english.HelpPage.subtitle }
+        : page === "open-source"
+          ? { heading: english.OpenSourcePage.title, description: english.OpenSourcePage.subtitle }
+          : { heading: english.SupportPage.title, description: english.SupportPage.subtitle };
+    return {
+      title: `${content.heading} | ClashKing`,
+      openGraphTitle: content.heading,
+      description: content.description,
+      heading: content.heading,
+      eyebrow: "ClashKing",
+      imageAlt: english.PublicSeo.imageAlt,
+    };
+  }
+
   return {
-    ...localized.PublicSeo[page],
+    ...localized.PublicSeo[page as "privacy" | "terms"],
     imageAlt: localized.PublicSeo.imageAlt,
   };
 }
 
-export function getPublicMetadata(locale: PublicLocale, page: PublicPage): Metadata {
+export function getPublicMetadata(locale: PublicLocale, page: PublicPage): PublicMetadata {
   const copy = getPublicPageCopy(locale, page);
   const pagePath = pagePaths[page];
-  const localizedPath = publicPath(locale, pagePath);
+  const isLocalized = localizedPages.has(page);
+  const localizedPath = isLocalized ? publicPath(locale, pagePath as PublicPagePath) : pagePath;
   const canonical = `${SITE_ORIGIN}${localizedPath === "/" ? "/" : localizedPath}`;
-  const languageAlternates = {
-    en: `${SITE_ORIGIN}${publicPath("en", pagePath)}`,
-    fr: `${SITE_ORIGIN}${publicPath("fr", pagePath)}`,
-    nl: `${SITE_ORIGIN}${publicPath("nl", pagePath)}`,
-    "x-default": `${SITE_ORIGIN}${publicPath("en", pagePath)}`,
-  };
+  const languageAlternates: Readonly<Record<string, string>> = isLocalized
+    ? {
+        en: `${SITE_ORIGIN}${publicPath("en", pagePath as PublicPagePath)}`,
+        fr: `${SITE_ORIGIN}${publicPath("fr", pagePath as PublicPagePath)}`,
+        nl: `${SITE_ORIGIN}${publicPath("nl", pagePath as PublicPagePath)}`,
+        "x-default": `${SITE_ORIGIN}${publicPath("en", pagePath as PublicPagePath)}`,
+      }
+    : { en: canonical, "x-default": canonical };
 
   return {
     title: copy.title,
     description: copy.description,
-    robots: { index: true, follow: true },
-    alternates: {
-      canonical,
-      languages: languageAlternates,
-    },
-    openGraph: {
-      title: copy.openGraphTitle,
-      description: copy.description,
-      type: "website",
-      siteName: "ClashKing",
-      url: canonical,
-      locale: openGraphLocales[locale],
-      alternateLocale: Object.values(openGraphLocales).filter(
-        (candidate) => candidate !== openGraphLocales[locale],
-      ),
-      images: [
-        {
-          url: SOCIAL_IMAGE,
-          width: 1200,
-          height: 630,
-          alt: copy.imageAlt,
-        },
-      ],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: copy.openGraphTitle,
-      description: copy.description,
-      images: [SOCIAL_IMAGE],
-    },
-    other: {
-      "content-language": locale,
-    },
+    canonical,
+    languageAlternates,
+    openGraphTitle: copy.openGraphTitle,
+    openGraphLocale: isLocalized ? openGraphLocales[locale] : openGraphLocales.en,
+    alternateOpenGraphLocales: isLocalized
+      ? Object.values(openGraphLocales).filter((candidate) => candidate !== openGraphLocales[locale])
+      : [],
+    socialImage: SOCIAL_IMAGE,
+    socialImageAlt: copy.imageAlt,
   };
 }

@@ -3,13 +3,13 @@
 import { useState, useEffect, useRef } from "react";
 import { ChevronDown, LogOut, Menu, PanelLeftClose } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { usePathname, useRouter } from "next/navigation";
-import { useLocale, useTranslations } from "next-intl";
+import { usePathname, useRouter } from "@/lib/navigation";
+import { useLocale, useTranslations } from "use-intl";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { SettingsDropdown } from "@/components/settings-dropdown";
 import { logout } from "@/lib/auth/logout";
 import { useAuthSession } from "@/components/auth-session-provider";
-import Link from "next/link";
+import Link from "@/components/app-link";
 import { dashboardHref } from "@/lib/dashboard-route";
 import { getGraphicsEditorMode, GRAPHICS_EDITOR_MODE_EVENT } from "@/lib/graphics-editor-shell";
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";

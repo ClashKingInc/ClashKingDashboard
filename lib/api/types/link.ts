@@ -1,25 +1,12 @@
-/**
- * Account linking types
- */
+import type {
+  DashboardLinksAddEndpoint,
+  DashboardLinksListEndpoint,
+  DashboardLinksVisibilityEndpoint,
+  EndpointRequest,
+  EndpointResponse,
+} from "@clashking/api-contracts";
 
-export interface CocAccountRequest {
-  player_tag: string;
-  api_token?: string;
-}
-
-export interface LinkedAccount {
-  player_tag: string;
-  player_name?: string | null;
-  town_hall?: number | null;
-  is_verified?: boolean;
-  hidden: boolean;
-  added_at?: string | null;
-}
-
-export interface LinkVisibilityRequest {
-  hidden: boolean;
-}
-
-export interface LinkedAccountsResponse {
-  items: LinkedAccount[];
-}
+export type CocAccountRequest = EndpointRequest<typeof DashboardLinksAddEndpoint>["body"];
+export type LinkedAccount = EndpointResponse<typeof DashboardLinksVisibilityEndpoint>;
+export type LinkVisibilityRequest = EndpointRequest<typeof DashboardLinksVisibilityEndpoint>["body"];
+export type LinkedAccountsResponse = EndpointResponse<typeof DashboardLinksListEndpoint>;

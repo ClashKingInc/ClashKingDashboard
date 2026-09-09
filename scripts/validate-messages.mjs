@@ -1,8 +1,8 @@
 import { readFile, readdir } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { parse as parseSource } from "@babel/parser";
 import { parse, TYPE } from "@formatjs/icu-messageformat-parser";
-import ts from "typescript";
 
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const messagesDirectory = resolve(projectRoot, "messages");
@@ -76,67 +76,79 @@ async function sourceFiles(directory) {
 }
 
 function stringLiteralValue(node) {
-  return node && ts.isStringLiteralLike(node) ? node.text : undefined;
+  return node?.type === "StringLiteral" ? node.value : undefined;
 }
 
-function translationNamespace(call, sourceFile) {
+function translationNamespace(call) {
   const argument = call.arguments[0];
   const directNamespace = stringLiteralValue(argument);
   if (directNamespace !== undefined) return directNamespace;
-  if (!argument || !ts.isObjectLiteralExpression(argument)) return "";
+  if (argument?.type !== "ObjectExpression") return "";
 
   const namespaceProperty = argument.properties.find(
     (property) =>
-      ts.isPropertyAssignment(property) &&
-      property.name.getText(sourceFile) === "namespace",
+      property.type === "ObjectProperty" &&
+      !property.computed &&
+      ((property.key.type === "Identifier" && property.key.name === "namespace") ||
+        (property.key.type === "StringLiteral" && property.key.value === "namespace")),
   );
-  if (
-    !namespaceProperty ||
-    !ts.isPropertyAssignment(namespaceProperty)
-  ) {
+  if (namespaceProperty?.type !== "ObjectProperty") {
     return "";
   }
-  return stringLiteralValue(namespaceProperty.initializer) ?? "";
+  return stringLiteralValue(namespaceProperty.value) ?? "";
 }
 
-function translationDeclaration(node, sourceFile) {
+function translationDeclaration(node) {
   if (
-    !ts.isVariableDeclaration(node) ||
-    !ts.isIdentifier(node.name) ||
-    !node.initializer
+    node?.type !== "VariableDeclarator" ||
+    node.id.type !== "Identifier" ||
+    !node.init
   ) {
     return undefined;
   }
 
-  const initializer = ts.isAwaitExpression(node.initializer)
-    ? node.initializer.expression
-    : node.initializer;
+  const initializer = node.init.type === "AwaitExpression"
+    ? node.init.argument
+    : node.init;
   if (
-    !ts.isCallExpression(initializer) ||
-    !ts.isIdentifier(initializer.expression) ||
-    !["getTranslations", "useTranslations"].includes(initializer.expression.text)
+    initializer.type !== "CallExpression" ||
+    initializer.callee.type !== "Identifier" ||
+    !["getTranslations", "useTranslations"].includes(initializer.callee.name)
   ) {
     return undefined;
   }
 
   return {
-    name: node.name.text,
-    namespace: translationNamespace(initializer, sourceFile),
+    name: node.id.name,
+    namespace: translationNamespace(initializer),
   };
 }
 
-function unambiguousFileTranslators(sourceFile) {
+function forEachChild(node, visit) {
+  for (const [key, value] of Object.entries(node ?? {})) {
+    if (["loc", "start", "end", "extra", "errors", "comments", "tokens"].includes(key)) continue;
+    if (Array.isArray(value)) {
+      for (const child of value) {
+        if (child && typeof child.type === "string") visit(child);
+      }
+    } else if (value && typeof value.type === "string") {
+      visit(value);
+    }
+  }
+}
+
+function unambiguousFileTranslators(program) {
   const candidates = new Map();
   const visit = (node) => {
-    const declaration = translationDeclaration(node, sourceFile);
+    const declaration = translationDeclaration(node);
     if (declaration) {
       const namespaces = candidates.get(declaration.name) ?? new Set();
       namespaces.add(declaration.namespace);
       candidates.set(declaration.name, namespaces);
     }
-    ts.forEachChild(node, visit);
+    forEachChild(node, visit);
   };
-  visit(sourceFile);
+  visit(program);
 
   return new Map(
     [...candidates.entries()]
@@ -148,7 +160,7 @@ function unambiguousFileTranslators(sourceFile) {
 async function collectStaticTranslationCalls() {
   const files = (
     await Promise.all(
-      ["app", "components", "i18n", "lib"].map((directory) =>
+      ["app", "components", "lib", "src"].map((directory) =>
         sourceFiles(resolve(projectRoot, directory)),
       ),
     )
@@ -157,36 +169,41 @@ async function collectStaticTranslationCalls() {
 
   for (const filename of files) {
     const source = await readFile(filename, "utf8");
-    const sourceFile = ts.createSourceFile(
-      filename,
-      source,
-      ts.ScriptTarget.Latest,
-      true,
-      filename.endsWith("x") ? ts.ScriptKind.TSX : ts.ScriptKind.TS,
-    );
+    const program = parseSource(source, {
+      sourceType: "module",
+      plugins: ["typescript", ...(filename.endsWith("x") ? ["jsx"] : [])],
+    }).program;
 
     const visit = (node, inheritedTranslators = new Map()) => {
       const translators =
-        ts.isSourceFile(node) || ts.isFunctionLike(node) || ts.isBlock(node)
+        [
+          "Program",
+          "BlockStatement",
+          "FunctionDeclaration",
+          "FunctionExpression",
+          "ArrowFunctionExpression",
+        ].includes(node.type)
           ? new Map(inheritedTranslators)
           : inheritedTranslators;
 
-      const declaration = translationDeclaration(node, sourceFile);
+      const declaration = translationDeclaration(node);
       if (declaration) {
         translators.set(declaration.name, declaration.namespace);
       }
 
-      if (ts.isCallExpression(node)) {
+      if (node.type === "CallExpression") {
         let translatorName;
         let method = "call";
-        if (ts.isIdentifier(node.expression)) {
-          translatorName = node.expression.text;
+        if (node.callee.type === "Identifier") {
+          translatorName = node.callee.name;
         } else if (
-          ts.isPropertyAccessExpression(node.expression) &&
-          ts.isIdentifier(node.expression.expression)
+          node.callee.type === "MemberExpression" &&
+          !node.callee.computed &&
+          node.callee.object.type === "Identifier" &&
+          node.callee.property.type === "Identifier"
         ) {
-          translatorName = node.expression.expression.text;
-          method = node.expression.name.text;
+          translatorName = node.callee.object.name;
+          method = node.callee.property.name;
         }
 
         if (
@@ -198,20 +215,19 @@ async function collectStaticTranslationCalls() {
           if (key !== undefined) {
             const namespace = translators.get(translatorName);
             const fullKey = namespace ? `${namespace}.${key}` : key;
-            const { line } = sourceFile.getLineAndCharacterOfPosition(node.getStart());
             calls.push({
               key: fullKey,
               method,
-              location: `${filename.slice(projectRoot.length + 1)}:${line + 1}`,
+              location: `${filename.slice(projectRoot.length + 1)}:${node.loc?.start.line ?? 1}`,
             });
           }
         }
       }
 
-      ts.forEachChild(node, (child) => visit(child, translators));
+      forEachChild(node, (child) => visit(child, translators));
     };
 
-    visit(sourceFile, unambiguousFileTranslators(sourceFile));
+    visit(program, unambiguousFileTranslators(program));
   }
 
   return calls;
@@ -442,7 +458,7 @@ for (const locale of locales.filter((locale) => locale !== "en")) {
       console.error(`  Invalid plural selector: ${invalidPluralSelectors.join(", ")}`);
     }
   } else {
-    console.log(`messages/${locale}.json: ${translated.size} keys match English`);
+    console.log(`messages/${locale}.json: ${translated.size} translated keys match English`);
   }
 }
 
