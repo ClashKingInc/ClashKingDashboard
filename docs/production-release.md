@@ -10,7 +10,7 @@ The browser origins are `https://clashk.ing` and `https://dash.clashk.ing`. They
 - Apply required Goose migrations from the authoritative schema repository before enabling API code that reads or writes the new shape.
 - Configure API CORS with exact allowed origins for the two browser hosts and local development. Credentialed requests cannot use a wildcard origin.
 - Add `https://dash.clashk.ing/auth/callback` to Discord's allowed OAuth redirect URIs and keep the refresh cookie scoped for direct API requests.
-- Confirm the API release exposes the six body-based POST endpoints and the typed Tenor resolver used by the shared client before building the dashboard.
+- Confirm the API release exposes the body-based home activity POST endpoint, the statistics and league analytics GET endpoints (including `GET /v2/stats/armies`), and the typed Tenor resolver used by the shared client before building the dashboard.
 - Apply the canonical ticket-configuration migration before serving ticket settings. Verify active panels and buttons expose stable UUIDs, settings are keyed by canonical `ck:ticket:open:<panel-id>:<button-id>` values, archived panels remain immutable, and historical tickets still resolve their original panel identity.
 - Keep ticket and roster publishing disabled until their API-owned publication records and Discord delivery handlers persist the exact channel/message result. Dashboard settings readiness alone does not prove persistent-message readiness.
 
@@ -18,7 +18,7 @@ The browser origins are `https://clashk.ing` and `https://dash.clashk.ing`. They
 
 1. **Publish contracts and client.** Publish immutable release-candidate versions, verify their package contents and provenance, then lock every consumer to the coordinated versions. Do not publish an implementation that silently falls back to the legacy method or response shape.
 2. **Apply schemas.** Run the authoritative Goose status and up commands for each affected datastore, record the applied versions, and verify the new objects before changing API traffic.
-3. **Deploy the API Worker without switching clients.** Verify health, authentication refresh, exact-origin CORS, the six POST routes, and the Tenor resolver against the release-candidate contracts.
+3. **Deploy the API Worker without switching clients.** Verify health, authentication refresh, exact-origin CORS, the home activity POST route, the statistics and league analytics GET routes, and the Tenor resolver against the release-candidate contracts.
 4. **Deploy dependent applications.** Deploy the admin and other consumers against the same package versions, then deploy the roster assistant if its API contract changed.
 5. **Build and stage the dashboard Worker.** Run the validation commands below, upload or preview the Worker without changing custom-domain routing, and verify the generated deployment contains the expected API and assistant origins.
 6. **Republish persistent messages deliberately.** Once the new Bot handlers and publication records are verified, replace legacy ticket and roster messages with canonical `ck:` components. Do not enable a legacy-ID parser or assume old message locations can be recovered from configuration that never stored them.
@@ -47,7 +47,7 @@ Roll back in the reverse dependency direction, keeping schemas forward-compatibl
 
 1. **Dashboard first.** Redeploy the last known-good dashboard Worker version or restore its previous Cloudflare deployment. Because documents are revalidated and assets are content-addressed, clients will load that version's matching entry point and chunks.
 2. **Other clients next.** Restore any dependent application that consumed the new contracts before rolling back the API.
-3. **API after clients.** Restore the previous API Worker only after no active client requires the new POST or Tenor contracts. Recheck authentication and exact-origin CORS after promotion.
+3. **API after clients.** Restore the previous API Worker only after no active client requires the new statistics, league analytics, home activity, or Tenor contracts. Recheck authentication and exact-origin CORS after promotion.
 4. **Packages stay immutable.** Deprecate a bad release candidate and publish a new version; never overwrite an existing package version.
 5. **Schemas last and usually not down.** Prefer a forward repair. Run a down migration only when it is explicitly proven safe for production data and separately authorized.
 

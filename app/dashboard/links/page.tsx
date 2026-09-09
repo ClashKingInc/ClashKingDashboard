@@ -5,6 +5,7 @@ import { dashboardEndpoints, CreateServerLinkEndpoint, DeleteServerLinkEndpoint,
 import { ApiResponseError } from "@clashking/api-client";
 import { Schema } from "effect";
 import { executeSharedEndpoint } from "@/lib/api/shared-client";
+import { fetchAllServerLinks } from "@/lib/api/all-server-links";
 
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -179,7 +180,7 @@ export default function LinksManagementPage() {
     setStatsLoading(true);
     setError(null);
     try {
-      const body = await fetchServerLinks(guildId, { limit: 5000, offset: 0 });
+      const body = await fetchAllServerLinks(query => fetchServerLinks(guildId, query));
       setStatsData(mutableServerLinks(body));
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Failed to fetch link statistics");
@@ -253,9 +254,7 @@ export default function LinksManagementPage() {
     setExporting(format);
     setError(null);
     try {
-      const exportData = await fetchServerLinks(guildId, {
-        limit: 5000,
-        offset: 0,
+      const exportData = await fetchAllServerLinks(query => fetchServerLinks(guildId, query), {
         ...(serverQuery ? { query: serverQuery } : {}),
         ...(accountFilter === "none" ? { account_filter: accountFilter } : {}),
       });
@@ -328,6 +327,7 @@ export default function LinksManagementPage() {
 
   const totalPages = Math.max(1, Math.ceil((data?.filtered_members || 0) / ITEMS_PER_PAGE));
   const linkedPercent = data?.total_members ? Math.round((data.members_with_links / data.total_members) * 100) : 0;
+  const initialLoading = loading && data === null;
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
@@ -338,9 +338,9 @@ export default function LinksManagementPage() {
         </div>
 
         <div className="grid gap-3 sm:grid-cols-3">
-          <StatCard title="Members loaded" value={data?.total_members} detail={loadedMembersDetail(data?.total_members ?? 0, serverMemberCount)} loading={loading} />
-          <StatCard title="Members with links" value={data?.members_with_links} detail={`${linkedPercent}% coverage`} loading={loading} />
-          <StatCard title="Linked accounts" value={data?.total_linked_accounts} detail="Across loaded members" loading={loading} />
+          <StatCard title="Members loaded" value={data?.total_members} detail={loadedMembersDetail(data?.total_members ?? 0, serverMemberCount)} loading={initialLoading} />
+          <StatCard title="Members with links" value={data?.members_with_links} detail={`${linkedPercent}% coverage`} loading={initialLoading} />
+          <StatCard title="Linked accounts" value={data?.total_linked_accounts} detail="Across loaded members" loading={initialLoading} />
         </div>
 
         <section className="space-y-4">
@@ -417,7 +417,10 @@ export default function LinksManagementPage() {
             </div>
 
             <div className="flex flex-col gap-3 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-              <span>{loading ? "Loading members…" : `${data?.filtered_members || 0} matching members`}</span>
+              <span className="inline-flex items-center gap-2" aria-live="polite">
+                {initialLoading ? "Loading members…" : `${data?.filtered_members || 0} matching members`}
+                {loading && !initialLoading && <Loader2 className="h-3.5 w-3.5 animate-spin" aria-label="Updating members" />}
+              </span>
               <div className="flex gap-2">
                 <Button variant="secondary" size="sm" className="border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted" onClick={() => void exportLinks("csv")} disabled={Boolean(exporting)}>
                   {exporting === "csv" ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Download className="mr-2 h-4 w-4" />}Export CSV
@@ -428,8 +431,8 @@ export default function LinksManagementPage() {
               </div>
             </div>
 
-            {loading ? <MemberSkeleton /> : data?.members.length ? (
-              <div className="space-y-3">
+            {initialLoading ? <MemberSkeleton /> : data?.members.length ? (
+              <div className="space-y-3" aria-busy={loading}>
                 {data.members.map(member => (
                   <MemberCard
                     key={member.user_id}
@@ -453,12 +456,12 @@ export default function LinksManagementPage() {
               </div>
             )}
 
-            {!loading && (data?.filtered_members || 0) > 0 && (
+            {!initialLoading && (data?.filtered_members || 0) > 0 && (
               <div className="flex items-center justify-between pt-2">
                 <span className="text-sm text-muted-foreground">Page {page} of {totalPages}</span>
                 <div className="flex gap-2">
-                  <Button variant="secondary" size="sm" className="border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted" onClick={() => setPage(current => Math.max(1, current - 1))} disabled={page === 1}>Previous</Button>
-                  <Button variant="secondary" size="sm" className="border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted" onClick={() => setPage(current => Math.min(totalPages, current + 1))} disabled={page >= totalPages}>Next</Button>
+                  <Button variant="secondary" size="sm" className="border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted" onClick={() => setPage(current => Math.max(1, current - 1))} disabled={loading || page === 1}>Previous</Button>
+                  <Button variant="secondary" size="sm" className="border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted" onClick={() => setPage(current => Math.min(totalPages, current + 1))} disabled={loading || page >= totalPages}>Next</Button>
                 </div>
               </div>
             )}

@@ -60,6 +60,21 @@ describe('initiateDiscordLogin', () => {
     expect(window.location.href).toContain('code_challenge_method=S256');
   });
 
+  it('initiates local login with the configured public ID and exact local callback', async () => {
+    vi.stubEnv('VITE_DISCORD_CLIENT_ID', '824653933347209227');
+    Object.defineProperty(window, 'location', {
+      value: { origin: 'http://localhost:3002', hostname: 'localhost', href: '' },
+      configurable: true,
+    });
+    await initiateDiscordLogin('en');
+    const authorization = new URL(window.location.href);
+    expect(authorization.origin).toBe('https://discord.com');
+    expect(authorization.searchParams.get('client_id')).toBe('824653933347209227');
+    expect(authorization.searchParams.get('redirect_uri')).toBe('http://localhost:3002/auth/callback');
+    expect(authorization.searchParams.get('state')).toBe(sessionStorage.getItem('discord_oauth_state'));
+    expect(window.alert).not.toHaveBeenCalled();
+  });
+
   it('calls alert and logs error when client ID is missing', async () => {
     vi.stubEnv('VITE_DISCORD_CLIENT_ID', '');
     await initiateDiscordLogin('en');
