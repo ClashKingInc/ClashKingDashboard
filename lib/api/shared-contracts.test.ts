@@ -1,9 +1,12 @@
 import {
-  ArmyHash,
+  ArmyDetailEndpoint,
+  ArmyFamilyId,
   ArmySearchEndpoint,
+  ArmyTimelineEndpoint,
   LeagueHitRateHistoryEndpoint,
   LeagueTierStatisticsEndpoint,
   LegendBattlelogEndpoint,
+  PlayerBattlelogHistoryResponse,
   PlayerLeaderboardResponse,
   RankedBattlelogEndpoint,
   RankedBattlelogResponse,
@@ -24,6 +27,8 @@ describe("coordinated API contracts", () => {
     ["legendBattlelog", LegendBattlelogEndpoint, "/v2/player/:playerTag/legend/:day/battlelog"],
     ["armySearch", ArmySearchEndpoint, "/v2/stats/armies"],
     ["statsArmies", ArmySearchEndpoint, "/v2/stats/armies"],
+    ["armyDetail", ArmyDetailEndpoint, "/v2/stats/armies/detail"],
+    ["armyTimeline", ArmyTimelineEndpoint, "/v2/stats/armies/timeline"],
     ["statsRanked", StatsRankedEndpoint, "/v2/stats/ranked"],
     ["statsWar", StatsWarEndpoint, "/v2/stats/war"],
     ["statsCwl", StatsCwlEndpoint, "/v2/stats/cwl"],
@@ -69,15 +74,13 @@ describe("coordinated API contracts", () => {
     expect(query).toMatchObject({ heroIds: "1,2", minimumAttacks: 100, sort: "tripleRate", direction: "desc" });
   });
 
-  it("accepts only lowercase 64-hex ArmyHash v2 values", () => {
-    const hash = "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef";
-
-    expect(Schema.decodeUnknownSync(ArmyHash)(hash)).toBe(hash);
-    expect(() => Schema.decodeUnknownSync(ArmyHash)(hash.toUpperCase())).toThrow();
-    expect(() => Schema.decodeUnknownSync(ArmyHash)("army-1")).toThrow();
+  it("keeps army families identified by decimal strings", () => {
+    expect(Schema.decodeUnknownSync(ArmyFamilyId)("9223372036854775807")).toBe("9223372036854775807");
+    expect(() => Schema.decodeUnknownSync(ArmyFamilyId)(0)).toThrow();
+    expect(() => Schema.decodeUnknownSync(ArmyFamilyId)("01")).toThrow();
   });
 
-  it("decodes camelCase Ranked battles, completeness metadata, and automatic defenses", () => {
+  it("decodes loot-free detailed battles and rejects leaked loot", () => {
     const battle = {
       time: "2026-09-07T12:00:00.000Z",
       duration: 141,
@@ -85,8 +88,6 @@ describe("coordinated API contracts", () => {
       opponent: { tag: "#DEFENDER", name: "Defender", townHallLevel: 17 },
       stars: 3,
       destructionPercentage: 100,
-      lootedResources: { gold: 1_000_000, elixir: 900_000, darkElixir: 8_000 },
-      armyHash: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
       shareCode: "u1x10-s1x2",
       trophies: 40,
     };
@@ -111,6 +112,28 @@ describe("coordinated API contracts", () => {
     });
     expect(response).toMatchObject({ leagueGroupId: "#GROUP", maxBattles: 8, registeredAttacks: 7 });
     expect(response.defenses[1]).toEqual({ trophies: -20, automatic: true });
+
+    expect(() => Schema.decodeUnknownSync(RankedBattlelogResponse)({
+      ...response,
+      attacks: [{ ...battle, lootedResources: { gold: 1, elixir: 2, darkElixir: 3 } }],
+    })).toThrow();
+  });
+
+  it("decodes compact all-attack history with mode and stored loot", () => {
+    const response = Schema.decodeUnknownSync(PlayerBattlelogHistoryResponse)({
+      items: ["farming", "ranked", "legend"].map((battleMode) => ({
+        battleMode,
+        battleTime: "2026-09-07T12:00:00.000Z",
+        stars: 3,
+        destructionPercentage: 100,
+        duration: 141,
+        lootedResources: { gold: 1_000_000, elixir: 900_000, darkElixir: 8_000 },
+        shareCode: "u1x10-s1x2",
+      })),
+    });
+
+    expect(response.items.map(({ battleMode }) => battleMode)).toEqual(["farming", "ranked", "legend"]);
+    expect(response.items[0]?.lootedResources.darkElixir).toBe(8_000);
   });
 
   it("requires leagueGroupId on realtime Town Hall and league leaderboard players", () => {
