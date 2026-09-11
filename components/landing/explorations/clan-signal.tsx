@@ -199,9 +199,9 @@ export function ClanSignal() {
           <h2 id="cs-dashboard-title">{t("dashboard.title")}</h2>
           <p className="cs-section-intro">{t("dashboard.intro")}</p>
           <FeatureList features={dashboardFeatures} />
-          <button className="cs-text-link cs-disabled" type="button" disabled>
+          <Link className="cs-text-link" href="/login">
             {t("actions.openDashboard")} <ArrowAsset />
-          </button>
+          </Link>
         </div>
         <figure className="cs-dashboard-art" aria-label={t("dashboard.imageLabel")}>
           <Image
@@ -223,7 +223,7 @@ export function ClanSignal() {
         <nav aria-label={t("resources.ariaLabel")}>
           <a href="https://docs.clashk.ing/" target="_blank" rel="noreferrer">{t("resources.documentation")} <ArrowAsset /></a>
           <a href="https://github.com/ClashKingInc" target="_blank" rel="noreferrer">GitHub <ArrowAsset /></a>
-          <a href="https://go.api.clashk.ing/" target="_blank" rel="noreferrer">{t("resources.publicApi")} <ArrowAsset /></a>
+          <a href="https://api.clashk.ing/" target="_blank" rel="noreferrer">{t("resources.publicApi")} <ArrowAsset /></a>
         </nav>
       </section>
 
