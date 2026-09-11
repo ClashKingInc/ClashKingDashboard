@@ -245,7 +245,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<BasesResponse>>",
       "parameters": "serverId: string, limit = 50, offset = 0",
-      "source": "lib/api/clients/bases-client.ts:22",
+      "source": "lib/api/clients/bases-client.ts:24",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -266,7 +266,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<Base>>",
       "parameters": "serverId: string, baseId: string",
-      "source": "lib/api/clients/bases-client.ts:30",
+      "source": "lib/api/clients/bases-client.ts:32",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -287,7 +287,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<BaseDeleteResponse>>",
       "parameters": "serverId: string, baseId: string",
-      "source": "lib/api/clients/bases-client.ts:38",
+      "source": "lib/api/clients/bases-client.ts:40",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -308,7 +308,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<Base>>",
       "parameters": "serverId: string, data: CreateBaseRequest",
-      "source": "lib/api/clients/bases-client.ts:46",
+      "source": "lib/api/clients/bases-client.ts:48",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -325,6 +325,31 @@
       ]
     },
     {
+      "clientMethod": "BasesClient.update",
+      "operationId": "updateDashboardBase",
+      "method": "PATCH",
+      "path": "/v2/server/:serverId/bases/:baseId",
+      "contract": "UpdateBaseEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "Promise<ApiResponse<Base>>",
+      "parameters": "serverId: string, baseId: string, data: UpdateBaseRequest",
+      "source": "lib/api/clients/bases-client.ts:56",
+      "localTypeLocations": [
+        {
+          "name": "ApiResponse",
+          "path": "lib/api/types/common.ts"
+        },
+        {
+          "name": "Base",
+          "path": "lib/api/types/bases.ts"
+        },
+        {
+          "name": "UpdateBaseRequest",
+          "path": "lib/api/types/bases.ts"
+        }
+      ]
+    },
+    {
       "clientMethod": "BasesClient.uploadImage",
       "operationId": "uploadDashboardBaseImage",
       "method": "POST",
@@ -333,7 +358,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<BaseImageUploadResponse>>",
       "parameters": "serverId: string, file: File",
-      "source": "lib/api/clients/bases-client.ts:54",
+      "source": "lib/api/clients/bases-client.ts:68",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -354,7 +379,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<BaseDownloader>>",
       "parameters": "serverId: string, baseId: string, userId: string",
-      "source": "lib/api/clients/bases-client.ts:64",
+      "source": "lib/api/clients/bases-client.ts:78",
       "localTypeLocations": [
         {
           "name": "ApiResponse",

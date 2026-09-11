@@ -344,7 +344,7 @@
     },
     "form": {
       "title": "Bázis hozzáadása",
-      "description": "A bázisok létrehozás után nem szerkeszthetők. Válaszd ki, hová küldje a ClashKing a Discord-üzenetet, és erősítsd meg az elrendezés hivatkozását.",
+      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
       "channel": "Discord-csatorna",
       "channelPlaceholder": "Válassz csatornát",
       "channelSearch": "Csatornák keresése…",
@@ -353,7 +353,7 @@
       "descriptionLabel": "Leírás",
       "images": "Képek",
       "chooseImages": "Elrendezésképek kiválasztása",
-      "imageLimit": "Legfeljebb négy kép tölthető fel; a feltöltés a bázis létrehozása előtt befejeződik.",
+      "imageLimit": "Up to four images total; new uploads finish before saving.",
       "submit": "Bázis létrehozása",
       "creating": "Feltöltés és létrehozás…",
       "createRejectedTitle": "Bázis nem jött létre",
@@ -369,7 +369,12 @@
         "deleted": "Discord-üzenet törölve",
         "alreadyMissing": "A Discord-üzenet már nem létezik",
         "failed": "A Discord-takarítás sikertelen"
-      }
+      },
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
+      "removeImage": "Remove image {index}",
+      "update": "Save changes",
+      "updating": "Uploading and saving…"
     },
     "errors": {
       "title": "A bázisok nem érhetők el",
@@ -381,7 +386,17 @@
       "channelRequired": "Válassz Discord-csatornát.",
       "linkRequired": "Az elrendezés hivatkozása kötelező.",
       "descriptionTooLong": "A leírás legfeljebb 1000 karakter lehet.",
-      "tooManyImages": "Legfeljebb négy képet válassz."
+      "tooManyImages": "Legfeljebb négy képet válassz.",
+      "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
+      "update": "Failed to update the base."
+    },
+    "context": {
+      "server": "Server",
+      "channel": "Channel",
+      "message": "Message"
+    },
+    "edit": {
+      "action": "Edit"
     }
   },
   "BansPage": {

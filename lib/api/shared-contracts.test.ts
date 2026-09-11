@@ -1,5 +1,5 @@
 import {
-  ArmyHash,
+  ArmyFamilyId,
   ArmySearchEndpoint,
   LeagueHitRateHistoryEndpoint,
   LeagueTierStatisticsEndpoint,
@@ -69,12 +69,10 @@ describe("coordinated API contracts", () => {
     expect(query).toMatchObject({ heroIds: "1,2", minimumAttacks: 100, sort: "tripleRate", direction: "desc" });
   });
 
-  it("accepts only lowercase 64-hex ArmyHash v2 values", () => {
-    const hash = "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef";
-
-    expect(Schema.decodeUnknownSync(ArmyHash)(hash)).toBe(hash);
-    expect(() => Schema.decodeUnknownSync(ArmyHash)(hash.toUpperCase())).toThrow();
-    expect(() => Schema.decodeUnknownSync(ArmyHash)("army-1")).toThrow();
+  it("accepts only positive decimal-string army family IDs", () => {
+    expect(Schema.decodeUnknownSync(ArmyFamilyId)("9007199254740993")).toBe("9007199254740993");
+    expect(() => Schema.decodeUnknownSync(ArmyFamilyId)("0")).toThrow();
+    expect(() => Schema.decodeUnknownSync(ArmyFamilyId)("AB".repeat(32))).toThrow();
   });
 
   it("decodes camelCase Ranked battles, completeness metadata, and automatic defenses", () => {
@@ -85,9 +83,8 @@ describe("coordinated API contracts", () => {
       opponent: { tag: "#DEFENDER", name: "Defender", townHallLevel: 17 },
       stars: 3,
       destructionPercentage: 100,
-      lootedResources: { gold: 1_000_000, elixir: 900_000, darkElixir: 8_000 },
-      armyHash: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
       shareCode: "u1x10-s1x2",
+      familyId: "1",
       trophies: 40,
     };
     const response = Schema.decodeUnknownSync(RankedBattlelogResponse)({
@@ -108,6 +105,7 @@ describe("coordinated API contracts", () => {
     expect(response.attacks[0]).toMatchObject({
       time: battle.time,
       townHallLevel: 17,
+      familyId: "1",
     });
     expect(response).toMatchObject({ leagueGroupId: "#GROUP", maxBattles: 8, registeredAttacks: 7 });
     expect(response.defenses[1]).toEqual({ trophies: -20, automatic: true });

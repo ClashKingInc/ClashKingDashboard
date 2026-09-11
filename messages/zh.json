@@ -344,7 +344,7 @@
     },
     "form": {
       "title": "添加基地",
-      "description": "基地创建后无法编辑。请选择ClashKing发布Discord消息的位置并确认阵型链接。",
+      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
       "channel": "Discord频道",
       "channelPlaceholder": "选择频道",
       "channelSearch": "搜索频道…",
@@ -353,7 +353,7 @@
       "descriptionLabel": "描述",
       "images": "图片",
       "chooseImages": "选择阵型图片",
-      "imageLimit": "最多可选择四张图片；创建基地前会先完成上传。",
+      "imageLimit": "Up to four images total; new uploads finish before saving.",
       "submit": "创建基地",
       "creating": "正在上传并创建…",
       "createRejectedTitle": "未创建基地",
@@ -369,7 +369,12 @@
         "deleted": "Discord消息已删除",
         "alreadyMissing": "Discord消息不存在",
         "failed": "Discord清理失败"
-      }
+      },
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
+      "removeImage": "Remove image {index}",
+      "update": "Save changes",
+      "updating": "Uploading and saving…"
     },
     "errors": {
       "title": "基地不可用",
@@ -381,7 +386,17 @@
       "channelRequired": "请选择Discord频道。",
       "linkRequired": "必须提供阵型链接。",
       "descriptionTooLong": "描述不能超过1,000个字符。",
-      "tooManyImages": "最多只能选择四张图片。"
+      "tooManyImages": "最多只能选择四张图片。",
+      "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
+      "update": "Failed to update the base."
+    },
+    "context": {
+      "server": "Server",
+      "channel": "Channel",
+      "message": "Message"
+    },
+    "edit": {
+      "action": "Edit"
     }
   },
   "BansPage": {

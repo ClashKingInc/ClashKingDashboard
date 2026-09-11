@@ -344,7 +344,7 @@
     },
     "form": {
       "title": "Thêm căn cứ",
-      "description": "Không thể chỉnh sửa căn cứ sau khi tạo. Hãy chọn nơi ClashKing đăng tin nhắn Discord và xác nhận liên kết bố trí.",
+      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
       "channel": "Kênh Discord",
       "channelPlaceholder": "Chọn kênh",
       "channelSearch": "Tìm kiếm kênh…",
@@ -353,7 +353,7 @@
       "descriptionLabel": "Mô tả",
       "images": "Hình ảnh",
       "chooseImages": "Chọn ảnh bố trí",
-      "imageLimit": "Tối đa bốn ảnh; quá trình tải lên hoàn tất trước khi tạo căn cứ.",
+      "imageLimit": "Up to four images total; new uploads finish before saving.",
       "submit": "Tạo căn cứ",
       "creating": "Đang tải lên và tạo…",
       "createRejectedTitle": "Chưa tạo căn cứ",
@@ -369,7 +369,12 @@
         "deleted": "Đã xóa tin nhắn Discord",
         "alreadyMissing": "Tin nhắn Discord đã không còn",
         "failed": "Dọn dẹp Discord thất bại"
-      }
+      },
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
+      "removeImage": "Remove image {index}",
+      "update": "Save changes",
+      "updating": "Uploading and saving…"
     },
     "errors": {
       "title": "Căn cứ không khả dụng",
@@ -381,7 +386,17 @@
       "channelRequired": "Chọn một kênh Discord.",
       "linkRequired": "Bắt buộc phải có liên kết bố trí.",
       "descriptionTooLong": "Mô tả không được vượt quá 1.000 ký tự.",
-      "tooManyImages": "Chọn tối đa bốn ảnh."
+      "tooManyImages": "Chọn tối đa bốn ảnh.",
+      "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
+      "update": "Failed to update the base."
+    },
+    "context": {
+      "server": "Server",
+      "channel": "Channel",
+      "message": "Message"
+    },
+    "edit": {
+      "action": "Edit"
     }
   },
   "BansPage": {

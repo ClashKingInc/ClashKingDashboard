@@ -344,7 +344,7 @@
     },
     "form": {
       "title": "Añadir una base",
-      "description": "Las bases no se pueden editar después de crearlas. Elige dónde debe publicar ClashKing el mensaje de Discord y confirma el enlace del diseño.",
+      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
       "channel": "Canal de Discord",
       "channelPlaceholder": "Selecciona un canal",
       "channelSearch": "Buscar canales…",
@@ -353,7 +353,7 @@
       "descriptionLabel": "Descripción",
       "images": "Imágenes",
       "chooseImages": "Elegir imágenes del diseño",
-      "imageLimit": "Hasta cuatro imágenes; las subidas terminan antes de crear la base.",
+      "imageLimit": "Up to four images total; new uploads finish before saving.",
       "submit": "Crear base",
       "creating": "Subiendo y creando…",
       "createRejectedTitle": "La base no se creó",
@@ -369,7 +369,12 @@
         "deleted": "Mensaje de Discord eliminado",
         "alreadyMissing": "El mensaje de Discord ya no existe",
         "failed": "Falló la limpieza de Discord"
-      }
+      },
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
+      "removeImage": "Remove image {index}",
+      "update": "Save changes",
+      "updating": "Uploading and saving…"
     },
     "errors": {
       "title": "Bases no disponibles",
@@ -381,7 +386,17 @@
       "channelRequired": "Selecciona un canal de Discord.",
       "linkRequired": "El enlace del diseño es obligatorio.",
       "descriptionTooLong": "La descripción debe tener 1000 caracteres como máximo.",
-      "tooManyImages": "Elige como máximo cuatro imágenes."
+      "tooManyImages": "Elige como máximo cuatro imágenes.",
+      "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
+      "update": "Failed to update the base."
+    },
+    "context": {
+      "server": "Server",
+      "channel": "Channel",
+      "message": "Message"
+    },
+    "edit": {
+      "action": "Edit"
     }
   },
   "BansPage": {

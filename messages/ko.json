@@ -344,7 +344,7 @@
     },
     "form": {
       "title": "배치 추가",
-      "description": "배치는 생성 후 수정할 수 없습니다. ClashKing이 메시지를 게시할 Discord 채널을 선택하고 배치 링크를 확인하세요.",
+      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
       "channel": "Discord 채널",
       "channelPlaceholder": "채널 선택",
       "channelSearch": "채널 검색…",
@@ -353,7 +353,7 @@
       "descriptionLabel": "설명",
       "images": "이미지",
       "chooseImages": "배치 이미지 선택",
-      "imageLimit": "이미지는 최대 4개까지 추가할 수 있으며 배치 생성 전에 업로드가 완료됩니다.",
+      "imageLimit": "Up to four images total; new uploads finish before saving.",
       "submit": "배치 생성",
       "creating": "업로드 및 생성 중…",
       "createRejectedTitle": "배치를 생성하지 못했습니다",
@@ -369,7 +369,12 @@
         "deleted": "Discord 메시지 삭제됨",
         "alreadyMissing": "Discord 메시지 이미 누락",
         "failed": "Discord 정리 실패"
-      }
+      },
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
+      "removeImage": "Remove image {index}",
+      "update": "Save changes",
+      "updating": "Uploading and saving…"
     },
     "errors": {
       "title": "배치 사용 불가",
@@ -381,7 +386,17 @@
       "channelRequired": "Discord 채널을 선택하세요.",
       "linkRequired": "배치 링크를 입력해야 합니다.",
       "descriptionTooLong": "설명은 1,000자 이하여야 합니다.",
-      "tooManyImages": "이미지는 최대 4개까지 선택할 수 있습니다."
+      "tooManyImages": "이미지는 최대 4개까지 선택할 수 있습니다.",
+      "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
+      "update": "Failed to update the base."
+    },
+    "context": {
+      "server": "Server",
+      "channel": "Channel",
+      "message": "Message"
+    },
+    "edit": {
+      "action": "Edit"
     }
   },
   "BansPage": {
