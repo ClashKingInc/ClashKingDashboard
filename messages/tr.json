@@ -344,7 +344,7 @@
     },
     "form": {
       "title": "Üs ekle",
-      "description": "Üsler oluşturulduktan sonra düzenlenemez. ClashKing'in Discord mesajını göndereceği yeri seçip düzen bağlantısını doğrulayın.",
+      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
       "channel": "Discord kanalı",
       "channelPlaceholder": "Kanal seçin",
       "channelSearch": "Kanallarda ara…",
@@ -353,7 +353,7 @@
       "descriptionLabel": "Açıklama",
       "images": "Görseller",
       "chooseImages": "Düzen görsellerini seç",
-      "imageLimit": "En fazla dört görsel ekleyebilirsiniz. Üs oluşturulmadan önce yüklemeler tamamlanır.",
+      "imageLimit": "Up to four images total; new uploads finish before saving.",
       "submit": "Üs oluştur",
       "creating": "Yükleniyor ve oluşturuluyor…",
       "createRejectedTitle": "Üs oluşturulmadı",
@@ -369,7 +369,12 @@
         "deleted": "Discord mesajı silindi",
         "alreadyMissing": "Discord mesajı zaten yoktu",
         "failed": "Discord temizliği başarısız"
-      }
+      },
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
+      "removeImage": "Remove image {index}",
+      "update": "Save changes",
+      "updating": "Uploading and saving…"
     },
     "errors": {
       "title": "Üsler kullanılamıyor",
@@ -381,7 +386,17 @@
       "channelRequired": "Bir Discord kanalı seçin.",
       "linkRequired": "Düzen bağlantısı gerekli.",
       "descriptionTooLong": "Açıklama en fazla 1.000 karakter olabilir.",
-      "tooManyImages": "En fazla dört görsel seçin."
+      "tooManyImages": "En fazla dört görsel seçin.",
+      "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
+      "update": "Failed to update the base."
+    },
+    "context": {
+      "server": "Server",
+      "channel": "Channel",
+      "message": "Message"
+    },
+    "edit": {
+      "action": "Edit"
     }
   },
   "BansPage": {

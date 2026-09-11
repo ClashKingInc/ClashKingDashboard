@@ -4,6 +4,7 @@ import {
   BasesEndpoint,
   CreateBaseEndpoint,
   DeleteBaseEndpoint,
+  UpdateBaseEndpoint,
   UploadBaseImageEndpoint,
 } from "@clashking/api-contracts";
 
@@ -16,6 +17,7 @@ import type {
   BaseImageUploadResponse,
   BasesResponse,
   CreateBaseRequest,
+  UpdateBaseRequest,
 } from "../types/bases";
 
 export class BasesClient extends BaseApiClient {
@@ -46,6 +48,18 @@ export class BasesClient extends BaseApiClient {
   async create(serverId: string, data: CreateBaseRequest): Promise<ApiResponse<Base>> {
     return this.executeEndpoint(CreateBaseEndpoint, {
       path: { serverId },
+      query: {},
+      body: data,
+    });
+  }
+
+  async update(
+    serverId: string,
+    baseId: string,
+    data: UpdateBaseRequest,
+  ): Promise<ApiResponse<Base>> {
+    return this.executeEndpoint(UpdateBaseEndpoint, {
+      path: { serverId, baseId },
       query: {},
       body: data,
     });

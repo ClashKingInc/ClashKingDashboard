@@ -344,7 +344,7 @@
     },
     "form": {
       "title": "Legg til en base",
-      "description": "Baser kan ikke redigeres etter at de er opprettet. Velg hvor ClashKing skal sende Discord-meldingen, og bekreft deretter layoutkoblingen.",
+      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
       "channel": "Discord-kanal",
       "channelPlaceholder": "Velg en kanal",
       "channelSearch": "Søk i kanaler…",
@@ -353,7 +353,7 @@
       "descriptionLabel": "Beskrivelse",
       "images": "Bilder",
       "chooseImages": "Velg layoutbilder",
-      "imageLimit": "Maksimalt fire bilder. Opplastinger fullføres, før basen opprettes.",
+      "imageLimit": "Up to four images total; new uploads finish before saving.",
       "submit": "Opprett base",
       "creating": "Laster opp og oppretter…",
       "createRejectedTitle": "Base ble ikke opprettet",
@@ -369,7 +369,12 @@
         "deleted": "Discord-melding slettet",
         "alreadyMissing": "Discord-melding manglet allerede",
         "failed": "Discord-opprydding mislyktes"
-      }
+      },
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
+      "removeImage": "Remove image {index}",
+      "update": "Save changes",
+      "updating": "Uploading and saving…"
     },
     "errors": {
       "title": "Basene er ikke tilgjengelige",
@@ -381,7 +386,17 @@
       "channelRequired": "Velg en Discord-kanal.",
       "linkRequired": "Layoutlink er påkrevd.",
       "descriptionTooLong": "Beskrivelsen kan være på maksimalt 1 000 tegn.",
-      "tooManyImages": "Velg maksimalt fire bilder."
+      "tooManyImages": "Velg maksimalt fire bilder.",
+      "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
+      "update": "Failed to update the base."
+    },
+    "context": {
+      "server": "Server",
+      "channel": "Channel",
+      "message": "Message"
+    },
+    "edit": {
+      "action": "Edit"
     }
   },
   "BansPage": {

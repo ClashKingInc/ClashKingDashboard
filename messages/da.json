@@ -344,7 +344,7 @@
     },
     "form": {
       "title": "Tilføj en base",
-      "description": "Baser kan ikke redigeres efter oprettelsen. Vælg, hvor ClashKing skal sende Discord-beskeden, og bekræft derefter layoutlinket.",
+      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
       "channel": "Discord-kanal",
       "channelPlaceholder": "Vælg en kanal",
       "channelSearch": "Søg i kanaler…",
@@ -353,7 +353,7 @@
       "descriptionLabel": "Beskrivelse",
       "images": "Billeder",
       "chooseImages": "Vælg layoutbilleder",
-      "imageLimit": "Højst fire billeder. Uploads afsluttes, før basen oprettes.",
+      "imageLimit": "Up to four images total; new uploads finish before saving.",
       "submit": "Opret base",
       "creating": "Uploader og opretter…",
       "createRejectedTitle": "Base blev ikke oprettet",
@@ -369,7 +369,12 @@
         "deleted": "Discord-besked slettet",
         "alreadyMissing": "Discord-besked manglede allerede",
         "failed": "Discord-oprydning mislykkedes"
-      }
+      },
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
+      "removeImage": "Remove image {index}",
+      "update": "Save changes",
+      "updating": "Uploading and saving…"
     },
     "errors": {
       "title": "Baserne er ikke tilgængelige",
@@ -381,7 +386,17 @@
       "channelRequired": "Vælg en Discord-kanal.",
       "linkRequired": "Layoutlink er påkrævet.",
       "descriptionTooLong": "Beskrivelsen må højst være på 1.000 tegn.",
-      "tooManyImages": "Vælg højst fire billeder."
+      "tooManyImages": "Vælg højst fire billeder.",
+      "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
+      "update": "Failed to update the base."
+    },
+    "context": {
+      "server": "Server",
+      "channel": "Channel",
+      "message": "Message"
+    },
+    "edit": {
+      "action": "Edit"
     }
   },
   "BansPage": {

@@ -344,7 +344,7 @@
     },
     "form": {
       "title": "Adaugă o bază",
-      "description": "Bazele nu pot fi editate după creare. Alege canalul în care ClashKing va publica mesajul Discord și confirmă linkul aranjamentului.",
+      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
       "channel": "Canal Discord",
       "channelPlaceholder": "Selectează un canal",
       "channelSearch": "Caută canale…",
@@ -353,7 +353,7 @@
       "descriptionLabel": "Descriere",
       "images": "Imagini",
       "chooseImages": "Alege imaginile aranjamentului",
-      "imageLimit": "Poți alege cel mult patru imagini; încărcarea lor se încheie înainte de crearea bazei.",
+      "imageLimit": "Up to four images total; new uploads finish before saving.",
       "submit": "Creează baza",
       "creating": "Se încarcă și se creează…",
       "createRejectedTitle": "Baza nu a fost creată",
@@ -369,7 +369,12 @@
         "deleted": "Mesaj Discord șters",
         "alreadyMissing": "Mesajul Discord lipsea deja",
         "failed": "Curățarea pe Discord a eșuat"
-      }
+      },
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
+      "removeImage": "Remove image {index}",
+      "update": "Save changes",
+      "updating": "Uploading and saving…"
     },
     "errors": {
       "title": "Bazele nu sunt disponibile",
@@ -381,7 +386,17 @@
       "channelRequired": "Selectează un canal de Discord.",
       "linkRequired": "Linkul aranjamentului este obligatoriu.",
       "descriptionTooLong": "Descrierea trebuie să aibă cel mult 1.000 de caractere.",
-      "tooManyImages": "Alege cel mult patru imagini."
+      "tooManyImages": "Alege cel mult patru imagini.",
+      "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
+      "update": "Failed to update the base."
+    },
+    "context": {
+      "server": "Server",
+      "channel": "Channel",
+      "message": "Message"
+    },
+    "edit": {
+      "action": "Edit"
     }
   },
   "BansPage": {

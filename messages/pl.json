@@ -344,7 +344,7 @@
     },
     "form": {
       "title": "Dodaj bazę",
-      "description": "Baz nie można edytować po utworzeniu. Wybierz miejsce publikacji wiadomości Discord przez ClashKing i potwierdź link do układu.",
+      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
       "channel": "Kanał Discord",
       "channelPlaceholder": "Wybierz kanał",
       "channelSearch": "Szukaj kanałów…",
@@ -353,7 +353,7 @@
       "descriptionLabel": "Opis",
       "images": "Obrazy",
       "chooseImages": "Wybierz obrazy układu",
-      "imageLimit": "Maksymalnie cztery obrazy; przesyłanie zakończy się przed utworzeniem bazy.",
+      "imageLimit": "Up to four images total; new uploads finish before saving.",
       "submit": "Utwórz bazę",
       "creating": "Przesyłanie i tworzenie…",
       "createRejectedTitle": "Baza nie została utworzona",
@@ -369,7 +369,12 @@
         "deleted": "Wiadomość Discord usunięta",
         "alreadyMissing": "Wiadomości Discord już nie ma",
         "failed": "Czyszczenie Discorda nie powiodło się"
-      }
+      },
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
+      "removeImage": "Remove image {index}",
+      "update": "Save changes",
+      "updating": "Uploading and saving…"
     },
     "errors": {
       "title": "Bazy są niedostępne",
@@ -381,7 +386,17 @@
       "channelRequired": "Wybierz kanał Discord.",
       "linkRequired": "Link do układu jest wymagany.",
       "descriptionTooLong": "Opis może mieć najwyżej 1000 znaków.",
-      "tooManyImages": "Wybierz najwyżej cztery obrazy."
+      "tooManyImages": "Wybierz najwyżej cztery obrazy.",
+      "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
+      "update": "Failed to update the base."
+    },
+    "context": {
+      "server": "Server",
+      "channel": "Channel",
+      "message": "Message"
+    },
+    "edit": {
+      "action": "Edit"
     }
   },
   "BansPage": {

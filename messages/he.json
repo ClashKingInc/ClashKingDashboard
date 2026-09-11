@@ -344,7 +344,7 @@
     },
     "form": {
       "title": "הוספת בסיס",
-      "description": "לא ניתן לערוך בסיסים לאחר יצירתם. בחרו היכן ClashKing יפרסם את הודעת Discord ואשרו את קישור הסידור.",
+      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
       "channel": "ערוץ Discord",
       "channelPlaceholder": "בחירת ערוץ",
       "channelSearch": "חיפוש ערוצים…",
@@ -353,7 +353,7 @@
       "descriptionLabel": "תיאור",
       "images": "תמונות",
       "chooseImages": "בחירת תמונות סידור",
-      "imageLimit": "עד ארבע תמונות; ההעלאה תסתיים לפני יצירת הבסיס.",
+      "imageLimit": "Up to four images total; new uploads finish before saving.",
       "submit": "יצירת בסיס",
       "creating": "מעלה ויוצר…",
       "createRejectedTitle": "הבסיס לא נוצר",
@@ -369,7 +369,12 @@
         "deleted": "הודעת Discord נמחקה",
         "alreadyMissing": "הודעת Discord כבר לא קיימת",
         "failed": "הניקוי ב-Discord נכשל"
-      }
+      },
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
+      "removeImage": "Remove image {index}",
+      "update": "Save changes",
+      "updating": "Uploading and saving…"
     },
     "errors": {
       "title": "הבסיסים אינם זמינים",
@@ -381,7 +386,17 @@
       "channelRequired": "בחרו ערוץ Discord.",
       "linkRequired": "נדרש קישור לסידור.",
       "descriptionTooLong": "התיאור חייב להכיל עד 1,000 תווים.",
-      "tooManyImages": "בחרו לכל היותר ארבע תמונות."
+      "tooManyImages": "בחרו לכל היותר ארבע תמונות.",
+      "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
+      "update": "Failed to update the base."
+    },
+    "context": {
+      "server": "Server",
+      "channel": "Channel",
+      "message": "Message"
+    },
+    "edit": {
+      "action": "Edit"
     }
   },
   "BansPage": {

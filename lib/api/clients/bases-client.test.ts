@@ -8,11 +8,11 @@ describe("BasesClient", () => {
   const client = new BasesClient({ baseUrl: "http://dashboard.test", accessToken: "token" });
 
   const base = {
-    id: "base-1",
+    id: "101",
     serverId: "123",
     channelId: "channel-1",
     messageId: "message-1",
-    baseLink: "https://link.clashofclans.com/layout",
+    baseLink: "https://link.clashofclans.com/en?action=OpenLayout&id=TH17%3AHV%3AAAAA",
     images: ["https://api.clashk.ing/v2/media/base.webp"],
     description: "Layout",
     downloadCount: 0,
@@ -41,20 +41,20 @@ describe("BasesClient", () => {
       .mockResolvedValueOnce(new Response(JSON.stringify(base), { status: 200 }));
 
     await client.list("123", 50, 0);
-    await client.get("123", "base/1");
+    await client.get("123", "101");
 
     const listRequest = fetchMock.mock.calls[0]?.[0] as Request;
     const getRequest = fetchMock.mock.calls[1]?.[0] as Request;
     expect(listRequest.url).toBe("http://dashboard.test/v2/server/123/bases?limit=50&offset=0");
     expect(listRequest.method).toBe("GET");
-    expect(getRequest.url).toBe("http://dashboard.test/v2/server/123/bases/base%2F1");
+    expect(getRequest.url).toBe("http://dashboard.test/v2/server/123/bases/101");
   });
 
   it("creates an immutable base without engagement fields", async () => {
     fetchMock.mockResolvedValue(new Response(JSON.stringify(base), { status: 201 }));
     const body = {
       channelId: "channel-1",
-      baseLink: "https://link.clashofclans.com/layout",
+      baseLink: "https://link.clashofclans.com/en?action=OpenLayout&id=TH17%3AHV%3AAAAA",
       images: ["https://api.clashk.ing/v2/media/base.webp"],
       description: "Layout",
     };
@@ -71,6 +71,29 @@ describe("BasesClient", () => {
     expect(requestText).not.toContain("messageId");
   });
 
+  it("updates only the complete editable set through the canonical PATCH endpoint", async () => {
+    fetchMock.mockResolvedValue(new Response(JSON.stringify(base), { status: 200 }));
+    const body = {
+      baseLink: "https://link.clashofclans.com/en?action=OpenLayout&id=TH17%3AHV%3ABBBB",
+      images: ["https://api.clashk.ing/v2/media/base.webp"],
+      description: "Updated layout",
+    };
+
+    await client.update("123", "101", body);
+
+    const request = fetchMock.mock.calls[0]?.[0] as Request;
+    const requestText = await request.text();
+    expect(request.url).toBe("http://dashboard.test/v2/server/123/bases/101");
+    expect(request.method).toBe("PATCH");
+    expect(JSON.parse(requestText)).toEqual(body);
+    expect(requestText).not.toContain("serverId");
+    expect(requestText).not.toContain("channelId");
+    expect(requestText).not.toContain("messageId");
+    expect(requestText).not.toContain("downloaders");
+    expect(requestText).not.toContain("upvotes");
+    expect(requestText).not.toContain("downvotes");
+  });
+
   it("uploads images and resolves one downloader through narrow endpoints", async () => {
     fetchMock
       .mockResolvedValueOnce(new Response(JSON.stringify({
@@ -85,7 +108,7 @@ describe("BasesClient", () => {
 
     const file = new NodeFile(["image"], "base.webp", { type: "image/webp" }) as unknown as File;
     const upload = await client.uploadImage("123", file);
-    await client.getDownloader("123", "base-1", "456");
+    await client.getDownloader("123", "101", "456");
 
     const uploadRequest = fetchMock.mock.calls[0]?.[0] as Request;
     const downloaderRequest = fetchMock.mock.calls[1]?.[0] as Request;
@@ -93,22 +116,22 @@ describe("BasesClient", () => {
     expect(uploadRequest.headers.get("Content-Type")).toContain("multipart/form-data");
     expect(upload.data).toEqual({ url: "https://api.clashk.ing/v2/media/base.webp", filename: "base.webp" });
     expect(downloaderRequest.url).toBe(
-      "http://dashboard.test/v2/server/123/bases/base-1/downloaders/456",
+      "http://dashboard.test/v2/server/123/bases/101/downloaders/456",
     );
   });
 
   it("deletes through the server-scoped manager route", async () => {
     const body = {
-      baseId: "base-1",
+      baseId: "101",
       databaseDeleted: true,
       discordMessageCleanup: "deleted",
     };
     fetchMock.mockResolvedValue(new Response(JSON.stringify(body), { status: 200 }));
 
-    const response = await client.delete("123", "base/1");
+    const response = await client.delete("123", "101");
 
     const request = fetchMock.mock.calls[0]?.[0] as Request;
-    expect(request.url).toBe("http://dashboard.test/v2/server/123/bases/base%2F1");
+    expect(request.url).toBe("http://dashboard.test/v2/server/123/bases/101");
     expect(request.method).toBe("DELETE");
     expect(response.data).toEqual(body);
   });
@@ -118,14 +141,14 @@ describe("BasesClient", () => {
       code: "discord_unavailable",
       message: "Discord integration unavailable",
       requestId: "request-1",
-      baseId: "base-1",
+      baseId: "101",
       databaseDeleted: false,
       discordMessageCleanup: "failed",
       retryable: true,
     };
     fetchMock.mockResolvedValue(new Response(JSON.stringify(body), { status: 503 }));
 
-    const response = await client.delete("123", "base-1");
+    const response = await client.delete("123", "101");
 
     expect(response.status).toBe(503);
     expect(response.error).toBe(body.message);

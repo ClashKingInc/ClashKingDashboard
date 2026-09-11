@@ -344,7 +344,7 @@
     },
     "form": {
       "title": "एक बेस जोड़ें",
-      "description": "बेस बनाने के बाद उसे संपादित नहीं किया जा सकता। चुनें कि ClashKing Discord संदेश कहाँ पोस्ट करे और लेआउट लिंक की पुष्टि करें।",
+      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
       "channel": "Discord चैनल",
       "channelPlaceholder": "चैनल चुनें",
       "channelSearch": "चैनल खोजें…",
@@ -353,7 +353,7 @@
       "descriptionLabel": "विवरण",
       "images": "चित्र",
       "chooseImages": "लेआउट के चित्र चुनें",
-      "imageLimit": "अधिकतम चार चित्र; बेस बनने से पहले अपलोड पूरे हो जाते हैं।",
+      "imageLimit": "Up to four images total; new uploads finish before saving.",
       "submit": "बेस बनाएँ",
       "creating": "अपलोड हो रहा है और बनाया जा रहा है…",
       "createRejectedTitle": "बेस नहीं बनाया गया",
@@ -369,7 +369,12 @@
         "deleted": "Discord संदेश हटाया गया",
         "alreadyMissing": "Discord संदेश पहले से अनुपस्थित",
         "failed": "Discord की सफ़ाई विफल रही"
-      }
+      },
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
+      "removeImage": "Remove image {index}",
+      "update": "Save changes",
+      "updating": "Uploading and saving…"
     },
     "errors": {
       "title": "बेस अनुपलब्ध",
@@ -381,7 +386,17 @@
       "channelRequired": "Discord चैनल चुनें।",
       "linkRequired": "लेआउट लिंक आवश्यक है।",
       "descriptionTooLong": "विवरण 1,000 या उससे कम अक्षरों का होना चाहिए।",
-      "tooManyImages": "अधिकतम चार चित्र चुनें।"
+      "tooManyImages": "अधिकतम चार चित्र चुनें।",
+      "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
+      "update": "Failed to update the base."
+    },
+    "context": {
+      "server": "Server",
+      "channel": "Channel",
+      "message": "Message"
+    },
+    "edit": {
+      "action": "Edit"
     }
   },
   "BansPage": {

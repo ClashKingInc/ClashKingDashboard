@@ -344,7 +344,7 @@
     },
     "form": {
       "title": "Додати базу",
-      "description": "Після створення базу не можна редагувати. Виберіть, де ClashKing має опублікувати повідомлення в Discord, і перевірте посилання на розстановку.",
+      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
       "channel": "Канал Discord",
       "channelPlaceholder": "Виберіть канал",
       "channelSearch": "Пошук каналів…",
@@ -353,7 +353,7 @@
       "descriptionLabel": "Опис",
       "images": "Зображення",
       "chooseImages": "Вибрати зображення розстановки",
-      "imageLimit": "До чотирьох зображень; завантаження завершаться до створення бази.",
+      "imageLimit": "Up to four images total; new uploads finish before saving.",
       "submit": "Створити базу",
       "creating": "Завантаження та створення…",
       "createRejectedTitle": "Базу не створено",
@@ -369,7 +369,12 @@
         "deleted": "Повідомлення в Discord видалено",
         "alreadyMissing": "Повідомлення в Discord уже відсутнє",
         "failed": "Не вдалося очистити Discord"
-      }
+      },
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
+      "removeImage": "Remove image {index}",
+      "update": "Save changes",
+      "updating": "Uploading and saving…"
     },
     "errors": {
       "title": "Бази недоступні",
@@ -381,7 +386,17 @@
       "channelRequired": "Виберіть канал Discord.",
       "linkRequired": "Посилання на розстановку обов’язкове.",
       "descriptionTooLong": "Опис має містити не більше 1 000 символів.",
-      "tooManyImages": "Виберіть не більше чотирьох зображень."
+      "tooManyImages": "Виберіть не більше чотирьох зображень.",
+      "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
+      "update": "Failed to update the base."
+    },
+    "context": {
+      "server": "Server",
+      "channel": "Channel",
+      "message": "Message"
+    },
+    "edit": {
+      "action": "Edit"
     }
   },
   "BansPage": {
