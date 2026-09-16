@@ -344,7 +344,7 @@
     },
     "form": {
       "title": "Προσθήκη βάσης",
-      "description": "Οι βάσεις δεν μπορούν να τροποποιηθούν μετά τη δημιουργία τους. Επιλέξτε πού θα δημοσιεύσει το ClashKing το μήνυμα στο Discord και επιβεβαιώστε τον σύνδεσμο διάταξης.",
+      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
       "channel": "Κανάλι Discord",
       "channelPlaceholder": "Επιλέξτε κανάλι",
       "channelSearch": "Αναζήτηση καναλιών…",
@@ -353,7 +353,7 @@
       "descriptionLabel": "Περιγραφή",
       "images": "Εικόνες",
       "chooseImages": "Επιλογή εικόνων διάταξης",
-      "imageLimit": "Έως τέσσερις εικόνες. Η μεταφόρτωση ολοκληρώνεται πριν δημιουργηθεί η βάση.",
+      "imageLimit": "Up to four images total; new uploads finish before saving.",
       "submit": "Δημιουργία βάσης",
       "creating": "Μεταφόρτωση και δημιουργία…",
       "createRejectedTitle": "Η βάση δεν δημιουργήθηκε",
@@ -369,7 +369,12 @@
         "deleted": "Το μήνυμα στο Discord διαγράφηκε",
         "alreadyMissing": "Το μήνυμα στο Discord δεν υπήρχε πλέον",
         "failed": "Η εκκαθάριση στο Discord απέτυχε"
-      }
+      },
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
+      "removeImage": "Remove image {index}",
+      "update": "Save changes",
+      "updating": "Uploading and saving…"
     },
     "errors": {
       "title": "Οι βάσεις δεν είναι διαθέσιμες",
@@ -381,7 +386,17 @@
       "channelRequired": "Επιλέξτε κανάλι Discord.",
       "linkRequired": "Απαιτείται σύνδεσμος διάταξης.",
       "descriptionTooLong": "Η περιγραφή δεν μπορεί να ξεπερνά τους 1.000 χαρακτήρες.",
-      "tooManyImages": "Επιλέξτε έως τέσσερις εικόνες."
+      "tooManyImages": "Επιλέξτε έως τέσσερις εικόνες.",
+      "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
+      "update": "Failed to update the base."
+    },
+    "context": {
+      "server": "Server",
+      "channel": "Channel",
+      "message": "Message"
+    },
+    "edit": {
+      "action": "Edit"
     }
   },
   "BansPage": {

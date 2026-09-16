@@ -344,7 +344,7 @@
     },
     "form": {
       "title": "Voeg basis by",
-      "description": "Basisse kan nie ná skepping gewysig word nie. Kies waar ClashKing die Discord-boodskap moet plaas en kontroleer die uitlegskakel.",
+      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
       "channel": "Discord-kanaal",
       "channelPlaceholder": "Kies 'n kanaal",
       "channelSearch": "Soek kanale…",
@@ -353,7 +353,7 @@
       "descriptionLabel": "Beskrywing",
       "images": "Beelde",
       "chooseImages": "Kies uitlegbeelde",
-      "imageLimit": "Maksimum vier Beelde; uploads word vir skepping voltooi.",
+      "imageLimit": "Up to four images total; new uploads finish before saving.",
       "submit": "Base skep",
       "creating": "Laai op en skep…",
       "createRejectedTitle": "Die basis is nie geskep nie",
@@ -369,7 +369,12 @@
         "deleted": "Discord-boodskap Verwyder",
         "alreadyMissing": "Discord-boodskap het reeds ontbreek",
         "failed": "Discord-opruiming het misluk"
-      }
+      },
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
+      "removeImage": "Remove image {index}",
+      "update": "Save changes",
+      "updating": "Uploading and saving…"
     },
     "errors": {
       "title": "Basisse nie beskikbaar",
@@ -381,7 +386,17 @@
       "channelRequired": "Kies 'n Discord-kanaal.",
       "linkRequired": "Uitlegskakel is verpligtend.",
       "descriptionTooLong": "Die Beskrywing mag hoogstens 1 000 tekens bevat.",
-      "tooManyImages": "Kies hoogstens vier Beelde."
+      "tooManyImages": "Kies hoogstens vier Beelde.",
+      "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
+      "update": "Failed to update the base."
+    },
+    "context": {
+      "server": "Server",
+      "channel": "Channel",
+      "message": "Message"
+    },
+    "edit": {
+      "action": "Edit"
     }
   },
   "BansPage": {

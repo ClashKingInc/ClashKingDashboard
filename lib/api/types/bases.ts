@@ -6,6 +6,7 @@ import {
   BasesEndpoint,
   CreateBaseEndpoint,
   DeleteBaseEndpoint,
+  UpdateBaseEndpoint,
   UploadBaseImageEndpoint,
   type EndpointRequest,
   type EndpointResponse,
@@ -15,6 +16,7 @@ import { Schema } from "effect";
 export type Base = EndpointResponse<typeof BaseEndpoint>;
 export type BasesResponse = EndpointResponse<typeof BasesEndpoint>;
 export type CreateBaseRequest = EndpointRequest<typeof CreateBaseEndpoint>["body"];
+export type UpdateBaseRequest = EndpointRequest<typeof UpdateBaseEndpoint>["body"];
 export type BaseImageUploadResponse = EndpointResponse<typeof UploadBaseImageEndpoint>;
 export type BaseCreateFailure = (typeof BaseCreateFailureSchema)["Type"];
 export type DiscordMessageCreateCleanup = BaseCreateFailure["discordMessageCleanup"];

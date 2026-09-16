@@ -344,7 +344,7 @@
     },
     "form": {
       "title": "Dodaj bazu",
-      "description": "Baze se ne mogu menjati nakon pravljenja. Izaberite gde ClashKing treba da pošalje Discord poruku i potvrdite vezu rasporeda.",
+      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
       "channel": "Discord kanal",
       "channelPlaceholder": "Izaberi kanal",
       "channelSearch": "Pretraži kanale…",
@@ -353,7 +353,7 @@
       "descriptionLabel": "Opis",
       "images": "Slike",
       "chooseImages": "Izaberi slike rasporeda",
-      "imageLimit": "Najviše četiri slike; otpremanje se završava pre pravljenja baze.",
+      "imageLimit": "Up to four images total; new uploads finish before saving.",
       "submit": "Napravi bazu",
       "creating": "Otpremanje i pravljenje…",
       "createRejectedTitle": "Baza nije napravljena",
@@ -369,7 +369,12 @@
         "deleted": "Discord poruka je obrisana",
         "alreadyMissing": "Discord poruka već nedostaje",
         "failed": "Čišćenje Discorda nije uspelo"
-      }
+      },
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
+      "removeImage": "Remove image {index}",
+      "update": "Save changes",
+      "updating": "Uploading and saving…"
     },
     "errors": {
       "title": "Baze nisu dostupne",
@@ -381,7 +386,17 @@
       "channelRequired": "Izaberite Discord kanal.",
       "linkRequired": "Veza rasporeda je obavezna.",
       "descriptionTooLong": "Opis može imati najviše 1.000 znakova.",
-      "tooManyImages": "Izaberite najviše četiri slike."
+      "tooManyImages": "Izaberite najviše četiri slike.",
+      "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
+      "update": "Failed to update the base."
+    },
+    "context": {
+      "server": "Server",
+      "channel": "Channel",
+      "message": "Message"
+    },
+    "edit": {
+      "action": "Edit"
     }
   },
   "BansPage": {

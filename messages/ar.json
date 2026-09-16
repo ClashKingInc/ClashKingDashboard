@@ -344,7 +344,7 @@
     },
     "form": {
       "title": "إضافة قاعدة",
-      "description": "لا يمكن تعديل القواعد بعد إنشائها. اختر مكان نشر رسالة Discord بواسطة ClashKing وأكّد رابط المخطط.",
+      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
       "channel": "قناة Discord",
       "channelPlaceholder": "اختر قناة",
       "channelSearch": "البحث في القنوات…",
@@ -353,7 +353,7 @@
       "descriptionLabel": "الوصف",
       "images": "الصور",
       "chooseImages": "اختر صور المخطط",
-      "imageLimit": "حتى أربع صور؛ يكتمل الرفع قبل إنشاء القاعدة.",
+      "imageLimit": "Up to four images total; new uploads finish before saving.",
       "submit": "إنشاء القاعدة",
       "creating": "جارٍ الرفع والإنشاء…",
       "createRejectedTitle": "لم تُنشأ القاعدة",
@@ -369,7 +369,12 @@
         "deleted": "حُذفت رسالة Discord",
         "alreadyMissing": "رسالة Discord مفقودة بالفعل",
         "failed": "فشل تنظيف Discord"
-      }
+      },
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
+      "removeImage": "Remove image {index}",
+      "update": "Save changes",
+      "updating": "Uploading and saving…"
     },
     "errors": {
       "title": "القواعد غير متاحة",
@@ -381,7 +386,17 @@
       "channelRequired": "اختر قناة Discord.",
       "linkRequired": "رابط المخطط مطلوب.",
       "descriptionTooLong": "يجب ألا يتجاوز الوصف 1,000 حرف.",
-      "tooManyImages": "اختر أربع صور كحد أقصى."
+      "tooManyImages": "اختر أربع صور كحد أقصى.",
+      "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
+      "update": "Failed to update the base."
+    },
+    "context": {
+      "server": "Server",
+      "channel": "Channel",
+      "message": "Message"
+    },
+    "edit": {
+      "action": "Edit"
     }
   },
   "BansPage": {

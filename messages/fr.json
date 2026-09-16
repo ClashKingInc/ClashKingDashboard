@@ -344,7 +344,7 @@
     },
     "form": {
       "title": "Ajouter une base",
-      "description": "Les bases ne peuvent pas être modifiées après création. Choisissez le salon où ClashKing publiera le message et vérifiez le lien.",
+      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
       "channel": "Salon Discord",
       "channelPlaceholder": "Sélectionner un salon",
       "channelSearch": "Rechercher un salon…",
@@ -353,7 +353,7 @@
       "descriptionLabel": "Description",
       "images": "Images",
       "chooseImages": "Choisir les images du plan",
-      "imageLimit": "Jusqu’à quatre images, téléversées avant la création.",
+      "imageLimit": "Up to four images total; new uploads finish before saving.",
       "submit": "Créer la base",
       "creating": "Téléversement et création…",
       "createRejectedTitle": "La base n’a pas été créée",
@@ -369,7 +369,12 @@
         "deleted": "Message Discord supprimé",
         "alreadyMissing": "Message Discord déjà absent",
         "failed": "Nettoyage Discord échoué"
-      }
+      },
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
+      "removeImage": "Remove image {index}",
+      "update": "Save changes",
+      "updating": "Uploading and saving…"
     },
     "errors": {
       "title": "Bases indisponibles",
@@ -381,7 +386,17 @@
       "channelRequired": "Sélectionnez un salon Discord.",
       "linkRequired": "Le lien du plan est requis.",
       "descriptionTooLong": "La description doit contenir au maximum 1 000 caractères.",
-      "tooManyImages": "Choisissez au maximum quatre images."
+      "tooManyImages": "Choisissez au maximum quatre images.",
+      "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
+      "update": "Failed to update the base."
+    },
+    "context": {
+      "server": "Server",
+      "channel": "Channel",
+      "message": "Message"
+    },
+    "edit": {
+      "action": "Edit"
     }
   },
   "BansPage": {

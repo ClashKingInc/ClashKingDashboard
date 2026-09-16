@@ -310,10 +310,18 @@
       "upvotes": "Upvotes",
       "downvotes": "Downvotes"
     },
+    "context": {
+      "server": "Server",
+      "channel": "Channel",
+      "message": "Message"
+    },
     "history": {
       "title": "Downloader history ({count})",
       "empty": "No downloader IDs have been recorded.",
       "resolve": "Resolve profile"
+    },
+    "edit": {
+      "action": "Edit"
     },
     "delete": {
       "action": "Delete",
@@ -344,7 +352,9 @@
     },
     "form": {
       "title": "Add a base",
-      "description": "Bases cannot be edited after creation. Choose where ClashKing should post the Discord message and confirm the layout link.",
+      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
       "channel": "Discord channel",
       "channelPlaceholder": "Select a channel",
       "channelSearch": "Search channels…",
@@ -353,9 +363,12 @@
       "descriptionLabel": "Description",
       "images": "Images",
       "chooseImages": "Choose layout images",
-      "imageLimit": "Up to four images; uploads finish before the base is created.",
+      "imageLimit": "Up to four images total; new uploads finish before saving.",
+      "removeImage": "Remove image {index}",
       "submit": "Create base",
       "creating": "Uploading and creating…",
+      "update": "Save changes",
+      "updating": "Uploading and saving…",
       "createRejectedTitle": "Base was not created",
       "createCleanupCompleteTitle": "Discord cleanup completed; base was not created",
       "createCleanupFailedTitle": "Discord message may remain; base was not created",
@@ -375,11 +388,13 @@
       "title": "Bases unavailable",
       "load": "Failed to load bases.",
       "create": "Failed to create the base.",
+      "update": "Failed to update the base.",
       "upload": "Failed to upload an image.",
       "downloader": "Failed to resolve this downloader.",
       "channels": "Failed to load Discord channels.",
       "channelRequired": "Select a Discord channel.",
       "linkRequired": "Layout link is required.",
+      "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
       "descriptionTooLong": "Description must be 1,000 characters or fewer.",
       "tooManyImages": "Choose no more than four images."
     }

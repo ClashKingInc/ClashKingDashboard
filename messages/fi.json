@@ -344,7 +344,7 @@
     },
     "form": {
       "title": "Lisää tukikohta",
-      "description": "Tukikohtia ei voi muokata luomisen jälkeen. Valitse, mihin ClashKing lähettää Discord-viestin, ja vahvista asettelulinkki.",
+      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
       "channel": "Discord-kanava",
       "channelPlaceholder": "Valitse kanava",
       "channelSearch": "Hae kanavia…",
@@ -353,7 +353,7 @@
       "descriptionLabel": "Kuvaus",
       "images": "Kuvat",
       "chooseImages": "Valitse asettelukuvat",
-      "imageLimit": "Enintään neljä kuvaa; lataukset valmistuvat ennen tukikohdan luomista.",
+      "imageLimit": "Up to four images total; new uploads finish before saving.",
       "submit": "Luo tukikohta",
       "creating": "Ladataan ja luodaan…",
       "createRejectedTitle": "Tukikohtaa ei luotu",
@@ -369,7 +369,12 @@
         "deleted": "Discord-viesti poistettu",
         "alreadyMissing": "Discord-viesti puuttuu jo",
         "failed": "Discord-siivous epäonnistui"
-      }
+      },
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
+      "removeImage": "Remove image {index}",
+      "update": "Save changes",
+      "updating": "Uploading and saving…"
     },
     "errors": {
       "title": "Tukikohdat eivät ole saatavilla",
@@ -381,7 +386,17 @@
       "channelRequired": "Valitse Discord-kanava.",
       "linkRequired": "Asettelulinkki vaaditaan.",
       "descriptionTooLong": "Kuvauksen enimmäispituus on 1 000 merkkiä.",
-      "tooManyImages": "Valitse enintään neljä kuvaa."
+      "tooManyImages": "Valitse enintään neljä kuvaa.",
+      "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
+      "update": "Failed to update the base."
+    },
+    "context": {
+      "server": "Server",
+      "channel": "Channel",
+      "message": "Message"
+    },
+    "edit": {
+      "action": "Edit"
     }
   },
   "BansPage": {

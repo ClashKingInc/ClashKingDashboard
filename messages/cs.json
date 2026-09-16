@@ -344,7 +344,7 @@
     },
     "form": {
       "title": "Přidat základnu",
-      "description": "Základny nelze po vytvoření upravovat. Vyberte, kam má ClashKing odeslat zprávu na Discordu, a potvrďte odkaz na rozložení.",
+      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
       "channel": "Kanál na Discordu",
       "channelPlaceholder": "Vybrat kanál",
       "channelSearch": "Hledat kanály…",
@@ -353,7 +353,7 @@
       "descriptionLabel": "Popis",
       "images": "Obrázky",
       "chooseImages": "Vybrat obrázky rozložení",
-      "imageLimit": "Až čtyři obrázky; nahrávání se dokončí před vytvořením základny.",
+      "imageLimit": "Up to four images total; new uploads finish before saving.",
       "submit": "Vytvořit základnu",
       "creating": "Nahrávání a vytváření…",
       "createRejectedTitle": "Základna nebyla vytvořena",
@@ -369,7 +369,12 @@
         "deleted": "Zpráva na Discordu odstraněna",
         "alreadyMissing": "Zpráva na Discordu již neexistuje",
         "failed": "Vyčištění Discordu selhalo"
-      }
+      },
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
+      "removeImage": "Remove image {index}",
+      "update": "Save changes",
+      "updating": "Uploading and saving…"
     },
     "errors": {
       "title": "Základny nejsou dostupné",
@@ -381,7 +386,17 @@
       "channelRequired": "Vyberte kanál na Discordu.",
       "linkRequired": "Odkaz na rozložení je povinný.",
       "descriptionTooLong": "Popis může mít nejvýše 1 000 znaků.",
-      "tooManyImages": "Vyberte nejvýše čtyři obrázky."
+      "tooManyImages": "Vyberte nejvýše čtyři obrázky.",
+      "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
+      "update": "Failed to update the base."
+    },
+    "context": {
+      "server": "Server",
+      "channel": "Channel",
+      "message": "Message"
+    },
+    "edit": {
+      "action": "Edit"
     }
   },
   "BansPage": {

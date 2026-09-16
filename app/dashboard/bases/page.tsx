@@ -19,10 +19,13 @@ import {
   Loader2,
   Map,
   MessageSquareText,
+  Pencil,
   Plus,
   RefreshCw,
+  Server,
   Trash2,
   Users,
+  X,
 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -66,6 +69,7 @@ import {
   BASES_PAGE_SIZE,
   MAX_BASE_DESCRIPTION_LENGTH,
   MAX_BASE_IMAGES,
+  baseDescriptionLength,
   type BaseDraft,
   validateBaseDraft,
 } from "./bases-utils";
@@ -139,6 +143,8 @@ export default function BasesPage() {
   const [error, setError] = useState<string | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
   const [creating, setCreating] = useState(false);
+  const [editTarget, setEditTarget] = useState<Base | null>(null);
+  const [retainedImages, setRetainedImages] = useState<string[]>([]);
   const [draft, setDraft] = useState<BaseDraft>(EMPTY_DRAFT);
   const [draftError, setDraftError] = useState<string | null>(null);
   const [createFeedback, setCreateFeedback] = useState<CreateFeedback | null>(null);
@@ -157,6 +163,10 @@ export default function BasesPage() {
   const formatter = useMemo(
     () => new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }),
     [locale],
+  );
+  const channelNames = useMemo(
+    () => Object.fromEntries(channels.map((channel) => [channel.id, channel.name])),
+    [channels],
   );
 
   const loadBases = useCallback(async () => {
@@ -208,7 +218,7 @@ export default function BasesPage() {
 
   const selectImages = (files: FileList | null) => {
     const selected = Array.from(files ?? []);
-    if (selected.length > MAX_BASE_IMAGES) {
+    if (retainedImages.length + selected.length > MAX_BASE_IMAGES) {
       setDraftError(t("errors.tooManyImages"));
       setCreateFeedback(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
@@ -219,17 +229,42 @@ export default function BasesPage() {
     setCreateFeedback(null);
   };
 
+  const openCreate = () => {
+    setEditTarget(null);
+    setRetainedImages([]);
+    setDraft(EMPTY_DRAFT);
+    setDraftError(null);
+    setCreateFeedback(null);
+    setCreateOpen(true);
+  };
+
+  const openEdit = (base: Base) => {
+    setEditTarget(base);
+    setRetainedImages(base.images.slice(0, MAX_BASE_IMAGES));
+    setDraft({
+      channelId: base.channelId,
+      baseLink: base.baseLink,
+      description: base.description,
+      images: [],
+    });
+    setDraftError(null);
+    setCreateFeedback(null);
+    setCreateOpen(true);
+  };
+
   const closeCreate = (force = false) => {
     if (creating && !force) return;
     setCreateOpen(false);
+    setEditTarget(null);
+    setRetainedImages([]);
     setDraft(EMPTY_DRAFT);
     setDraftError(null);
     setCreateFeedback(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  const createBase = async () => {
-    const validationError = validateBaseDraft(draft);
+  const saveBase = async () => {
+    const validationError = validateBaseDraft(draft, retainedImages.length);
     if (validationError) {
       setDraftError(t(`errors.${validationError}`));
       return;
@@ -244,14 +279,19 @@ export default function BasesPage() {
         if (response.error || !response.data) throw new Error(response.error || t("errors.upload"));
         return response.data.url;
       }));
-      const response = await apiClient.bases.create(guildId, {
-        channelId: draft.channelId.trim(),
+      const editable = {
         baseLink: draft.baseLink.trim(),
-        images: uploads,
+        images: [...retainedImages, ...uploads],
         description: draft.description.trim(),
-      });
+      };
+      const response = editTarget
+        ? await apiClient.bases.update(guildId, editTarget.id, editable)
+        : await apiClient.bases.create(guildId, {
+          channelId: draft.channelId.trim(),
+          ...editable,
+        });
       if (response.error || !response.data) {
-        if (isBaseCreateFailure(response.errorData)) {
+        if (!editTarget && isBaseCreateFailure(response.errorData)) {
           const cleanupCompleted = ["deleted", "alreadyMissing"].includes(
             response.errorData.discordMessageCleanup,
           );
@@ -272,13 +312,15 @@ export default function BasesPage() {
           });
           return;
         }
-        throw new Error(response.error || t("errors.create"));
+        throw new Error(response.error || t(editTarget ? "errors.update" : "errors.create"));
       }
       closeCreate(true);
       if (offset === 0) await loadBases();
       else setOffset(0);
     } catch (caught) {
-      setDraftError(caught instanceof Error ? caught.message : t("errors.create"));
+      setDraftError(caught instanceof Error
+        ? caught.message
+        : t(editTarget ? "errors.update" : "errors.create"));
     } finally {
       setCreating(false);
     }
@@ -377,7 +419,7 @@ export default function BasesPage() {
               <RefreshCw className={loading ? "animate-spin" : ""} />
               {t("refresh")}
             </Button>
-            <Button onClick={() => setCreateOpen(true)}>
+            <Button onClick={openCreate}>
               <Plus />
               {t("create")}
             </Button>
@@ -431,7 +473,7 @@ export default function BasesPage() {
               </div>
               <h2 className="mt-4 text-lg font-semibold">{t("empty.title")}</h2>
               <p className="mt-1 max-w-md text-sm text-muted-foreground">{t("empty.description")}</p>
-              <Button className="mt-5" onClick={() => setCreateOpen(true)}>
+              <Button className="mt-5" onClick={openCreate}>
                 <Plus />
                 {t("create")}
               </Button>
@@ -442,6 +484,7 @@ export default function BasesPage() {
             {bases.map((base) => {
               const expanded = expandedBases.has(base.id);
               const created = new Date(base.createdAt);
+              const channelName = channelNames[base.channelId];
               return (
                 <Card key={base.id} className="overflow-hidden rounded-2xl">
                   {base.images.length > 0 ? (
@@ -473,7 +516,7 @@ export default function BasesPage() {
                       <div className="min-w-0">
                         <CardTitle className="flex items-center gap-2 text-base">
                           <Hash className="h-4 w-4 text-primary" />
-                          <span className="truncate">{base.channelId}</span>
+                          <span className="truncate">{channelName ? `#${channelName}` : base.channelId}</span>
                         </CardTitle>
                         <p className="mt-1 text-xs text-muted-foreground">
                           {Number.isNaN(created.getTime()) ? base.createdAt : formatter.format(created)}
@@ -489,18 +532,42 @@ export default function BasesPage() {
                   </CardHeader>
 
                   <CardContent className="space-y-4">
-                    <div className="grid grid-cols-3 divide-x divide-border rounded-xl border border-border bg-secondary/35">
-                      <div className="p-3 text-center">
+                    <dl className="grid gap-2 rounded-xl bg-muted/45 p-3 text-xs sm:grid-cols-3">
+                      <div className="min-w-0">
+                        <dt className="flex items-center gap-1.5 text-muted-foreground">
+                          <Server className="h-3.5 w-3.5" />
+                          {t("context.server")}
+                        </dt>
+                        <dd className="mt-1 truncate font-mono">{base.serverId}</dd>
+                      </div>
+                      <div className="min-w-0">
+                        <dt className="flex items-center gap-1.5 text-muted-foreground">
+                          <Hash className="h-3.5 w-3.5" />
+                          {t("context.channel")}
+                        </dt>
+                        <dd className="mt-1 truncate font-mono">{base.channelId}</dd>
+                      </div>
+                      <div className="min-w-0">
+                        <dt className="flex items-center gap-1.5 text-muted-foreground">
+                          <MessageSquareText className="h-3.5 w-3.5" />
+                          {t("context.message")}
+                        </dt>
+                        <dd className="mt-1 truncate font-mono">{base.messageId}</dd>
+                      </div>
+                    </dl>
+
+                    <div className="grid grid-cols-3 gap-2">
+                      <div className="rounded-xl bg-muted/55 p-3 text-center">
                         <div className="text-lg font-semibold tabular-nums">{base.downloadCount}</div>
                         <div className="text-[11px] text-muted-foreground">{t("counts.downloads")}</div>
                       </div>
-                      <div className="p-3 text-center">
+                      <div className="rounded-xl bg-muted/55 p-3 text-center">
                         <div className="flex items-center justify-center gap-1 text-lg font-semibold tabular-nums">
                           <ArrowUp className="h-3.5 w-3.5 text-emerald-500" />{base.upvotes}
                         </div>
                         <div className="text-[11px] text-muted-foreground">{t("counts.upvotes")}</div>
                       </div>
-                      <div className="p-3 text-center">
+                      <div className="rounded-xl bg-muted/55 p-3 text-center">
                         <div className="flex items-center justify-center gap-1 text-lg font-semibold tabular-nums">
                           <ArrowDown className="h-3.5 w-3.5 text-destructive" />{base.downvotes}
                         </div>
@@ -514,15 +581,24 @@ export default function BasesPage() {
                           <ExternalLink />{t("openLayout")}
                         </a>
                       </Button>
-                      <Button asChild size="sm" variant="outline">
+                      <Button asChild size="sm" variant="secondary" className="border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted">
                         <a href={base.discordMessageUrl} target="_blank" rel="noreferrer">
                           <MessageSquareText />{t("openMessage")}
                         </a>
                       </Button>
                       <Button
                         size="sm"
-                        variant="outline"
-                        className="ml-auto text-destructive hover:border-destructive/40 hover:text-destructive"
+                        variant="ghost"
+                        className="ml-auto"
+                        onClick={() => openEdit(base)}
+                      >
+                        <Pencil />
+                        {t("edit.action")}
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="text-destructive hover:bg-destructive/10 hover:text-destructive"
                         onClick={() => openDeleteConfirmation(base)}
                       >
                         <Trash2 />
@@ -542,11 +618,11 @@ export default function BasesPage() {
                       </CollapsibleTrigger>
                       <CollapsibleContent className="pt-2">
                         {base.downloaders.length === 0 ? (
-                          <p className="rounded-xl border border-dashed p-4 text-center text-xs text-muted-foreground">
+                          <p className="rounded-xl bg-muted/45 p-4 text-center text-xs text-muted-foreground">
                             {t("history.empty")}
                           </p>
                         ) : (
-                          <div className="space-y-1 rounded-xl border border-border p-2">
+                          <div className="space-y-1 rounded-xl bg-muted/45 p-2">
                             {base.downloaders.map((userId) => {
                               const key = `${base.id}:${userId}`;
                               const state = downloaders[key];
@@ -615,11 +691,13 @@ export default function BasesPage() {
         <Dialog open={createOpen} onOpenChange={(open) => open ? setCreateOpen(true) : closeCreate()}>
           <DialogContent variant="form" className="sm:max-w-2xl">
             <DialogHeader>
-              <DialogTitle>{t("form.title")}</DialogTitle>
-              <DialogDescription>{t("form.description")}</DialogDescription>
+              <DialogTitle>{t(editTarget ? "form.editTitle" : "form.title")}</DialogTitle>
+              <DialogDescription>
+                {t(editTarget ? "form.editDescription" : "form.description")}
+              </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 sm:grid-cols-2">
-              <div className="space-y-2 sm:col-span-2">
+              {!editTarget && <div className="space-y-2 sm:col-span-2">
                 <Label>{t("form.channel")}</Label>
                 <ChannelCombobox
                   channels={channels}
@@ -641,7 +719,7 @@ export default function BasesPage() {
                     </AlertDescription>
                   </Alert>
                 )}
-              </div>
+              </div>}
               <div className="space-y-2 sm:col-span-2">
                 <Label htmlFor="base-link">{t("form.baseLink")}</Label>
                 <Input
@@ -656,20 +734,47 @@ export default function BasesPage() {
                 <div className="flex items-center justify-between">
                   <Label htmlFor="base-description">{t("form.descriptionLabel")}</Label>
                   <span className="text-xs tabular-nums text-muted-foreground">
-                    {draft.description.length}/{MAX_BASE_DESCRIPTION_LENGTH}
+                    {baseDescriptionLength(draft.description)}/{MAX_BASE_DESCRIPTION_LENGTH}
                   </span>
                 </div>
                 <Textarea
                   id="base-description"
                   value={draft.description}
                   onChange={(event) => setDraftField("description", event.target.value)}
-                  maxLength={MAX_BASE_DESCRIPTION_LENGTH}
                   rows={5}
                   disabled={creating}
                 />
               </div>
               <div className="space-y-2 sm:col-span-2">
                 <Label htmlFor="base-images">{t("form.images")}</Label>
+                {retainedImages.length > 0 && (
+                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                    {retainedImages.map((image, index) => (
+                      <div key={`${image}:${index}`} className="relative aspect-video overflow-hidden rounded-xl bg-muted">
+                        <Image
+                          src={image}
+                          alt={t("imageAlt", { index: index + 1 })}
+                          fill
+                          unoptimized
+                          sizes="160px"
+                          className="object-cover"
+                        />
+                        <Button
+                          type="button"
+                          size="icon"
+                          variant="secondary"
+                          className="absolute right-1.5 top-1.5 h-7 w-7 rounded-full"
+                          aria-label={t("form.removeImage", { index: index + 1 })}
+                          onClick={() => setRetainedImages((current) =>
+                            current.filter((_, candidateIndex) => candidateIndex !== index))}
+                          disabled={creating}
+                        >
+                          <X />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                )}
                 <label
                   htmlFor="base-images"
                   className="flex cursor-pointer items-center justify-between gap-4 rounded-xl border border-dashed border-input bg-secondary/25 p-4 transition-colors hover:border-primary/50 hover:bg-secondary/50"
@@ -683,7 +788,9 @@ export default function BasesPage() {
                       <span className="block text-xs text-muted-foreground">{t("form.imageLimit")}</span>
                     </span>
                   </span>
-                  <Badge variant="secondary">{draft.images.length}/{MAX_BASE_IMAGES}</Badge>
+                  <Badge variant="secondary">
+                    {retainedImages.length + draft.images.length}/{MAX_BASE_IMAGES}
+                  </Badge>
                 </label>
                 <input
                   ref={fileInputRef}
@@ -751,9 +858,11 @@ export default function BasesPage() {
             )}
             <DialogFooter>
               <Button variant="outline" onClick={() => closeCreate()} disabled={creating}>{t("cancel")}</Button>
-              <Button onClick={() => void createBase()} disabled={creating}>
-                {creating ? <Loader2 className="animate-spin" /> : <Plus />}
-                {creating ? t("form.creating") : t("form.submit")}
+              <Button onClick={() => void saveBase()} disabled={creating}>
+                {creating ? <Loader2 className="animate-spin" /> : editTarget ? <Pencil /> : <Plus />}
+                {creating
+                  ? t(editTarget ? "form.updating" : "form.creating")
+                  : t(editTarget ? "form.update" : "form.submit")}
               </Button>
             </DialogFooter>
           </DialogContent>

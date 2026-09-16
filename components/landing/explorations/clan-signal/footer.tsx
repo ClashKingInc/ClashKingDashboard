@@ -32,7 +32,7 @@ export function ClanSignalFooter() {
           <Link href="/servers">{t("navigation.dashboard")}</Link>
           <a href="https://docs.clashk.ing/">{t("footer.docs")}</a>
           <a href="https://github.com/ClashKingInc">GitHub</a>
-          <a href="https://go.api.clashk.ing/">API</a>
+          <a href="https://api.clashk.ing/">API</a>
           <Link href="/features">{navigation("features")}</Link>
           <Link href="/help">{navigation("help")}</Link>
           <Link href="/open-source">{navigation("openSource")}</Link>

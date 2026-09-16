@@ -344,7 +344,7 @@
     },
     "form": {
       "title": "配置を追加",
-      "description": "作成後に配置を編集することはできません。ClashKingがDiscordメッセージを投稿する場所を選び、配置リンクを確認してください。",
+      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
       "channel": "Discordチャンネル",
       "channelPlaceholder": "チャンネルを選択",
       "channelSearch": "チャンネルを検索…",
@@ -353,7 +353,7 @@
       "descriptionLabel": "説明",
       "images": "画像",
       "chooseImages": "配置画像を選択",
-      "imageLimit": "画像は最大4枚です。配置を作成する前にアップロードが完了します。",
+      "imageLimit": "Up to four images total; new uploads finish before saving.",
       "submit": "配置を作成",
       "creating": "アップロードして作成中…",
       "createRejectedTitle": "配置は作成されませんでした",
@@ -369,7 +369,12 @@
         "deleted": "Discordメッセージを削除しました",
         "alreadyMissing": "Discordメッセージはすでに存在しません",
         "failed": "Discordのクリーンアップに失敗しました"
-      }
+      },
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
+      "removeImage": "Remove image {index}",
+      "update": "Save changes",
+      "updating": "Uploading and saving…"
     },
     "errors": {
       "title": "配置を利用できません",
@@ -381,7 +386,17 @@
       "channelRequired": "Discordチャンネルを選択してください。",
       "linkRequired": "配置リンクは必須です。",
       "descriptionTooLong": "説明は1,000文字以内にしてください。",
-      "tooManyImages": "画像は4枚以内で選択してください。"
+      "tooManyImages": "画像は4枚以内で選択してください。",
+      "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
+      "update": "Failed to update the base."
+    },
+    "context": {
+      "server": "Server",
+      "channel": "Channel",
+      "message": "Message"
+    },
+    "edit": {
+      "action": "Edit"
     }
   },
   "BansPage": {
