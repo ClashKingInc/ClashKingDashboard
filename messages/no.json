@@ -310,10 +310,18 @@
       "upvotes": "Stemmer for",
       "downvotes": "Stemmer imot"
     },
+    "context": {
+      "server": "Server",
+      "channel": "Kanal",
+      "message": "Message"
+    },
     "history": {
       "title": "Nedlastingshistorikk ({count})",
       "empty": "Det er ikke registrert noen nedlaster-ID-er.",
       "resolve": "Finn profilen"
+    },
+    "edit": {
+      "action": "Rediger"
     },
     "delete": {
       "action": "Slett",
@@ -344,7 +352,9 @@
     },
     "form": {
       "title": "Legg til en base",
-      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
+      "description": "Baser kan ikke redigeres etter at de er opprettet. Velg hvor ClashKing skal sende Discord-meldingen, og bekreft deretter layoutkoblingen.",
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
       "channel": "Discord-kanal",
       "channelPlaceholder": "Velg en kanal",
       "channelSearch": "Søk i kanaler…",
@@ -353,9 +363,12 @@
       "descriptionLabel": "Beskrivelse",
       "images": "Bilder",
       "chooseImages": "Velg layoutbilder",
-      "imageLimit": "Up to four images total; new uploads finish before saving.",
+      "imageLimit": "Maksimalt fire bilder. Opplastinger fullføres, før basen opprettes.",
+      "removeImage": "Remove image {index}",
       "submit": "Opprett base",
       "creating": "Laster opp og oppretter…",
+      "update": "Lagre endringer",
+      "updating": "Uploading and saving…",
       "createRejectedTitle": "Base ble ikke opprettet",
       "createCleanupCompleteTitle": "Discord-opprydding fullført; base ble ikke opprettet",
       "createCleanupFailedTitle": "Discord-melding kan bli stående; base ble ikke opprettet",
@@ -369,34 +382,21 @@
         "deleted": "Discord-melding slettet",
         "alreadyMissing": "Discord-melding manglet allerede",
         "failed": "Discord-opprydding mislyktes"
-      },
-      "editTitle": "Edit base",
-      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
-      "removeImage": "Remove image {index}",
-      "update": "Save changes",
-      "updating": "Uploading and saving…"
+      }
     },
     "errors": {
       "title": "Basene er ikke tilgjengelige",
       "load": "Kunne ikke laste inn baser.",
       "create": "Kunne ikke opprette basen.",
+      "update": "Failed to update the base.",
       "upload": "Kunne ikke laste opp et bilde.",
       "downloader": "Kunne ikke finne denne nedlaster.",
       "channels": "Kunne ikke laste inn Discord-kanaler.",
       "channelRequired": "Velg en Discord-kanal.",
       "linkRequired": "Layoutlink er påkrevd.",
-      "descriptionTooLong": "Beskrivelsen kan være på maksimalt 1 000 tegn.",
-      "tooManyImages": "Velg maksimalt fire bilder.",
       "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
-      "update": "Failed to update the base."
-    },
-    "context": {
-      "server": "Server",
-      "channel": "Channel",
-      "message": "Message"
-    },
-    "edit": {
-      "action": "Edit"
+      "descriptionTooLong": "Beskrivelsen kan være på maksimalt 1 000 tegn.",
+      "tooManyImages": "Velg maksimalt fire bilder."
     }
   },
   "BansPage": {
@@ -435,7 +435,7 @@
       },
       "list": {
         "title": "Utestengte spillere",
-        "count": "{count, plural, one {# spiller utestengt} other {# spillere utestengt}}",
+        "count": "{count} player{count, plural, one {} other {s}} banned",
         "searchPlaceholder": "Søk etter navn, tag eller årsak...",
         "noBansFound": "Ingen utestengelser funnet",
         "noBans": "Ingen utestengte spillere",
@@ -505,7 +505,7 @@
       },
       "list": {
         "title": "Spilleradvarsler",
-        "count": "{count, plural, one {# advarsel utstedt} other {# advarsler utstedt}}",
+        "count": "{count} strike{count, plural, one {} other {s}} issued",
         "searchPlaceholder": "Søk etter navn, tag eller årsak...",
         "noStrikesFound": "Ingen advarsler funnet",
         "noStrikes": "Ingen advarsler utstedt",
@@ -989,6 +989,8 @@
       "editTitle": "Rediger automatisering",
       "createDesc": "Planlegg en automatisert handling",
       "actionType": "Handlingstype",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "Tid i forhold til hendelsen",
       "offsetBefore": "Før hendelsen",
       "offsetAfter": "Etter hendelsen",
@@ -1034,9 +1036,7 @@
         "roster_clear": "Fjerner alle medlemmer fra spillerlisten uten å slette den",
         "roster_archive": "Arkiverer spillerlisten og gjør den skrivebeskyttet"
       },
-      "infoBox": "Automatiseringer utløses i forhold til hendelsens starttidspunkt. Angi en forskyvning, f.eks. 3 dager før, så utfører boten automatisk handlingen på det tidspunktet – også ved gjentatte hendelser.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "Automatiseringer utløses i forhold til hendelsens starttidspunkt. Angi en forskyvning, f.eks. 3 dager før, så utfører boten automatisk handlingen på det tidspunktet – også ved gjentatte hendelser."
     },
     "groups": {
       "title": "Spillerlistegrupper",
@@ -3105,8 +3105,8 @@
       "start": "Starter",
       "end": "Slutter",
       "winnersHeader": "Vinnere",
-      "winners": "{count, plural, one {# vinner} other {# vinnere}}",
-      "boosters": "{count, plural, one {# booster} other {# boostere}}",
+      "winners": "{count} winner{count, plural, one {} other {s}}",
+      "boosters": "{count} booster{count, plural, one {} other {s}}",
       "noChannel": "Ingen kanal",
       "noChannelHelp": "Ingen kanal tildelt. Rediger giveawayen for å rette det.",
       "endsAt": "Slutter kl.",
@@ -3218,7 +3218,7 @@
       "notScheduled": "Ikke planlagt",
       "schedule": "Tidsplan",
       "endMessage": "Vinnermelding",
-      "endSummary": "{winners, plural, one {# vinner blir kunngjort her.} other {# vinnere blir kunngjort her.}}",
+      "endSummary": "{winners} winner{winners, plural, one {} other {s}} will be announced here.",
       "totalParticipants": "Deltakere totalt: {count}",
       "participate": "Bli med",
       "buttonHint": "Den primære handlingsknappen vises under Discord-innlegget."
