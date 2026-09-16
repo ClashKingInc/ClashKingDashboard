@@ -310,10 +310,18 @@
       "upvotes": "Hlasy pro",
       "downvotes": "Hlasy proti"
     },
+    "context": {
+      "server": "Server",
+      "channel": "Kanál",
+      "message": "Message"
+    },
     "history": {
       "title": "Historie stahování ({count})",
       "empty": "Nebyla zaznamenána žádná ID stahujících.",
       "resolve": "Vyhledat profil"
+    },
+    "edit": {
+      "action": "Upravit"
     },
     "delete": {
       "action": "Smazat",
@@ -344,7 +352,9 @@
     },
     "form": {
       "title": "Přidat základnu",
-      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
+      "description": "Základny nelze po vytvoření upravovat. Vyberte, kam má ClashKing odeslat zprávu na Discordu, a potvrďte odkaz na rozložení.",
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
       "channel": "Kanál na Discordu",
       "channelPlaceholder": "Vybrat kanál",
       "channelSearch": "Hledat kanály…",
@@ -353,9 +363,12 @@
       "descriptionLabel": "Popis",
       "images": "Obrázky",
       "chooseImages": "Vybrat obrázky rozložení",
-      "imageLimit": "Up to four images total; new uploads finish before saving.",
+      "imageLimit": "Až čtyři obrázky; nahrávání se dokončí před vytvořením základny.",
+      "removeImage": "Remove image {index}",
       "submit": "Vytvořit základnu",
       "creating": "Nahrávání a vytváření…",
+      "update": "Uložit změny",
+      "updating": "Uploading and saving…",
       "createRejectedTitle": "Základna nebyla vytvořena",
       "createCleanupCompleteTitle": "Vyčištění Discordu dokončeno; základna nebyla vytvořena",
       "createCleanupFailedTitle": "Zpráva na Discordu může zůstat; základna nebyla vytvořena",
@@ -369,34 +382,21 @@
         "deleted": "Zpráva na Discordu odstraněna",
         "alreadyMissing": "Zpráva na Discordu již neexistuje",
         "failed": "Vyčištění Discordu selhalo"
-      },
-      "editTitle": "Edit base",
-      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
-      "removeImage": "Remove image {index}",
-      "update": "Save changes",
-      "updating": "Uploading and saving…"
+      }
     },
     "errors": {
       "title": "Základny nejsou dostupné",
       "load": "Základny se nepodařilo načíst.",
       "create": "Základnu se nepodařilo vytvořit.",
+      "update": "Failed to update the base.",
       "upload": "Obrázek se nepodařilo nahrát.",
       "downloader": "Profil stahujícího se nepodařilo vyhledat.",
       "channels": "Kanály na Discordu se nepodařilo načíst.",
       "channelRequired": "Vyberte kanál na Discordu.",
       "linkRequired": "Odkaz na rozložení je povinný.",
-      "descriptionTooLong": "Popis může mít nejvýše 1 000 znaků.",
-      "tooManyImages": "Vyberte nejvýše čtyři obrázky.",
       "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
-      "update": "Failed to update the base."
-    },
-    "context": {
-      "server": "Server",
-      "channel": "Channel",
-      "message": "Message"
-    },
-    "edit": {
-      "action": "Edit"
+      "descriptionTooLong": "Popis může mít nejvýše 1 000 znaků.",
+      "tooManyImages": "Vyberte nejvýše čtyři obrázky."
     }
   },
   "BansPage": {
@@ -435,7 +435,7 @@
       },
       "list": {
         "title": "Zabanovaní hráči",
-        "count": "{count, plural, one {Zabanován # hráč} few {Zabanováni # hráči} other {Zabanováno # hráčů}}",
+        "count": "{count} player{count, plural, one {} other {s}} banned",
         "searchPlaceholder": "Hledat podle jména, tagu nebo důvodu...",
         "noBansFound": "Nebyly nalezeny žádné bany",
         "noBans": "Žádní zabanovaní hráči",
@@ -505,7 +505,7 @@
       },
       "list": {
         "title": "Varování hráčů",
-        "count": "{count, plural, one {Uděleno # varování} few {Udělena # varování} other {Uděleno # varování}}",
+        "count": "{count} strike{count, plural, one {} other {s}} issued",
         "searchPlaceholder": "Hledat podle jména, tagu nebo důvodu...",
         "noStrikesFound": "Nebyla nalezena žádná varování",
         "noStrikes": "Nebyla udělena žádná varování",
@@ -989,6 +989,8 @@
       "editTitle": "Upravit automatizaci",
       "createDesc": "Naplánovat automatickou akci",
       "actionType": "Typ akce",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "Načasování vzhledem k události",
       "offsetBefore": "Před událostí",
       "offsetAfter": "Po události",
@@ -1034,9 +1036,7 @@
         "roster_clear": "Odebere všechny členy bez odstranění soupisky",
         "roster_archive": "Archivuje soupisku a nastaví ji pouze pro čtení"
       },
-      "infoBox": "Automatizace se spouštějí vzhledem k času zahájení události. Nastavte posun (např. 3 dny předem) a bot akci automaticky provede, a to i u opakovaných událostí.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "Automatizace se spouštějí vzhledem k času zahájení události. Nastavte posun (např. 3 dny předem) a bot akci automaticky provede, a to i u opakovaných událostí."
     },
     "groups": {
       "title": "Skupiny soupisek",
@@ -3105,8 +3105,8 @@
       "start": "Začíná",
       "end": "Končí",
       "winnersHeader": "Výherci",
-      "winners": "{count, plural, one {# výherce} few {# výherci} other {# výherců}}",
-      "boosters": "{count, plural, one {# zvýhodnění} few {# zvýhodnění} other {# zvýhodnění}}",
+      "winners": "{count} winner{count, plural, one {} other {s}}",
+      "boosters": "{count} booster{count, plural, one {} other {s}}",
       "noChannel": "Žádný kanál",
       "noChannelHelp": "Není přiřazen žádný kanál. Opravte to úpravou soutěže.",
       "endsAt": "Končí",
@@ -3218,7 +3218,7 @@
       "notScheduled": "Nenaplánováno",
       "schedule": "Plán",
       "endMessage": "Zpráva pro výherce",
-      "endSummary": "{winners, plural, one {Zde bude oznámen # výherce.} few {Zde budou oznámeni # výherci.} other {Zde bude oznámeno # výherců.}}",
+      "endSummary": "{winners} winner{winners, plural, one {} other {s}} will be announced here.",
       "totalParticipants": "Celkem účastníků: {count}",
       "participate": "Zúčastnit se",
       "buttonHint": "Hlavní akční tlačítko zobrazené pod příspěvkem na Discordu."
