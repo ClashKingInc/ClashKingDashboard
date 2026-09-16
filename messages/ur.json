@@ -310,10 +310,18 @@
       "upvotes": "مثبت ووٹس",
       "downvotes": "منفی ووٹس"
     },
+    "context": {
+      "server": "سرور",
+      "channel": "چینل",
+      "message": "Message"
+    },
     "history": {
       "title": "ڈاؤن لوڈ کرنے والوں کی تاریخ ({count})",
       "empty": "ڈاؤن لوڈ کرنے والوں کی کوئی ID ریکارڈ نہیں ہوئی۔",
       "resolve": "پروفائل معلوم کریں"
+    },
+    "edit": {
+      "action": "ترمیم کریں"
     },
     "delete": {
       "action": "حذف کریں",
@@ -344,7 +352,9 @@
     },
     "form": {
       "title": "بیس شامل کریں",
-      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
+      "description": "بیس بنانے کے بعد اس میں ترمیم نہیں ہو سکتی۔ وہ مقام منتخب کریں جہاں ClashKing کو Discord پیغام پوسٹ کرنا چاہیے اور لے آؤٹ لنک کی تصدیق کریں۔",
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
       "channel": "Discord چینل",
       "channelPlaceholder": "چینل منتخب کریں",
       "channelSearch": "چینلز تلاش کریں…",
@@ -353,9 +363,12 @@
       "descriptionLabel": "تفصیل",
       "images": "تصاویر",
       "chooseImages": "لے آؤٹ کی تصاویر منتخب کریں",
-      "imageLimit": "Up to four images total; new uploads finish before saving.",
+      "imageLimit": "زیادہ سے زیادہ چار تصاویر؛ بیس بننے سے پہلے اپ لوڈ مکمل ہوں گے۔",
+      "removeImage": "Remove image {index}",
       "submit": "بیس بنائیں",
       "creating": "اپ لوڈ اور تخلیق جاری ہے…",
+      "update": "تبدیلیاں محفوظ کریں",
+      "updating": "Uploading and saving…",
       "createRejectedTitle": "بیس نہیں بنایا گیا",
       "createCleanupCompleteTitle": "Discord کی صفائی مکمل ہوئی؛ بیس نہیں بنایا گیا",
       "createCleanupFailedTitle": "Discord پیغام باقی رہ سکتا ہے؛ بیس نہیں بنایا گیا",
@@ -369,34 +382,21 @@
         "deleted": "Discord پیغام حذف ہو گیا",
         "alreadyMissing": "Discord پیغام پہلے ہی موجود نہیں تھا",
         "failed": "Discord کی صفائی ناکام رہی"
-      },
-      "editTitle": "Edit base",
-      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
-      "removeImage": "Remove image {index}",
-      "update": "Save changes",
-      "updating": "Uploading and saving…"
+      }
     },
     "errors": {
       "title": "بیسز دستیاب نہیں",
       "load": "بیسز لوڈ نہیں ہو سکے۔",
       "create": "بیس نہیں بنایا جا سکا۔",
+      "update": "Failed to update the base.",
       "upload": "تصویر اپ لوڈ نہیں ہو سکی۔",
       "downloader": "اس ڈاؤن لوڈر کا پروفائل معلوم نہیں ہو سکا۔",
       "channels": "Discord چینلز لوڈ نہیں ہو سکے۔",
       "channelRequired": "Discord چینل منتخب کریں۔",
       "linkRequired": "لے آؤٹ لنک درکار ہے۔",
-      "descriptionTooLong": "تفصیل 1,000 حروف یا اس سے کم ہونی چاہیے۔",
-      "tooManyImages": "زیادہ سے زیادہ چار تصاویر منتخب کریں۔",
       "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
-      "update": "Failed to update the base."
-    },
-    "context": {
-      "server": "Server",
-      "channel": "Channel",
-      "message": "Message"
-    },
-    "edit": {
-      "action": "Edit"
+      "descriptionTooLong": "تفصیل 1,000 حروف یا اس سے کم ہونی چاہیے۔",
+      "tooManyImages": "زیادہ سے زیادہ چار تصاویر منتخب کریں۔"
     }
   },
   "BansPage": {
@@ -989,6 +989,8 @@
       "editTitle": "خودکاری میں ترمیم کریں",
       "createDesc": "خودکار کارروائی شیڈول کریں",
       "actionType": "کارروائی کی قسم",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "ایونٹ کے لحاظ سے وقت",
       "offsetBefore": "ایونٹ سے پہلے",
       "offsetAfter": "ایونٹ کے بعد",
@@ -1034,9 +1036,7 @@
         "roster_clear": "روسٹر حذف کیے بغیر اس سے تمام ارکان ہٹاتا ہے",
         "roster_archive": "روسٹر محفوظ شدہ میں ڈال کر اسے صرف پڑھنے کے قابل بناتا ہے"
       },
-      "infoBox": "خودکاریاں ایونٹ شروع ہونے کے وقت کے لحاظ سے چلتی ہیں۔ وقفہ مقرر کریں (مثلاً 3 دن پہلے) تو بوٹ اس وقت کارروائی خودکار طور پر انجام دے گا، بار بار ہونے والے ایونٹس کے لیے بھی۔",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "خودکاریاں ایونٹ شروع ہونے کے وقت کے لحاظ سے چلتی ہیں۔ وقفہ مقرر کریں (مثلاً 3 دن پہلے) تو بوٹ اس وقت کارروائی خودکار طور پر انجام دے گا، بار بار ہونے والے ایونٹس کے لیے بھی۔"
     },
     "groups": {
       "title": "روسٹر گروپس",
