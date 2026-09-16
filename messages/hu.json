@@ -310,10 +310,18 @@
       "upvotes": "Pozitív szavazatok",
       "downvotes": "Negatív szavazatok"
     },
+    "context": {
+      "server": "Szerver",
+      "channel": "Csatorna",
+      "message": "Message"
+    },
     "history": {
       "title": "Letöltési előzmények ({count})",
       "empty": "Nincs rögzített letöltőazonosító.",
       "resolve": "Profil megkeresése"
+    },
+    "edit": {
+      "action": "Szerkesztés"
     },
     "delete": {
       "action": "Törlés",
@@ -344,7 +352,9 @@
     },
     "form": {
       "title": "Bázis hozzáadása",
-      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
+      "description": "A bázisok létrehozás után nem szerkeszthetők. Válaszd ki, hová küldje a ClashKing a Discord-üzenetet, és erősítsd meg az elrendezés hivatkozását.",
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
       "channel": "Discord-csatorna",
       "channelPlaceholder": "Válassz csatornát",
       "channelSearch": "Csatornák keresése…",
@@ -353,9 +363,12 @@
       "descriptionLabel": "Leírás",
       "images": "Képek",
       "chooseImages": "Elrendezésképek kiválasztása",
-      "imageLimit": "Up to four images total; new uploads finish before saving.",
+      "imageLimit": "Legfeljebb négy kép tölthető fel; a feltöltés a bázis létrehozása előtt befejeződik.",
+      "removeImage": "Remove image {index}",
       "submit": "Bázis létrehozása",
       "creating": "Feltöltés és létrehozás…",
+      "update": "Változtatások mentése",
+      "updating": "Uploading and saving…",
       "createRejectedTitle": "Bázis nem jött létre",
       "createCleanupCompleteTitle": "A Discord-takarítás befejeződött; a bázis nem jött létre",
       "createCleanupFailedTitle": "A Discord-üzenet megmaradhat; a bázis nem jött létre",
@@ -369,34 +382,21 @@
         "deleted": "Discord-üzenet törölve",
         "alreadyMissing": "A Discord-üzenet már nem létezik",
         "failed": "A Discord-takarítás sikertelen"
-      },
-      "editTitle": "Edit base",
-      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
-      "removeImage": "Remove image {index}",
-      "update": "Save changes",
-      "updating": "Uploading and saving…"
+      }
     },
     "errors": {
       "title": "A bázisok nem érhetők el",
       "load": "Nem sikerült betölteni a bázisokat.",
       "create": "Nem sikerült létrehozni a bázist.",
+      "update": "Failed to update the base.",
       "upload": "Nem sikerült feltölteni a képet.",
       "downloader": "Nem sikerült megkeresni ezt a letöltőt.",
       "channels": "Nem sikerült betölteni a Discord-csatornákat.",
       "channelRequired": "Válassz Discord-csatornát.",
       "linkRequired": "Az elrendezés hivatkozása kötelező.",
-      "descriptionTooLong": "A leírás legfeljebb 1000 karakter lehet.",
-      "tooManyImages": "Legfeljebb négy képet válassz.",
       "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
-      "update": "Failed to update the base."
-    },
-    "context": {
-      "server": "Server",
-      "channel": "Channel",
-      "message": "Message"
-    },
-    "edit": {
-      "action": "Edit"
+      "descriptionTooLong": "A leírás legfeljebb 1000 karakter lehet.",
+      "tooManyImages": "Legfeljebb négy képet válassz."
     }
   },
   "BansPage": {
@@ -989,6 +989,8 @@
       "editTitle": "Automatizálás szerkesztése",
       "createDesc": "Automatikus művelet ütemezése",
       "actionType": "Művelet típusa",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "Időzítés az eseményhez képest",
       "offsetBefore": "Esemény előtt",
       "offsetAfter": "Esemény után",
@@ -1034,9 +1036,7 @@
         "roster_clear": "Eltávolít minden tagot a keret törlése nélkül",
         "roster_archive": "Archiválja a keretet, és csak olvashatóvá teszi"
       },
-      "infoBox": "Az automatizálások az esemény kezdési idejéhez igazodnak. Adj meg egy időeltolást (például 3 nappal korábban), és a bot automatikusan végrehajtja a műveletet, az ismétlődő eseményeknél is.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "Az automatizálások az esemény kezdési idejéhez igazodnak. Adj meg egy időeltolást (például 3 nappal korábban), és a bot automatikusan végrehajtja a műveletet, az ismétlődő eseményeknél is."
     },
     "groups": {
       "title": "Keretcsoportok",

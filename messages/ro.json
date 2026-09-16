@@ -310,10 +310,18 @@
       "upvotes": "Voturi pozitive",
       "downvotes": "Voturi negative"
     },
+    "context": {
+      "server": "Server",
+      "channel": "Canal",
+      "message": "Message"
+    },
     "history": {
       "title": "Istoricul descărcărilor ({count})",
       "empty": "Nu a fost înregistrat niciun ID de descărcare.",
       "resolve": "Identifică profilul"
+    },
+    "edit": {
+      "action": "Editează"
     },
     "delete": {
       "action": "Șterge",
@@ -344,7 +352,9 @@
     },
     "form": {
       "title": "Adaugă o bază",
-      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
+      "description": "Bazele nu pot fi editate după creare. Alege canalul în care ClashKing va publica mesajul Discord și confirmă linkul aranjamentului.",
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
       "channel": "Canal Discord",
       "channelPlaceholder": "Selectează un canal",
       "channelSearch": "Caută canale…",
@@ -353,9 +363,12 @@
       "descriptionLabel": "Descriere",
       "images": "Imagini",
       "chooseImages": "Alege imaginile aranjamentului",
-      "imageLimit": "Up to four images total; new uploads finish before saving.",
+      "imageLimit": "Poți alege cel mult patru imagini; încărcarea lor se încheie înainte de crearea bazei.",
+      "removeImage": "Remove image {index}",
       "submit": "Creează baza",
       "creating": "Se încarcă și se creează…",
+      "update": "Salvează modificări",
+      "updating": "Uploading and saving…",
       "createRejectedTitle": "Baza nu a fost creată",
       "createCleanupCompleteTitle": "Curățarea pe Discord s-a încheiat; baza nu a fost creată",
       "createCleanupFailedTitle": "Mesajul Discord poate rămâne; baza nu a fost creată",
@@ -369,34 +382,21 @@
         "deleted": "Mesaj Discord șters",
         "alreadyMissing": "Mesajul Discord lipsea deja",
         "failed": "Curățarea pe Discord a eșuat"
-      },
-      "editTitle": "Edit base",
-      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
-      "removeImage": "Remove image {index}",
-      "update": "Save changes",
-      "updating": "Uploading and saving…"
+      }
     },
     "errors": {
       "title": "Bazele nu sunt disponibile",
       "load": "Bazele nu au putut fi încărcate.",
       "create": "Baza nu a putut fi creată.",
+      "update": "Failed to update the base.",
       "upload": "Imaginea nu a putut fi încărcată.",
       "downloader": "Utilizatorul care a descărcat baza nu a putut fi identificat.",
       "channels": "Canalele Discord nu au putut fi încărcate.",
       "channelRequired": "Selectează un canal de Discord.",
       "linkRequired": "Linkul aranjamentului este obligatoriu.",
-      "descriptionTooLong": "Descrierea trebuie să aibă cel mult 1.000 de caractere.",
-      "tooManyImages": "Alege cel mult patru imagini.",
       "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
-      "update": "Failed to update the base."
-    },
-    "context": {
-      "server": "Server",
-      "channel": "Channel",
-      "message": "Message"
-    },
-    "edit": {
-      "action": "Edit"
+      "descriptionTooLong": "Descrierea trebuie să aibă cel mult 1.000 de caractere.",
+      "tooManyImages": "Alege cel mult patru imagini."
     }
   },
   "BansPage": {
@@ -435,7 +435,7 @@
       },
       "list": {
         "title": "Jucători interziși",
-        "count": "{count, plural, one {# jucător interzis} other {# jucători interziși}}",
+        "count": "{count} player{count, plural, one {} other {s}} banned",
         "searchPlaceholder": "Caută după nume, etichetă sau motiv...",
         "noBansFound": "Nu au fost găsite interdicții",
         "noBans": "Niciun jucător interzis",
@@ -505,7 +505,7 @@
       },
       "list": {
         "title": "Avertismentele jucătorilor",
-        "count": "{count, plural, one {# avertisment emis} other {# avertismente emise}}",
+        "count": "{count} strike{count, plural, one {} other {s}} issued",
         "searchPlaceholder": "Caută după nume, etichetă sau motiv...",
         "noStrikesFound": "Nu au fost găsite avertismente",
         "noStrikes": "Niciun avertisment emis",
@@ -989,6 +989,8 @@
       "editTitle": "Editează automatizarea",
       "createDesc": "Programează o acțiune automată",
       "actionType": "Tipul acțiunii",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "Momentul față de eveniment",
       "offsetBefore": "Înaintea evenimentului",
       "offsetAfter": "După eveniment",
@@ -1034,9 +1036,7 @@
         "roster_clear": "Elimină toți membrii din listă fără a o șterge",
         "roster_archive": "Arhivează lista și o transformă în una doar pentru citire"
       },
-      "infoBox": "Automatizările sunt activate în raport cu ora de începere a evenimentului. Stabilește un decalaj (de ex., cu 3 zile înainte), iar botul va executa automat acțiunea la momentul stabilit, inclusiv pentru evenimente recurente.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "Automatizările sunt activate în raport cu ora de începere a evenimentului. Stabilește un decalaj (de ex., cu 3 zile înainte), iar botul va executa automat acțiunea la momentul stabilit, inclusiv pentru evenimente recurente."
     },
     "groups": {
       "title": "Grupuri de liste",
@@ -3105,8 +3105,8 @@
       "start": "Începe",
       "end": "Se termină",
       "winnersHeader": "Câștigători",
-      "winners": "{count, plural, one {# câștigător} other {# câștigători}}",
-      "boosters": "{count, plural, one {# multiplicator} other {# multiplicatori}}",
+      "winners": "{count} winner{count, plural, one {} other {s}}",
+      "boosters": "{count} booster{count, plural, one {} other {s}}",
       "noChannel": "Fără canal",
       "noChannelHelp": "Nu este atribuit niciun canal. Editează concursul pentru a corecta situația.",
       "endsAt": "Se termină la",
@@ -3218,7 +3218,7 @@
       "notScheduled": "Neprogramat",
       "schedule": "Programare",
       "endMessage": "Mesaj pentru câștigători",
-      "endSummary": "{winners, plural, one {Aici va fi anunțat # câștigător.} other {Aici vor fi anunțați # câștigători.}}",
+      "endSummary": "{winners} winner{winners, plural, one {} other {s}} will be announced here.",
       "totalParticipants": "Total de participanți: {count}",
       "participate": "Participă",
       "buttonHint": "Butonul principal de acțiune de sub postarea Discord."

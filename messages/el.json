@@ -310,10 +310,18 @@
       "upvotes": "Θετικές ψήφοι",
       "downvotes": "Αρνητικές ψήφοι"
     },
+    "context": {
+      "server": "Διακομιστής",
+      "channel": "Κανάλι",
+      "message": "Message"
+    },
     "history": {
       "title": "Ιστορικό λήψεων ({count})",
       "empty": "Δεν έχουν καταγραφεί αναγνωριστικά χρηστών που έκαναν λήψη.",
       "resolve": "Εύρεση προφίλ"
+    },
+    "edit": {
+      "action": "Επεξεργασία"
     },
     "delete": {
       "action": "Διαγραφή",
@@ -344,7 +352,9 @@
     },
     "form": {
       "title": "Προσθήκη βάσης",
-      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
+      "description": "Οι βάσεις δεν μπορούν να τροποποιηθούν μετά τη δημιουργία τους. Επιλέξτε πού θα δημοσιεύσει το ClashKing το μήνυμα στο Discord και επιβεβαιώστε τον σύνδεσμο διάταξης.",
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
       "channel": "Κανάλι Discord",
       "channelPlaceholder": "Επιλέξτε κανάλι",
       "channelSearch": "Αναζήτηση καναλιών…",
@@ -353,9 +363,12 @@
       "descriptionLabel": "Περιγραφή",
       "images": "Εικόνες",
       "chooseImages": "Επιλογή εικόνων διάταξης",
-      "imageLimit": "Up to four images total; new uploads finish before saving.",
+      "imageLimit": "Έως τέσσερις εικόνες. Η μεταφόρτωση ολοκληρώνεται πριν δημιουργηθεί η βάση.",
+      "removeImage": "Remove image {index}",
       "submit": "Δημιουργία βάσης",
       "creating": "Μεταφόρτωση και δημιουργία…",
+      "update": "Αποθήκευση αλλαγών",
+      "updating": "Uploading and saving…",
       "createRejectedTitle": "Η βάση δεν δημιουργήθηκε",
       "createCleanupCompleteTitle": "Η εκκαθάριση στο Discord ολοκληρώθηκε, αλλά η βάση δεν δημιουργήθηκε",
       "createCleanupFailedTitle": "Το μήνυμα ίσως παραμένει στο Discord και η βάση δεν δημιουργήθηκε",
@@ -369,34 +382,21 @@
         "deleted": "Το μήνυμα στο Discord διαγράφηκε",
         "alreadyMissing": "Το μήνυμα στο Discord δεν υπήρχε πλέον",
         "failed": "Η εκκαθάριση στο Discord απέτυχε"
-      },
-      "editTitle": "Edit base",
-      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
-      "removeImage": "Remove image {index}",
-      "update": "Save changes",
-      "updating": "Uploading and saving…"
+      }
     },
     "errors": {
       "title": "Οι βάσεις δεν είναι διαθέσιμες",
       "load": "Η φόρτωση των βάσεων απέτυχε.",
       "create": "Η δημιουργία της βάσης απέτυχε.",
+      "update": "Failed to update the base.",
       "upload": "Η μεταφόρτωση της εικόνας απέτυχε.",
       "downloader": "Δεν ήταν δυνατή η εύρεση αυτού του χρήστη.",
       "channels": "Η φόρτωση των καναλιών Discord απέτυχε.",
       "channelRequired": "Επιλέξτε κανάλι Discord.",
       "linkRequired": "Απαιτείται σύνδεσμος διάταξης.",
-      "descriptionTooLong": "Η περιγραφή δεν μπορεί να ξεπερνά τους 1.000 χαρακτήρες.",
-      "tooManyImages": "Επιλέξτε έως τέσσερις εικόνες.",
       "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
-      "update": "Failed to update the base."
-    },
-    "context": {
-      "server": "Server",
-      "channel": "Channel",
-      "message": "Message"
-    },
-    "edit": {
-      "action": "Edit"
+      "descriptionTooLong": "Η περιγραφή δεν μπορεί να ξεπερνά τους 1.000 χαρακτήρες.",
+      "tooManyImages": "Επιλέξτε έως τέσσερις εικόνες."
     }
   },
   "BansPage": {
@@ -989,6 +989,8 @@
       "editTitle": "Επεξεργασία αυτοματισμού",
       "createDesc": "Προγραμματίστε μια αυτοματοποιημένη ενέργεια",
       "actionType": "Τύπος ενέργειας",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "Χρονισμός σε σχέση με την εκδήλωση",
       "offsetBefore": "Πριν από την εκδήλωση",
       "offsetAfter": "Μετά την εκδήλωση",
@@ -1034,9 +1036,7 @@
         "roster_clear": "Αφαιρεί όλα τα μέλη από το ρόστερ χωρίς να το διαγράψει",
         "roster_archive": "Αρχειοθετεί το ρόστερ και το κάνει μόνο για ανάγνωση"
       },
-      "infoBox": "Οι αυτοματισμοί ενεργοποιούνται σε σχέση με την ώρα έναρξης του συμβάντος. Ορίστε μια χρονική απόκλιση (π.χ. 3 ημέρες πριν) και το bot θα εκτελέσει αυτόματα την ενέργεια, ακόμη και για επαναλαμβανόμενα συμβάντα.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "Οι αυτοματισμοί ενεργοποιούνται σε σχέση με την ώρα έναρξης του συμβάντος. Ορίστε μια χρονική απόκλιση (π.χ. 3 ημέρες πριν) και το bot θα εκτελέσει αυτόματα την ενέργεια, ακόμη και για επαναλαμβανόμενα συμβάντα."
     },
     "groups": {
       "title": "Ομάδες ρόστερ",

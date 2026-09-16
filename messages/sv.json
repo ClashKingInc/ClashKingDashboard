@@ -310,10 +310,18 @@
       "upvotes": "Uppröster",
       "downvotes": "Nedröster"
     },
+    "context": {
+      "server": "Server",
+      "channel": "Kanal",
+      "message": "Message"
+    },
     "history": {
       "title": "Nedladdningshistorik ({count})",
       "empty": "Inga ID:n för nedladdare har registrerats.",
       "resolve": "Hitta profil"
+    },
+    "edit": {
+      "action": "Redigera"
     },
     "delete": {
       "action": "Ta bort",
@@ -344,7 +352,9 @@
     },
     "form": {
       "title": "Lägg till en bas",
-      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
+      "description": "Baser kan inte redigeras efter att de har skapats. Välj var ClashKing ska publicera Discord-meddelandet och bekräfta layoutlänken.",
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
       "channel": "Discord-kanal",
       "channelPlaceholder": "Välj en kanal",
       "channelSearch": "Sök efter kanaler…",
@@ -353,9 +363,12 @@
       "descriptionLabel": "Beskrivning",
       "images": "Bilder",
       "chooseImages": "Välj layoutbilder",
-      "imageLimit": "Up to four images total; new uploads finish before saving.",
+      "imageLimit": "Högst fyra bilder; uppladdningarna slutförs innan basen skapas.",
+      "removeImage": "Remove image {index}",
       "submit": "Skapa bas",
       "creating": "Laddar upp och skapar…",
+      "update": "Spara ändringar",
+      "updating": "Uploading and saving…",
       "createRejectedTitle": "Basen skapades inte",
       "createCleanupCompleteTitle": "Discord-rensningen slutfördes; basen skapades inte",
       "createCleanupFailedTitle": "Discord-meddelandet kan finnas kvar; basen skapades inte",
@@ -369,34 +382,21 @@
         "deleted": "Discord-meddelandet har tagits bort",
         "alreadyMissing": "Discord-meddelandet saknas redan",
         "failed": "Discord-rensningen misslyckades"
-      },
-      "editTitle": "Edit base",
-      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
-      "removeImage": "Remove image {index}",
-      "update": "Save changes",
-      "updating": "Uploading and saving…"
+      }
     },
     "errors": {
       "title": "Baser är inte tillgängliga",
       "load": "Det gick inte att läsa in baserna.",
       "create": "Det gick inte att skapa basen.",
+      "update": "Failed to update the base.",
       "upload": "Det gick inte att ladda upp en bild.",
       "downloader": "Det gick inte att hitta den här nedladdaren.",
       "channels": "Det gick inte att läsa in Discord-kanaler.",
       "channelRequired": "Välj en Discord-kanal.",
       "linkRequired": "Layoutlänk krävs.",
-      "descriptionTooLong": "Beskrivningen får innehålla högst 1 000 tecken.",
-      "tooManyImages": "Välj högst fyra bilder.",
       "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
-      "update": "Failed to update the base."
-    },
-    "context": {
-      "server": "Server",
-      "channel": "Channel",
-      "message": "Message"
-    },
-    "edit": {
-      "action": "Edit"
+      "descriptionTooLong": "Beskrivningen får innehålla högst 1 000 tecken.",
+      "tooManyImages": "Välj högst fyra bilder."
     }
   },
   "BansPage": {
@@ -435,7 +435,7 @@
       },
       "list": {
         "title": "Avstängda spelare",
-        "count": "{count, plural, one {# avstängd spelare} other {# avstängda spelare}}",
+        "count": "{count} player{count, plural, one {} other {s}} banned",
         "searchPlaceholder": "Sök efter namn, tagg eller orsak...",
         "noBansFound": "Inga avstängningar hittades",
         "noBans": "Inga avstängda spelare",
@@ -505,7 +505,7 @@
       },
       "list": {
         "title": "Spelarvarningar",
-        "count": "{count, plural, one {# utfärdad varning} other {# utfärdade varningar}}",
+        "count": "{count} strike{count, plural, one {} other {s}} issued",
         "searchPlaceholder": "Sök efter namn, tagg eller orsak...",
         "noStrikesFound": "Inga varningar hittades",
         "noStrikes": "Inga varningar utfärdade",
@@ -989,6 +989,8 @@
       "editTitle": "Redigera automatisering",
       "createDesc": "Schemalägg en automatisk åtgärd",
       "actionType": "Åtgärdstyp",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "Tid i förhållande till evenemanget",
       "offsetBefore": "Före evenemanget",
       "offsetAfter": "Efter evenemanget",
@@ -1034,9 +1036,7 @@
         "roster_clear": "Tar bort alla medlemmar från laguppställningen utan att radera den",
         "roster_archive": "Arkiverar laguppställningen och gör den skrivskyddad"
       },
-      "infoBox": "Automatiseringar utlöses i förhållande till evenemangets starttid. Ange en förskjutning (t.ex. tre dagar före), så utför boten åtgärden automatiskt vid den tiden, även för återkommande evenemang.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "Automatiseringar utlöses i förhållande till evenemangets starttid. Ange en förskjutning (t.ex. tre dagar före), så utför boten åtgärden automatiskt vid den tiden, även för återkommande evenemang."
     },
     "groups": {
       "title": "Grupper för laguppställningar",
@@ -3105,8 +3105,8 @@
       "start": "Startar",
       "end": "Slutar",
       "winnersHeader": "Vinnare",
-      "winners": "{count, plural, one {# vinnare} other {# vinnare}}",
-      "boosters": "{count, plural, one {# bonus} other {# bonusar}}",
+      "winners": "{count} winner{count, plural, one {} other {s}}",
+      "boosters": "{count} booster{count, plural, one {} other {s}}",
       "noChannel": "Ingen kanal",
       "noChannelHelp": "Ingen kanal har tilldelats. Redigera utlottningen för att rätta till det.",
       "endsAt": "Slutar",
@@ -3218,7 +3218,7 @@
       "notScheduled": "Inte schemalagd",
       "schedule": "Schema",
       "endMessage": "Vinnarmeddelande",
-      "endSummary": "{winners, plural, one {# vinnare meddelas här.} other {# vinnare meddelas här.}}",
+      "endSummary": "{winners} winner{winners, plural, one {} other {s}} will be announced here.",
       "totalParticipants": "Totalt antal deltagare: {count}",
       "participate": "Delta",
       "buttonHint": "Primär åtgärdsknapp som visas under Discord-inlägget."

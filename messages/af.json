@@ -310,10 +310,18 @@
       "upvotes": "Opstemme",
       "downvotes": "Negatiewe stemme"
     },
+    "context": {
+      "server": "Server",
+      "channel": "kanaal",
+      "message": "Message"
+    },
     "history": {
       "title": "Aflaaigeskiedenis ({count})",
       "empty": "Daar is geen downloader-ID's aangeteken.",
       "resolve": "Profiel haal"
+    },
+    "edit": {
+      "action": "Wysig"
     },
     "delete": {
       "action": "Vee uit",
@@ -344,7 +352,9 @@
     },
     "form": {
       "title": "Voeg basis by",
-      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
+      "description": "Basisse kan nie ná skepping gewysig word nie. Kies waar ClashKing die Discord-boodskap moet plaas en kontroleer die uitlegskakel.",
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
       "channel": "Discord-kanaal",
       "channelPlaceholder": "Kies 'n kanaal",
       "channelSearch": "Soek kanale…",
@@ -353,9 +363,12 @@
       "descriptionLabel": "Beskrywing",
       "images": "Beelde",
       "chooseImages": "Kies uitlegbeelde",
-      "imageLimit": "Up to four images total; new uploads finish before saving.",
+      "imageLimit": "Maksimum vier Beelde; uploads word vir skepping voltooi.",
+      "removeImage": "Remove image {index}",
       "submit": "Base skep",
       "creating": "Laai op en skep…",
+      "update": "Stoor veranderinge",
+      "updating": "Uploading and saving…",
       "createRejectedTitle": "Die basis is nie geskep nie",
       "createCleanupCompleteTitle": "Discord-opruiming voltooi; basis is nie geskep nie",
       "createCleanupFailedTitle": "Discord-boodskap kan agterbly; basis is nie geskep nie",
@@ -369,34 +382,21 @@
         "deleted": "Discord-boodskap Verwyder",
         "alreadyMissing": "Discord-boodskap het reeds ontbreek",
         "failed": "Discord-opruiming het misluk"
-      },
-      "editTitle": "Edit base",
-      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
-      "removeImage": "Remove image {index}",
-      "update": "Save changes",
-      "updating": "Uploading and saving…"
+      }
     },
     "errors": {
       "title": "Basisse nie beskikbaar",
       "load": "Kon nie basisse laai nie.",
       "create": "Kon nie basis skep nie.",
+      "update": "Failed to update the base.",
       "upload": "Kon nie beeld oplaai nie.",
       "downloader": "Kon nie aflaaierdata haal nie.",
       "channels": "Kon nie Discord-kanale laai nie.",
       "channelRequired": "Kies 'n Discord-kanaal.",
       "linkRequired": "Uitlegskakel is verpligtend.",
-      "descriptionTooLong": "Die Beskrywing mag hoogstens 1 000 tekens bevat.",
-      "tooManyImages": "Kies hoogstens vier Beelde.",
       "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
-      "update": "Failed to update the base."
-    },
-    "context": {
-      "server": "Server",
-      "channel": "Channel",
-      "message": "Message"
-    },
-    "edit": {
-      "action": "Edit"
+      "descriptionTooLong": "Die Beskrywing mag hoogstens 1 000 tekens bevat.",
+      "tooManyImages": "Kies hoogstens vier Beelde."
     }
   },
   "BansPage": {
@@ -989,6 +989,8 @@
       "editTitle": "Wysig outomatisering",
       "createDesc": "Plan 'n outomatiese aksie",
       "actionType": "Aksietipe",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "Skeduleer relatief tot die geleentheid",
       "offsetBefore": "Voor die geleentheid",
       "offsetAfter": "Na die geleentheid",
@@ -1034,9 +1036,7 @@
         "roster_clear": "Verwyder alle lede uit die spanlys sonder om die spanlys te verwyder",
         "roster_archive": "Argiveer die spanlys en maak dit leesalleen"
       },
-      "infoBox": "Outomatiserings word relatief tot die geleentheid se begindatum geaktiveer. Stel ’n verplasing in, byvoorbeeld 3 dae voor, en die bot voer die aksie outomaties uit – ook vir herhalende geleenthede.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "Outomatiserings word relatief tot die geleentheid se begindatum geaktiveer. Stel ’n verplasing in, byvoorbeeld 3 dae voor, en die bot voer die aksie outomaties uit – ook vir herhalende geleenthede."
     },
     "groups": {
       "title": "Spanlysgroepe",

@@ -310,10 +310,18 @@
       "upvotes": "הצבעות בעד",
       "downvotes": "הצבעות נגד"
     },
+    "context": {
+      "server": "שרת",
+      "channel": "ערוץ",
+      "message": "Message"
+    },
     "history": {
       "title": "היסטוריית הורדות ({count})",
       "empty": "לא נרשמו מזהים של מורידים.",
       "resolve": "איתור פרופיל"
+    },
+    "edit": {
+      "action": "עריכה"
     },
     "delete": {
       "action": "מחק",
@@ -344,7 +352,9 @@
     },
     "form": {
       "title": "הוספת בסיס",
-      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
+      "description": "לא ניתן לערוך בסיסים לאחר יצירתם. בחרו היכן ClashKing יפרסם את הודעת Discord ואשרו את קישור הסידור.",
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
       "channel": "ערוץ Discord",
       "channelPlaceholder": "בחירת ערוץ",
       "channelSearch": "חיפוש ערוצים…",
@@ -353,9 +363,12 @@
       "descriptionLabel": "תיאור",
       "images": "תמונות",
       "chooseImages": "בחירת תמונות סידור",
-      "imageLimit": "Up to four images total; new uploads finish before saving.",
+      "imageLimit": "עד ארבע תמונות; ההעלאה תסתיים לפני יצירת הבסיס.",
+      "removeImage": "Remove image {index}",
       "submit": "יצירת בסיס",
       "creating": "מעלה ויוצר…",
+      "update": "שמירת שינויים",
+      "updating": "Uploading and saving…",
       "createRejectedTitle": "הבסיס לא נוצר",
       "createCleanupCompleteTitle": "הניקוי ב-Discord הושלם; הבסיס לא נוצר",
       "createCleanupFailedTitle": "ייתכן שהודעת Discord נשארה; הבסיס לא נוצר",
@@ -369,34 +382,21 @@
         "deleted": "הודעת Discord נמחקה",
         "alreadyMissing": "הודעת Discord כבר לא קיימת",
         "failed": "הניקוי ב-Discord נכשל"
-      },
-      "editTitle": "Edit base",
-      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
-      "removeImage": "Remove image {index}",
-      "update": "Save changes",
-      "updating": "Uploading and saving…"
+      }
     },
     "errors": {
       "title": "הבסיסים אינם זמינים",
       "load": "טעינת הבסיסים נכשלה.",
       "create": "יצירת הבסיס נכשלה.",
+      "update": "Failed to update the base.",
       "upload": "העלאת התמונה נכשלה.",
       "downloader": "איתור המשתמש שהוריד נכשל.",
       "channels": "טעינת ערוצי Discord נכשלה.",
       "channelRequired": "בחרו ערוץ Discord.",
       "linkRequired": "נדרש קישור לסידור.",
-      "descriptionTooLong": "התיאור חייב להכיל עד 1,000 תווים.",
-      "tooManyImages": "בחרו לכל היותר ארבע תמונות.",
       "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
-      "update": "Failed to update the base."
-    },
-    "context": {
-      "server": "Server",
-      "channel": "Channel",
-      "message": "Message"
-    },
-    "edit": {
-      "action": "Edit"
+      "descriptionTooLong": "התיאור חייב להכיל עד 1,000 תווים.",
+      "tooManyImages": "בחרו לכל היותר ארבע תמונות."
     }
   },
   "BansPage": {
@@ -435,7 +435,7 @@
       },
       "list": {
         "title": "שחקנים חסומים",
-        "count": "{count, plural, one {שחקן אחד חסום} two {שני שחקנים חסומים} other {# שחקנים חסומים}}",
+        "count": "{count} player{count, plural, one {} other {s}} banned",
         "searchPlaceholder": "חיפוש לפי שם, תג או סיבה...",
         "noBansFound": "לא נמצאו חסימות",
         "noBans": "אין שחקנים חסומים",
@@ -505,7 +505,7 @@
       },
       "list": {
         "title": "אזהרות שחקנים",
-        "count": "{count, plural, one {ניתנה אזהרה אחת} two {ניתנו שתי אזהרות} other {ניתנו # אזהרות}}",
+        "count": "{count} strike{count, plural, one {} other {s}} issued",
         "searchPlaceholder": "חיפוש לפי שם, תג או סיבה...",
         "noStrikesFound": "לא נמצאו אזהרות",
         "noStrikes": "לא ניתנו אזהרות",
@@ -989,6 +989,8 @@
       "editTitle": "עריכת אוטומציה",
       "createDesc": "תזמון פעולה אוטומטית",
       "actionType": "סוג פעולה",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "תזמון ביחס לאירוע",
       "offsetBefore": "לפני האירוע",
       "offsetAfter": "אחרי האירוע",
@@ -1034,9 +1036,7 @@
         "roster_clear": "מסירה את כל החברים מהסגל בלי למחוק אותו",
         "roster_archive": "מעבירה את הסגל לארכיון והופכת אותו לקריאה בלבד"
       },
-      "infoBox": "אוטומציות מופעלות ביחס לשעת התחלת האירוע. הגדירו הפרש זמן, למשל שלושה ימים לפני, והבוט יבצע את הפעולה אוטומטית גם באירועים חוזרים.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "אוטומציות מופעלות ביחס לשעת התחלת האירוע. הגדירו הפרש זמן, למשל שלושה ימים לפני, והבוט יבצע את הפעולה אוטומטית גם באירועים חוזרים."
     },
     "groups": {
       "title": "קבוצות סגלים",
@@ -3105,8 +3105,8 @@
       "start": "מתחילה",
       "end": "מסתיימת",
       "winnersHeader": "זוכים",
-      "winners": "{count, plural, one {זוכה אחד} two {שני זוכים} other {# זוכים}}",
-      "boosters": "{count, plural, one {מאיץ אחד} two {שני מאיצים} other {# מאיצים}}",
+      "winners": "{count} winner{count, plural, one {} other {s}}",
+      "boosters": "{count} booster{count, plural, one {} other {s}}",
       "noChannel": "ללא ערוץ",
       "noChannelHelp": "לא הוקצה ערוץ. ערכו את ההגרלה כדי לתקן זאת.",
       "endsAt": "מסתיימת בשעה",
@@ -3218,7 +3218,7 @@
       "notScheduled": "לא מתוזמנת",
       "schedule": "לוח זמנים",
       "endMessage": "הודעת זכייה",
-      "endSummary": "{winners, plural, one {זוכה אחד יוכרז כאן.} two {שני זוכים יוכרזו כאן.} other {# זוכים יוכרזו כאן.}}",
+      "endSummary": "{winners} winner{winners, plural, one {} other {s}} will be announced here.",
       "totalParticipants": "סך המשתתפים: {count}",
       "participate": "השתתפות",
       "buttonHint": "כפתור הפעולה הראשי שמוצג מתחת לפרסום ב-Discord."

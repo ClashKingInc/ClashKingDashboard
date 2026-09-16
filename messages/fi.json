@@ -310,10 +310,18 @@
       "upvotes": "Kannatusäänet",
       "downvotes": "Vastustusäänet"
     },
+    "context": {
+      "server": "Palvelin",
+      "channel": "Kanava",
+      "message": "Message"
+    },
     "history": {
       "title": "Lataushistoria ({count})",
       "empty": "Lataajien tunnuksia ei ole tallennettu.",
       "resolve": "Selvitä profiili"
+    },
+    "edit": {
+      "action": "Muokkaa"
     },
     "delete": {
       "action": "Poista",
@@ -344,7 +352,9 @@
     },
     "form": {
       "title": "Lisää tukikohta",
-      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
+      "description": "Tukikohtia ei voi muokata luomisen jälkeen. Valitse, mihin ClashKing lähettää Discord-viestin, ja vahvista asettelulinkki.",
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
       "channel": "Discord-kanava",
       "channelPlaceholder": "Valitse kanava",
       "channelSearch": "Hae kanavia…",
@@ -353,9 +363,12 @@
       "descriptionLabel": "Kuvaus",
       "images": "Kuvat",
       "chooseImages": "Valitse asettelukuvat",
-      "imageLimit": "Up to four images total; new uploads finish before saving.",
+      "imageLimit": "Enintään neljä kuvaa; lataukset valmistuvat ennen tukikohdan luomista.",
+      "removeImage": "Remove image {index}",
       "submit": "Luo tukikohta",
       "creating": "Ladataan ja luodaan…",
+      "update": "Tallenna muutokset",
+      "updating": "Uploading and saving…",
       "createRejectedTitle": "Tukikohtaa ei luotu",
       "createCleanupCompleteTitle": "Discord-siivous valmistui; tukikohtaa ei luotu",
       "createCleanupFailedTitle": "Discord-viesti saattaa jäädä; tukikohtaa ei luotu",
@@ -369,34 +382,21 @@
         "deleted": "Discord-viesti poistettu",
         "alreadyMissing": "Discord-viesti puuttuu jo",
         "failed": "Discord-siivous epäonnistui"
-      },
-      "editTitle": "Edit base",
-      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
-      "removeImage": "Remove image {index}",
-      "update": "Save changes",
-      "updating": "Uploading and saving…"
+      }
     },
     "errors": {
       "title": "Tukikohdat eivät ole saatavilla",
       "load": "Tukikohtien lataaminen epäonnistui.",
       "create": "Tukikohdan luominen epäonnistui.",
+      "update": "Failed to update the base.",
       "upload": "Kuvan lataaminen epäonnistui.",
       "downloader": "Lataajan selvittäminen epäonnistui.",
       "channels": "Discord-kanavien lataaminen epäonnistui.",
       "channelRequired": "Valitse Discord-kanava.",
       "linkRequired": "Asettelulinkki vaaditaan.",
-      "descriptionTooLong": "Kuvauksen enimmäispituus on 1 000 merkkiä.",
-      "tooManyImages": "Valitse enintään neljä kuvaa.",
       "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
-      "update": "Failed to update the base."
-    },
-    "context": {
-      "server": "Server",
-      "channel": "Channel",
-      "message": "Message"
-    },
-    "edit": {
-      "action": "Edit"
+      "descriptionTooLong": "Kuvauksen enimmäispituus on 1 000 merkkiä.",
+      "tooManyImages": "Valitse enintään neljä kuvaa."
     }
   },
   "BansPage": {
@@ -989,6 +989,8 @@
       "editTitle": "Muokkaa automaatiota",
       "createDesc": "Ajasta automaattinen toiminto",
       "actionType": "Toiminnon tyyppi",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "Ajoitus suhteessa tapahtumaan",
       "offsetBefore": "Ennen tapahtumaa",
       "offsetAfter": "Tapahtuman jälkeen",
@@ -1034,9 +1036,7 @@
         "roster_clear": "Poistaa kaikki jäsenet poistamatta kokoonpanoa",
         "roster_archive": "Arkistoi kokoonpanon kirjoitussuojattuun tilaan"
       },
-      "infoBox": "Automaatiot käynnistyvät suhteessa tapahtuman alkamisaikaan. Määritä siirtymä (esim. kolme päivää ennen), niin botti suorittaa toiminnon automaattisesti myös toistuvissa tapahtumissa.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "Automaatiot käynnistyvät suhteessa tapahtuman alkamisaikaan. Määritä siirtymä (esim. kolme päivää ennen), niin botti suorittaa toiminnon automaattisesti myös toistuvissa tapahtumissa."
     },
     "groups": {
       "title": "Kokoonpanoryhmät",

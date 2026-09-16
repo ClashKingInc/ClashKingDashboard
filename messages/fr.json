@@ -310,10 +310,18 @@
       "upvotes": "Votes positifs",
       "downvotes": "Votes négatifs"
     },
+    "context": {
+      "server": "Serveur",
+      "channel": "Salon",
+      "message": "Message"
+    },
     "history": {
       "title": "Historique des téléchargements ({count})",
       "empty": "Aucun identifiant de téléchargeur enregistré.",
       "resolve": "Résoudre le profil"
+    },
+    "edit": {
+      "action": "Modifier"
     },
     "delete": {
       "action": "Supprimer",
@@ -344,7 +352,9 @@
     },
     "form": {
       "title": "Ajouter une base",
-      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
+      "description": "Les bases ne peuvent pas être modifiées après création. Choisissez le salon où ClashKing publiera le message et vérifiez le lien.",
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
       "channel": "Salon Discord",
       "channelPlaceholder": "Sélectionner un salon",
       "channelSearch": "Rechercher un salon…",
@@ -353,9 +363,12 @@
       "descriptionLabel": "Description",
       "images": "Images",
       "chooseImages": "Choisir les images du plan",
-      "imageLimit": "Up to four images total; new uploads finish before saving.",
+      "imageLimit": "Jusqu’à quatre images, téléversées avant la création.",
+      "removeImage": "Remove image {index}",
       "submit": "Créer la base",
       "creating": "Téléversement et création…",
+      "update": "Enregistrer",
+      "updating": "Uploading and saving…",
       "createRejectedTitle": "La base n’a pas été créée",
       "createCleanupCompleteTitle": "Nettoyage Discord terminé ; base non créée",
       "createCleanupFailedTitle": "Le message Discord peut subsister ; base non créée",
@@ -369,34 +382,21 @@
         "deleted": "Message Discord supprimé",
         "alreadyMissing": "Message Discord déjà absent",
         "failed": "Nettoyage Discord échoué"
-      },
-      "editTitle": "Edit base",
-      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
-      "removeImage": "Remove image {index}",
-      "update": "Save changes",
-      "updating": "Uploading and saving…"
+      }
     },
     "errors": {
       "title": "Bases indisponibles",
       "load": "Impossible de charger les bases.",
       "create": "Impossible de créer la base.",
+      "update": "Failed to update the base.",
       "upload": "Impossible de téléverser une image.",
       "downloader": "Impossible de résoudre ce téléchargeur.",
       "channels": "Impossible de charger les salons Discord.",
       "channelRequired": "Sélectionnez un salon Discord.",
       "linkRequired": "Le lien du plan est requis.",
-      "descriptionTooLong": "La description doit contenir au maximum 1 000 caractères.",
-      "tooManyImages": "Choisissez au maximum quatre images.",
       "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
-      "update": "Failed to update the base."
-    },
-    "context": {
-      "server": "Server",
-      "channel": "Channel",
-      "message": "Message"
-    },
-    "edit": {
-      "action": "Edit"
+      "descriptionTooLong": "La description doit contenir au maximum 1 000 caractères.",
+      "tooManyImages": "Choisissez au maximum quatre images."
     }
   },
   "BansPage": {

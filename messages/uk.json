@@ -310,10 +310,18 @@
       "upvotes": "Позитивні оцінки",
       "downvotes": "Негативні оцінки"
     },
+    "context": {
+      "server": "Сервер",
+      "channel": "Канал",
+      "message": "Message"
+    },
     "history": {
       "title": "Історія завантажень ({count})",
       "empty": "Ідентифікатори завантажувачів ще не записувалися.",
       "resolve": "Знайти профіль"
+    },
+    "edit": {
+      "action": "Редагувати"
     },
     "delete": {
       "action": "Видалити",
@@ -344,7 +352,9 @@
     },
     "form": {
       "title": "Додати базу",
-      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
+      "description": "Після створення базу не можна редагувати. Виберіть, де ClashKing має опублікувати повідомлення в Discord, і перевірте посилання на розстановку.",
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
       "channel": "Канал Discord",
       "channelPlaceholder": "Виберіть канал",
       "channelSearch": "Пошук каналів…",
@@ -353,9 +363,12 @@
       "descriptionLabel": "Опис",
       "images": "Зображення",
       "chooseImages": "Вибрати зображення розстановки",
-      "imageLimit": "Up to four images total; new uploads finish before saving.",
+      "imageLimit": "До чотирьох зображень; завантаження завершаться до створення бази.",
+      "removeImage": "Remove image {index}",
       "submit": "Створити базу",
       "creating": "Завантаження та створення…",
+      "update": "Зберегти зміни",
+      "updating": "Uploading and saving…",
       "createRejectedTitle": "Базу не створено",
       "createCleanupCompleteTitle": "Discord очищено; базу не створено",
       "createCleanupFailedTitle": "Повідомлення в Discord може залишитися; базу не створено",
@@ -369,34 +382,21 @@
         "deleted": "Повідомлення в Discord видалено",
         "alreadyMissing": "Повідомлення в Discord уже відсутнє",
         "failed": "Не вдалося очистити Discord"
-      },
-      "editTitle": "Edit base",
-      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
-      "removeImage": "Remove image {index}",
-      "update": "Save changes",
-      "updating": "Uploading and saving…"
+      }
     },
     "errors": {
       "title": "Бази недоступні",
       "load": "Не вдалося завантажити бази.",
       "create": "Не вдалося створити базу.",
+      "update": "Failed to update the base.",
       "upload": "Не вдалося завантажити зображення.",
       "downloader": "Не вдалося визначити цього завантажувача.",
       "channels": "Не вдалося завантажити канали Discord.",
       "channelRequired": "Виберіть канал Discord.",
       "linkRequired": "Посилання на розстановку обов’язкове.",
-      "descriptionTooLong": "Опис має містити не більше 1 000 символів.",
-      "tooManyImages": "Виберіть не більше чотирьох зображень.",
       "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
-      "update": "Failed to update the base."
-    },
-    "context": {
-      "server": "Server",
-      "channel": "Channel",
-      "message": "Message"
-    },
-    "edit": {
-      "action": "Edit"
+      "descriptionTooLong": "Опис має містити не більше 1 000 символів.",
+      "tooManyImages": "Виберіть не більше чотирьох зображень."
     }
   },
   "BansPage": {
@@ -989,6 +989,8 @@
       "editTitle": "Редагувати автоматизацію",
       "createDesc": "Заплануйте автоматичну дію",
       "actionType": "Тип дії",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "Час відносно події",
       "offsetBefore": "До події",
       "offsetAfter": "Після події",
@@ -1034,9 +1036,7 @@
         "roster_clear": "Вилучає всіх учасників, не видаляючи склад",
         "roster_archive": "Архівує склад і робить його доступним лише для читання"
       },
-      "infoBox": "Автоматизації запускаються відносно часу початку події. Укажіть зсув, наприклад за 3 дні до початку, і бот автоматично виконає дію, зокрема для повторюваних подій.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "Автоматизації запускаються відносно часу початку події. Укажіть зсув, наприклад за 3 дні до початку, і бот автоматично виконає дію, зокрема для повторюваних подій."
     },
     "groups": {
       "title": "Групи складів",

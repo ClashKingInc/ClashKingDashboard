@@ -310,10 +310,18 @@
       "upvotes": "Vots positius",
       "downvotes": "Vots negatius"
     },
+    "context": {
+      "server": "Servidor",
+      "channel": "Canal",
+      "message": "Message"
+    },
     "history": {
       "title": "Historial de baixades ({count})",
       "empty": "No s’ha registrat cap ID de baixada.",
       "resolve": "Identifica el perfil"
+    },
+    "edit": {
+      "action": "Edita"
     },
     "delete": {
       "action": "Suprimeix",
@@ -344,7 +352,9 @@
     },
     "form": {
       "title": "Afegeix una base",
-      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
+      "description": "Les bases no es poden editar després de crear-les. Tria on ha de publicar ClashKing el missatge de Discord i confirma l’enllaç del disseny.",
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
       "channel": "Canal de Discord",
       "channelPlaceholder": "Selecciona un canal",
       "channelSearch": "Cerca canals…",
@@ -353,9 +363,12 @@
       "descriptionLabel": "Descripció",
       "images": "Imatges",
       "chooseImages": "Tria les imatges del disseny",
-      "imageLimit": "Up to four images total; new uploads finish before saving.",
+      "imageLimit": "Pots triar fins a quatre imatges; les pujades acabaran abans de crear la base.",
+      "removeImage": "Remove image {index}",
       "submit": "Crea la base",
       "creating": "S’està pujant i creant…",
+      "update": "Desa canvis",
+      "updating": "Uploading and saving…",
       "createRejectedTitle": "La base no s’ha creat",
       "createCleanupCompleteTitle": "Neteja de Discord completada; la base no s’ha creat",
       "createCleanupFailedTitle": "El missatge de Discord podria conservar-se; la base no s’ha creat",
@@ -369,34 +382,21 @@
         "deleted": "Missatge de Discord suprimit",
         "alreadyMissing": "El missatge de Discord ja no existeix",
         "failed": "Ha fallat la neteja de Discord"
-      },
-      "editTitle": "Edit base",
-      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
-      "removeImage": "Remove image {index}",
-      "update": "Save changes",
-      "updating": "Uploading and saving…"
+      }
     },
     "errors": {
       "title": "Bases no disponibles",
       "load": "No s’han pogut carregar les bases.",
       "create": "No s’ha pogut crear la base.",
+      "update": "Failed to update the base.",
       "upload": "No s’ha pogut pujar la imatge.",
       "downloader": "No s’ha pogut identificar aquest usuari.",
       "channels": "No s’han pogut carregar els canals de Discord.",
       "channelRequired": "Selecciona un canal de Discord.",
       "linkRequired": "L’enllaç del disseny és obligatori.",
-      "descriptionTooLong": "La descripció pot tenir com a màxim 1.000 caràcters.",
-      "tooManyImages": "Tria com a màxim quatre imatges.",
       "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
-      "update": "Failed to update the base."
-    },
-    "context": {
-      "server": "Server",
-      "channel": "Channel",
-      "message": "Message"
-    },
-    "edit": {
-      "action": "Edit"
+      "descriptionTooLong": "La descripció pot tenir com a màxim 1.000 caràcters.",
+      "tooManyImages": "Tria com a màxim quatre imatges."
     }
   },
   "BansPage": {
@@ -989,6 +989,8 @@
       "editTitle": "Edita l’automatització",
       "createDesc": "Programa una acció automàtica",
       "actionType": "Tipus d’acció",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "Moment relatiu a l’esdeveniment",
       "offsetBefore": "Abans de l’esdeveniment",
       "offsetAfter": "Després de l’esdeveniment",
@@ -1034,9 +1036,7 @@
         "roster_clear": "Elimina tots els membres de la llista sense suprimir-la",
         "roster_archive": "Arxiva la llista i la converteix en només lectura"
       },
-      "infoBox": "Les automatitzacions s’activen en relació amb l’hora d’inici de l’esdeveniment. Defineix un interval i el bot executarà automàticament l’acció en el moment establert, també per als esdeveniments recurrents.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "Les automatitzacions s’activen en relació amb l’hora d’inici de l’esdeveniment. Defineix un interval i el bot executarà automàticament l’acció en el moment establert, també per als esdeveniments recurrents."
     },
     "groups": {
       "title": "Grups de llistes",
@@ -3105,8 +3105,8 @@
       "start": "Comença",
       "end": "Acaba",
       "winnersHeader": "Guanyadors",
-      "winners": "{count, plural, one {# guanyador} other {# guanyadors}}",
-      "boosters": "{count, plural, one {# multiplicador} other {# multiplicadors}}",
+      "winners": "{count} winner{count, plural, one {} other {s}}",
+      "boosters": "{count} booster{count, plural, one {} other {s}}",
       "noChannel": "Sense canal",
       "noChannelHelp": "No hi ha cap canal assignat. Edita el sorteig per corregir-ho.",
       "endsAt": "Acaba a les",
@@ -3218,7 +3218,7 @@
       "notScheduled": "Sense programar",
       "schedule": "Programació",
       "endMessage": "Missatge per als guanyadors",
-      "endSummary": "{winners, plural, one {Aquí s’anunciarà # guanyador.} other {Aquí s’anunciaran # guanyadors.}}",
+      "endSummary": "{winners} winner{winners, plural, one {} other {s}} will be announced here.",
       "totalParticipants": "Total de participants: {count}",
       "participate": "Participa",
       "buttonHint": "Botó d’acció principal sota la publicació de Discord."

@@ -310,10 +310,18 @@
       "upvotes": "अपवोट",
       "downvotes": "डाउनवोट"
     },
+    "context": {
+      "server": "सर्वर",
+      "channel": "चैनल",
+      "message": "Message"
+    },
     "history": {
       "title": "डाउनलोडकर्ता इतिहास ({count})",
       "empty": "किसी डाउनलोडकर्ता की आईडी दर्ज नहीं की गई है।",
       "resolve": "प्रोफ़ाइल देखें"
+    },
+    "edit": {
+      "action": "संपादित करें"
     },
     "delete": {
       "action": "हटाएँ",
@@ -344,7 +352,9 @@
     },
     "form": {
       "title": "एक बेस जोड़ें",
-      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
+      "description": "बेस बनाने के बाद उसे संपादित नहीं किया जा सकता। चुनें कि ClashKing Discord संदेश कहाँ पोस्ट करे और लेआउट लिंक की पुष्टि करें।",
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
       "channel": "Discord चैनल",
       "channelPlaceholder": "चैनल चुनें",
       "channelSearch": "चैनल खोजें…",
@@ -353,9 +363,12 @@
       "descriptionLabel": "विवरण",
       "images": "चित्र",
       "chooseImages": "लेआउट के चित्र चुनें",
-      "imageLimit": "Up to four images total; new uploads finish before saving.",
+      "imageLimit": "अधिकतम चार चित्र; बेस बनने से पहले अपलोड पूरे हो जाते हैं।",
+      "removeImage": "Remove image {index}",
       "submit": "बेस बनाएँ",
       "creating": "अपलोड हो रहा है और बनाया जा रहा है…",
+      "update": "बदलाव सहेजें",
+      "updating": "Uploading and saving…",
       "createRejectedTitle": "बेस नहीं बनाया गया",
       "createCleanupCompleteTitle": "Discord की सफ़ाई पूरी हुई; बेस नहीं बनाया गया",
       "createCleanupFailedTitle": "Discord संदेश मौजूद रह सकता है; बेस नहीं बनाया गया",
@@ -369,34 +382,21 @@
         "deleted": "Discord संदेश हटाया गया",
         "alreadyMissing": "Discord संदेश पहले से अनुपस्थित",
         "failed": "Discord की सफ़ाई विफल रही"
-      },
-      "editTitle": "Edit base",
-      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
-      "removeImage": "Remove image {index}",
-      "update": "Save changes",
-      "updating": "Uploading and saving…"
+      }
     },
     "errors": {
       "title": "बेस अनुपलब्ध",
       "load": "बेस लोड नहीं हो सका।",
       "create": "बेस नहीं बनाया जा सका।",
+      "update": "Failed to update the base.",
       "upload": "चित्र अपलोड नहीं हो सका।",
       "downloader": "इस डाउनलोडकर्ता की प्रोफ़ाइल नहीं मिल सकी।",
       "channels": "Discord चैनल लोड नहीं हो सका।",
       "channelRequired": "Discord चैनल चुनें।",
       "linkRequired": "लेआउट लिंक आवश्यक है।",
-      "descriptionTooLong": "विवरण 1,000 या उससे कम अक्षरों का होना चाहिए।",
-      "tooManyImages": "अधिकतम चार चित्र चुनें।",
       "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
-      "update": "Failed to update the base."
-    },
-    "context": {
-      "server": "Server",
-      "channel": "Channel",
-      "message": "Message"
-    },
-    "edit": {
-      "action": "Edit"
+      "descriptionTooLong": "विवरण 1,000 या उससे कम अक्षरों का होना चाहिए।",
+      "tooManyImages": "अधिकतम चार चित्र चुनें।"
     }
   },
   "BansPage": {
@@ -435,7 +435,7 @@
       },
       "list": {
         "title": "प्रतिबंधित खिलाड़ी",
-        "count": "{count, plural, one {# खिलाड़ी प्रतिबंधित} other {# खिलाड़ी प्रतिबंधित}}",
+        "count": "{count} player{count, plural, one {} other {s}} banned",
         "searchPlaceholder": "नाम, टैग या कारण से खोजें...",
         "noBansFound": "कोई प्रतिबंध नहीं मिला।",
         "noBans": "कोई प्रतिबंधित खिलाड़ी",
@@ -505,7 +505,7 @@
       },
       "list": {
         "title": "खिलाड़ी स्ट्राइक",
-        "count": "{count, plural, one {# स्ट्राइक जारी} other {# स्ट्राइक जारी}}",
+        "count": "{count} strike{count, plural, one {} other {s}} issued",
         "searchPlaceholder": "नाम, टैग या कारण से खोजें...",
         "noStrikesFound": "कोई स्ट्राइक नहीं मिली।",
         "noStrikes": "अभी कोई स्ट्राइक जारी नहीं की गई",
@@ -989,6 +989,8 @@
       "editTitle": "ऑटोमेशन संपादित करें",
       "createDesc": "स्वचालित कार्रवाई शेड्यूल करें",
       "actionType": "कार्रवाई प्रकार",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "इवेंट के सापेक्ष समय",
       "offsetBefore": "इवेंट से पहले",
       "offsetAfter": "इवेंट के बाद",
@@ -1034,9 +1036,7 @@
         "roster_clear": "रोस्टर को हटाए बिना उसके सभी सदस्यों को निकाल देता है",
         "roster_archive": "रोस्टर को केवल पढ़ने योग्य बनाकर संग्रहित करता है"
       },
-      "infoBox": "ऑटोमेशन इवेंट के आरंभ समय के सापेक्ष ट्रिगर होते हैं। अंतराल तय करें (जैसे 3 दिन पहले), और बॉट उस समय कार्रवाई अपने आप करेगा—दोहराए जाने वाले इवेंट के लिए भी।",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "ऑटोमेशन इवेंट के आरंभ समय के सापेक्ष ट्रिगर होते हैं। अंतराल तय करें (जैसे 3 दिन पहले), और बॉट उस समय कार्रवाई अपने आप करेगा—दोहराए जाने वाले इवेंट के लिए भी।"
     },
     "groups": {
       "title": "रोस्टर ग्रुप",
@@ -1108,7 +1108,7 @@
       "recurrenceModeMonthly": "महीने का दिन",
       "recurrenceDaysUnit": "दिन",
       "recurrenceDayOfMonthPrefix": "हर महीने की तारीख",
-      "recurrenceDayOfMonthSuffix": "",
+      "recurrenceDayOfMonthSuffix": "of each month",
       "recurrenceDaysHint": "एक बार के इवेंट के लिए खाली छोड़ें। दो अवसरों के बीच दिनों की संख्या दर्ज करें (जैसे मासिक CWL के लिए 30)।",
       "recurrenceDayOfMonthHint": "हर महीने इसी तारीख को दोहराता है (जैसे 1 = पहली तारीख)।",
       "group": "ग्रुप",
@@ -3105,8 +3105,8 @@
       "start": "शुरू",
       "end": "समाप्त",
       "winnersHeader": "विजेता",
-      "winners": "{count, plural, one {# विजेता} other {# विजेता}}",
-      "boosters": "{count, plural, one {# बूस्टर} other {# बूस्टर}}",
+      "winners": "{count} winner{count, plural, one {} other {s}}",
+      "boosters": "{count} booster{count, plural, one {} other {s}}",
       "noChannel": "कोई चैनल नहीं",
       "noChannelHelp": "कोई चैनल असाइन नहीं है। इसे ठीक करने के लिए इनामी आयोजन संपादित करें।",
       "endsAt": "समाप्ति समय",
@@ -3218,7 +3218,7 @@
       "notScheduled": "निर्धारित नहीं",
       "schedule": "शेड्यूल",
       "endMessage": "विजेता संदेश",
-      "endSummary": "{winners, plural, one {यहाँ # विजेता की घोषणा होगी।} other {यहाँ # विजेताओं की घोषणा होगी।}}",
+      "endSummary": "{winners} winner{winners, plural, one {} other {s}} will be announced here.",
       "totalParticipants": "कुल प्रतिभागी: {count}",
       "participate": "भाग लें",
       "buttonHint": "Discord पोस्ट के नीचे दिखने वाला मुख्य कार्रवाई बटन।"

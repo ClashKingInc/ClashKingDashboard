@@ -310,10 +310,18 @@
       "upvotes": "Głosy za",
       "downvotes": "Głosy przeciw"
     },
+    "context": {
+      "server": "Serwer",
+      "channel": "Kanał",
+      "message": "Message"
+    },
     "history": {
       "title": "Historia pobrań ({count})",
       "empty": "Nie zarejestrowano identyfikatorów pobierających.",
       "resolve": "Znajdź profil"
+    },
+    "edit": {
+      "action": "Edytuj"
     },
     "delete": {
       "action": "Usuń",
@@ -344,7 +352,9 @@
     },
     "form": {
       "title": "Dodaj bazę",
-      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
+      "description": "Baz nie można edytować po utworzeniu. Wybierz miejsce publikacji wiadomości Discord przez ClashKing i potwierdź link do układu.",
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
       "channel": "Kanał Discord",
       "channelPlaceholder": "Wybierz kanał",
       "channelSearch": "Szukaj kanałów…",
@@ -353,9 +363,12 @@
       "descriptionLabel": "Opis",
       "images": "Obrazy",
       "chooseImages": "Wybierz obrazy układu",
-      "imageLimit": "Up to four images total; new uploads finish before saving.",
+      "imageLimit": "Maksymalnie cztery obrazy; przesyłanie zakończy się przed utworzeniem bazy.",
+      "removeImage": "Remove image {index}",
       "submit": "Utwórz bazę",
       "creating": "Przesyłanie i tworzenie…",
+      "update": "Zapisz zmiany",
+      "updating": "Uploading and saving…",
       "createRejectedTitle": "Baza nie została utworzona",
       "createCleanupCompleteTitle": "Czyszczenie Discorda zakończone; baza nie została utworzona",
       "createCleanupFailedTitle": "Wiadomość Discord może pozostać; baza nie została utworzona",
@@ -369,34 +382,21 @@
         "deleted": "Wiadomość Discord usunięta",
         "alreadyMissing": "Wiadomości Discord już nie ma",
         "failed": "Czyszczenie Discorda nie powiodło się"
-      },
-      "editTitle": "Edit base",
-      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
-      "removeImage": "Remove image {index}",
-      "update": "Save changes",
-      "updating": "Uploading and saving…"
+      }
     },
     "errors": {
       "title": "Bazy są niedostępne",
       "load": "Nie udało się wczytać baz.",
       "create": "Nie udało się utworzyć bazy.",
+      "update": "Failed to update the base.",
       "upload": "Nie udało się przesłać obrazu.",
       "downloader": "Nie udało się znaleźć profilu pobierającego.",
       "channels": "Nie udało się wczytać kanałów Discord.",
       "channelRequired": "Wybierz kanał Discord.",
       "linkRequired": "Link do układu jest wymagany.",
-      "descriptionTooLong": "Opis może mieć najwyżej 1000 znaków.",
-      "tooManyImages": "Wybierz najwyżej cztery obrazy.",
       "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
-      "update": "Failed to update the base."
-    },
-    "context": {
-      "server": "Server",
-      "channel": "Channel",
-      "message": "Message"
-    },
-    "edit": {
-      "action": "Edit"
+      "descriptionTooLong": "Opis może mieć najwyżej 1000 znaków.",
+      "tooManyImages": "Wybierz najwyżej cztery obrazy."
     }
   },
   "BansPage": {
@@ -989,6 +989,8 @@
       "editTitle": "Edytuj automatyzację",
       "createDesc": "Zaplanuj automatyczne działanie",
       "actionType": "Typ działania",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "Czas względem wydarzenia",
       "offsetBefore": "Przed wydarzeniem",
       "offsetAfter": "Po wydarzeniu",
@@ -1034,9 +1036,7 @@
         "roster_clear": "Usuwa wszystkich członków ze składu bez usuwania samego składu",
         "roster_archive": "Archiwizuje skład i ustawia go jako tylko do odczytu"
       },
-      "infoBox": "Automatyzacje są uruchamiane względem czasu rozpoczęcia wydarzenia. Ustaw przesunięcie (np. 3 dni wcześniej), a bot automatycznie wykona działanie w tym czasie, także dla wydarzeń cyklicznych.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "Automatyzacje są uruchamiane względem czasu rozpoczęcia wydarzenia. Ustaw przesunięcie (np. 3 dni wcześniej), a bot automatycznie wykona działanie w tym czasie, także dla wydarzeń cyklicznych."
     },
     "groups": {
       "title": "Grupy składów",
