@@ -310,10 +310,18 @@
       "upvotes": "Pozitivni glasovi",
       "downvotes": "Negativni glasovi"
     },
+    "context": {
+      "server": "Server",
+      "channel": "Kanal",
+      "message": "Message"
+    },
     "history": {
       "title": "Istorija preuzimanja ({count})",
       "empty": "Nijedan ID korisnika koji je preuzeo raspored nije zabeležen.",
       "resolve": "Pronađi profil"
+    },
+    "edit": {
+      "action": "Izmeni"
     },
     "delete": {
       "action": "Obriši",
@@ -344,7 +352,9 @@
     },
     "form": {
       "title": "Dodaj bazu",
-      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
+      "description": "Baze se ne mogu menjati nakon pravljenja. Izaberite gde ClashKing treba da pošalje Discord poruku i potvrdite vezu rasporeda.",
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
       "channel": "Discord kanal",
       "channelPlaceholder": "Izaberi kanal",
       "channelSearch": "Pretraži kanale…",
@@ -353,9 +363,12 @@
       "descriptionLabel": "Opis",
       "images": "Slike",
       "chooseImages": "Izaberi slike rasporeda",
-      "imageLimit": "Up to four images total; new uploads finish before saving.",
+      "imageLimit": "Najviše četiri slike; otpremanje se završava pre pravljenja baze.",
+      "removeImage": "Remove image {index}",
       "submit": "Napravi bazu",
       "creating": "Otpremanje i pravljenje…",
+      "update": "Sačuvaj izmene",
+      "updating": "Uploading and saving…",
       "createRejectedTitle": "Baza nije napravljena",
       "createCleanupCompleteTitle": "Čišćenje Discorda završeno; baza nije napravljena",
       "createCleanupFailedTitle": "Discord poruka može ostati; baza nije napravljena",
@@ -369,34 +382,21 @@
         "deleted": "Discord poruka je obrisana",
         "alreadyMissing": "Discord poruka već nedostaje",
         "failed": "Čišćenje Discorda nije uspelo"
-      },
-      "editTitle": "Edit base",
-      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
-      "removeImage": "Remove image {index}",
-      "update": "Save changes",
-      "updating": "Uploading and saving…"
+      }
     },
     "errors": {
       "title": "Baze nisu dostupne",
       "load": "Učitavanje baza nije uspelo.",
       "create": "Pravljenje baze nije uspelo.",
+      "update": "Failed to update the base.",
       "upload": "Otpremanje slike nije uspelo.",
       "downloader": "Pronalaženje ovog korisnika nije uspelo.",
       "channels": "Učitavanje Discord kanala nije uspelo.",
       "channelRequired": "Izaberite Discord kanal.",
       "linkRequired": "Veza rasporeda je obavezna.",
-      "descriptionTooLong": "Opis može imati najviše 1.000 znakova.",
-      "tooManyImages": "Izaberite najviše četiri slike.",
       "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
-      "update": "Failed to update the base."
-    },
-    "context": {
-      "server": "Server",
-      "channel": "Channel",
-      "message": "Message"
-    },
-    "edit": {
-      "action": "Edit"
+      "descriptionTooLong": "Opis može imati najviše 1.000 znakova.",
+      "tooManyImages": "Izaberite najviše četiri slike."
     }
   },
   "BansPage": {
@@ -435,7 +435,7 @@
       },
       "list": {
         "title": "Zabranjeni igrači",
-        "count": "{count, plural, one {# igrač je zabranjen} few {# igrača su zabranjena} other {# igrača je zabranjeno}}",
+        "count": "{count} player{count, plural, one {} other {s}} banned",
         "searchPlaceholder": "Pretraži po imenu, oznaci ili razlogu...",
         "noBansFound": "Zabrane nisu pronađene",
         "noBans": "Nema zabranjenih igrača",
@@ -505,7 +505,7 @@
       },
       "list": {
         "title": "Opomene igrača",
-        "count": "{count, plural, one {Izdana je # opomena} few {Izdane su # opomene} other {Izdano je # opomena}}",
+        "count": "{count} strike{count, plural, one {} other {s}} issued",
         "searchPlaceholder": "Pretraži po imenu, oznaci ili razlogu...",
         "noStrikesFound": "Opomene nisu pronađene",
         "noStrikes": "Nema izdatih opomena",
@@ -989,6 +989,8 @@
       "editTitle": "Izmeni automatizaciju",
       "createDesc": "Zakažite automatsku radnju",
       "actionType": "Vrsta radnje",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "Vreme u odnosu na događaj",
       "offsetBefore": "Pre događaja",
       "offsetAfter": "Posle događaja",
@@ -1034,9 +1036,7 @@
         "roster_clear": "Uklanja sve članove iz sastava bez njegovog brisanja",
         "roster_archive": "Arhivira sastav i omogućava samo čitanje"
       },
-      "infoBox": "Automatizacije se pokreću u odnosu na vreme početka događaja. Podesite pomak (npr. tri dana ranije), a bot će tada automatski izvršiti radnju, uključujući događaje koji se ponavljaju.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "Automatizacije se pokreću u odnosu na vreme početka događaja. Podesite pomak (npr. tri dana ranije), a bot će tada automatski izvršiti radnju, uključujući događaje koji se ponavljaju."
     },
     "groups": {
       "title": "Grupe sastava",
@@ -3105,8 +3105,8 @@
       "start": "Počinje",
       "end": "Završava se",
       "winnersHeader": "Dobitnici",
-      "winners": "{count, plural, one {# dobitnik} few {# dobitnika} other {# dobitnika}}",
-      "boosters": "{count, plural, one {# pojačivač} few {# pojačivača} other {# pojačivača}}",
+      "winners": "{count} winner{count, plural, one {} other {s}}",
+      "boosters": "{count} booster{count, plural, one {} other {s}}",
       "noChannel": "Bez kanala",
       "noChannelHelp": "Kanal nije dodeljen. Izmenite nagradnu igru da biste to ispravili.",
       "endsAt": "Završava se",
@@ -3218,7 +3218,7 @@
       "notScheduled": "Nije zakazano",
       "schedule": "Raspored",
       "endMessage": "Poruka dobitnicima",
-      "endSummary": "{winners, plural, one {Ovde će biti objavljen # dobitnik.} few {Ovde će biti objavljena # dobitnika.} other {Ovde će biti objavljeno # dobitnika.}}",
+      "endSummary": "{winners} winner{winners, plural, one {} other {s}} will be announced here.",
       "totalParticipants": "Ukupno učesnika: {count}",
       "participate": "Učestvuj",
       "buttonHint": "Glavno dugme radnje prikazano ispod Discord objave."
