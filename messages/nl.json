@@ -310,10 +310,18 @@
       "upvotes": "Positieve stemmen",
       "downvotes": "Negatieve stemmen"
     },
+    "context": {
+      "server": "Server",
+      "channel": "Kanaal",
+      "message": "Message"
+    },
     "history": {
       "title": "Downloadgeschiedenis ({count})",
       "empty": "Er zijn geen downloader-ID's vastgelegd.",
       "resolve": "Profiel ophalen"
+    },
+    "edit": {
+      "action": "Bewerken"
     },
     "delete": {
       "action": "Verwijderen",
@@ -344,7 +352,9 @@
     },
     "form": {
       "title": "Base toevoegen",
-      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
+      "description": "Bases kunnen na het aanmaken niet worden bewerkt. Kies waar ClashKing het Discord-bericht plaatst en controleer de lay-outlink.",
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
       "channel": "Discord-kanaal",
       "channelPlaceholder": "Selecteer een kanaal",
       "channelSearch": "Kanalen zoeken…",
@@ -353,9 +363,12 @@
       "descriptionLabel": "Beschrijving",
       "images": "Afbeeldingen",
       "chooseImages": "Lay-outafbeeldingen kiezen",
-      "imageLimit": "Up to four images total; new uploads finish before saving.",
+      "imageLimit": "Maximaal vier afbeeldingen; uploads worden voor creatie afgerond.",
+      "removeImage": "Remove image {index}",
       "submit": "Base maken",
       "creating": "Uploaden en maken…",
+      "update": "Wijzigingen opslaan",
+      "updating": "Uploading and saving…",
       "createRejectedTitle": "De base is niet gemaakt",
       "createCleanupCompleteTitle": "Discord-opruiming voltooid; base niet gemaakt",
       "createCleanupFailedTitle": "Discord-bericht kan achterblijven; base niet gemaakt",
@@ -369,34 +382,21 @@
         "deleted": "Discord-bericht verwijderd",
         "alreadyMissing": "Discord-bericht ontbrak al",
         "failed": "Discord-opruiming mislukt"
-      },
-      "editTitle": "Edit base",
-      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
-      "removeImage": "Remove image {index}",
-      "update": "Save changes",
-      "updating": "Uploading and saving…"
+      }
     },
     "errors": {
       "title": "Bases niet beschikbaar",
       "load": "Bases laden is mislukt.",
       "create": "De base maken is mislukt.",
+      "update": "Failed to update the base.",
       "upload": "Een afbeelding uploaden is mislukt.",
       "downloader": "Deze downloader ophalen is mislukt.",
       "channels": "Discord-kanalen laden is mislukt.",
       "channelRequired": "Selecteer een Discord-kanaal.",
       "linkRequired": "Een lay-outlink is verplicht.",
-      "descriptionTooLong": "De beschrijving mag maximaal 1.000 tekens bevatten.",
-      "tooManyImages": "Kies maximaal vier afbeeldingen.",
       "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
-      "update": "Failed to update the base."
-    },
-    "context": {
-      "server": "Server",
-      "channel": "Channel",
-      "message": "Message"
-    },
-    "edit": {
-      "action": "Edit"
+      "descriptionTooLong": "De beschrijving mag maximaal 1.000 tekens bevatten.",
+      "tooManyImages": "Kies maximaal vier afbeeldingen."
     }
   },
   "BansPage": {
@@ -726,7 +726,7 @@
     "memberColumns": {
       "name": "Naam",
       "townhall": "Stadhuis",
-      "tag": "Tag",
+      "tag": "Label",
       "hitrate": "Trefferpercentage over 30 dagen",
       "current_clan": "Huidige clan",
       "current_clan_tag": "Clantag",
@@ -2831,7 +2831,7 @@
     "rolesToRemoveHint": "Rollen die automatisch worden verwijderd van de gebruiker bij het openen van een ticket.",
     "applyClans": "Toegestane clans",
     "applyClansHint": "Alleen leden van deze clans kunnen dit ticket openen. Laat leeg om iedereen toe te staan.",
-    "clanTagPlaceholder": "#CLANTAG",
+    "clanTagPlaceholder": "#CLANLABEL",
     "thRequirements": "Vereisten per stadhuisniveau",
     "thRequirementsHint": "Minimale heldenniveaus per stadhuisniveau om dit ticket te kunnen openen.",
     "thHeroLegend": "BK = Barbaarse Koning · AQ = Boogschutter Koningin · GW = Grote Wachter · RC = Koninklijke Kampioene · WARST = Oorlogsterren",
