@@ -310,10 +310,18 @@
       "upvotes": "Positive Bewertungen",
       "downvotes": "Negative Bewertungen"
     },
+    "context": {
+      "server": "Server",
+      "channel": "Kanal",
+      "message": "Message"
+    },
     "history": {
       "title": "Downloadverlauf ({count})",
       "empty": "Es wurden keine Downloader-IDs erfasst.",
       "resolve": "Profil ermitteln"
+    },
+    "edit": {
+      "action": "Bearbeiten"
     },
     "delete": {
       "action": "Löschen",
@@ -344,7 +352,9 @@
     },
     "form": {
       "title": "Eine Base hinzufügen",
-      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
+      "description": "Basen können nach dem Erstellen nicht bearbeitet werden. Wähle aus, wo ClashKing die Discord-Nachricht veröffentlichen soll, und bestätige den Layoutlink.",
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
       "channel": "Discord-Kanal",
       "channelPlaceholder": "Kanal auswählen",
       "channelSearch": "Kanäle suchen…",
@@ -353,9 +363,12 @@
       "descriptionLabel": "Beschreibung",
       "images": "Bilder",
       "chooseImages": "Layoutbilder auswählen",
-      "imageLimit": "Up to four images total; new uploads finish before saving.",
+      "imageLimit": "Bis zu vier Bilder; die Uploads werden abgeschlossen, bevor die Base erstellt wird.",
+      "removeImage": "Remove image {index}",
       "submit": "Base erstellen",
       "creating": "Wird hochgeladen und erstellt…",
+      "update": "Änderungen speichern",
+      "updating": "Uploading and saving…",
       "createRejectedTitle": "Base wurde nicht erstellt",
       "createCleanupCompleteTitle": "Discord-Bereinigung abgeschlossen; Base wurde nicht erstellt",
       "createCleanupFailedTitle": "Discord-Nachricht ist möglicherweise noch vorhanden; Base wurde nicht erstellt",
@@ -369,34 +382,21 @@
         "deleted": "Discord-Nachricht gelöscht",
         "alreadyMissing": "Discord-Nachricht bereits nicht mehr vorhanden",
         "failed": "Discord-Bereinigung fehlgeschlagen"
-      },
-      "editTitle": "Edit base",
-      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
-      "removeImage": "Remove image {index}",
-      "update": "Save changes",
-      "updating": "Uploading and saving…"
+      }
     },
     "errors": {
       "title": "Basen nicht verfügbar",
       "load": "Basen konnten nicht geladen werden.",
       "create": "Base konnte nicht erstellt werden.",
+      "update": "Failed to update the base.",
       "upload": "Bild konnte nicht hochgeladen werden.",
       "downloader": "Der Downloader konnte nicht ermittelt werden.",
       "channels": "Discord-Kanäle konnten nicht geladen werden.",
       "channelRequired": "Wähle einen Discord-Kanal aus.",
       "linkRequired": "Ein Layoutlink ist erforderlich.",
-      "descriptionTooLong": "Die Beschreibung darf höchstens 1.000 Zeichen lang sein.",
-      "tooManyImages": "Wähle höchstens vier Bilder aus.",
       "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
-      "update": "Failed to update the base."
-    },
-    "context": {
-      "server": "Server",
-      "channel": "Channel",
-      "message": "Message"
-    },
-    "edit": {
-      "action": "Edit"
+      "descriptionTooLong": "Die Beschreibung darf höchstens 1.000 Zeichen lang sein.",
+      "tooManyImages": "Wähle höchstens vier Bilder aus."
     }
   },
   "BansPage": {
@@ -989,6 +989,8 @@
       "editTitle": "Automatisierung bearbeiten",
       "createDesc": "Eine automatische Aktion planen",
       "actionType": "Aktionstyp",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "Zeitpunkt relativ zum Ereignis",
       "offsetBefore": "Vor dem Ereignis",
       "offsetAfter": "Nach dem Ereignis",
@@ -1034,9 +1036,7 @@
         "roster_clear": "Entfernt alle Mitglieder aus dem Kader, ohne ihn zu löschen",
         "roster_archive": "Archiviert den Kader und setzt ihn auf schreibgeschützt"
       },
-      "infoBox": "Automatisierungen werden relativ zur Startzeit des Ereignisses ausgelöst. Lege einen Versatz fest (z. B. 3 Tage vorher), dann führt der Bot die Aktion zu diesem Zeitpunkt automatisch aus – auch bei wiederkehrenden Ereignissen.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "Automatisierungen werden relativ zur Startzeit des Ereignisses ausgelöst. Lege einen Versatz fest (z. B. 3 Tage vorher), dann führt der Bot die Aktion zu diesem Zeitpunkt automatisch aus – auch bei wiederkehrenden Ereignissen."
     },
     "groups": {
       "title": "Kadergruppen",
