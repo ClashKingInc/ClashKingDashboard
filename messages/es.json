@@ -310,10 +310,18 @@
       "upvotes": "Votos positivos",
       "downvotes": "Votos negativos"
     },
+    "context": {
+      "server": "Servidor",
+      "channel": "Canal",
+      "message": "Message"
+    },
     "history": {
       "title": "Historial de descargas ({count})",
       "empty": "No se ha registrado ningún ID de descarga.",
       "resolve": "Identificar perfil"
+    },
+    "edit": {
+      "action": "Editar"
     },
     "delete": {
       "action": "Eliminar",
@@ -344,7 +352,9 @@
     },
     "form": {
       "title": "Añadir una base",
-      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
+      "description": "Las bases no se pueden editar después de crearlas. Elige dónde debe publicar ClashKing el mensaje de Discord y confirma el enlace del diseño.",
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
       "channel": "Canal de Discord",
       "channelPlaceholder": "Selecciona un canal",
       "channelSearch": "Buscar canales…",
@@ -353,9 +363,12 @@
       "descriptionLabel": "Descripción",
       "images": "Imágenes",
       "chooseImages": "Elegir imágenes del diseño",
-      "imageLimit": "Up to four images total; new uploads finish before saving.",
+      "imageLimit": "Hasta cuatro imágenes; las subidas terminan antes de crear la base.",
+      "removeImage": "Remove image {index}",
       "submit": "Crear base",
       "creating": "Subiendo y creando…",
+      "update": "Guardar cambios",
+      "updating": "Uploading and saving…",
       "createRejectedTitle": "La base no se creó",
       "createCleanupCompleteTitle": "Limpieza de Discord completada; la base no se creó",
       "createCleanupFailedTitle": "El mensaje de Discord podría conservarse; la base no se creó",
@@ -369,34 +382,21 @@
         "deleted": "Mensaje de Discord eliminado",
         "alreadyMissing": "El mensaje de Discord ya no existe",
         "failed": "Falló la limpieza de Discord"
-      },
-      "editTitle": "Edit base",
-      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
-      "removeImage": "Remove image {index}",
-      "update": "Save changes",
-      "updating": "Uploading and saving…"
+      }
     },
     "errors": {
       "title": "Bases no disponibles",
       "load": "No se pudieron cargar las bases.",
       "create": "No se pudo crear la base.",
+      "update": "Failed to update the base.",
       "upload": "No se pudo subir una imagen.",
       "downloader": "No se pudo identificar a este usuario.",
       "channels": "No se pudieron cargar los canales de Discord.",
       "channelRequired": "Selecciona un canal de Discord.",
       "linkRequired": "El enlace del diseño es obligatorio.",
-      "descriptionTooLong": "La descripción debe tener 1000 caracteres como máximo.",
-      "tooManyImages": "Elige como máximo cuatro imágenes.",
       "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
-      "update": "Failed to update the base."
-    },
-    "context": {
-      "server": "Server",
-      "channel": "Channel",
-      "message": "Message"
-    },
-    "edit": {
-      "action": "Edit"
+      "descriptionTooLong": "La descripción debe tener 1000 caracteres como máximo.",
+      "tooManyImages": "Elige como máximo cuatro imágenes."
     }
   },
   "BansPage": {
@@ -989,6 +989,8 @@
       "editTitle": "Editar automatización",
       "createDesc": "Programa una acción automática",
       "actionType": "Tipo de acción",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "Momento relativo al evento",
       "offsetBefore": "Antes del evento",
       "offsetAfter": "Después del evento",
@@ -1034,9 +1036,7 @@
         "roster_clear": "Elimina a todos los miembros de la lista sin borrarla",
         "roster_archive": "Archiva la lista y la convierte en solo lectura"
       },
-      "infoBox": "Las automatizaciones se activan en relación con la hora de inicio del evento. Define un intervalo (p. ej., 3 días antes) y el bot ejecutará la acción automáticamente en ese momento, también para los eventos recurrentes.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "Las automatizaciones se activan en relación con la hora de inicio del evento. Define un intervalo (p. ej., 3 días antes) y el bot ejecutará la acción automáticamente en ese momento, también para los eventos recurrentes."
     },
     "groups": {
       "title": "Grupos de listas",
