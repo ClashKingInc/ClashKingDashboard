@@ -310,10 +310,18 @@
       "upvotes": "高評価",
       "downvotes": "低評価"
     },
+    "context": {
+      "server": "サーバー",
+      "channel": "チャンネル",
+      "message": "Message"
+    },
     "history": {
       "title": "ダウンロード履歴（{count}件）",
       "empty": "ダウンロードしたユーザーのIDは記録されていません。",
       "resolve": "プロフィールを取得"
+    },
+    "edit": {
+      "action": "編集"
     },
     "delete": {
       "action": "削除",
@@ -344,7 +352,9 @@
     },
     "form": {
       "title": "配置を追加",
-      "description": "Choose where ClashKing should post the Discord message and confirm the layout details.",
+      "description": "作成後に配置を編集することはできません。ClashKingがDiscordメッセージを投稿する場所を選び、配置リンクを確認してください。",
+      "editTitle": "Edit base",
+      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
       "channel": "Discordチャンネル",
       "channelPlaceholder": "チャンネルを選択",
       "channelSearch": "チャンネルを検索…",
@@ -353,9 +363,12 @@
       "descriptionLabel": "説明",
       "images": "画像",
       "chooseImages": "配置画像を選択",
-      "imageLimit": "Up to four images total; new uploads finish before saving.",
+      "imageLimit": "画像は最大4枚です。配置を作成する前にアップロードが完了します。",
+      "removeImage": "Remove image {index}",
       "submit": "配置を作成",
       "creating": "アップロードして作成中…",
+      "update": "変更を保存",
+      "updating": "Uploading and saving…",
       "createRejectedTitle": "配置は作成されませんでした",
       "createCleanupCompleteTitle": "Discordのクリーンアップが完了しました。配置は作成されませんでした",
       "createCleanupFailedTitle": "Discordメッセージが残っている可能性があります。配置は作成されませんでした",
@@ -369,34 +382,21 @@
         "deleted": "Discordメッセージを削除しました",
         "alreadyMissing": "Discordメッセージはすでに存在しません",
         "failed": "Discordのクリーンアップに失敗しました"
-      },
-      "editTitle": "Edit base",
-      "editDescription": "Update the layout details while preserving its Discord source and engagement history.",
-      "removeImage": "Remove image {index}",
-      "update": "Save changes",
-      "updating": "Uploading and saving…"
+      }
     },
     "errors": {
       "title": "配置を利用できません",
       "load": "配置の読み込みに失敗しました。",
       "create": "配置の作成に失敗しました。",
+      "update": "Failed to update the base.",
       "upload": "画像のアップロードに失敗しました。",
       "downloader": "このダウンロードユーザーの取得に失敗しました。",
       "channels": "Discordチャンネルの読み込みに失敗しました。",
       "channelRequired": "Discordチャンネルを選択してください。",
       "linkRequired": "配置リンクは必須です。",
-      "descriptionTooLong": "説明は1,000文字以内にしてください。",
-      "tooManyImages": "画像は4枚以内で選択してください。",
       "linkInvalid": "Enter a complete link.clashofclans.com layout link.",
-      "update": "Failed to update the base."
-    },
-    "context": {
-      "server": "Server",
-      "channel": "Channel",
-      "message": "Message"
-    },
-    "edit": {
-      "action": "Edit"
+      "descriptionTooLong": "説明は1,000文字以内にしてください。",
+      "tooManyImages": "画像は4枚以内で選択してください。"
     }
   },
   "BansPage": {
@@ -989,6 +989,8 @@
       "editTitle": "自動処理を編集",
       "createDesc": "自動処理をスケジュールします",
       "actionType": "操作の種類",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "イベントを基準にしたタイミング",
       "offsetBefore": "イベント前",
       "offsetAfter": "イベント後",
@@ -1034,9 +1036,7 @@
         "roster_clear": "ロスターを削除せずにすべてのメンバーを外します",
         "roster_archive": "ロスターをアーカイブして読み取り専用にします"
       },
-      "infoBox": "自動処理はイベント開始時刻を基準に実行されます。オフセット（例：3日前）を設定すると、繰り返しイベントを含め、その時刻にボットが自動実行します。",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "自動処理はイベント開始時刻を基準に実行されます。オフセット（例：3日前）を設定すると、繰り返しイベントを含め、その時刻にボットが自動実行します。"
     },
     "groups": {
       "title": "ロスターグループ",
@@ -3360,7 +3360,7 @@
         },
         "stats": {
           "first": "見る",
-          "second": "",
+          "second": "the",
           "third": "統計"
         }
       },
