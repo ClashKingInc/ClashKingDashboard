@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "vite --host 127.0.0.1 --port 3002",
-    "dev:tunnel": "CLASHKING_LOCAL_DASHBOARD_HOST=local-dash.clashk.ing VITE_CLASHKING_API_ORIGIN=https://local-api.clashk.ing VITE_CLASHKING_AI_ORIGIN=https://local-ai.invalid VITE_DISCORD_CLIENT_ID=824653933347209227 vite --host 127.0.0.1 --port 3002",
+    "dev:tunnel": "CLASHKING_LOCAL_DASHBOARD_HOST=local-dash.clashk.ing VITE_CLASHKING_API_ORIGIN=https://local-api.clashk.ing VITE_CLASHKING_AI_ORIGIN=https://local-ai.invalid VITE_DISCORD_CLIENT_ID=808566437199216691 vite --host 127.0.0.1 --port 3002",
     "build": "npm run validate:messages && vite build && npm run generate:public-shells && npm run check:bundles",
     "build:production": "VITE_CLASHKING_API_ORIGIN=https://api.clashk.ing VITE_CLASHKING_AI_ORIGIN=https://ai.clashk.ing VITE_DISCORD_CLIENT_ID=824653933347209227 npm run build",
     "start": "vite preview --host 127.0.0.1 --port 3002",
