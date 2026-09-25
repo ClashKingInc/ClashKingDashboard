@@ -22,6 +22,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import type { RosterQuestionType, RosterSignupQuestion } from "@/lib/api/types/roster";
+import { hasInvalidDropdownOptions } from "../_lib/signup-questions";
 
 interface SignupQuestionsEditorProps {
   readonly questions: RosterSignupQuestion[];
@@ -173,6 +174,7 @@ export function SignupQuestionsEditor({ questions, onChange, clans = [] }: Signu
                     <Button type="button" variant="ghost" size="icon" aria-label={`Remove option ${optionIndex + 1}`} onClick={() => update(question.id, { options: question.options!.filter((_, i) => i !== optionIndex) })}><Trash2 className="h-4 w-4" /></Button>
                   </div>)}
                   <Button type="button" variant="secondary" size="sm" disabled={(question.options?.length ?? 0) >= 25} onClick={() => update(question.id, { options: [...(question.options ?? []), ""] })}>Add option ({question.options?.length ?? 0}/25)</Button>
+                  {hasInvalidDropdownOptions([question]) && <p role="alert" className="text-xs text-destructive">Enter text for every dropdown option before saving.</p>}
                 </div>
               )}
 

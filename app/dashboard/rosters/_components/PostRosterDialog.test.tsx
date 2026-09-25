@@ -40,3 +40,18 @@ it("holds an uncertain publication until the operator checks the channel", async
   await waitFor(() => expect(mocks.executeSharedApiResult).toHaveBeenCalledTimes(2));
   expect(mocks.executeSharedApiResult.mock.calls[0][1].body.nonce).not.toBe(mocks.executeSharedApiResult.mock.calls[1][1].body.nonce);
 });
+
+it("offers only channels that can receive a roster message", () => {
+  render(<PostRosterDialog serverId="111111111111111111" rosterId="roster-1" channels={[
+    { id: "111111111111111112", name: "category", type: "category" },
+    { id: "111111111111111113", name: "forum", type: "forum" },
+    { id: "111111111111111114", name: "general", type: "text" },
+    { id: "111111111111111115", name: "announcements", type: "news" },
+  ]} />);
+  fireEvent.click(screen.getByRole("button", { name: "automations.actions.post" }));
+  expect(screen.queryByRole("option", { name: "#category" })).not.toBeInTheDocument();
+  expect(screen.queryByRole("option", { name: "#forum" })).not.toBeInTheDocument();
+  expect(screen.getByRole("option", { name: "#general" })).toBeInTheDocument();
+  expect(screen.getByRole("option", { name: "#announcements" })).toBeInTheDocument();
+  expect(screen.getAllByRole("button", { name: "automations.actions.post" })[1]).toBeDisabled();
+});

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useTranslations } from "use-intl";
 import { dashboardEndpoints } from "@clashking/api-contracts";
 import { executeSharedApiResult } from "@/lib/api/shared-client";
+import { normalizeChannelsPayload } from "@/lib/dashboard-cache";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle, DialogHeader } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -22,8 +23,10 @@ export function PostRosterDialog({ serverId, rosterId, channels }: { serverId: s
   const [messageId, setMessageId] = useState("");
   const [nonce, setNonce] = useState(newNonce);
   const [uncertain, setUncertain] = useState(false);
+  const messageableChannels = normalizeChannelsPayload(channels);
+  const validChannel = messageableChannels.some((channel) => channel.id === channelId);
   async function post() {
-    if (uncertain) return;
+    if (uncertain || !validChannel) return;
     setBusy(true); setError("");
     try {
       const result = await executeSharedApiResult(dashboardEndpoints.dashboardPostRoster, {
@@ -48,7 +51,7 @@ export function PostRosterDialog({ serverId, rosterId, channels }: { serverId: s
       <DialogHeader><DialogTitle>{t("automations.actions.post")}</DialogTitle></DialogHeader>
       <Select value={channelId} disabled={busy || !!messageId || uncertain} onValueChange={value => { setChannelId(value); setNonce(newNonce()); }}>
         <SelectTrigger aria-label={t("automations.channel")}><SelectValue placeholder={t("automations.channel")} /></SelectTrigger>
-        <SelectContent>{channels.map(channel => <SelectItem key={channel.id} value={channel.id}>#{channel.name}</SelectItem>)}</SelectContent>
+        <SelectContent>{messageableChannels.map(channel => <SelectItem key={channel.id} value={channel.id}>#{channel.name}</SelectItem>)}</SelectContent>
       </Select>
       <Select value={mode} disabled={busy || !!messageId || uncertain} onValueChange={value => { if (value === "signup" || value === "post" || value === "static") setMode(value); }}>
         <SelectTrigger><SelectValue /></SelectTrigger><SelectContent>
@@ -60,7 +63,7 @@ export function PostRosterDialog({ serverId, rosterId, channels }: { serverId: s
       {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
       {uncertain && <Button variant="outline" onClick={() => { setUncertain(false); setError(""); setNonce(newNonce()); }}>I checked the channel; start a new post</Button>}
       {messageId ? <Button asChild><a href={`https://discord.com/channels/${serverId}/${channelId}/${messageId}`} target="_blank" rel="noreferrer">{t("rosterCard.view")}</a></Button>
-        : <Button disabled={!channelId || busy || uncertain} onClick={post}>{t("automations.actions.post")}</Button>}
+        : <Button disabled={!validChannel || busy || uncertain} onClick={post}>{t("automations.actions.post")}</Button>}
     </DialogContent></Dialog>
   </>;
 }

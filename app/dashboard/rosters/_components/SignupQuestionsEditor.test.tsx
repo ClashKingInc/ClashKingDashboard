@@ -32,6 +32,10 @@ describe("SignupQuestionsEditor", () => {
     fireEvent.change(screen.getByRole("textbox", { name: "Question 1 option 1" }), { target: { value: "One, two" } });
     expect(onChange.mock.calls[0][0][0].options).toEqual(["One, two", "Two"]);
   });
+  it("shows why a blank dropdown option prevents saving", () => {
+    render(<SignupQuestionsEditor questions={[{ ...question, type: "single_select", options: ["One", "  "] }]} onChange={vi.fn()} />);
+    expect(screen.getByRole("alert")).toHaveTextContent("Enter text for every dropdown option before saving.");
+  });
   it("keeps the account selector fixed and adds a configurable question", () => {
     const onChange = vi.fn();
     render(<SignupQuestionsEditor questions={[]} onChange={onChange} />);

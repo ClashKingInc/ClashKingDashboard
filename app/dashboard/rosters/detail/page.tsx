@@ -92,6 +92,8 @@ import {
 } from "../_lib";
 import type { EditRosterFormData, RosterAutomation, AutomationActionType, RosterGroup } from "../_lib/types";
 import { fetchRosters } from "../_lib/api";
+import { automationEditPayload } from "../_lib/automation-edit";
+import { hasInvalidDropdownOptions } from "../_lib/signup-questions";
 
 // ────────────────────────────────────────────────────────────────────────────
 
@@ -246,6 +248,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
   const settingsSnapshot = React.useRef("");
   const [savedSettings, setSavedSettings] = useState("");
   const settingsChanged = savedSettings !== "" && JSON.stringify(editData) !== savedSettings;
+  const invalidDropdownOptions = hasInvalidDropdownOptions(editData.signup_questions);
   React.useEffect(() => {
     if (roster) {
       const snapshot = JSON.stringify({ ...roster, members: undefined });
@@ -337,6 +340,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
   };
 
   const handleSaveSettings = async (resetAnswers = false) => {
+    if (invalidDropdownOptions) return;
     const normalizeQuestions = (questions: typeof editData.signup_questions) => questions.map((question, order) => [question.id, question.label.trim(), question.type, question.required, order, question.options ?? []]);
     const questionsChanged = JSON.stringify(normalizeQuestions(editData.signup_questions)) !== JSON.stringify(normalizeQuestions(roster?.signup_questions ?? []));
     if (questionsChanged && !resetAnswers) { setConfirmQuestionReset(true); return; }
@@ -504,15 +508,10 @@ export default function RosterDetailPage() { // NOSONAR — React page component
   const handleEditAutomation = async () => {
     if (!editingAutomation) return;
     if (editingAutomation.action_type === 'roster_ping' && !editingAutomation.options?.ping_type) return;
+    const original = automations.find((automation) => automation.automation_id === editingAutomation.automation_id);
+    if (!original) return;
     try {
-      await updateAutomation(editingAutomation.automation_id, {
-        action_type: editingAutomation.action_type,
-        scheduled_at: editingAutomation.scheduled_at,
-        event_offset_days: editingAutomation.event_offset_days ?? (roster?.event_start_time ? Math.round((Date.parse(editingAutomation.scheduled_at) / 1000 - roster.event_start_time) / 86400) : 0),
-        discord_channel_id: editingAutomation.discord_channel_id,
-        options: editingAutomation.options,
-        active: editingAutomation.active,
-      });
+      await updateAutomation(editingAutomation.automation_id, automationEditPayload(original, editingAutomation));
       toast({ title: t("automationUpdated") });
       setEditAutomationDialogOpen(false);
       setEditingAutomation(null);
@@ -1268,7 +1267,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
           {settingsChanged && <div className="sticky bottom-4 flex justify-end">
             <Button
               onClick={() => void handleSaveSettings()}
-              disabled={saving || uploadingImage}
+              disabled={saving || uploadingImage || invalidDropdownOptions}
               size="lg"
               className="min-w-[200px] shadow-lg"
             >
@@ -1556,10 +1555,17 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                 </p>
               )}
             </div>
-            <div className="space-y-2">
-			  <Label>Days from event start</Label>
-              <EventOffsetInput value={editingAutomation?.event_offset_days ?? (roster?.event_start_time && editingAutomation ? Math.round((Date.parse(editingAutomation.scheduled_at) / 1000 - roster.event_start_time) / 86400) : 0)} onChange={event_offset_days => setEditingAutomation(previous => previous ? { ...previous, event_offset_days } : previous)} />
-            </div>
+            {editingAutomation && <div className="space-y-2">
+              {editingAutomation.event_offset_days == null ? <>
+                <Label>Absolute schedule</Label>
+                <p className="text-sm text-muted-foreground">Runs at {formatTimestamp(Math.floor(new Date(editingAutomation.scheduled_at).getTime() / 1000))}. This timing stays unchanged when you edit other settings.</p>
+                <Button type="button" size="sm" variant="outline" onClick={() => setEditingAutomation(previous => previous ? { ...previous, event_offset_days: 0 } : previous)}>Switch to event-relative timing</Button>
+                <p className="text-xs text-muted-foreground">Switching will reschedule this automation to the event start unless you choose a different offset.</p>
+              </> : <>
+                <Label>Days from event start</Label>
+                <EventOffsetInput value={editingAutomation.event_offset_days} onChange={event_offset_days => setEditingAutomation(previous => previous ? { ...previous, event_offset_days } : previous)} />
+              </>}
+            </div>}
             {editingAutomation?.action_type === "roster_ping" && (
               <div className="space-y-2">
                 <Label>{t("automations.pingType")}</Label>

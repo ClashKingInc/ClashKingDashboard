@@ -1,5 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { createAutomation, fetchClanMembers, fetchRoster, fetchRosters } from "./api";
+import { createAutomation, fetchClanMembers, fetchRoster, fetchRosters, updateAutomation } from "./api";
+import { automationEditPayload } from "./automation-edit";
+import type { RosterAutomation } from "./types";
 import { clearSession, setAccessToken } from "@/lib/auth/session";
 import { getDefaultBaseUrl } from "@/lib/api/client";
 
@@ -156,5 +158,36 @@ describe("createAutomation", () => {
       scheduled_at: "2026-08-24T20:00:00.000Z",
       active: true,
     })).rejects.toThrow();
+  });
+});
+
+describe("updateAutomation", () => {
+  const fetchMock = vi.fn();
+  beforeEach(() => {
+    vi.stubGlobal("fetch", fetchMock);
+    setAccessToken("token_123", false);
+  });
+  afterEach(() => {
+    clearSession(false);
+    vi.unstubAllGlobals();
+    fetchMock.mockReset();
+  });
+
+  it("does not serialize timing changes for an unrelated legacy-rule edit", async () => {
+    const legacy: RosterAutomation = {
+      automation_id: "automation-1", server_id: serverId, roster_id: "roster-1",
+      action_type: "roster_clear", scheduled_at: "2026-10-01T12:00:00.000Z",
+      event_offset_days: null, active: true, executed: false,
+    };
+    fetchMock.mockResolvedValue(jsonResponse({ message: "updated", rule: {
+      ...legacy, trigger_type: "scheduled", active: false,
+      created_at: "2026-09-01T00:00:00.000Z", updated_at: "2026-09-25T00:00:00.000Z",
+    } }));
+    await updateAutomation(legacy.automation_id, serverId, automationEditPayload(legacy, { ...legacy, active: false }));
+    const request = fetchMock.mock.calls[0]?.[0] as Request;
+    const body = await request.clone().json();
+    expect(body).toMatchObject({ action_type: "roster_clear", active: false });
+    expect(body).not.toHaveProperty("scheduled_at");
+    expect(body).not.toHaveProperty("event_offset_days");
   });
 });
