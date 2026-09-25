@@ -10,4 +10,10 @@ describe("hero percentage gradient", () => {
     expect(heroGradient(100)).toBe("hsl(120 78% 52%)");
     expect(heroGradient(40, [20, 40, 80])).toBe("hsl(60 78% 52%)");
   });
+  it("uses valid defaults for equal, reversed, or non-finite anchors", () => {
+    expect(heroGradient(60, [50, 50, 90])).toBe("hsl(24 78% 52%)");
+    expect(heroGradient(60, [90, 75, 50])).toBe("hsl(24 78% 52%)");
+    expect(heroGradient(60, [NaN, 75, 90])).toBe("hsl(24 78% 52%)");
+    expect(heroGradient(NaN)).toBe("hsl(0 78% 52%)");
+  });
 });
