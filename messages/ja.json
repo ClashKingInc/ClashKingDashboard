@@ -396,6 +396,7 @@
       "message": "Message"
     },
     "edit": {
+      "imageWarning": "配置リンクと画像は差し替えできません。余分な画像は削除できますが、少なくとも1枚は残す必要があります。保存後は削除した画像を復元できません。",
       "action": "Edit"
     }
   },
@@ -589,6 +590,7 @@
     }
   },
   "RostersPage": {
+    "publication": { "signup": "名簿に参加", "removeSignup": "参加を取り消す" },
     "title": "ロスターと編成",
     "description": "対戦ロスター、編成、メンバー割り当てを管理します",
     "stats": {
@@ -633,7 +635,8 @@
       "typeFamily": "ファミリー",
       "signupScopeLabel": "参加登録の範囲",
       "scopeClanOnly": "クランのみ",
-      "scopeFamilyWide": "ファミリー全体",
+      "scopeFamilyOnly": "ファミリーのみ",
+      "scopeAnyone": "誰でも",
       "clanLabel": "クラン",
       "clanPlaceholder": "クランを選択",
       "descriptionLabel": "説明（任意）",
@@ -1095,7 +1098,8 @@
       "typeFamily": "ファミリー",
       "signupScope": "参加登録の範囲",
       "scopeClanOnly": "クランのみ",
-      "scopeFamilyWide": "ファミリー全体",
+      "scopeFamilyOnly": "ファミリーのみ",
+      "scopeAnyone": "誰でも",
       "clan": "クラン",
       "selectClan": "クランを選択",
       "description": "説明",
@@ -1120,6 +1124,8 @@
       "rosterSize": "ロスターの定員",
       "rosterSizeHint": "メンバーの最大人数",
       "minSignups": "最小登録数",
+      "maxSignups": "登録数の上限",
+      "requireVerified": "認証済みアカウントを必須にする",
       "minSignupsHint": "ロスターを埋めるために必要な最小登録数",
       "maxAccountsPerUser": "ユーザーあたりの最大アカウント数",
       "maxAccountsHint": "Discordユーザーごとのアカウント数を制限します",
@@ -2234,8 +2240,6 @@
     "security": {
       "title": "セキュリティと権限",
       "description": "アクセスと確認を管理します",
-      "requireLinkingToken": "アカウント連携時にゲーム内APIトークンを必須にする",
-      "requireLinkingTokenDescription": "初期設定はオフです。有効にすると、認証済みアカウントも含め、このサーバーで連携するたびに有効なトークンが必要になります。名簿やチケットでのアカウント選択は変わりません。",
       "fullWhitelistRole": "フルアクセスロール",
       "fullWhitelistRoleDesc": "すべてのボットコマンドにフルアクセスできるDiscordロール（すべての権限チェックをスキップ）",
       "noRole": "ロールなし",

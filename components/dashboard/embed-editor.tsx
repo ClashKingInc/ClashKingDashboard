@@ -1,4 +1,5 @@
 "use client";
+import { DateTimePicker } from "@/components/ui/date-time-picker";
 
 import { dashboardEndpoints, UpsertEmbedRequest as UpsertEmbedRequestSchema } from "@clashking/api-contracts";
 import { Schema } from "effect";
@@ -9,7 +10,7 @@ import { useId, useRef, useState, type ComponentType, type MutableRefObject, use
 import { useLocale, useTranslations } from "use-intl";
 import Image from "@/components/app-image";
 import emojiDataset from "emoji-datasource-twitter/emoji.json";
-import { AtSign, Bike, CalendarDays, CheckCircle2, ChevronDown, ChevronRight, ChevronUp, Clock3, Copy, ExternalLink, Flag, Gamepad2, GlassWater, Hash, Heart, Keyboard, Leaf, Loader2, Plus, Smile, Trash2, Utensils, Link2, Upload } from "lucide-react";
+import { AtSign, Bike, CheckCircle2, ChevronDown, ChevronRight, ChevronUp, Clock3, Copy, ExternalLink, Flag, Gamepad2, GlassWater, Hash, Heart, Keyboard, Leaf, Loader2, Plus, Smile, Trash2, Utensils, Link2, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -560,7 +561,6 @@ function MentionTextField({
   const [timeValue, setTimeValue] = useState(() => formatTimeInputValue(new Date()));
   const inputId = useId();
   const fieldRef = useRef<HTMLInputElement | HTMLTextAreaElement | null>(null);
-  const dateInputRef = useRef<HTMLInputElement | null>(null);
   const timeInputRef = useRef<HTMLInputElement | null>(null);
   const mentionsScrollerRef = useRef<HTMLDivElement | null>(null);
   const channelsSectionRef = useRef<HTMLDivElement | null>(null);
@@ -766,25 +766,13 @@ function MentionTextField({
               <div className="space-y-1">
                 <Label htmlFor={`${inputId}-date`} className="text-xs text-white">{t("dateLabel")}</Label>
                 <div className="relative">
-                  <Input
-                    ref={dateInputRef}
+                  <DateTimePicker
                     id={`${inputId}-date`}
                     type="date"
                     value={dateValue}
                     onChange={(event) => setDateValue(event.target.value)}
-                    className="h-8 appearance-none border-[#3f4147] bg-[#1e1f22] px-2.5 pr-8 text-sm text-white focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-red-500/80 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:pointer-events-none"
+                    className="min-w-0"
                   />
-                  <button
-                    type="button"
-                    aria-label={t("dateLabel")}
-                    onClick={() => {
-                      const el = dateInputRef.current;
-                      openNativePicker(el);
-                    }}
-                    className="absolute right-1.5 top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded text-white hover:text-white"
-                  >
-                    <CalendarDays className="h-3.5 w-3.5" />
-                  </button>
                 </div>
               </div>
               <div className="space-y-1">

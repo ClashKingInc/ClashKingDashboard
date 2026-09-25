@@ -274,13 +274,13 @@ export default function BasesPage() {
     setDraftError(null);
     setCreateFeedback(null);
     try {
-      const uploads = await Promise.all(draft.images.map(async (file) => {
+      const uploads = await Promise.all((editTarget ? [] : draft.images).map(async (file) => {
         const response = await apiClient.bases.uploadImage(guildId, file);
         if (response.error || !response.data) throw new Error(response.error || t("errors.upload"));
         return response.data.url;
       }));
       const editable = {
-        baseLink: draft.baseLink.trim(),
+        baseLink: editTarget ? editTarget.baseLink : draft.baseLink.trim(),
         images: [...retainedImages, ...uploads],
         description: draft.description.trim(),
       };
@@ -727,6 +727,7 @@ export default function BasesPage() {
                   value={draft.baseLink}
                   onChange={(event) => setDraftField("baseLink", event.target.value)}
                   placeholder="https://link.clashofclans.com/..."
+                  readOnly={!!editTarget}
                   disabled={creating}
                 />
               </div>
@@ -747,6 +748,12 @@ export default function BasesPage() {
               </div>
               <div className="space-y-2 sm:col-span-2">
                 <Label htmlFor="base-images">{t("form.images")}</Label>
+                {editTarget && (
+                  <Alert>
+                    <AlertCircle />
+                    <AlertDescription>{t("edit.imageWarning")}</AlertDescription>
+                  </Alert>
+                )}
                 {retainedImages.length > 0 && (
                   <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
                     {retainedImages.map((image, index) => (
@@ -766,8 +773,8 @@ export default function BasesPage() {
                           className="absolute right-1.5 top-1.5 h-7 w-7 rounded-full"
                           aria-label={t("form.removeImage", { index: index + 1 })}
                           onClick={() => setRetainedImages((current) =>
-                            current.filter((_, candidateIndex) => candidateIndex !== index))}
-                          disabled={creating}
+                            current.length > 1 ? current.filter((_, candidateIndex) => candidateIndex !== index) : current)}
+                          disabled={creating || retainedImages.length <= 1}
                         >
                           <X />
                         </Button>
@@ -775,7 +782,7 @@ export default function BasesPage() {
                     ))}
                   </div>
                 )}
-                <label
+                {!editTarget && <><label
                   htmlFor="base-images"
                   className="flex cursor-pointer items-center justify-between gap-4 rounded-xl border border-dashed border-input bg-secondary/25 p-4 transition-colors hover:border-primary/50 hover:bg-secondary/50"
                 >
@@ -802,6 +809,7 @@ export default function BasesPage() {
                   onChange={(event) => selectImages(event.target.files)}
                   disabled={creating}
                 />
+                </>}
                 {draft.images.length > 0 && (
                   <div className="flex flex-wrap gap-2">
                     {draft.images.map((file) => (

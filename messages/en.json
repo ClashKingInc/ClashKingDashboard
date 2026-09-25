@@ -321,6 +321,7 @@
       "resolve": "Resolve profile"
     },
     "edit": {
+      "imageWarning": "The layout link and images cannot be replaced. You can remove extra images, but at least one must remain. Once saved, removed images cannot be restored.",
       "action": "Edit"
     },
     "delete": {
@@ -589,6 +590,7 @@
     }
   },
   "RostersPage": {
+    "publication": { "signup": "Join", "removeSignup": "Remove" },
     "title": "Rosters & Lineups",
     "description": "Manage war rosters, lineups, and member assignments",
     "stats": {
@@ -633,7 +635,8 @@
       "typeFamily": "Family",
       "signupScopeLabel": "Signup Scope",
       "scopeClanOnly": "Clan Only",
-      "scopeFamilyWide": "Family Wide",
+      "scopeFamilyOnly": "Family Only",
+      "scopeAnyone": "Anyone",
       "clanLabel": "Clan",
       "clanPlaceholder": "Select a clan",
       "descriptionLabel": "Description (Optional)",
@@ -1095,7 +1098,8 @@
       "typeFamily": "Family",
       "signupScope": "Signup Scope",
       "scopeClanOnly": "Clan Only",
-      "scopeFamilyWide": "Family Wide",
+      "scopeFamilyOnly": "Family Only",
+      "scopeAnyone": "Anyone",
       "clan": "Clan",
       "selectClan": "Select a clan",
       "description": "Description",
@@ -1120,6 +1124,8 @@
       "rosterSize": "Roster Size",
       "rosterSizeHint": "Maximum number of members",
       "minSignups": "Min Signups",
+      "maxSignups": "Max Signups",
+      "requireVerified": "Require verified accounts",
       "minSignupsHint": "Minimum number of signups required to fill the roster",
       "maxAccountsPerUser": "Max Accounts per User",
       "maxAccountsHint": "Limit accounts per Discord user",
@@ -2234,8 +2240,6 @@
     "security": {
       "title": "Security & Permissions",
       "description": "Control access and verification",
-      "requireLinkingToken": "Require an in-game API token when linking",
-      "requireLinkingTokenDescription": "Off by default. When enabled, every server link needs a valid token, including verified accounts. Roster and ticket selection are unchanged.",
       "fullWhitelistRole": "Full Whitelist Role",
       "fullWhitelistRoleDesc": "Discord role with full access to all bot commands (bypasses all permission checks)",
       "noRole": "No Role",

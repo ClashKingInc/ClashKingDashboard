@@ -7,12 +7,11 @@ import React, { useState, useEffect, useEffectEvent } from "react";
 import { useTranslations } from "use-intl";
 import { useQueryClient } from "@tanstack/react-query";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RoleCombobox } from "@/components/ui/role-combobox";
-import { RotateCcw, AlertCircle, Pencil, Plus, Trash2 } from "lucide-react";
+import { AlertCircle, Plus, Trash2 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/components/ui/use-toast";
 import { apiClient } from "@/lib/api/client";
@@ -33,17 +32,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { EmbedColorPicker, embedColorHex as intToHex } from "@/components/dashboard/embed-color-picker";
 import { BotProfileCard } from "@/components/dashboard/bot-profile-card";
 import { DashboardAccessSettings } from "@/components/dashboard/dashboard-access-settings";
 import { useDashboardAccess } from "@/components/dashboard/dashboard-access-provider";
-
-const hexToInt = (hex: string): number => {
-  return Number.parseInt(hex.replace("#", ""), 16);
-};
-
-const intToHex = (int: number): string => {
-  return "#" + int.toString(16).padStart(6, "0").toUpperCase();
-};
 
 export default function GeneralSettingsPage() {
   const guildId = useGuildId();
@@ -57,7 +49,6 @@ export default function GeneralSettingsPage() {
   const [settings, setSettings] = useState({
     embed_color: 14223113, // #D90709 as integer
     full_whitelist_role: undefined as string | undefined,
-    require_api_token_when_linking: false,
   });
 
   const [discordRoles, setDiscordRoles] = useState<Array<{ id: string; name: string; color?: number }>>([]);
@@ -65,9 +56,6 @@ export default function GeneralSettingsPage() {
   const [hasLoadedSettings, setHasLoadedSettings] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [tempColor, setTempColor] = useState(settings.embed_color);
-  const [tempHex, setTempHex] = useState(intToHex(settings.embed_color));
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { toast } = useToast();
 
   // Discord Tenure Roles state
@@ -90,11 +78,8 @@ export default function GeneralSettingsPage() {
         const newSettings = {
           embed_color: embedColor,
           full_whitelist_role: settingsData.full_whitelist_role?.toString(),
-          require_api_token_when_linking: settingsData.require_api_token_when_linking,
         };
         setSettings(newSettings);
-        setTempColor(newSettings.embed_color);
-        setTempHex(intToHex(newSettings.embed_color));
         setHasLoadedSettings(true);
       }
     } catch (err: any) {
@@ -259,31 +244,7 @@ export default function GeneralSettingsPage() {
           {isLoading ? <Skeleton className="h-24 rounded-[24px]" /> : (
             <div className="space-y-4 rounded-[24px] bg-card p-4 shadow-sm shadow-black/5 sm:p-5">
               <div className="flex items-center gap-4">
-                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                  <DialogTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      className="group relative h-12 w-12 shrink-0 overflow-hidden rounded-xl p-0 shadow-sm ring-1 ring-border ring-offset-2 ring-offset-card"
-                      style={{ backgroundColor: intToHex(settings.embed_color) }}
-                      onClick={() => { setTempColor(settings.embed_color); setTempHex(intToHex(settings.embed_color)); }}
-                      disabled={!editable}
-                      aria-label={t("appearance.editColor")}
-                    >
-                      <span className="absolute inset-0 flex items-center justify-center bg-black/35 opacity-0 transition-opacity group-hover:opacity-100"><Pencil className="h-4 w-4 text-white" /></span>
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent variant="form" className="border-0 bg-card shadow-xl sm:max-w-md">
-                    <DialogHeader><DialogTitle>{t("appearance.editColor")}</DialogTitle><DialogDescription>{t("appearance.embedColorDesc")}</DialogDescription></DialogHeader>
-                    <div className="flex flex-col gap-4 py-4">
-                      <div className="flex items-center gap-4">
-                        <Input type="color" value={intToHex(tempColor)} onChange={(event) => { const color = hexToInt(event.target.value); setTempColor(color); setTempHex(intToHex(color)); }} className="h-20 w-20 cursor-pointer rounded-xl p-1" />
-                        <div className="flex-1 space-y-2"><Label className="text-xs font-semibold text-muted-foreground">Hex code</Label><Input value={tempHex} onChange={(event) => { const hex = event.target.value.toUpperCase(); if (hex.length <= 7) { setTempHex(hex); if (/^#[0-9A-F]{6}$/i.test(hex)) setTempColor(hexToInt(hex)); } }} placeholder="#D90709" className="font-mono text-lg uppercase" /></div>
-                      </div>
-                      <Button variant="ghost" size="sm" className="w-fit text-xs text-muted-foreground hover:text-primary" onClick={() => { setTempColor(14223113); setTempHex("#D90709"); }}><RotateCcw className="mr-2 h-3 w-3" />{t("appearance.resetToDefault")}</Button>
-                    </div>
-                    <DialogFooter><Button variant="outline" onClick={() => setIsDialogOpen(false)}>{tCommon("cancel")}</Button><Button onClick={() => { void applySettingsChange({ embed_color: tempColor }); setIsDialogOpen(false); }} disabled={!/^#[0-9A-F]{6}$/i.test(tempHex) || isSaving}>{t("appearance.apply")}</Button></DialogFooter>
-                  </DialogContent>
-                </Dialog>
+                <EmbedColorPicker value={settings.embed_color} disabled={!editable || isSaving} onChange={embed_color => { void applySettingsChange({ embed_color }); }} />
                 <div className="min-w-0"><Label className="text-sm font-medium">{t("appearance.embedColor")}</Label><p className="mt-0.5 font-mono text-sm">{intToHex(settings.embed_color)}</p><div className="mt-0.5 text-xs text-muted-foreground"><ReactMarkdown>{t("appearance.embedColorDefault")}</ReactMarkdown></div></div>
               </div>
               <div className="flex items-center gap-3 rounded-2xl bg-muted/45 px-4 py-3">
@@ -304,15 +265,6 @@ export default function GeneralSettingsPage() {
                 <SelectTrigger id="whitelist-role" className="border-0 bg-muted/55 shadow-sm shadow-black/5" disabled={!editable || isSaving}><SelectValue /></SelectTrigger>
                 <SelectContent><SelectItem value="none">{t("security.noRole")}</SelectItem>{discordRoles.map((role) => <SelectItem key={role.id} value={role.id}><span style={{ color: role.color ? intToHex(role.color) : "#99AAB5" }}>@{role.name}</span></SelectItem>)}</SelectContent>
               </Select>
-              <div className="flex items-start justify-between gap-4">
-                <div className="min-w-0 space-y-1">
-                  <Label htmlFor="linking-api-token" className="text-sm font-medium">{t("security.requireLinkingToken")}</Label>
-                  <p id="linking-api-token-description" className="text-xs text-muted-foreground">{t("security.requireLinkingTokenDescription")}</p>
-                </div>
-                <Switch id="linking-api-token" aria-describedby="linking-api-token-description"
-                  checked={settings.require_api_token_when_linking} disabled={!editable || isLoading || !hasLoadedSettings || isSaving}
-                  onCheckedChange={(checked) => void applySettingsChange({ require_api_token_when_linking: checked })} />
-              </div>
             </div>
           </section>
           {fullAccess && <DashboardAccessSettings guildId={guildId} />}

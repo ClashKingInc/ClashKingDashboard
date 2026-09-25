@@ -396,6 +396,7 @@
       "message": "Message"
     },
     "edit": {
+      "imageWarning": "Die uitle skakel en beelde kan nie vervang word nie. Jy kan ekstra beelde verwyder, maar minstens een moet oorbly. Ná stoor kan verwyderde beelde nie herstel word nie.",
       "action": "Edit"
     }
   },
@@ -589,6 +590,7 @@
     }
   },
   "RostersPage": {
+    "publication": { "signup": "Sluit aan", "removeSignup": "Onttrek" },
     "title": "Spanlyste en opstellings",
     "description": "Bestuur oorlogspanlyste, opstellings en lede-indelings",
     "stats": {
@@ -633,7 +635,8 @@
       "typeFamily": "Familie",
       "signupScopeLabel": "Aanmeldingsreeks",
       "scopeClanOnly": "Slegs clan",
-      "scopeFamilyWide": "Familiewyd",
+      "scopeFamilyOnly": "Slegs familie",
+      "scopeAnyone": "Enigiemand",
       "clanLabel": "Klan",
       "clanPlaceholder": "Kies 'n clan",
       "descriptionLabel": "Beskrywing (opsioneel)",
@@ -1095,7 +1098,8 @@
       "typeFamily": "Familie",
       "signupScope": "Aanmeldingsreeks",
       "scopeClanOnly": "Slegs clan",
-      "scopeFamilyWide": "Familiewyd",
+      "scopeFamilyOnly": "Slegs familie",
+      "scopeAnyone": "Enigiemand",
       "clan": "Klan",
       "selectClan": "Kies 'n clan",
       "description": "Beskrywing",
@@ -1120,6 +1124,8 @@
       "rosterSize": "Spanlysgrootte",
       "rosterSizeHint": "maksimum aantal lede",
       "minSignups": "Min. aanmeldings",
+      "maxSignups": "Maksimum inskrywings",
+      "requireVerified": "Vereis geverifieerde rekeninge",
       "minSignupsHint": "Minimum aantal aanmeldings wat nodig is om die spanlys te vul",
       "maxAccountsPerUser": "Maks. rekeninge per gebruiker",
       "maxAccountsHint": "Rekeninglimiet per Discord-gebruiker",
@@ -2234,8 +2240,6 @@
     "security": {
       "title": "sekuriteit & regte",
       "description": "Bestuur toegang en verifikasie",
-      "requireLinkingToken": "Vereis 'n API-token uit die speletjie wanneer rekeninge gekoppel word",
-      "requireLinkingTokenDescription": "By verstek af. Indien aangeskakel, vereis elke koppeling op hierdie bediener 'n geldige token, ook vir geverifieerde rekeninge. Rooster- en kaartjiekeuses bly onveranderd.",
       "fullWhitelistRole": "Volledige witlysrol",
       "fullWhitelistRoleDesc": "Discord-rol met volle toegang tot alle botopdragte (omseil alle toestemmingskontroles)",
       "noRole": "geen rol",

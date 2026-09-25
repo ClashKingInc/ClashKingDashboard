@@ -396,6 +396,7 @@
       "message": "Message"
     },
     "edit": {
+      "imageWarning": "Odkaz na rozložení ani obrázky nelze nahradit. Další obrázky můžete odebrat, ale alespoň jeden musí zůstat. Po uložení nelze odebrané obrázky obnovit.",
       "action": "Edit"
     }
   },
@@ -589,6 +590,7 @@
     }
   },
   "RostersPage": {
+    "publication": { "signup": "Připojit se", "removeSignup": "Zrušit přihlášení" },
     "title": "Soupisky a sestavy",
     "description": "Správa válečných soupisek, sestav a přiřazení členů",
     "stats": {
@@ -633,7 +635,8 @@
       "typeFamily": "Rodina",
       "signupScopeLabel": "Rozsah přihlášení",
       "scopeClanOnly": "Pouze klan",
-      "scopeFamilyWide": "Celá rodina",
+      "scopeFamilyOnly": "Pouze rodina",
+      "scopeAnyone": "Kdokoli",
       "clanLabel": "Klan",
       "clanPlaceholder": "Vybrat klan",
       "descriptionLabel": "Popis (volitelné)",
@@ -1095,7 +1098,8 @@
       "typeFamily": "Rodina",
       "signupScope": "Rozsah přihlášení",
       "scopeClanOnly": "Pouze klan",
-      "scopeFamilyWide": "Celá rodina",
+      "scopeFamilyOnly": "Pouze rodina",
+      "scopeAnyone": "Kdokoli",
       "clan": "Klan",
       "selectClan": "Vybrat klan",
       "description": "Popis",
@@ -1120,6 +1124,8 @@
       "rosterSize": "Velikost soupisky",
       "rosterSizeHint": "Maximální počet členů",
       "minSignups": "Minimální počet přihlášení",
+      "maxSignups": "Maximum přihlášek",
+      "requireVerified": "Vyžadovat ověřené účty",
       "minSignupsHint": "Minimální počet přihlášení potřebný k naplnění soupisky",
       "maxAccountsPerUser": "Maximální počet účtů na uživatele",
       "maxAccountsHint": "Omezit počet účtů na uživatele Discordu",
@@ -2234,8 +2240,6 @@
     "security": {
       "title": "Zabezpečení a oprávnění",
       "description": "Řízení přístupu a ověřování",
-      "requireLinkingToken": "Při propojení vyžadovat API token ze hry",
-      "requireLinkingTokenDescription": "Ve výchozím stavu vypnuto. Po zapnutí vyžaduje každé propojení na serveru platný token, i u ověřených účtů. Výběr účtů pro soupisky a tickety se nemění.",
       "fullWhitelistRole": "Role s úplným přístupem",
       "fullWhitelistRoleDesc": "Role na Discordu s úplným přístupem ke všem příkazům bota (obchází všechny kontroly oprávnění)",
       "noRole": "Žádná role",

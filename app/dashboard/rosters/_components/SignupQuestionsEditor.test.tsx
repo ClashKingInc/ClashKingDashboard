@@ -13,6 +13,29 @@ const question: RosterSignupQuestion = {
 };
 
 describe("SignupQuestionsEditor", () => {
+  it("hides question IDs and permits keyboard reordering from the drag handle", () => {
+    const onChange = vi.fn();
+    render(<SignupQuestionsEditor questions={[question, { ...question, id: "second", order: 1 }]} onChange={onChange} />);
+    expect(screen.queryByText(question.id)).not.toBeInTheDocument();
+    fireEvent.keyDown(screen.getByRole("button", { name: "Move question 2" }), { key: "ArrowUp" });
+    expect(onChange.mock.calls[0][0].map((item: RosterSignupQuestion) => item.id)).toEqual(["second", question.id]);
+  });
+  it("adds family clans as separate editable dropdown options", () => {
+    const onChange = vi.fn();
+    render(<SignupQuestionsEditor questions={[]} onChange={onChange} clans={[{ name: "Clan A", tag: "#P0Y" }]} />);
+    fireEvent.click(screen.getByRole("button", { name: "Family clans" }));
+    expect(onChange.mock.calls[0][0][0]).toMatchObject({ type: "single_select", options: ["Clan A (#P0Y)"] });
+  });
+  it("renders individual option inputs without splitting comma-containing values", () => {
+    const onChange = vi.fn();
+    render(<SignupQuestionsEditor questions={[{ ...question, type: "single_select", options: ["One", "Two"] }]} onChange={onChange} />);
+    fireEvent.change(screen.getByRole("textbox", { name: "Question 1 option 1" }), { target: { value: "One, two" } });
+    expect(onChange.mock.calls[0][0][0].options).toEqual(["One, two", "Two"]);
+  });
+  it("shows why a blank dropdown option prevents saving", () => {
+    render(<SignupQuestionsEditor questions={[{ ...question, type: "single_select", options: ["One", "  "] }]} onChange={vi.fn()} />);
+    expect(screen.getByRole("alert")).toHaveTextContent("Enter text for every dropdown option before saving.");
+  });
   it("keeps the account selector fixed and adds a configurable question", () => {
     const onChange = vi.fn();
     render(<SignupQuestionsEditor questions={[]} onChange={onChange} />);

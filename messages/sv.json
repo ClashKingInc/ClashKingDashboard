@@ -396,6 +396,7 @@
       "message": "Message"
     },
     "edit": {
+      "imageWarning": "Layoutlänken och bilderna kan inte ersättas. Du kan ta bort extra bilder, men minst en måste finnas kvar. Efter att du sparat kan borttagna bilder inte återställas.",
       "action": "Edit"
     }
   },
@@ -589,6 +590,7 @@
     }
   },
   "RostersPage": {
+    "publication": { "signup": "Anmäl dig", "removeSignup": "Avanmäl" },
     "title": "Laguppställningar",
     "description": "Hantera krigsuppställningar och medlemstilldelningar",
     "stats": {
@@ -633,7 +635,8 @@
       "typeFamily": "Familj",
       "signupScopeLabel": "Anmälningsomfattning",
       "scopeClanOnly": "Endast klanen",
-      "scopeFamilyWide": "Hela familjen",
+      "scopeFamilyOnly": "Endast familj",
+      "scopeAnyone": "Alla",
       "clanLabel": "Klan",
       "clanPlaceholder": "Välj en klan",
       "descriptionLabel": "Beskrivning (valfritt)",
@@ -1095,7 +1098,8 @@
       "typeFamily": "Familj",
       "signupScope": "Anmälningsomfattning",
       "scopeClanOnly": "Endast klanen",
-      "scopeFamilyWide": "Hela familjen",
+      "scopeFamilyOnly": "Endast familj",
+      "scopeAnyone": "Alla",
       "clan": "Klan",
       "selectClan": "Välj en klan",
       "description": "Beskrivning",
@@ -1120,6 +1124,8 @@
       "rosterSize": "Laguppställningens storlek",
       "rosterSizeHint": "Maximalt antal medlemmar",
       "minSignups": "Minsta antal anmälningar",
+      "maxSignups": "Maximalt antal anmälningar",
+      "requireVerified": "Kräv verifierade konton",
       "minSignupsHint": "Minsta antal anmälningar som krävs för att fylla laguppställningen",
       "maxAccountsPerUser": "Maximalt antal konton per användare",
       "maxAccountsHint": "Begränsa antalet konton per Discord-användare",
@@ -2234,8 +2240,6 @@
     "security": {
       "title": "Säkerhet och behörigheter",
       "description": "Styr åtkomst och verifiering",
-      "requireLinkingToken": "Kräv en API-token från spelet vid länkning",
-      "requireLinkingTokenDescription": "Avstängt som standard. När det är aktiverat kräver varje länkning på servern en giltig token, även för verifierade konton. Kontoval för laguppställningar och ärenden ändras inte.",
       "fullWhitelistRole": "Roll med fullständig åtkomst",
       "fullWhitelistRoleDesc": "Discord-roll med fullständig åtkomst till alla botkommandon (förbigår alla behörighetskontroller)",
       "noRole": "Ingen roll",

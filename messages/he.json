@@ -396,6 +396,7 @@
       "message": "Message"
     },
     "edit": {
+      "imageWarning": "לא ניתן להחליף את קישור הפריסה או את התמונות. ניתן להסיר תמונות נוספות, אך לפחות תמונה אחת חייבת להישאר. לאחר השמירה לא ניתן לשחזר תמונות שהוסרו.",
       "action": "Edit"
     }
   },
@@ -589,6 +590,7 @@
     }
   },
   "RostersPage": {
+    "publication": { "signup": "הרשמה", "removeSignup": "ביטול הרשמה" },
     "title": "סגלים והרכבים",
     "description": "ניהול סגלי מלחמה, הרכבים ושיוך חברים",
     "stats": {
@@ -633,7 +635,8 @@
       "typeFamily": "משפחה",
       "signupScopeLabel": "טווח ההרשמה",
       "scopeClanOnly": "השבט בלבד",
-      "scopeFamilyWide": "כל המשפחה",
+      "scopeFamilyOnly": "משפחה בלבד",
+      "scopeAnyone": "כולם",
       "clanLabel": "שבט",
       "clanPlaceholder": "בחירת שבט",
       "descriptionLabel": "תיאור (אופציונלי)",
@@ -1095,7 +1098,8 @@
       "typeFamily": "משפחה",
       "signupScope": "טווח ההרשמה",
       "scopeClanOnly": "השבט בלבד",
-      "scopeFamilyWide": "כל המשפחה",
+      "scopeFamilyOnly": "משפחה בלבד",
+      "scopeAnyone": "כולם",
       "clan": "שבט",
       "selectClan": "בחירת שבט",
       "description": "תיאור",
@@ -1120,6 +1124,8 @@
       "rosterSize": "גודל הסגל",
       "rosterSizeHint": "מספר החברים המרבי",
       "minSignups": "מספר הרשמות מזערי",
+      "maxSignups": "מספר הרשמות מרבי",
+      "requireVerified": "דרוש חשבונות מאומתים",
       "minSignupsHint": "מספר ההרשמות המזערי הנדרש למילוי הסגל",
       "maxAccountsPerUser": "מספר חשבונות מרבי למשתמש",
       "maxAccountsHint": "הגבלת חשבונות לכל משתמש Discord",
@@ -2234,8 +2240,6 @@
     "security": {
       "title": "אבטחה והרשאות",
       "description": "שליטה בגישה ובאימות",
-      "requireLinkingToken": "דרוש אסימון API מהמשחק בעת קישור חשבון",
-      "requireLinkingTokenDescription": "כבוי כברירת מחדל. כאשר מופעל, כל קישור בשרת דורש אסימון תקף, גם עבור חשבונות מאומתים. בחירת החשבונות לסגלים ולפניות אינה משתנה.",
       "fullWhitelistRole": "תפקיד גישה מלאה",
       "fullWhitelistRoleDesc": "תפקיד Discord עם גישה מלאה לכל פקודות הבוט, ללא בדיקות הרשאה",
       "noRole": "ללא תפקיד",

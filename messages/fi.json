@@ -396,6 +396,7 @@
       "message": "Message"
     },
     "edit": {
+      "imageWarning": "Asettelulinkkiä ja kuvia ei voi korvata. Voit poistaa ylimääräisiä kuvia, mutta vähintään yhden on jäätävä. Tallennuksen jälkeen poistettuja kuvia ei voi palauttaa.",
       "action": "Edit"
     }
   },
@@ -589,6 +590,7 @@
     }
   },
   "RostersPage": {
+    "publication": { "signup": "Liity kokoonpanoon", "removeSignup": "Peru ilmoittautuminen" },
     "title": "Kokoonpanot",
     "description": "Hallitse sotakokoonpanoja ja jäsenten sijoittelua",
     "stats": {
@@ -633,7 +635,8 @@
       "typeFamily": "Perhe",
       "signupScopeLabel": "Ilmoittautumisen laajuus",
       "scopeClanOnly": "Vain klaani",
-      "scopeFamilyWide": "Koko perhe",
+      "scopeFamilyOnly": "Vain klaaniperhe",
+      "scopeAnyone": "Kuka tahansa",
       "clanLabel": "Klaani",
       "clanPlaceholder": "Valitse klaani",
       "descriptionLabel": "Kuvaus (valinnainen)",
@@ -1095,7 +1098,8 @@
       "typeFamily": "Perhe",
       "signupScope": "Ilmoittautumisen laajuus",
       "scopeClanOnly": "Vain klaani",
-      "scopeFamilyWide": "Koko perhe",
+      "scopeFamilyOnly": "Vain klaaniperhe",
+      "scopeAnyone": "Kuka tahansa",
       "clan": "Klaani",
       "selectClan": "Valitse klaani",
       "description": "Kuvaus",
@@ -1120,6 +1124,8 @@
       "rosterSize": "Kokoonpanon koko",
       "rosterSizeHint": "Jäsenten enimmäismäärä",
       "minSignups": "Ilmoittautumisia vähintään",
+      "maxSignups": "Ilmoittautumisten enimmäismäärä",
+      "requireVerified": "Vaadi vahvistetut tilit",
       "minSignupsHint": "Kokoonpanon täyttämiseen vaadittava ilmoittautumisten vähimmäismäärä",
       "maxAccountsPerUser": "Tilejä enintään käyttäjää kohti",
       "maxAccountsHint": "Rajoita Discord-käyttäjän tilien määrää",
@@ -2234,8 +2240,6 @@
     "security": {
       "title": "Suojaus ja käyttöoikeudet",
       "description": "Hallitse käyttöoikeuksia ja vahvistusta",
-      "requireLinkingToken": "Vaadi pelin API-tunniste tilin yhdistämiseen",
-      "requireLinkingTokenDescription": "Oletuksena pois käytöstä. Kun asetus on käytössä, jokainen tilin yhdistäminen palvelimella vaatii kelvollisen tunnisteen, myös vahvistetuilta tileiltä. Kokoonpanojen ja tukipyyntöjen tilivalinnat eivät muutu.",
       "fullWhitelistRole": "Täyden käyttöoikeuden rooli",
       "fullWhitelistRoleDesc": "Discord-rooli, jolla on täydet oikeudet kaikkiin botin komentoihin ja joka ohittaa käyttöoikeustarkistukset",
       "noRole": "Ei roolia",

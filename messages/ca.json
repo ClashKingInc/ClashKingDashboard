@@ -396,6 +396,7 @@
       "message": "Message"
     },
     "edit": {
+      "imageWarning": "No es poden substituir l’enllaç del disseny ni les imatges. Pots eliminar imatges addicionals, però n’ha de quedar almenys una. Un cop desat, no es poden recuperar les imatges eliminades.",
       "action": "Edit"
     }
   },
@@ -589,6 +590,7 @@
     }
   },
   "RostersPage": {
+    "publication": { "signup": "Inscriu-te", "removeSignup": "Cancel·la la inscripció" },
     "title": "Llistes i alineacions",
     "description": "Gestiona les llistes de guerra, les alineacions i les assignacions de membres",
     "stats": {
@@ -633,7 +635,8 @@
       "typeFamily": "Família",
       "signupScopeLabel": "Àmbit d’inscripció",
       "scopeClanOnly": "Només el clan",
-      "scopeFamilyWide": "Tota la família",
+      "scopeFamilyOnly": "Només la família",
+      "scopeAnyone": "Qualsevol",
       "clanLabel": "Clan",
       "clanPlaceholder": "Selecciona un clan",
       "descriptionLabel": "Descripció (opcional)",
@@ -1095,7 +1098,8 @@
       "typeFamily": "Família",
       "signupScope": "Àmbit d’inscripció",
       "scopeClanOnly": "Només el clan",
-      "scopeFamilyWide": "Tota la família",
+      "scopeFamilyOnly": "Només la família",
+      "scopeAnyone": "Qualsevol",
       "clan": "Clan",
       "selectClan": "Selecciona un clan",
       "description": "Descripció",
@@ -1120,6 +1124,8 @@
       "rosterSize": "Mida de la llista",
       "rosterSizeHint": "Nombre màxim de membres",
       "minSignups": "Inscripcions mínimes",
+      "maxSignups": "Inscripcions màximes",
+      "requireVerified": "Requereix comptes verificats",
       "minSignupsHint": "Nombre mínim d’inscripcions necessari per omplir la llista",
       "maxAccountsPerUser": "Màxim de comptes per usuari",
       "maxAccountsHint": "Limita els comptes de cada usuari de Discord",
@@ -2234,8 +2240,6 @@
     "security": {
       "title": "Seguretat i permisos",
       "description": "Controla l’accés i la verificació",
-      "requireLinkingToken": "Requereix un token API del joc en vincular comptes",
-      "requireLinkingTokenDescription": "Desactivat per defecte. Si s'activa, cada vinculació al servidor necessita un token vàlid, també per als comptes verificats. La selecció de comptes per a plantilles i tiquets no canvia.",
       "fullWhitelistRole": "Rol amb accés complet",
       "fullWhitelistRoleDesc": "Rol de Discord amb accés a totes les ordres del bot (omet totes les comprovacions de permisos)",
       "noRole": "Sense rol",

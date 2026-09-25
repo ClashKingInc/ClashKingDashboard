@@ -396,6 +396,7 @@
       "message": "Message"
     },
     "edit": {
+      "imageWarning": "لے آؤٹ کا لنک اور تصاویر تبدیل نہیں کی جا سکتیں۔ آپ اضافی تصاویر ہٹا سکتے ہیں، لیکن کم از کم ایک تصویر رہنی چاہیے۔ محفوظ کرنے کے بعد ہٹائی گئی تصاویر بحال نہیں کی جا سکتیں۔",
       "action": "Edit"
     }
   },
@@ -589,6 +590,7 @@
     }
   },
   "RostersPage": {
+    "publication": { "signup": "شامل ہوں", "removeSignup": "رجسٹریشن منسوخ کریں" },
     "title": "روسٹرز اور لائن اپس",
     "description": "جنگی روسٹرز، لائن اپس اور ارکان کی تفویض کا انتظام کریں",
     "stats": {
@@ -633,7 +635,8 @@
       "typeFamily": "فیملی",
       "signupScopeLabel": "سائن اپ کا دائرہ",
       "scopeClanOnly": "صرف کلین",
-      "scopeFamilyWide": "پوری فیملی",
+      "scopeFamilyOnly": "صرف خاندان",
+      "scopeAnyone": "کوئی بھی",
       "clanLabel": "کلین",
       "clanPlaceholder": "کلین منتخب کریں",
       "descriptionLabel": "تفصیل (اختیاری)",
@@ -1095,7 +1098,8 @@
       "typeFamily": "فیملی",
       "signupScope": "سائن اپ کا دائرہ",
       "scopeClanOnly": "صرف کلین",
-      "scopeFamilyWide": "پوری فیملی",
+      "scopeFamilyOnly": "صرف خاندان",
+      "scopeAnyone": "کوئی بھی",
       "clan": "کلین",
       "selectClan": "کلین منتخب کریں",
       "description": "تفصیل",
@@ -1120,6 +1124,8 @@
       "rosterSize": "روسٹر کا حجم",
       "rosterSizeHint": "ارکان کی زیادہ سے زیادہ تعداد",
       "minSignups": "کم از کم سائن اپس",
+      "maxSignups": "زیادہ سے زیادہ رجسٹریشن",
+      "requireVerified": "تصدیق شدہ اکاؤنٹس لازم ہیں",
       "minSignupsHint": "روسٹر بھرنے کے لیے درکار سائن اپس کی کم از کم تعداد",
       "maxAccountsPerUser": "فی صارف زیادہ سے زیادہ اکاؤنٹس",
       "maxAccountsHint": "ہر Discord صارف کے اکاؤنٹس محدود کریں",
@@ -2234,8 +2240,6 @@
     "security": {
       "title": "سیکیورٹی اور اجازتیں",
       "description": "رسائی اور تصدیق کو کنٹرول کریں",
-      "requireLinkingToken": "اکاؤنٹ لنک کرتے وقت گیم کا API ٹوکن لازمی کریں",
-      "requireLinkingTokenDescription": "پہلے سے بند ہے۔ فعال ہونے پر اس سرور پر ہر بار اکاؤنٹ لنک کرنے کے لیے درست ٹوکن درکار ہوگا، تصدیق شدہ اکاؤنٹس کے لیے بھی۔ روسٹر اور ٹکٹ میں اکاؤنٹ کا انتخاب تبدیل نہیں ہوگا۔",
       "fullWhitelistRole": "مکمل وائٹ لسٹ رول",
       "fullWhitelistRoleDesc": "تمام بوٹ کمانڈز تک مکمل رسائی رکھنے والا Discord رول (اجازتوں کی تمام جانچ سے مستثنیٰ)",
       "noRole": "کوئی رول نہیں",

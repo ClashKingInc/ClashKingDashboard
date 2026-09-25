@@ -396,6 +396,7 @@
       "message": "Message"
     },
     "edit": {
+      "imageWarning": "Der Layout-Link und die Bilder können nicht ersetzt werden. Zusätzliche Bilder können entfernt werden, aber mindestens eines muss bleiben. Nach dem Speichern können entfernte Bilder nicht wiederhergestellt werden.",
       "action": "Edit"
     }
   },
@@ -589,6 +590,7 @@
     }
   },
   "RostersPage": {
+    "publication": { "signup": "Kader beitreten", "removeSignup": "Abmelden" },
     "title": "Kader und Aufstellungen",
     "description": "Kriegskader, Aufstellungen und Mitgliederzuweisungen verwalten",
     "stats": {
@@ -633,7 +635,8 @@
       "typeFamily": "Familie",
       "signupScopeLabel": "Anmeldebereich",
       "scopeClanOnly": "Nur Clan",
-      "scopeFamilyWide": "Familienweit",
+      "scopeFamilyOnly": "Nur Clan-Familie",
+      "scopeAnyone": "Jeder",
       "clanLabel": "Clan",
       "clanPlaceholder": "Clan auswählen",
       "descriptionLabel": "Beschreibung (optional)",
@@ -1095,7 +1098,8 @@
       "typeFamily": "Familie",
       "signupScope": "Anmeldebereich",
       "scopeClanOnly": "Nur Clan",
-      "scopeFamilyWide": "Familienweit",
+      "scopeFamilyOnly": "Nur Clan-Familie",
+      "scopeAnyone": "Jeder",
       "clan": "Clan",
       "selectClan": "Clan auswählen",
       "description": "Beschreibung",
@@ -1120,6 +1124,8 @@
       "rosterSize": "Kadergröße",
       "rosterSizeHint": "Maximale Mitgliederzahl",
       "minSignups": "Mindestanmeldungen",
+      "maxSignups": "Maximale Anmeldungen",
+      "requireVerified": "Verifizierte Konten erforderlich",
       "minSignupsHint": "Mindestanzahl an Anmeldungen, die zum Füllen des Kaders erforderlich ist",
       "maxAccountsPerUser": "Maximale Konten pro Benutzer",
       "maxAccountsHint": "Konten pro Discord-Benutzer begrenzen",
@@ -2234,8 +2240,6 @@
     "security": {
       "title": "Sicherheit und Berechtigungen",
       "description": "Zugriff und Verifizierung steuern",
-      "requireLinkingToken": "Beim Verknüpfen einen API-Token aus dem Spiel verlangen",
-      "requireLinkingTokenDescription": "Standardmäßig deaktiviert. Wenn aktiviert, benötigt jede Verknüpfung auf diesem Server einen gültigen Token, auch bei verifizierten Konten. Die Kontoauswahl für Aufstellungen und Tickets bleibt unverändert.",
       "fullWhitelistRole": "Rolle mit vollständiger Freigabe",
       "fullWhitelistRoleDesc": "Discord-Rolle mit vollständigem Zugriff auf alle Bot-Befehle (umgeht sämtliche Berechtigungsprüfungen)",
       "noRole": "Keine Rolle",

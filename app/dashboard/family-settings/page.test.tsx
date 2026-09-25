@@ -45,7 +45,6 @@ describe("FamilySettingsPage empty configuration", () => {
         server_id: "123",
         server: "123",
         name: "Empty server",
-        require_api_token_when_linking: false,
         change_nickname: true,
         nickname_rule: "[{player_clan_abbreviation}] {player_name}",
         non_family_nickname_rule: "{player_name}",

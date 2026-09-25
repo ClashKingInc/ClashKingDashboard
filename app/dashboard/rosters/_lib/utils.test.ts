@@ -19,7 +19,14 @@ import {
   getAutomationIcon,
   getAutomationLabel,
   formatOffsetSeconds,
+  recurrenceDayOfMonth,
 } from "./utils";
+
+it("preserves a stored monthly day when the event start is empty", () => {
+  expect(recurrenceDayOfMonth("day_of_month", "", "17")).toBe(17);
+  expect(recurrenceDayOfMonth("day_of_month", "2026-10-05T12:00", "17")).toBe(5);
+  expect(recurrenceDayOfMonth("once", "", "17")).toBeNull();
+});
 
 // ─── validatePlayerTag ────────────────────────────────────────────────────────
 
@@ -363,8 +370,8 @@ describe("calculateRosterStats — extra branches", () => {
     const s = calculateRosterStats([{ name: "A", tag: "#AAA", townhall: 14, current_clan_tag: null }], "#CLAN");
     expect(s.external).toBe(1);
   });
-  it("avgHitrate 0 when all hitrates are null", () => {
+  it("avgHitrate is unavailable when all hitrates are null", () => {
     const s = calculateRosterStats([{ name: "A", tag: "#AAA", townhall: 14, hitrate: null }]);
-    expect(s.avgHitrate).toBe(0);
+    expect(s.avgHitrate).toBeNull();
   });
 });

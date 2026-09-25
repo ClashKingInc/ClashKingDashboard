@@ -396,6 +396,7 @@
       "message": "Message"
     },
     "edit": {
+      "imageWarning": "लेआउट लिंक और चित्र बदले नहीं जा सकते। आप अतिरिक्त चित्र हटा सकते हैं, लेकिन कम से कम एक चित्र रहना चाहिए। सहेजने के बाद हटाए गए चित्र वापस नहीं लाए जा सकते।",
       "action": "Edit"
     }
   },
@@ -589,6 +590,7 @@
     }
   },
   "RostersPage": {
+    "publication": { "signup": "रोस्टर में शामिल हों", "removeSignup": "नाम वापस लें" },
     "title": "रोस्टर और लाइनअप",
     "description": "वॉर रोस्टर, लाइनअप और सदस्य असाइनमेंट प्रबंधित करें",
     "stats": {
@@ -633,7 +635,8 @@
       "typeFamily": "फ़ैमिली",
       "signupScopeLabel": "साइनअप दायरा",
       "scopeClanOnly": "केवल क्लैन",
-      "scopeFamilyWide": "पूरी फ़ैमिली",
+      "scopeFamilyOnly": "केवल परिवार",
+      "scopeAnyone": "कोई भी",
       "clanLabel": "क्लैन",
       "clanPlaceholder": "क्लैन चुनें",
       "descriptionLabel": "विवरण (वैकल्पिक)",
@@ -1095,7 +1098,8 @@
       "typeFamily": "फ़ैमिली",
       "signupScope": "साइनअप दायरा",
       "scopeClanOnly": "केवल क्लैन",
-      "scopeFamilyWide": "पूरी फ़ैमिली",
+      "scopeFamilyOnly": "केवल परिवार",
+      "scopeAnyone": "कोई भी",
       "clan": "क्लैन",
       "selectClan": "क्लैन चुनें",
       "description": "विवरण",
@@ -1120,6 +1124,8 @@
       "rosterSize": "रोस्टर आकार",
       "rosterSizeHint": "सदस्यों की अधिकतम संख्या",
       "minSignups": "न्यूनतम साइनअप",
+      "maxSignups": "अधिकतम पंजीकरण",
+      "requireVerified": "सत्यापित खाते आवश्यक",
       "minSignupsHint": "रोस्टर भरने के लिए आवश्यक न्यूनतम साइनअप संख्या",
       "maxAccountsPerUser": "अधिकतम खाते प्रति उपयोगकर्ता",
       "maxAccountsHint": "प्रति Discord उपयोगकर्ता खातों की संख्या सीमित करें",
@@ -2234,8 +2240,6 @@
     "security": {
       "title": "सुरक्षा और अनुमतियाँ",
       "description": "पहुँच और सत्यापन नियंत्रित करें",
-      "requireLinkingToken": "खाता लिंक करते समय गेम का API टोकन आवश्यक करें",
-      "requireLinkingTokenDescription": "डिफ़ॉल्ट रूप से बंद। चालू करने पर इस सर्वर पर हर बार खाता लिंक करने के लिए मान्य टोकन चाहिए, सत्यापित खातों के लिए भी। रोस्टर और टिकट में खाता चुनने के नियम नहीं बदलते।",
       "fullWhitelistRole": "पूर्ण श्वेतसूची भूमिका",
       "fullWhitelistRoleDesc": "सभी बॉट कमांड की पूरी पहुँच वाली Discord भूमिका (सभी अनुमति जाँचों को छोड़ देती है)",
       "noRole": "कोई भूमिका",

@@ -396,6 +396,7 @@
       "message": "Message"
     },
     "edit": {
+      "imageWarning": "Nie można zastąpić linku do układu ani obrazów. Możesz usunąć dodatkowe obrazy, ale co najmniej jeden musi pozostać. Po zapisaniu usuniętych obrazów nie można przywrócić.",
       "action": "Edit"
     }
   },
@@ -589,6 +590,7 @@
     }
   },
   "RostersPage": {
+    "publication": { "signup": "Dołącz do składu", "removeSignup": "Wypisz się" },
     "title": "Składy i ustawienia",
     "description": "Zarządzaj składami wojennymi, ustawieniami i przydziałami członków",
     "stats": {
@@ -633,7 +635,8 @@
       "typeFamily": "Rodzina",
       "signupScopeLabel": "Zakres zapisów",
       "scopeClanOnly": "Tylko klan",
-      "scopeFamilyWide": "Cała rodzina",
+      "scopeFamilyOnly": "Tylko rodzina",
+      "scopeAnyone": "Każdy",
       "clanLabel": "Klan",
       "clanPlaceholder": "Wybierz klan",
       "descriptionLabel": "Opis (opcjonalnie)",
@@ -1095,7 +1098,8 @@
       "typeFamily": "Rodzina",
       "signupScope": "Zakres zapisów",
       "scopeClanOnly": "Tylko klan",
-      "scopeFamilyWide": "Cała rodzina",
+      "scopeFamilyOnly": "Tylko rodzina",
+      "scopeAnyone": "Każdy",
       "clan": "Klan",
       "selectClan": "Wybierz klan",
       "description": "Opis",
@@ -1120,6 +1124,8 @@
       "rosterSize": "Rozmiar składu",
       "rosterSizeHint": "Maksymalna liczba członków",
       "minSignups": "Minimalna liczba zapisów",
+      "maxSignups": "Maksymalna liczba zapisów",
+      "requireVerified": "Wymagaj zweryfikowanych kont",
       "minSignupsHint": "Minimalna liczba zapisów wymagana do zapełnienia składu",
       "maxAccountsPerUser": "Maksymalna liczba kont na użytkownika",
       "maxAccountsHint": "Ogranicz konta na użytkownika Discord",
@@ -2234,8 +2240,6 @@
     "security": {
       "title": "Bezpieczeństwo i uprawnienia",
       "description": "Kontroluj dostęp i weryfikację",
-      "requireLinkingToken": "Wymagaj tokenu API z gry przy łączeniu kont",
-      "requireLinkingTokenDescription": "Domyślnie wyłączone. Po włączeniu każde połączenie na tym serwerze wymaga ważnego tokenu, również dla zweryfikowanych kont. Wybór kont do składów i zgłoszeń pozostaje bez zmian.",
       "fullWhitelistRole": "Rola z pełnym dostępem",
       "fullWhitelistRoleDesc": "Rola Discord z pełnym dostępem do wszystkich poleceń bota (pomija wszystkie kontrole uprawnień)",
       "noRole": "Brak roli",
