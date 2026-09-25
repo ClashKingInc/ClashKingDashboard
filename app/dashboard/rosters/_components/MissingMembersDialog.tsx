@@ -104,10 +104,10 @@ export function MissingMembersDialog({
   };
 
   const handleAddAll = async () => {
-    if (allMissingMembers.length === 0) return;
+    if (visibleMembers.length === 0) return;
     setAdding(true);
     try {
-      await onAddMembers(allMissingMembers.map(m => m.tag));
+      await onAddMembers(visibleMembers.map(m => m.tag));
       onLoad(viewMode === 'group' && groupId ? groupId : undefined);
     } finally {
       setAdding(false);
@@ -166,7 +166,7 @@ export function MissingMembersDialog({
               {data?.results?.find(r => r.state === 'error')?.error_message || t("missingMembers.error")}
             </p>
           </div>
-        ) : allMissingMembers.length > 0 ? ( // NOSONAR — JSX nested ternary for multi-branch display state
+        ) : visibleMembers.length > 0 ? ( // NOSONAR — JSX nested ternary for multi-branch display state
           <div className="space-y-4">
             {/* Select all */}
             <div className="flex items-center justify-between">
@@ -206,9 +206,15 @@ export function MissingMembersDialog({
           </div>
         ) : (
           <div className="text-center py-12">
-            <CheckCircle2 className="w-12 h-12 text-green-400 mx-auto mb-4" />
-            <p className="text-foreground font-medium">{t("missingMembers.allCaughtUp")}</p>
-            <p className="text-sm text-muted-foreground mt-1">{t("missingMembers.allCaughtUpDesc")}</p>
+            {allMissingMembers.length > 0 ? (
+              <p className="text-foreground font-medium">{t("memberAutocomplete.noResults")}</p>
+            ) : (
+              <>
+                <CheckCircle2 className="w-12 h-12 text-green-400 mx-auto mb-4" />
+                <p className="text-foreground font-medium">{t("missingMembers.allCaughtUp")}</p>
+                <p className="text-sm text-muted-foreground mt-1">{t("missingMembers.allCaughtUpDesc")}</p>
+              </>
+            )}
           </div>
         )}
 
@@ -221,7 +227,7 @@ export function MissingMembersDialog({
           >
             {t("common.close")}
           </Button>
-          {allMissingMembers.length > 0 && (
+          {visibleMembers.length > 0 && (
             <>
               <Button
                 variant="outline"
