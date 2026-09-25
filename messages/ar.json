@@ -396,6 +396,7 @@
       "message": "Message"
     },
     "edit": {
+      "imageWarning": "لا يمكن استبدال رابط التصميم أو الصور. يمكنك حذف الصور الإضافية، لكن يجب إبقاء صورة واحدة على الأقل. بعد الحفظ، لا يمكن استعادة الصور المحذوفة.",
       "action": "Edit"
     }
   },
@@ -589,6 +590,7 @@
     }
   },
   "RostersPage": {
+    "publication": { "signup": "الانضمام", "removeSignup": "إلغاء التسجيل" },
     "title": "القوائم والتشكيلات",
     "description": "إدارة قوائم الحرب والتشكيلات وتعيين الأعضاء",
     "stats": {
@@ -633,7 +635,8 @@
       "typeFamily": "العائلة",
       "signupScopeLabel": "نطاق التسجيل",
       "scopeClanOnly": "القبيلة فقط",
-      "scopeFamilyWide": "لكامل العائلة",
+      "scopeFamilyOnly": "العائلة فقط",
+      "scopeAnyone": "أي شخص",
       "clanLabel": "القبيلة",
       "clanPlaceholder": "اختر قبيلة",
       "descriptionLabel": "الوصف (اختياري)",
@@ -1095,7 +1098,8 @@
       "typeFamily": "العائلة",
       "signupScope": "نطاق التسجيل",
       "scopeClanOnly": "القبيلة فقط",
-      "scopeFamilyWide": "العائلة بأكملها",
+      "scopeFamilyOnly": "العائلة فقط",
+      "scopeAnyone": "أي شخص",
       "clan": "القبيلة",
       "selectClan": "اختر قبيلة",
       "description": "الوصف",
@@ -1120,6 +1124,8 @@
       "rosterSize": "حجم القائمة",
       "rosterSizeHint": "الحد الأقصى لعدد الأعضاء",
       "minSignups": "الحد الأدنى للتسجيلات",
+      "maxSignups": "الحد الأقصى للتسجيلات",
+      "requireVerified": "اشتراط حسابات موثّقة",
       "minSignupsHint": "الحد الأدنى للتسجيلات المطلوبة لملء القائمة",
       "maxAccountsPerUser": "الحد الأقصى للحسابات لكل مستخدم",
       "maxAccountsHint": "تحديد الحسابات لكل مستخدم Discord",
@@ -2234,8 +2240,6 @@
     "security": {
       "title": "الأمان والأذونات",
       "description": "التحكم في الوصول والتحقق",
-      "requireLinkingToken": "طلب رمز API من اللعبة عند ربط الحسابات",
-      "requireLinkingTokenDescription": "معطّل افتراضيًا. عند تفعيله، تتطلب كل عملية ربط في هذا الخادم رمزًا صالحًا، حتى للحسابات الموثّقة. لا يتغير اختيار الحسابات للقوائم والتذاكر.",
       "fullWhitelistRole": "رتبة الوصول الكامل",
       "fullWhitelistRoleDesc": "رتبة Discord بوصول كامل إلى جميع أوامر البوت وتتجاوز كل فحوص الأذونات",
       "noRole": "بلا رتبة",

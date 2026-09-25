@@ -55,7 +55,7 @@ describe("dashboard cache payload normalization", () => {
   });
 
   it("normalizes canonical settings and rejects extra envelopes", () => {
-    const settings = { server_id: "1", server: "1", name: "Guild", countdowns: {}, server_roles: [], require_api_token_when_linking: false };
+    const settings = { server_id: "1", server: "1", name: "Guild", countdowns: {}, server_roles: [] };
 
     expect(normalizeServerSettingsPayload(settings)).toEqual(settings);
     expect(() => normalizeServerSettingsPayload({ data: settings })).toThrow();
@@ -63,7 +63,7 @@ describe("dashboard cache payload normalization", () => {
   });
 
   it("normalizes the API's decimal embed color string to a number", () => {
-    expect(normalizeServerSettingsPayload({ server_id: "1", server: "1", name: "Guild", countdowns: {}, server_roles: [], require_api_token_when_linking: false, embed_color: "2829617" }))
+    expect(normalizeServerSettingsPayload({ server_id: "1", server: "1", name: "Guild", countdowns: {}, server_roles: [], embed_color: "2829617" }))
       .toMatchObject({ server: "1", embed_color: 2829617 });
   });
 });

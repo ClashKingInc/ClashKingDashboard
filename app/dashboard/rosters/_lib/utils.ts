@@ -135,7 +135,7 @@ export function calculateRosterStats(
     return {
       totalMembers: 0,
       avgTh: 0,
-      avgHitrate: 0,
+      avgHitrate: null,
       inClan: 0,
       inFamily: 0,
       external: 0,
@@ -173,7 +173,7 @@ export function calculateRosterStats(
   return {
     totalMembers: members.length,
     avgTh: Math.round((totalTh / members.length) * 10) / 10,
-    avgHitrate: hitrateCount > 0 ? Math.round((totalHitrate / hitrateCount) * 10) / 10 : 0,
+    avgHitrate: hitrateCount > 0 ? Math.round((totalHitrate / hitrateCount) * 10) / 10 : null,
     inClan,
     inFamily,
     external,

@@ -396,6 +396,7 @@
       "message": "Message"
     },
     "edit": {
+      "imageWarning": "无法替换布局链接或图片。可以删除多余的图片，但必须至少保留一张。保存后，已删除的图片无法恢复。",
       "action": "Edit"
     }
   },
@@ -589,6 +590,7 @@
     }
   },
   "RostersPage": {
+    "publication": { "signup": "加入名单", "removeSignup": "取消报名" },
     "title": "阵容管理",
     "description": "管理部落战阵容、成员和分组",
     "stats": {
@@ -633,7 +635,8 @@
       "typeFamily": "家族",
       "signupScopeLabel": "报名范围",
       "scopeClanOnly": "部落仅",
-      "scopeFamilyWide": "家族范围",
+      "scopeFamilyOnly": "仅限家族",
+      "scopeAnyone": "任何人",
       "clanLabel": "部落",
       "clanPlaceholder": "选择部落",
       "descriptionLabel": "描述(可选)",
@@ -1095,7 +1098,8 @@
       "typeFamily": "家族",
       "signupScope": "报名范围",
       "scopeClanOnly": "部落仅",
-      "scopeFamilyWide": "家族范围",
+      "scopeFamilyOnly": "仅限家族",
+      "scopeAnyone": "任何人",
       "clan": "部落",
       "selectClan": "选择部落",
       "description": "描述",
@@ -1120,6 +1124,8 @@
       "rosterSize": "阵容人数",
       "rosterSizeHint": "最大成员数",
       "minSignups": "最小报名",
+      "maxSignups": "报名人数上限",
+      "requireVerified": "要求已验证的账号",
       "minSignupsHint": "填满阵容所需的最低报名人数",
       "maxAccountsPerUser": "每位用户最多可用账号数",
       "maxAccountsHint": "限制账号每Discord用户",
@@ -2234,8 +2240,6 @@
     "security": {
       "title": "安全与权限",
       "description": "控制访问权限和验证",
-      "requireLinkingToken": "关联账号时要求提供游戏内 API 令牌",
-      "requireLinkingTokenDescription": "默认关闭。开启后，在此服务器每次关联账号都需要有效令牌，包括已验证的账号。阵容和工单中的账号选择不受影响。",
       "fullWhitelistRole": "完整白名单身份组",
       "fullWhitelistRoleDesc": "可完整访问所有机器人命令并绕过权限检查的Discord身份组",
       "noRole": "无身份组",

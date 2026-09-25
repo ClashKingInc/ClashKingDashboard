@@ -396,6 +396,7 @@
       "message": "Message"
     },
     "edit": {
+      "imageWarning": "배치 링크와 이미지는 교체할 수 없습니다. 추가 이미지는 삭제할 수 있지만 최소 한 장은 남겨야 합니다. 저장 후에는 삭제한 이미지를 복원할 수 없습니다.",
       "action": "Edit"
     }
   },
@@ -589,6 +590,7 @@
     }
   },
   "RostersPage": {
+    "publication": { "signup": "명단 참가", "removeSignup": "참가 취소" },
     "title": "로스터 및 라인업",
     "description": "클랜전 로스터, 라인업과 멤버 배정을 관리합니다",
     "stats": {
@@ -633,7 +635,8 @@
       "typeFamily": "패밀리",
       "signupScopeLabel": "신청 범위",
       "scopeClanOnly": "클랜만",
-      "scopeFamilyWide": "패밀리 전체",
+      "scopeFamilyOnly": "패밀리만",
+      "scopeAnyone": "누구나",
       "clanLabel": "클랜",
       "clanPlaceholder": "클랜 선택",
       "descriptionLabel": "설명 (선택 사항)",
@@ -1095,7 +1098,8 @@
       "typeFamily": "패밀리",
       "signupScope": "신청 범위",
       "scopeClanOnly": "클랜만",
-      "scopeFamilyWide": "패밀리 전체",
+      "scopeFamilyOnly": "패밀리만",
+      "scopeAnyone": "누구나",
       "clan": "클랜",
       "selectClan": "클랜 선택",
       "description": "설명",
@@ -1120,6 +1124,8 @@
       "rosterSize": "로스터 크기",
       "rosterSizeHint": "최대 멤버 수",
       "minSignups": "최소 신청",
+      "maxSignups": "최대 등록 수",
+      "requireVerified": "인증된 계정 필수",
       "minSignupsHint": "로스터를 채우는 데 필요한 최소 신청 수",
       "maxAccountsPerUser": "사용자당 최대 계정 수",
       "maxAccountsHint": "Discord 사용자당 연결할 수 있는 계정 수를 제한합니다",
@@ -2234,8 +2240,6 @@
     "security": {
       "title": "보안 및 권한",
       "description": "접근 권한과 인증을 관리합니다",
-      "requireLinkingToken": "계정 연결 시 게임 내 API 토큰 요구",
-      "requireLinkingTokenDescription": "기본적으로 꺼져 있습니다. 활성화하면 인증된 계정을 포함해 이 서버에서 계정을 연결할 때마다 유효한 토큰이 필요합니다. 로스터와 티켓의 계정 선택은 바뀌지 않습니다.",
       "fullWhitelistRole": "전체 허용 목록 역할",
       "fullWhitelistRoleDesc": "모든 봇 명령어에 전체 접근 권한을 가지며 모든 권한 확인을 건너뛰는 Discord 역할",
       "noRole": "역할 없음",

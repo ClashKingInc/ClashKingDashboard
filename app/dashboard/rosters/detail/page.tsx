@@ -1,4 +1,15 @@
 "use client";
+import { RosterAppearance } from "../_components/RosterAppearance";
+import { useQuery } from "@tanstack/react-query";
+import { dashboardQueryOptions } from "@/lib/dashboard-query-options";
+import { normalizeServerSettingsPayload } from "@/lib/dashboard-cache";
+import { DateTimePicker } from "@/components/ui/date-time-picker";
+import { dashboardEndpoints } from "@clashking/api-contracts";
+import { executeSharedEndpoint } from "@/lib/api/shared-client";
+import { EventOffsetInput } from "../_components/EventOffsetInput";
+import { PostRosterDialog } from "../_components/PostRosterDialog";
+import { RosterAnswers } from "../_components/RosterAnswers";
+import { TownHallLimit } from "../_components/TownHallLimit";
 
 import { useGuildId, useRosterId } from "@/lib/dashboard-route";
 import React, { useState } from "react";
@@ -41,7 +52,7 @@ import {
   Loader2, ArrowLeft, Settings as SettingsIcon, Users, Zap,
   RefreshCw, UserPlus, Clock, Calendar, Plus, Trash2, Bell, Lock, Unlock,
   MessageSquare, UserMinus, Building2, Hash, Shield,
-  Tag, FileText, Home, Pencil, Columns3, ChevronUp, ChevronDown, GripVertical,
+  Tag, FileText, Pencil, Columns3, ChevronUp, ChevronDown, GripVertical,
   Lightbulb, Play, Pause, Archive,
   CheckCircle2, AlertTriangle
 } from "lucide-react";
@@ -70,7 +81,6 @@ import {
 import {
   unixToDatetimeLocal,
   datetimeLocalToUnix,
-  getTimezoneOffset,
   getAutomationLabel,
   formatTimestamp,
   getColumnLabel,
@@ -111,10 +121,13 @@ const DEFAULT_COLUMNS = ['townhall', 'name', 'hitrate', 'current_clan'];
 
 export default function RosterDetailPage() { // NOSONAR — React page component: complexity is aggregate state/handler management, not a single logic unit
   const guildId = useGuildId();
+  const serverSettings = useQuery(dashboardQueryOptions.settings(guildId));
+  const serverEmbedColor = Number((serverSettings.data === undefined ? undefined : normalizeServerSettingsPayload(serverSettings.data))?.embed_color ?? 14223113);
   const router = useRouter();
   const { toast } = useToast();
 
   const rosterId = useRosterId();
+  const [confirmQuestionReset, setConfirmQuestionReset] = useState(false);
   const t = useTranslations("RostersPage");
 
   // Game constants
@@ -123,6 +136,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
   // Data hook
   const {
     roster,
+    hitrateError,
     clans,
     clanMembers,
     serverMembers,
@@ -135,12 +149,12 @@ export default function RosterDetailPage() { // NOSONAR — React page component
     loadingServerMembers,
     error,
     refreshRoster,
+    refresh: reloadRoster,
     updateRoster,
     addMembers,
     removeMember,
     clearMembers,
     refreshMember,
-    refreshDiscordIdentity,
     loadMissingMembers,
     loadServerMembers,
     createAutomation,
@@ -166,19 +180,22 @@ export default function RosterDetailPage() { // NOSONAR — React page component
 
   // Form state
   const [editData, setEditData] = useState<EditRosterFormData>({
+    image: "",
     alias: "",
     description: "",
     roster_type: "clan",
-    signup_scope: "clan-only",
+    signup_scope: "anyone",
     clan_tag: "",
     min_th: "",
     max_th: "",
-    min_signups: "",
+    max_signups: "",
+    require_verified: false,
+    hero_red_percent: 50, hero_yellow_percent: 75, hero_green_percent: 90,
     max_accounts_per_user: "",
     event_start_time: "",
     recurrence_days: "",
     recurrence_day_of_month: "",
-    recurrence_mode: "days",
+    recurrence_mode: "once",
     signup_questions: [],
     columns: [],
     sort: [],
@@ -188,6 +205,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
   const [newAutomation, setNewAutomation] = useState<Partial<RosterAutomation> & { target_type?: 'roster' | 'group'; target_group_id?: string }>(() => ({
     action_type: "roster_ping",
     scheduled_at: new Date(Date.now() + 86400000).toISOString(),
+    event_offset_days: 0,
     active: true,
     target_type: 'roster',
   }));
@@ -216,34 +234,50 @@ export default function RosterDetailPage() { // NOSONAR — React page component
   }, [roster?.group_id, guildId, rosterId]);
 
   // Column configuration state
+  const draggedColumn = React.useRef<string | null>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [localColumns, setLocalColumns] = useState<string[]>(DEFAULT_COLUMNS);
   const [columnPopoverOpen, setColumnPopoverOpen] = useState(false);
   const [columnsInitialized, setColumnsInitialized] = useState(false);
   const columnsStorageKey = `roster-columns-${guildId}-${rosterId}`;
 
   // Sync edit form with roster data
+  const settingsSnapshot = React.useRef("");
+  const [savedSettings, setSavedSettings] = useState("");
+  const settingsChanged = savedSettings !== "" && JSON.stringify(editData) !== savedSettings;
   React.useEffect(() => {
     if (roster) {
+      const snapshot = JSON.stringify({ ...roster, members: undefined });
+      if (settingsSnapshot.current === snapshot) return;
+      settingsSnapshot.current = snapshot;
       const normalizedColumns = normalizeClanColumns(roster.columns || []);
-      setEditData({
+      const nextSettings: EditRosterFormData = {
+        embed_color: roster.embed_color ?? null,
+        image: roster.image || "",
         alias: roster.alias,
         description: roster.description || "",
         roster_type: roster.roster_type || "clan",
-        signup_scope: roster.signup_scope || "clan-only",
+        signup_scope: roster.signup_scope || "anyone",
         clan_tag: roster.clan_tag || "",
         min_th: roster.min_th?.toString() || "",
         max_th: roster.max_th?.toString() || "",
-        min_signups: roster.min_signups?.toString() || "",
+        max_signups: roster.max_signups?.toString() || "",
+        require_verified: roster.require_verified ?? false,
+        hero_red_percent: roster.hero_red_percent ?? 50,
+        hero_yellow_percent: roster.hero_yellow_percent ?? 75,
+        hero_green_percent: roster.hero_green_percent ?? 90,
         max_accounts_per_user: roster.max_accounts_per_user?.toString() || "",
         event_start_time: unixToDatetimeLocal(roster.event_start_time),
         recurrence_days: roster.recurrence_days?.toString() || "",
         recurrence_day_of_month: roster.recurrence_day_of_month?.toString() || "",
-        recurrence_mode: roster.recurrence_day_of_month ? "day_of_month" : "days",
+        recurrence_mode: roster.recurrence_day_of_month ? "day_of_month" : roster.recurrence_days ? "days" : "once",
         signup_questions: roster.signup_questions || [],
         columns: normalizedColumns.map(getColumnLabel),
 		sort: (roster.sort || []).map((item) => getSortLabel(`${item.columnId}_${item.direction}`)),
         group_id: roster.group_id || "",
-      });
+      };
+      setEditData(nextSettings);
+      setSavedSettings(JSON.stringify(nextSettings));
     }
   }, [roster]);
 
@@ -301,10 +335,15 @@ export default function RosterDetailPage() { // NOSONAR — React page component
     }
   };
 
-  const handleSaveSettings = async () => {
+  const handleSaveSettings = async (resetAnswers = false) => {
+    const normalizeQuestions = (questions: typeof editData.signup_questions) => questions.map((question, order) => [question.id, question.label.trim(), question.type, question.required, order, question.options ?? []]);
+    const questionsChanged = JSON.stringify(normalizeQuestions(editData.signup_questions)) !== JSON.stringify(normalizeQuestions(roster?.signup_questions ?? []));
+    if (questionsChanged && !resetAnswers) { setConfirmQuestionReset(true); return; }
     setSaving(true);
     try {
       await updateRoster({
+        embed_color: editData.embed_color ?? null,
+        image: editData.image || null,
         alias: editData.alias,
         description: editData.description || null,
         roster_type: editData.roster_type,
@@ -312,13 +351,17 @@ export default function RosterDetailPage() { // NOSONAR — React page component
         clan_tag: editData.clan_tag || null,
         min_th: editData.min_th ? Number.parseInt(editData.min_th) : null,
         max_th: editData.max_th ? Number.parseInt(editData.max_th) : null,
-        min_signups: editData.min_signups ? Number.parseInt(editData.min_signups) : null,
+        max_signups: editData.max_signups ? Number.parseInt(editData.max_signups) : null,
+        require_verified: editData.require_verified ?? false,
+        hero_red_percent: editData.hero_red_percent ?? 50,
+        hero_yellow_percent: editData.hero_yellow_percent ?? 75,
+        hero_green_percent: editData.hero_green_percent ?? 90,
         max_accounts_per_user: editData.max_accounts_per_user ? Number.parseInt(editData.max_accounts_per_user) : null,
         event_start_time: datetimeLocalToUnix(editData.event_start_time),
         recurrence_days: editData.recurrence_mode === 'days' && editData.recurrence_days
           ? Number.parseInt(editData.recurrence_days) : null,
-        recurrence_day_of_month: editData.recurrence_mode === 'day_of_month' && editData.recurrence_day_of_month
-          ? Number.parseInt(editData.recurrence_day_of_month) : null,
+        recurrence_day_of_month: editData.recurrence_mode === 'day_of_month' && editData.event_start_time
+          ? new Date(editData.event_start_time).getDate() : null,
         columns: editData.columns.map(getColumnInternal),
 		sort: editData.sort.map((label) => {
 		  const internal = getSortInternal(label);
@@ -329,6 +372,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
 		}),
         group_id: editData.group_id || null,
         signup_questions: editData.signup_questions,
+        reset_answers: resetAnswers,
       });
       toast({ title: t("saveSuccess") });
     } catch (err) {
@@ -403,7 +447,8 @@ export default function RosterDetailPage() { // NOSONAR — React page component
         roster_id: newAutomation.target_type === 'roster' ? rosterId : undefined,
         group_id: newAutomation.target_type === 'group' ? newAutomation.target_group_id : undefined,
         action_type: newAutomation.action_type as AutomationActionType,
-        scheduled_at: newAutomation.scheduled_at ?? new Date(Date.now() + 86400000).toISOString(),
+        scheduled_at: newAutomation.scheduled_at ?? new Date().toISOString(),
+        event_offset_days: newAutomation.event_offset_days ?? 0,
         discord_channel_id: newAutomation.discord_channel_id,
         options: newAutomation.options,
         active: true,
@@ -413,6 +458,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
       setNewAutomation({
         action_type: "roster_ping",
         scheduled_at: new Date(Date.now() + 86400000).toISOString(),
+    event_offset_days: 0,
         active: true,
         target_type: 'roster',
       });
@@ -462,6 +508,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
       await updateAutomation(editingAutomation.automation_id, {
         action_type: editingAutomation.action_type,
         scheduled_at: editingAutomation.scheduled_at,
+        event_offset_days: editingAutomation.event_offset_days ?? (roster?.event_start_time ? Math.round((Date.parse(editingAutomation.scheduled_at) / 1000 - roster.event_start_time) / 86400) : 0),
         discord_channel_id: editingAutomation.discord_channel_id,
         options: editingAutomation.options,
         active: editingAutomation.active,
@@ -637,6 +684,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
           </div>
         </div>
         <div className="grid grid-cols-2 gap-2 w-full md:w-auto md:flex">
+          <PostRosterDialog serverId={guildId} rosterId={rosterId} channels={channels} />
           <Button variant="secondary" onClick={handleRefresh} disabled={refreshing} className="w-full rounded-xl border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted md:w-auto">
             <RefreshCw className={`w-4 h-4 mr-2 ${refreshing ? "animate-spin" : ""}`} />
             {t("refresh")}
@@ -650,27 +698,27 @@ export default function RosterDetailPage() { // NOSONAR — React page component
 
       {/* Stats Card */}
       <RosterStatsCard roster={roster} familyClanTags={familyClanTags} t={t} />
+      {hitrateError && <p role="alert" className="text-sm text-destructive">{t("stats.avgHitrate")}: {hitrateError}</p>}
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <DashboardTabsList className="grid-cols-3">
-          <DashboardTabTrigger value="members" artwork={<Users />} count={roster.members?.length || 0}>
+          <DashboardTabTrigger value="members" artwork={<Users />}>
             {t("tabs.members")}
           </DashboardTabTrigger>
           <DashboardTabTrigger value="automations" artwork={<Zap />} count={automations.length}>
             {t("tabs.automations")}
           </DashboardTabTrigger>
+          <DashboardTabTrigger value="answers" artwork={<Users />}>Answers</DashboardTabTrigger>
           <DashboardTabTrigger value="settings" artwork={<SettingsIcon />}>
             {t("tabs.settings")}
           </DashboardTabTrigger>
         </DashboardTabsList>
 
         {/* Members Tab */}
+        <TabsContent value="answers" className="mt-5"><RosterAnswers roster={roster} onSaved={reloadRoster} /></TabsContent>
         <TabsContent value="members" className="mt-5 space-y-4">
           <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-            <p className="text-muted-foreground">
-              {roster.members?.length || 0} {t("members.count")}
-            </p>
             <div className="flex items-center gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               <Popover open={columnPopoverOpen} onOpenChange={setColumnPopoverOpen}>
                 <PopoverTrigger asChild>
@@ -679,12 +727,12 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                     {t("columns.configure")}
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-80 p-0" align="end">
+                <PopoverContent className="flex w-80 flex-col overflow-hidden p-0" align="end">
                   <div className="p-4 border-b border-border">
                     <h4 className="font-medium">{t("columns.title")}</h4>
                     <p className="text-sm text-muted-foreground">{t("columns.description")}</p>
                   </div>
-                  <div className="p-2 max-h-[300px] overflow-y-auto">
+                  <div className="scrollbar-custom min-h-0 overflow-y-auto overscroll-contain p-2">
                     {/* Selected columns with reorder */}
                     <div className="space-y-1 mb-2">
                       <p className="text-xs font-medium text-muted-foreground px-2 py-1">{t("columns.selected")}</p>
@@ -693,6 +741,22 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                         return (
                           <div
                             key={col}
+                            draggable
+                            onDragStart={event => { draggedColumn.current = col; event.dataTransfer.effectAllowed = "move"; event.dataTransfer.setData("text/plain", col); }}
+                            onDragEnd={() => { draggedColumn.current = null; }}
+                            onDragOver={event => { event.preventDefault(); event.dataTransfer.dropEffect = "move"; }}
+                            onDrop={event => {
+                              event.preventDefault();
+                              const source = draggedColumn.current;
+                              if (!source || source === col) return;
+                              setLocalColumns(previous => {
+                                if (!previous.includes(source)) return previous;
+                                const next = previous.filter(value => value !== source);
+                                next.splice(previous.indexOf(col), 0, source);
+                                return next;
+                              });
+                              draggedColumn.current = null;
+                            }}
                             className="flex items-center justify-between px-2 py-1.5 rounded hover:bg-muted/50"
                           >
                             <div className="flex items-center gap-2">
@@ -790,6 +854,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
           <Card className="overflow-hidden rounded-[24px] border-0 bg-card shadow-sm shadow-black/5">
             <CardContent className="p-0">
               <MembersTable
+                heroAnchors={[roster.hero_red_percent ?? 50, roster.hero_yellow_percent ?? 75, roster.hero_green_percent ?? 90]}
                 members={roster.members || []}
                 columns={localColumns}
                 rosterClanTag={roster.clan_tag}
@@ -799,7 +864,6 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                 onRemoveMember={handleRemoveMember}
                 removingMember={removingMember}
                 onRefreshMember={refreshMember}
-                onRefreshDiscordIdentity={refreshDiscordIdentity}
                 groupDuplicateMap={groupDuplicateMap}
                 t={t}
               />
@@ -926,7 +990,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                       <div className="space-y-1.5 mb-4">
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
                           <Clock className="w-4 h-4 flex-shrink-0" />
-                          <span className="truncate">{formatTimestamp(Math.floor(new Date(automation.scheduled_at).getTime() / 1000))}</span>
+                          <span className="truncate">{automation.event_offset_days == null ? formatTimestamp(Math.floor(new Date(automation.scheduled_at).getTime() / 1000)) : `${automation.event_offset_days > 0 ? "+" : ""}${automation.event_offset_days} days from event`}</span>
                         </div>
                         {automation.discord_channel_id && (
                           <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -979,8 +1043,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
 
         {/* Settings Tab */}
         <TabsContent value="settings" className="mt-5 space-y-4">
-          <Card className="border-0 bg-transparent shadow-none">
-            <CardContent className="space-y-4 p-0">
+          <div className="space-y-5">
 
               {/* Section: Identity */}
               <div className="space-y-4 rounded-[24px] bg-card p-5 shadow-sm shadow-black/5 md:p-6">
@@ -990,7 +1053,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <Label className="text-sm font-medium">{t("settings.name")}</Label>
+                    <Label className="block min-h-6 text-sm font-medium">{t("settings.name")}</Label>
                     <Input
                       value={editData.alias}
                       onChange={(e) => setEditData({ ...editData, alias: e.target.value })}
@@ -999,7 +1062,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <Label className="text-sm font-medium">{t("settings.group")}</Label>
+                    <Label className="block min-h-6 text-sm font-medium">{t("settings.group")}</Label>
                     <Select
                       value={editData.group_id || "__none__"}
                       onValueChange={(value) => setEditData({ ...editData, group_id: value === "__none__" ? "" : value })}
@@ -1019,7 +1082,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                   </div>
                 </div>
                 <div className="space-y-1.5">
-                  <Label className="text-sm font-medium">{t("settings.description")}</Label>
+                  <Label className="block min-h-6 text-sm font-medium">{t("settings.description")}</Label>
                   <Textarea
                     value={editData.description}
                     onChange={(e) => setEditData({ ...editData, description: e.target.value })}
@@ -1028,58 +1091,46 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                     placeholder={t("settings.descriptionPlaceholder")}
                   />
                 </div>
+                <RosterAppearance image={editData.image} color={editData.embed_color} serverColor={serverEmbedColor} uploading={uploadingImage}
+                  onImageChange={image => setEditData(previous => ({ ...previous, image }))}
+                  onColorChange={embed_color => setEditData(previous => ({ ...previous, embed_color }))}
+                  onUpload={async file => {
+                    setUploadingImage(true);
+                    try {
+                      const body = new FormData(); body.append("file", file);
+                      const result = await executeSharedEndpoint(dashboardEndpoints.dashboardRosterImage, { path: { serverId: guildId, rosterId }, query: {}, body });
+                      setEditData(previous => ({ ...previous, image: result.url }));
+                    } catch (error) { toast({ title: error instanceof Error ? error.message : String(error), variant: "destructive" }); }
+                    finally { setUploadingImage(false); }
+                  }} />
               </div>
 
               {/* Section: Type & Scope */}
               <div className="space-y-4 rounded-[24px] bg-card p-5 shadow-sm shadow-black/5 md:p-6">
                 <p className="flex items-center gap-1.5 text-sm font-semibold text-foreground">
                   <Building2 className="w-3.5 h-3.5" />
-                  {t("settings.typeAndScope")}
+                  {t("settings.signupScope")}
                 </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <div className="space-y-1.5">
-                    <Label className="text-sm font-medium">{t("settings.rosterType")}</Label>
-                    <Select
-                      value={editData.roster_type}
-                      onValueChange={(value: "clan" | "family") => setEditData({ ...editData, roster_type: value })}
-                    >
-                      <SelectTrigger className="rounded-xl border-0 bg-muted/55 shadow-sm shadow-black/5">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="clan">
-                          <span className="flex items-center gap-2">
-                            <Home className="w-4 h-4" />
-                            {t("settings.typeClan")}
-                          </span>
-                        </SelectItem>
-                        <SelectItem value="family">
-                          <span className="flex items-center gap-2">
-                            <Users className="w-4 h-4" />
-                            {t("settings.typeFamily")}
-                          </span>
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-sm font-medium">{t("settings.signupScope")}</Label>
+                    <Label className="block min-h-6 text-sm font-medium">{t("settings.signupScope")}</Label>
                     <Select
                       value={editData.signup_scope}
-                      onValueChange={(value: "clan-only" | "family-wide") => setEditData({ ...editData, signup_scope: value })}
+                      onValueChange={(value: "clan-only" | "family-only" | "anyone") => setEditData({ ...editData, signup_scope: value })}
                     >
                       <SelectTrigger className="rounded-xl border-0 bg-muted/55 shadow-sm shadow-black/5">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="clan-only">{t("settings.scopeClanOnly")}</SelectItem>
-                        <SelectItem value="family-wide">{t("settings.scopeFamilyWide")}</SelectItem>
+                        <SelectItem value="family-only">{t("settings.scopeFamilyOnly")}</SelectItem>
+                        <SelectItem value="anyone">{t("settings.scopeAnyone")}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
-                  {editData.roster_type === "clan" && (
+                  {(
                     <div className="space-y-1.5">
-                      <Label className="text-sm font-medium">{t("settings.clan")}</Label>
+                      <Label className="block min-h-6 text-sm font-medium">{t("settings.clan")}</Label>
                       <ClanCombobox
                         clans={clans}
                         value={editData.clan_tag}
@@ -1089,6 +1140,53 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                       />
                     </div>
                   )}
+                </div>
+                <p className="flex items-center gap-1.5 text-sm font-semibold text-foreground">
+                  <Shield className="w-3.5 h-3.5 text-emerald-500" />
+                  {t("settings.restrictions")}
+                </p>
+                <label className="flex items-center justify-between gap-4 rounded-2xl bg-muted/35 p-3">
+                  <span className="text-sm">{t("settings.requireVerified")}</span>
+                  <Switch checked={editData.require_verified ?? false} onCheckedChange={require_verified => setEditData({ ...editData, require_verified })} />
+                </label>
+                <div className="grid grid-cols-3 gap-3">
+                  {(["hero_red_percent", "hero_yellow_percent", "hero_green_percent"] as const).map((key, index) => <div key={key} className="space-y-1.5">
+                    <Label className="text-xs text-muted-foreground"><span aria-hidden="true" style={{ color: ["#ef4444", "#eab308", "#22c55e"][index] }}>● </span>{t("memberColumns.hero_lvs")} %</Label>
+                    <Input type="number" min={0} max={100} value={editData[key]} onChange={event => setEditData({ ...editData, [key]: Number(event.target.value) })} />
+                  </div>)}
+                </div>
+				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <TownHallLimit label={t("settings.minTh")} value={editData.min_th} minimum={minTh}
+                    maximum={editData.max_th ? Number(editData.max_th) : maxTh} initial={minTh}
+                    onChange={min_th => setEditData({ ...editData, min_th })} />
+                  <TownHallLimit label={t("settings.maxTh")} value={editData.max_th}
+                    minimum={editData.min_th ? Number(editData.min_th) : minTh} maximum={maxTh} initial={maxTh}
+                    onChange={max_th => setEditData({ ...editData, max_th })} />
+                  <div className="space-y-1.5">
+                    <Label className="block min-h-6 text-xs text-muted-foreground">{t("settings.maxSignups")}</Label>
+                    <Input
+                      type="number"
+                      min={1}
+                      value={editData.max_signups}
+                      onChange={(e) => setEditData({ ...editData, max_signups: e.target.value })}
+                      className="rounded-xl border-0 bg-muted/55 shadow-sm shadow-black/5"
+                      placeholder="50"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <div className="flex min-h-6 items-center justify-between gap-2"><Label className="text-sm font-medium">{t("settings.maxAccountsPerUser")}</Label>
+                      <Switch aria-label={t("settings.maxAccountsPerUser")} checked={editData.max_accounts_per_user !== ""} onCheckedChange={enabled => setEditData(previous => ({ ...previous, max_accounts_per_user: enabled ? "1" : "" }))} />
+                    </div>
+                    <Input
+                      type="number"
+                      min={1}
+                      disabled={editData.max_accounts_per_user === ""}
+                      value={editData.max_accounts_per_user}
+                      onChange={(e) => setEditData({ ...editData, max_accounts_per_user: e.target.value })}
+                      className="rounded-xl border-0 bg-muted/55 shadow-sm shadow-black/5"
+                      placeholder="No limit"
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -1100,27 +1198,24 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-1.5">
-                    <Label className="text-sm font-medium">{t("settings.eventTime")}</Label>
+                    <Label className="block min-h-6 text-sm font-medium">{t("settings.eventTime")}</Label>
                     <div className="flex items-center gap-2">
-                      <Input
+                      <DateTimePicker
                         type="datetime-local"
                         value={editData.event_start_time}
                         onChange={(e) => setEditData({ ...editData, event_start_time: e.target.value })}
                         className="flex-1 rounded-xl border-0 bg-muted/55 shadow-sm shadow-black/5"
                       />
-                      <Badge variant="secondary" className="shrink-0 border-0 bg-muted/65">
-                        <Clock className="w-3 h-3 mr-1" />
-                        {getTimezoneOffset()}
-                      </Badge>
                     </div>
                     <p className="text-xs text-muted-foreground">{t("settings.eventTimeHint")}</p>
                   </div>
                   <div className="space-y-1.5">
-                    <Label className="text-sm font-medium flex items-center gap-1.5">
+                    <Label className="block min-h-6 text-sm font-medium flex items-center gap-1.5">
                       <RefreshCw className="w-3.5 h-3.5 text-amber-500" />
                       {t("settings.recurrenceDays")}
                     </Label>
-                    <div className="flex gap-2">
+                    <div className="flex flex-wrap gap-2">
+                      <Button type="button" size="sm" variant={editData.recurrence_mode === "once" ? "default" : "outline"} onClick={() => setEditData({ ...editData, recurrence_mode: "once", recurrence_days: "", recurrence_day_of_month: "" })}>One time</Button>
                       <Button type="button" size="sm"
                         variant={editData.recurrence_mode === 'days' ? 'default' : 'outline'}
                         className="h-8 text-xs"
@@ -1131,10 +1226,10 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                         variant={editData.recurrence_mode === 'day_of_month' ? 'default' : 'outline'}
                         className="h-8 text-xs"
                         onClick={() => setEditData({ ...editData, recurrence_mode: 'day_of_month', recurrence_days: '' })}>
-                        {t("settings.recurrenceModeMonthly")}
+                        Monthly
                       </Button>
                     </div>
-                    {editData.recurrence_mode === 'days' ? (
+                    {editData.recurrence_mode === 'once' ? null : editData.recurrence_mode === 'days' ? (
                       <div className="flex items-center gap-2">
                         <Input
                           type="number"
@@ -1146,82 +1241,12 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                         />
                         <span className="text-sm text-muted-foreground">{t("settings.recurrenceDaysUnit")}</span>
                       </div>
-                    ) : (
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm text-muted-foreground">{t("settings.recurrenceDayOfMonthPrefix")}</span>
-                        <Input
-                          type="number"
-                          min={1}
-                          max={31}
-                          placeholder="1"
-                          value={editData.recurrence_day_of_month}
-                          onChange={(e) => setEditData({ ...editData, recurrence_day_of_month: e.target.value })}
-                          className="w-20 rounded-xl border-0 bg-muted/55 shadow-sm shadow-black/5"
-                        />
-                        <span className="text-sm text-muted-foreground">{t("settings.recurrenceDayOfMonthSuffix")}</span>
-                      </div>
-                    )}
+                    ) : null}
                     <p className="text-xs text-muted-foreground">
-                      {editData.recurrence_mode === 'days'
+                      {editData.recurrence_mode === 'once' ? "This event happens once at the start time above." : editData.recurrence_mode === 'days'
                         ? t("settings.recurrenceDaysHint")
-                        : t("settings.recurrenceDayOfMonthHint")}
+                        : "Uses the event start’s day and time for the monthly schedule."}
                     </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Section: Restrictions */}
-              <div className="space-y-4 rounded-[24px] bg-card p-5 shadow-sm shadow-black/5 md:p-6">
-                <p className="flex items-center gap-1.5 text-sm font-semibold text-foreground">
-                  <Shield className="w-3.5 h-3.5 text-emerald-500" />
-                  {t("settings.restrictions")}
-                </p>
-				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  <div className="space-y-1.5">
-                    <Label className="text-xs text-muted-foreground">{t("settings.minTh")}</Label>
-                    <Input
-                      type="number"
-                      min={minTh}
-                      max={maxTh}
-                      value={editData.min_th}
-                      onChange={(e) => setEditData({ ...editData, min_th: e.target.value })}
-                      className="rounded-xl border-0 bg-muted/55 shadow-sm shadow-black/5"
-                      placeholder={String(minTh)}
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-xs text-muted-foreground">{t("settings.maxTh")}</Label>
-                    <Input
-                      type="number"
-                      min={minTh}
-                      max={maxTh}
-                      value={editData.max_th}
-                      onChange={(e) => setEditData({ ...editData, max_th: e.target.value })}
-                      className="rounded-xl border-0 bg-muted/55 shadow-sm shadow-black/5"
-                      placeholder={String(maxTh)}
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-xs text-muted-foreground">{t("settings.minSignups")}</Label>
-                    <Input
-                      type="number"
-                      min={1}
-                      value={editData.min_signups}
-                      onChange={(e) => setEditData({ ...editData, min_signups: e.target.value })}
-                      className="rounded-xl border-0 bg-muted/55 shadow-sm shadow-black/5"
-                      placeholder="15"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-xs text-muted-foreground">{t("settings.maxAccountsPerUser")}</Label>
-                    <Input
-                      type="number"
-                      min={1}
-                      value={editData.max_accounts_per_user}
-                      onChange={(e) => setEditData({ ...editData, max_accounts_per_user: e.target.value })}
-                      className="rounded-xl border-0 bg-muted/55 shadow-sm shadow-black/5"
-                      placeholder="2"
-                    />
                   </div>
                 </div>
               </div>
@@ -1230,20 +1255,20 @@ export default function RosterDetailPage() { // NOSONAR — React page component
               <div className="rounded-[24px] bg-card p-5 shadow-sm shadow-black/5 md:p-6">
                 <SignupQuestionsEditor
                   questions={editData.signup_questions}
+                  clans={clans}
                   onChange={(signupQuestions) =>
                     setEditData({ ...editData, signup_questions: signupQuestions })
                   }
                 />
               </div>
 
-            </CardContent>
-          </Card>
+          </div>
 
           {/* Save — sticky at the bottom */}
-          <div className="sticky bottom-4 flex justify-end">
+          {settingsChanged && <div className="sticky bottom-4 flex justify-end">
             <Button
-              onClick={handleSaveSettings}
-              disabled={saving}
+              onClick={() => void handleSaveSettings()}
+              disabled={saving || uploadingImage}
               size="lg"
               className="min-w-[200px] shadow-lg"
             >
@@ -1259,7 +1284,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                 </>
               )}
             </Button>
-          </div>
+          </div>}
 
         </TabsContent>
       </Tabs>
@@ -1391,20 +1416,8 @@ export default function RosterDetailPage() { // NOSONAR — React page component
               )}
             </div>
             <div className="space-y-2">
-			  <Label>{t("automations.scheduledAt")}</Label>
-			  <Input
-				type="datetime-local"
-				value={newAutomation.scheduled_at ? unixToDatetimeLocal(Math.floor(new Date(newAutomation.scheduled_at).getTime() / 1000)) : ""}
-				onChange={(e) => {
-				  const scheduledAt = datetimeLocalToUnix(e.target.value);
-				  setNewAutomation({
-					...newAutomation,
-					scheduled_at: scheduledAt === null ? undefined : new Date(scheduledAt * 1000).toISOString(),
-				  });
-				}}
-				className="bg-muted/55 border-0 shadow-sm shadow-black/5"
-			  />
-			  <p className="text-xs text-muted-foreground">{t("automations.scheduledAtHint")}</p>
+			  <Label>Days from event start</Label>
+              <EventOffsetInput value={newAutomation.event_offset_days ?? 0} onChange={event_offset_days => setNewAutomation(previous => ({ ...previous, event_offset_days }))} />
             </div>
             {newAutomation.action_type === "roster_ping" && (
               <div className="space-y-2">
@@ -1544,21 +1557,8 @@ export default function RosterDetailPage() { // NOSONAR — React page component
               )}
             </div>
             <div className="space-y-2">
-			  <Label>{t("automations.scheduledAt")}</Label>
-			  {editingAutomation && (
-				<Input
-				  type="datetime-local"
-				  value={unixToDatetimeLocal(Math.floor(new Date(editingAutomation.scheduled_at).getTime() / 1000))}
-				  onChange={(e) => {
-					const scheduledAt = datetimeLocalToUnix(e.target.value);
-					setEditingAutomation(prev => prev && scheduledAt !== null
-					  ? { ...prev, scheduled_at: new Date(scheduledAt * 1000).toISOString() }
-					  : prev);
-				  }}
-				  className="bg-muted/55 border-0 shadow-sm shadow-black/5"
-				/>
-			  )}
-			  <p className="text-xs text-muted-foreground">{t("automations.scheduledAtHint")}</p>
+			  <Label>Days from event start</Label>
+              <EventOffsetInput value={editingAutomation?.event_offset_days ?? (roster?.event_start_time && editingAutomation ? Math.round((Date.parse(editingAutomation.scheduled_at) / 1000 - roster.event_start_time) / 86400) : 0)} onChange={event_offset_days => setEditingAutomation(previous => previous ? { ...previous, event_offset_days } : previous)} />
             </div>
             {editingAutomation?.action_type === "roster_ping" && (
               <div className="space-y-2">
@@ -1736,6 +1736,11 @@ export default function RosterDetailPage() { // NOSONAR — React page component
       </Dialog>
       </div>
 
+      <AlertDialog open={confirmQuestionReset} onOpenChange={setConfirmQuestionReset}>
+        <AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Replace signup questions?</AlertDialogTitle><AlertDialogDescription>Saving these question changes permanently clears all current answers for this roster. Members remain signed up.</AlertDialogDescription></AlertDialogHeader>
+          <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => { setConfirmQuestionReset(false); void handleSaveSettings(true); }}>Save and clear answers</AlertDialogAction></AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       <AlertDialog open={clearMembersOpen} onOpenChange={setClearMembersOpen}>
         <AlertDialogContent className="bg-card border-border">
           <AlertDialogHeader>

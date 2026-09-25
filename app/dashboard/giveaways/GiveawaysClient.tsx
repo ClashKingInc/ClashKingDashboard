@@ -1,4 +1,5 @@
 "use client";
+import { DateTimePicker } from "@/components/ui/date-time-picker";
 
 import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -853,11 +854,11 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
                       <Checkbox id="startNow" checked={form.startNow} onCheckedChange={(checked) => updateForm((s) => ({ ...s, startNow: checked === true, startTime: checked === true ? "" : s.startTime }))} />
                       <Label htmlFor="startNow" className="cursor-pointer font-normal">{t("form.startNow")}</Label>
                     </div>
-                    {!form.startNow && <Input className="mt-2 min-w-0 max-w-full border-0 bg-muted/55 shadow-sm shadow-black/5" type="datetime-local" value={form.startTime} onChange={(e) => updateForm((s) => ({ ...s, startTime: e.target.value }))} />}
+                    {!form.startNow && <DateTimePicker className="mt-2 min-w-0 max-w-full border-0 bg-muted/55 shadow-sm shadow-black/5" type="datetime-local" value={form.startTime} onChange={(e) => updateForm((s) => ({ ...s, startTime: e.target.value }))} />}
                   </div>
                   <div className="space-y-2">
                     <Label>{t("form.endTime")}<span className="ml-1 text-destructive">*</span></Label>
-                    <Input className="min-w-0 max-w-full border-0 bg-muted/55 shadow-sm shadow-black/5" type="datetime-local" value={form.endTime} onChange={(e) => updateForm((s) => ({ ...s, endTime: e.target.value }))} />
+                    <DateTimePicker className="min-w-0 max-w-full border-0 bg-muted/55 shadow-sm shadow-black/5" type="datetime-local" value={form.endTime} onChange={(e) => updateForm((s) => ({ ...s, endTime: e.target.value }))} />
                   </div>
                 </div>
                 <div className="md:w-1/2 md:pr-2">

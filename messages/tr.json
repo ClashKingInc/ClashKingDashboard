@@ -396,6 +396,7 @@
       "message": "Message"
     },
     "edit": {
+      "imageWarning": "Düzen bağlantısı ve görseller değiştirilemez. Fazladan görselleri kaldırabilirsiniz, ancak en az biri kalmalıdır. Kaydettikten sonra kaldırılan görseller geri yüklenemez.",
       "action": "Edit"
     }
   },
@@ -589,6 +590,7 @@
     }
   },
   "RostersPage": {
+    "publication": { "signup": "Kadroya katıl", "removeSignup": "Kaydı iptal et" },
     "title": "Listeler ve Kadrolar",
     "description": "Savaş listelerini, kadroları ve üye atamalarını yönetin",
     "stats": {
@@ -633,7 +635,8 @@
       "typeFamily": "Aile",
       "signupScopeLabel": "Kayıt kapsamı",
       "scopeClanOnly": "Yalnızca klan",
-      "scopeFamilyWide": "Tüm aile",
+      "scopeFamilyOnly": "Yalnızca aile",
+      "scopeAnyone": "Herkes",
       "clanLabel": "Klan",
       "clanPlaceholder": "Klan seçin",
       "descriptionLabel": "Açıklama (isteğe bağlı)",
@@ -1095,7 +1098,8 @@
       "typeFamily": "Aile",
       "signupScope": "Kayıt kapsamı",
       "scopeClanOnly": "Yalnızca klan",
-      "scopeFamilyWide": "Tüm aile",
+      "scopeFamilyOnly": "Yalnızca aile",
+      "scopeAnyone": "Herkes",
       "clan": "Klan",
       "selectClan": "Klan seçin",
       "description": "Açıklama",
@@ -1120,6 +1124,8 @@
       "rosterSize": "Liste boyutu",
       "rosterSizeHint": "En fazla üye sayısı",
       "minSignups": "Minimum kayıt",
+      "maxSignups": "Maksimum kayıt",
+      "requireVerified": "Doğrulanmış hesapları zorunlu tut",
       "minSignupsHint": "Listeyi doldurmak için gereken en az kayıt sayısı",
       "maxAccountsPerUser": "Kullanıcı başına en fazla hesap",
       "maxAccountsHint": "Discord kullanıcısı başına hesap sınırı",
@@ -2234,8 +2240,6 @@
     "security": {
       "title": "Güvenlik ve izinler",
       "description": "Erişimi ve doğrulamayı yönetin",
-      "requireLinkingToken": "Hesap bağlarken oyun içi API belirteci iste",
-      "requireLinkingTokenDescription": "Varsayılan olarak kapalıdır. Açıldığında, doğrulanmış hesaplar dahil bu sunucudaki her hesap bağlama işlemi geçerli bir belirteç gerektirir. Kadro ve destek talebi hesap seçimi değişmez.",
       "fullWhitelistRole": "Tam izinli rol",
       "fullWhitelistRoleDesc": "Tüm izin denetimlerini atlayarak bot komutlarına tam erişim sağlayan Discord rolü",
       "noRole": "Rol yok",

@@ -150,7 +150,7 @@ describe("BasesPage manager deletion", () => {
   it("updates only the complete editable set and preserves source context", async () => {
     const editableBase = {
       ...base,
-      images: ["https://api.clashk.ing/v2/media/base.webp"],
+      images: ["https://api.clashk.ing/v2/media/base.webp", "https://api.clashk.ing/v2/media/second.webp"],
     };
     apiMock.list.mockResolvedValue({
       data: { items: [editableBase], total: 1, limit: 50, offset: 0 },
@@ -163,10 +163,11 @@ describe("BasesPage manager deletion", () => {
     expect(await screen.findByText("Layout Alpha")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "edit.action" }));
     expect(screen.queryByRole("combobox")).not.toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "form.removeImage" }));
-    fireEvent.change(screen.getByLabelText("form.baseLink"), {
-      target: { value: "https://link.clashofclans.com/en?action=OpenLayout&id=TH17%3AHV%3ABBBB" },
-    });
+    expect(screen.getByLabelText("form.baseLink")).toHaveAttribute("readonly");
+    expect(screen.getByText("edit.imageWarning")).toBeInTheDocument();
+    expect(document.querySelector('input[type="file"]')).not.toBeInTheDocument();
+    fireEvent.click(screen.getAllByRole("button", { name: "form.removeImage" })[0]!);
+    expect(screen.getByRole("button", { name: "form.removeImage" })).toBeDisabled();
     fireEvent.change(screen.getByLabelText("form.descriptionLabel"), {
       target: { value: "Updated layout" },
     });
@@ -174,9 +175,9 @@ describe("BasesPage manager deletion", () => {
 
     await waitFor(() => {
       expect(apiMock.update).toHaveBeenCalledWith("server-1", "101", {
-        baseLink: "https://link.clashofclans.com/en?action=OpenLayout&id=TH17%3AHV%3ABBBB",
+        baseLink: base.baseLink,
         description: "Updated layout",
-        images: [],
+        images: ["https://api.clashk.ing/v2/media/second.webp"],
       });
     });
     const body = apiMock.update.mock.calls[0]?.[2];

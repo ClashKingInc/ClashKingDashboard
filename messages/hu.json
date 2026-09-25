@@ -396,6 +396,7 @@
       "message": "Message"
     },
     "edit": {
+      "imageWarning": "Az elrendezés hivatkozása és a képek nem cserélhetők le. A további képek eltávolíthatók, de legalább egynek maradnia kell. Mentés után az eltávolított képek nem állíthatók vissza.",
       "action": "Edit"
     }
   },
@@ -589,6 +590,7 @@
     }
   },
   "RostersPage": {
+    "publication": { "signup": "Csatlakozás", "removeSignup": "Jelentkezés visszavonása" },
     "title": "Keretek és felállások",
     "description": "Háborús keretek, felállások és játékosbeosztások kezelése",
     "stats": {
@@ -633,7 +635,8 @@
       "typeFamily": "Család",
       "signupScopeLabel": "Jelentkezés hatóköre",
       "scopeClanOnly": "Csak klán",
-      "scopeFamilyWide": "Teljes család",
+      "scopeFamilyOnly": "Csak kláncsalád",
+      "scopeAnyone": "Bárki",
       "clanLabel": "Klán",
       "clanPlaceholder": "Válassz klánt",
       "descriptionLabel": "Leírás (nem kötelező)",
@@ -1095,7 +1098,8 @@
       "typeFamily": "Család",
       "signupScope": "Jelentkezés hatóköre",
       "scopeClanOnly": "Csak klán",
-      "scopeFamilyWide": "Teljes család",
+      "scopeFamilyOnly": "Csak kláncsalád",
+      "scopeAnyone": "Bárki",
       "clan": "Klán",
       "selectClan": "Válassz klánt",
       "description": "Leírás",
@@ -1120,6 +1124,8 @@
       "rosterSize": "Keretlétszám",
       "rosterSizeHint": "Tagok maximális száma",
       "minSignups": "Minimális jelentkezésszám",
+      "maxSignups": "Jelentkezések felső határa",
+      "requireVerified": "Ellenőrzött fiókok megkövetelése",
       "minSignupsHint": "A keret feltöltéséhez szükséges jelentkezések minimális száma",
       "maxAccountsPerUser": "Fiókok maximális száma felhasználónként",
       "maxAccountsHint": "Discord-felhasználónként engedélyezett fiókok száma",
@@ -2234,8 +2240,6 @@
     "security": {
       "title": "Biztonság és jogosultságok",
       "description": "A hozzáférés és az ellenőrzés szabályozása",
-      "requireLinkingToken": "Játékon belüli API-token megkövetelése fiók összekapcsolásakor",
-      "requireLinkingTokenDescription": "Alapértelmezetten kikapcsolva. Bekapcsolva minden szerveres összekapcsoláshoz érvényes token szükséges, ellenőrzött fiókoknál is. A keretekhez és hibajegyekhez tartozó fiókválasztás nem változik.",
       "fullWhitelistRole": "Teljes hozzáférésű szerepkör",
       "fullWhitelistRoleDesc": "Discord-szerepkör, amely minden botparancshoz teljes hozzáférést ad, és megkerüli a jogosultság-ellenőrzéseket",
       "noRole": "Nincs szerepkör",

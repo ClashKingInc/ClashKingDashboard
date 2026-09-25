@@ -230,14 +230,14 @@ export default function LinksManagementPage() {
   }, []);
 
   const addLink = async () => {
-    if (!addTarget || !addTag.trim()) return;
+    if (!addTarget || !addTag.trim() || !addApiToken.trim()) return;
     setAdding(true);
     setError(null);
     try {
       await executeSharedEndpoint(CreateServerLinkEndpoint, {
         path: { serverId: guildId }, query: {},
         body: { playerTag: addTag.trim(), userID: addTarget.user_id,
-          ...(addApiToken.trim() ? { api_token: addApiToken.trim() } : {}) },
+          api_token: addApiToken.trim() },
       });
       setAddTarget(null);
       setAddTag("");
@@ -487,13 +487,13 @@ export default function LinksManagementPage() {
           <Input value={addTag} onChange={event => setAddTag(event.target.value)} placeholder="#PLAYER_TAG" autoFocus />
           <div className="space-y-2">
             <Label htmlFor="server-link-api-token">In-game API token</Label>
-            <Input id="server-link-api-token" type="password" autoComplete="off" spellCheck={false} maxLength={128}
+            <Input id="server-link-api-token" type="password" autoComplete="off" spellCheck={false} maxLength={128} required
               value={addApiToken} onChange={event => setAddApiToken(event.target.value)} aria-describedby="server-link-api-token-hint" />
-            <p id="server-link-api-token-hint" className="text-xs text-muted-foreground">Required when this server requires a token or when transferring an account. Use the token from the account’s in-game settings. It is cleared after each attempt.</p>
+            <p id="server-link-api-token-hint" className="text-xs text-muted-foreground">Required for every new link. Use the token from the account’s in-game settings. It is cleared after each attempt.</p>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => { setAddTarget(null); setAddApiToken(""); }}>Cancel</Button>
-            <Button onClick={addLink} disabled={adding || !addTag.trim()}>{adding && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}Add link</Button>
+            <Button onClick={addLink} disabled={adding || !addTag.trim() || !addApiToken.trim()}>{adding && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}Add link</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

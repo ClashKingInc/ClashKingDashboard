@@ -396,6 +396,7 @@
       "message": "Message"
     },
     "edit": {
+      "imageWarning": "Линк распореда и слике не могу се заменити. Можете уклонити додатне слике, али бар једна мора остати. Након чувања, уклоњене слике није могуће вратити.",
       "action": "Edit"
     }
   },
@@ -589,6 +590,7 @@
     }
   },
   "RostersPage": {
+    "publication": { "signup": "Пријави се", "removeSignup": "Откажи пријаву" },
     "title": "Sastavi i postave",
     "description": "Upravljajte ratnim sastavima, postavama i rasporedom članova",
     "stats": {
@@ -633,7 +635,8 @@
       "typeFamily": "Porodica",
       "signupScopeLabel": "Obuhvat prijave",
       "scopeClanOnly": "Samo klan",
-      "scopeFamilyWide": "Cela porodica",
+      "scopeFamilyOnly": "Само породица",
+      "scopeAnyone": "Свако",
       "clanLabel": "Klan",
       "clanPlaceholder": "Izaberite klan",
       "descriptionLabel": "Opis (opciono)",
@@ -1095,7 +1098,8 @@
       "typeFamily": "Porodica",
       "signupScope": "Obuhvat prijave",
       "scopeClanOnly": "Samo klan",
-      "scopeFamilyWide": "Cela porodica",
+      "scopeFamilyOnly": "Само породица",
+      "scopeAnyone": "Свако",
       "clan": "Klan",
       "selectClan": "Izaberite klan",
       "description": "Opis",
@@ -1120,6 +1124,8 @@
       "rosterSize": "Veličina sastava",
       "rosterSizeHint": "Najveći broj članova",
       "minSignups": "Najmanje prijava",
+      "maxSignups": "Maksimalan broj prijava",
+      "requireVerified": "Zahtevaj potvrđene naloge",
       "minSignupsHint": "Najmanji broj prijava potreban da se sastav popuni",
       "maxAccountsPerUser": "Najviše naloga po korisniku",
       "maxAccountsHint": "Ograničite broj naloga po Discord korisniku",
@@ -2234,8 +2240,6 @@
     "security": {
       "title": "Bezbednost i dozvole",
       "description": "Upravljajte pristupom i verifikacijom",
-      "requireLinkingToken": "Захтевај API токен из игре при повезивању налога",
-      "requireLinkingTokenDescription": "Подразумевано искључено. Када је укључено, свако повезивање на овом серверу захтева важећи токен, чак и за потврђене налоге. Избор налога за саставе и тикете се не мења.",
       "fullWhitelistRole": "Uloga sa punim pristupom",
       "fullWhitelistRoleDesc": "Discord uloga sa punim pristupom svim komandama bota (zaobilazi sve provere dozvola)",
       "noRole": "Bez uloge",

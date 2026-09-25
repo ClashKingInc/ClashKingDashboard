@@ -4,20 +4,20 @@ import { ServerClient } from "./server-client";
 describe("ServerClient dashboard access", () => {
   afterEach(() => vi.unstubAllGlobals());
 
-  it.each([false, true])("preserves explicit linking-token policy %s through the shared request and response", async (enabled) => {
+  it("updates unrelated settings without a linking-token policy", async () => {
     const settings = { server_id: "9007199254740993123", server: "Fixture", name: "Fixture", countdowns: {}, server_roles: [],
-      require_api_token_when_linking: enabled };
+      family_label: "Family" };
     const fetchMock = vi.fn()
       .mockResolvedValueOnce(Response.json({ message: "Updated", server_id: settings.server_id, updated_fields: 1 }))
       .mockResolvedValueOnce(Response.json(settings));
     vi.stubGlobal("fetch", fetchMock);
     const client = new ServerClient({ baseUrl: "http://dashboard.test", accessToken: "token" });
-    await client.updateSettings(settings.server_id, { require_api_token_when_linking: enabled });
+    await client.updateSettings(settings.server_id, { family_label: "Family" });
     const request = fetchMock.mock.calls[0]?.[0] as Request;
     expect(request.method).toBe("PATCH");
     expect(request.url).toBe(`http://dashboard.test/v2/server/${settings.server_id}/settings`);
-    expect(await request.json()).toEqual({ require_api_token_when_linking: enabled });
-    expect((await client.getSettings(settings.server_id)).data?.require_api_token_when_linking).toBe(enabled);
+    expect(await request.json()).toEqual({ family_label: "Family" });
+    expect((await client.getSettings(settings.server_id)).data?.family_label).toBe("Family");
   });
 
   it("uses the capabilities endpoint", async () => {

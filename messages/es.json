@@ -396,6 +396,7 @@
       "message": "Message"
     },
     "edit": {
+      "imageWarning": "No se pueden reemplazar el enlace del diseño ni las imágenes. Puedes eliminar imágenes adicionales, pero debe quedar al menos una. Una vez guardado, las imágenes eliminadas no se pueden recuperar.",
       "action": "Edit"
     }
   },
@@ -589,6 +590,7 @@
     }
   },
   "RostersPage": {
+    "publication": { "signup": "Unirse a la plantilla", "removeSignup": "Cancelar inscripción" },
     "title": "Listas y alineaciones",
     "description": "Gestiona las listas de guerra, las alineaciones y las asignaciones de miembros",
     "stats": {
@@ -633,7 +635,8 @@
       "typeFamily": "Familia",
       "signupScopeLabel": "Ámbito de inscripción",
       "scopeClanOnly": "Solo el clan",
-      "scopeFamilyWide": "Toda la familia",
+      "scopeFamilyOnly": "Solo la familia",
+      "scopeAnyone": "Cualquiera",
       "clanLabel": "Clan",
       "clanPlaceholder": "Selecciona un clan",
       "descriptionLabel": "Descripción (opcional)",
@@ -1095,7 +1098,8 @@
       "typeFamily": "Familia",
       "signupScope": "Ámbito de inscripción",
       "scopeClanOnly": "Solo el clan",
-      "scopeFamilyWide": "Toda la familia",
+      "scopeFamilyOnly": "Solo la familia",
+      "scopeAnyone": "Cualquiera",
       "clan": "Clan",
       "selectClan": "Selecciona un clan",
       "description": "Descripción",
@@ -1120,6 +1124,8 @@
       "rosterSize": "Tamaño de la lista",
       "rosterSizeHint": "Número máximo de miembros",
       "minSignups": "Inscripciones mínimas",
+      "maxSignups": "Inscripciones máximas",
+      "requireVerified": "Exigir cuentas verificadas",
       "minSignupsHint": "Número mínimo de inscripciones necesario para completar la lista",
       "maxAccountsPerUser": "Máximo de cuentas por usuario",
       "maxAccountsHint": "Limita las cuentas por usuario de Discord",
@@ -2234,8 +2240,6 @@
     "security": {
       "title": "Seguridad y permisos",
       "description": "Controla el acceso y la verificación",
-      "requireLinkingToken": "Exigir un token API del juego al vincular cuentas",
-      "requireLinkingTokenDescription": "Desactivado por defecto. Al activarlo, cada vinculación en este servidor requiere un token válido, incluso para cuentas verificadas. La selección de cuentas para plantillas y tickets no cambia.",
       "fullWhitelistRole": "Rol con acceso completo",
       "fullWhitelistRoleDesc": "Rol de Discord con acceso a todos los comandos del bot (omite todas las comprobaciones de permisos)",
       "noRole": "Sin rol",

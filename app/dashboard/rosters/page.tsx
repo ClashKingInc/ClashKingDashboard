@@ -1,4 +1,5 @@
 "use client";
+import { DateTimePicker } from "@/components/ui/date-time-picker";
 
 import { useGuildId } from "@/lib/dashboard-route";
 import { dashboardHref } from "@/lib/dashboard-route";
@@ -210,9 +211,6 @@ function RosterCard({
               {roster.clan_name && (
                 <p className="truncate text-sm text-muted-foreground">{roster.clan_name}</p>
               )}
-              <Badge variant="secondary" className="h-5 shrink-0 border-0 bg-muted/65 px-2 text-[11px] font-medium text-muted-foreground shadow-none">
-                {t(`rosterCard.${roster.roster_type}`)}
-              </Badge>
             </div>
           </div>
         </div>
@@ -337,6 +335,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
   const { toast } = useToast();
   const t = useTranslations("RostersPage");
   const tCommon = useTranslations("Common");
+  const tClans = useTranslations("ClansPage");
 
   // Data hook
   const {
@@ -457,7 +456,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
   const [newRosterData, setNewRosterData] = useState<CreateRosterFormData>({
     alias: "",
     roster_type: "clan",
-    signup_scope: "clan-only",
+    signup_scope: "anyone",
     clan_tag: "",
   });
 
@@ -731,7 +730,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
       });
       return;
     }
-    if (newRosterData.roster_type === "clan" && clans.length > 0 && !newRosterData.clan_tag) {
+    if (!clans.some(clan => clan.tag === newRosterData.clan_tag)) {
       toast({
         title: tCommon("error"),
         description: t("createErrorClan"),
@@ -752,7 +751,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
       setNewRosterData({
         alias: "",
         roster_type: "clan",
-        signup_scope: "clan-only",
+        signup_scope: "anyone",
         clan_tag: "",
       });
       refresh();
@@ -769,9 +768,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
 
   const isCreateRosterValid =
     newRosterData.alias.trim().length > 0 &&
-    newRosterData.roster_type.length > 0 &&
-    newRosterData.signup_scope.length > 0 &&
-    (newRosterData.roster_type !== "clan" || clans.length === 0 || newRosterData.clan_tag.length > 0);
+    clans.some(clan => clan.tag === newRosterData.clan_tag);
 
   // Loading state
   if (loading) {
@@ -846,6 +843,14 @@ export default function RostersPage() { // NOSONAR — React page component: com
                 </DialogHeader>
 
                 <div className="space-y-4 py-4">
+                  {clans.length === 0 && (
+                    <div className="space-y-2 text-sm text-muted-foreground">
+                      <p>{tClans("getStartedAdding")}</p>
+                      <Button variant="secondary" onClick={() => router.push(dashboardHref("clans", guildId))}>
+                        {tClans("addFirstClan")}
+                      </Button>
+                    </div>
+                  )}
                   <div className="space-y-2">
                     <Label htmlFor="roster-name">
                       {t("createDialog.aliasLabel")} <span className="text-destructive">*</span>
@@ -859,27 +864,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
                     />
                   </div>
 
-                  <div className="space-y-2">
-                    <Label>
-                      {t("createDialog.typeLabel")} <span className="text-destructive">*</span>
-                    </Label>
-                    <Select
-                      value={newRosterData.roster_type}
-                      onValueChange={(value: "clan" | "family") =>
-                        setNewRosterData({ ...newRosterData, roster_type: value })
-                      }
-                    >
-                      <SelectTrigger className="bg-background border-border">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="clan">{t("createDialog.typeClan")}</SelectItem>
-                        <SelectItem value="family">{t("createDialog.typeFamily")}</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  {newRosterData.roster_type === "clan" && clans.length > 0 && (
+                  {(
                     <div className="space-y-2">
                       <Label>
                         {t("createDialog.clanLabel")} <span className="text-destructive">*</span>
@@ -901,7 +886,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
                     </Label>
                     <Select
                       value={newRosterData.signup_scope}
-                      onValueChange={(value: "clan-only" | "family-wide") =>
+                      onValueChange={(value: "clan-only" | "family-only" | "anyone") =>
                         setNewRosterData({ ...newRosterData, signup_scope: value })
                       }
                     >
@@ -910,7 +895,8 @@ export default function RostersPage() { // NOSONAR — React page component: com
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="clan-only">{t("createDialog.scopeClanOnly")}</SelectItem>
-                        <SelectItem value="family-wide">{t("createDialog.scopeFamilyWide")}</SelectItem>
+                        <SelectItem value="family-only">{t("createDialog.scopeFamilyOnly")}</SelectItem>
+                        <SelectItem value="anyone">{t("createDialog.scopeAnyone")}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -1499,7 +1485,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
               </div>
               <div className="space-y-2">
 				<Label>{t("automations.scheduledAt")}</Label>
-				<Input
+				<DateTimePicker
 				  type="datetime-local"
 				  value={newAutomation.scheduled_at ? unixToDatetimeLocal(Math.floor(new Date(newAutomation.scheduled_at).getTime() / 1000)) : ""}
 				  onChange={(e) => {
@@ -1634,7 +1620,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
               <div className="space-y-2">
 				<Label>{t("automations.scheduledAt")}</Label>
 				{editingAutomation && (
-				  <Input
+				  <DateTimePicker
 					type="datetime-local"
 					value={unixToDatetimeLocal(Math.floor(new Date(editingAutomation.scheduled_at).getTime() / 1000))}
 					onChange={(e) => {

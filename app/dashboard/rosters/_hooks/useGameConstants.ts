@@ -15,7 +15,7 @@ interface GameConstants {
 
 // Default values as fallback
 const DEFAULT_CONSTANTS: GameConstants = {
-  townhall: { min: 1, max: 17 },
+  townhall: { min: 1, max: 18 },
   builderhall: { min: 1, max: 10 },
 };
 

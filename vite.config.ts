@@ -4,18 +4,15 @@ import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { publicSeoCopyPlugin } from "./scripts/public-seo-copy-plugin";
 
-const LOCAL_TUNNEL_HOST = "local-dash.clashk.ing";
-const BETA_DISCORD_CLIENT_ID = "808566437199216691";
-
 export default defineConfig(() => {
   const tunnelHost = process.env.CLASHKING_LOCAL_DASHBOARD_HOST?.trim();
-  if (tunnelHost && tunnelHost !== LOCAL_TUNNEL_HOST) {
-    throw new Error(`CLASHKING_LOCAL_DASHBOARD_HOST must be ${LOCAL_TUNNEL_HOST}`);
+  if (tunnelHost && (!/^(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/i.test(tunnelHost) || ["dash.clashk.ing", "api.clashk.ing"].includes(tunnelHost.toLowerCase()))) {
+    throw new Error("CLASHKING_LOCAL_DASHBOARD_HOST must be a development hostname, without https:// or a path");
   }
   if (tunnelHost) {
     const discordClientId = process.env.VITE_DISCORD_CLIENT_ID?.trim();
-    if (discordClientId !== BETA_DISCORD_CLIENT_ID) {
-      throw new Error(`The local Dashboard tunnel must use the beta Discord application (${BETA_DISCORD_CLIENT_ID})`);
+    if (!/^\d{17,20}$/.test(discordClientId ?? "") || discordClientId === "824653933347209227") {
+      throw new Error("Set VITE_DISCORD_CLIENT_ID to your Discord test application's ID");
     }
   }
 

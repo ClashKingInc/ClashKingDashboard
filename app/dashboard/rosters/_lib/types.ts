@@ -7,7 +7,10 @@ export interface RosterMember {
   tag: string;
   townhall: number;
   hero_lvs?: number;
+  hero_max_level_sum?: number;
+  hitrate_attacks?: number;
   discord?: string;
+  discord_cache_ready?: boolean;
   discord_username?: string | null;
   discord_avatar_url?: string | null;
   current_clan?: string;
@@ -18,6 +21,7 @@ export interface RosterMember {
   hitrate?: number | null;
   last_online?: number | null;
   current_league?: string | null;
+  league_id?: number;
   added_at?: number | null;
   last_updated?: number | null;
   refreshed_at?: string | null;
@@ -27,13 +31,20 @@ export interface RosterMember {
 }
 
 export interface Roster {
+  embed_color?: number | null;
+  reset_answers?: boolean;
+  max_signups?: number | null;
+  require_verified?: boolean;
+  hero_red_percent?: number;
+  hero_yellow_percent?: number;
+  hero_green_percent?: number;
   id: string;
   revision?: number;
   server_id: string;
   alias: string;
   description?: string | null;
   roster_type: "clan" | "family";
-  signup_scope: "clan-only" | "family-wide";
+  signup_scope: "clan-only" | "family-only" | "anyone";
   clan_tag?: string | null;
   clan_name?: string | null;
   clan_badge?: string | null;
@@ -63,6 +74,7 @@ export interface RosterAutomationOptions {
 }
 
 export interface RosterAutomation {
+  event_offset_days?: number | null;
   automation_id: string;
   server_id: string;
   roster_id?: string;
@@ -134,6 +146,9 @@ export interface ClanMember {
 }
 
 export interface MissingMember {
+  clan_tag?: string;
+  clan_name?: string;
+  league_name?: string;
   tag: string;
   name: string;
   townhall: number;
@@ -171,24 +186,31 @@ export interface MissingMembersResult {
 export interface CreateRosterFormData {
   alias: string;
   roster_type: "clan" | "family";
-  signup_scope: "clan-only" | "family-wide";
+  signup_scope: "clan-only" | "family-only" | "anyone";
   clan_tag: string;
 }
 
 export interface EditRosterFormData {
+  embed_color?: number | null;
+  image?: string;
+  max_signups?: string;
+  require_verified?: boolean;
+  hero_red_percent?: number;
+  hero_yellow_percent?: number;
+  hero_green_percent?: number;
   alias: string;
   description: string;
   roster_type: "clan" | "family";
-  signup_scope: "clan-only" | "family-wide";
+  signup_scope: "clan-only" | "family-only" | "anyone";
   clan_tag: string;
   min_th: string;
   max_th: string;
-  min_signups: string;
+  min_signups?: string;
   max_accounts_per_user: string;
   event_start_time: string;
   recurrence_days: string;
   recurrence_day_of_month: string;
-  recurrence_mode: 'days' | 'day_of_month';
+  recurrence_mode: 'once' | 'days' | 'day_of_month';
   signup_questions: RosterSignupQuestion[];
   columns: string[];
   sort: string[];
@@ -204,7 +226,7 @@ export interface CloneRosterFormData {
 export interface RosterStats {
   totalMembers: number;
   avgTh: number;
-  avgHitrate: number;
+  avgHitrate: number | null;
   inClan: number;
   inFamily: number;
   external: number;

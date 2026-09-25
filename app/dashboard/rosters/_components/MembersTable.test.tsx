@@ -9,6 +9,25 @@ vi.mock("@/components/ui/player-profile-popover", () => ({ PlayerProfilePopover:
 vi.mock("@/components/ui/clan-profile-popover", () => ({ ClanProfilePopover: ({ children }: { children: ReactNode }) => <>{children}</> }));
 afterEach(() => { cleanup(); vi.restoreAllMocks(); });
 
+it("uses compact metadata, image-only Town Halls, full clan names and white status text", () => {
+  render(<IntlProvider locale="en" messages={messages}><MembersTable
+    members={[{ tag: "#2PP", name: "Player", townhall: 18, hitrate: 70.588, hitrate_attacks: 17,
+      hero_lvs: 467, hero_max_level_sum: 480, current_clan: "An Unabridged Clan Name", current_clan_tag: "#P0Y", war_pref: true }]}
+    columns={["townhall", "hitrate", "hero_lvs", "current_clan", "war_pref"]} familyClans={[]}
+    onRemoveMember={vi.fn()} onRefreshDiscordIdentity={vi.fn()} t={key => key}
+  /></IntlProvider>);
+  expect(screen.queryByText("TH18")).toBeNull();
+  const townHallCell = screen.getAllByAltText("TH18").map(image => image.closest("td")).find(Boolean)!;
+  expect(townHallCell).toHaveClass("align-middle");
+  expect(townHallCell.firstElementChild).toHaveClass("flex", "justify-center");
+  expect(screen.getAllByText("70.6%")).toHaveLength(2);
+  expect(screen.queryByText(/35d/)).toBeNull();
+  expect(screen.getAllByText("An Unabridged Clan Name")[0]).not.toHaveClass("truncate");
+  expect(screen.getAllByText("In")[0]).toHaveClass("text-white", "dark:text-white");
+  expect(screen.getAllByText("(97.3%)")[0]).toHaveClass("block");
+  expect(screen.queryByRole("button", { name: /Refresh Discord/ })).toBeNull();
+});
+
 it("shows a TH warning even without a name column and keeps removal available", () => {
   vi.spyOn(Date, "now").mockReturnValue(Date.parse("2026-09-04T05:30:00Z"));
   const remove = vi.fn();

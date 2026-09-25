@@ -41,10 +41,12 @@ it("forwards a supplied in-game token through the shared contract and clears it 
   fireEvent.click(screen.getByRole("button", { name: "Add account" }));
   expect(screen.getByLabelText("In-game API token")).toHaveValue("");
   fireEvent.change(screen.getByPlaceholderText("#PLAYER_TAG"), { target: { value: "#8QP" } });
+  expect(screen.getByRole("button", { name: "Add link" })).toBeDisabled();
+  fireEvent.change(screen.getByLabelText("In-game API token"), { target: { value: "new-token" } });
   fireEvent.click(screen.getByRole("button", { name: "Add link" }));
   await waitFor(() => expect(requests.filter((request) => request.method === "POST")).toHaveLength(2));
   expect(await requests.filter((request) => request.method === "POST")[1]!.json())
-    .toEqual({ playerTag: "#8QP", userID: "9007199254740993124" });
+    .toEqual({ playerTag: "#8QP", userID: "9007199254740993124", api_token: "new-token" });
 });
 
 it("keeps the current member list mounted while a debounced search loads", async () => {

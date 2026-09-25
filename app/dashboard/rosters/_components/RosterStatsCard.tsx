@@ -30,7 +30,7 @@ export function RosterStatsCard({ roster, familyClanTags = [], t }: RosterStatsC
             <p className="mt-1 text-2xl font-semibold text-foreground">{stats.avgTh || "—"}</p>
           </div>
           {stats.avgTh > 0 && (
-            <Image src={townHallImageUrl(stats.avgTh)} alt="" width={36} height={36} unoptimized className="h-9 w-9 object-contain" />
+            <Image src={townHallImageUrl(Math.floor(stats.avgTh))} alt="" width={36} height={36} unoptimized className="h-9 w-9 object-contain" />
           )}
         </div>
         {(roster.min_th || roster.max_th) && (
@@ -43,7 +43,7 @@ export function RosterStatsCard({ roster, familyClanTags = [], t }: RosterStatsC
       <div className="rounded-2xl bg-muted/45 p-3.5">
         <p className="text-xs font-medium text-muted-foreground">{t("stats.avgHitrate")}</p>
         <p className="mt-1 text-2xl font-semibold text-foreground">
-          {stats.avgHitrate ? `${stats.avgHitrate}%` : "—"}
+          {stats.avgHitrate !== null ? `${stats.avgHitrate.toFixed(1)}%` : "—"}
         </p>
       </div>
 

@@ -396,6 +396,7 @@
       "message": "Message"
     },
     "edit": {
+      "imageWarning": "De indelingslink en afbeeldingen kunnen niet worden vervangen. Je kunt extra afbeeldingen verwijderen, maar er moet er minstens één overblijven. Na het opslaan kunnen verwijderde afbeeldingen niet worden hersteld.",
       "action": "Edit"
     }
   },
@@ -589,6 +590,7 @@
     }
   },
   "RostersPage": {
+    "publication": { "signup": "Aanmelden", "removeSignup": "Afmelden" },
     "title": "Rosters en opstellingen",
     "description": "Beheer oorlogsrosters, opstellingen en ledenindelingen",
     "stats": {
@@ -633,7 +635,8 @@
       "typeFamily": "Clanfamilie",
       "signupScopeLabel": "Inschrijfbereik",
       "scopeClanOnly": "Alleen de clan",
-      "scopeFamilyWide": "Hele clanfamilie",
+      "scopeFamilyOnly": "Alleen familie",
+      "scopeAnyone": "Iedereen",
       "clanLabel": "Clan",
       "clanPlaceholder": "Selecteer een clan",
       "descriptionLabel": "Beschrijving (optioneel)",
@@ -1095,7 +1098,8 @@
       "typeFamily": "Clanfamilie",
       "signupScope": "Inschrijfbereik",
       "scopeClanOnly": "Alleen de clan",
-      "scopeFamilyWide": "Hele clanfamilie",
+      "scopeFamilyOnly": "Alleen familie",
+      "scopeAnyone": "Iedereen",
       "clan": "Clan",
       "selectClan": "Selecteer een clan",
       "description": "Beschrijving",
@@ -1120,6 +1124,8 @@
       "rosterSize": "Rostergrootte",
       "rosterSizeHint": "Maximum aantal leden",
       "minSignups": "Minimaal aantal inschrijvingen",
+      "maxSignups": "Maximum aantal aanmeldingen",
+      "requireVerified": "Geverifieerde accounts vereisen",
       "minSignupsHint": "Minimumaantal inschrijvingen dat nodig is om het roster te vullen",
       "maxAccountsPerUser": "Maximaal aantal accounts per gebruiker",
       "maxAccountsHint": "Limiet voor het aantal accounts per Discord-gebruiker",
@@ -2234,8 +2240,6 @@
     "security": {
       "title": "Beveiliging en rechten",
       "description": "Beheer toegang en verificatie",
-      "requireLinkingToken": "Vereis een API-token uit het spel bij het koppelen",
-      "requireLinkingTokenDescription": "Standaard uitgeschakeld. Indien ingeschakeld, vereist elke koppeling op deze server een geldig token, ook voor geverifieerde accounts. De accountkeuze voor roosters en tickets blijft ongewijzigd.",
       "fullWhitelistRole": "Rol op de volledige toestemmingslijst",
       "fullWhitelistRoleDesc": "Discord-rol met volledige toegang tot alle botcommando's, waarbij alle controles van rechten worden overgeslagen",
       "noRole": "Geen rol",

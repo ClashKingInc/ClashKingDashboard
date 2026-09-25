@@ -396,6 +396,7 @@
       "message": "Message"
     },
     "edit": {
+      "imageWarning": "Linkul configurației și imaginile nu pot fi înlocuite. Poți elimina imaginile suplimentare, dar trebuie să rămână cel puțin una. După salvare, imaginile eliminate nu pot fi restaurate.",
       "action": "Edit"
     }
   },
@@ -589,6 +590,7 @@
     }
   },
   "RostersPage": {
+    "publication": { "signup": "Înscrie-te", "removeSignup": "Anulează înscrierea" },
     "title": "Liste și formații",
     "description": "Gestionează listele de război, formațiile și repartizarea membrilor",
     "stats": {
@@ -633,7 +635,8 @@
       "typeFamily": "Familie",
       "signupScopeLabel": "Domeniul înscrierilor",
       "scopeClanOnly": "Doar clanul",
-      "scopeFamilyWide": "Întreaga familie",
+      "scopeFamilyOnly": "Doar familia",
+      "scopeAnyone": "Oricine",
       "clanLabel": "Clanul",
       "clanPlaceholder": "Selectează un clan",
       "descriptionLabel": "Descriere (opțional)",
@@ -1095,7 +1098,8 @@
       "typeFamily": "Familie",
       "signupScope": "Domeniul înscrierilor",
       "scopeClanOnly": "Doar clanul",
-      "scopeFamilyWide": "Întreaga familie",
+      "scopeFamilyOnly": "Doar familia",
+      "scopeAnyone": "Oricine",
       "clan": "Clanul",
       "selectClan": "Selectează un clan",
       "description": "Descriere",
@@ -1120,6 +1124,8 @@
       "rosterSize": "Dimensiunea listei",
       "rosterSizeHint": "Numărul maxim de membri",
       "minSignups": "Număr minim de înscrieri",
+      "maxSignups": "Înscrieri maxime",
+      "requireVerified": "Solicită conturi verificate",
       "minSignupsHint": "Numărul minim de înscrieri necesar pentru completarea listei",
       "maxAccountsPerUser": "Număr maxim de conturi per utilizator",
       "maxAccountsHint": "Limitează conturile fiecărui utilizator Discord",
@@ -2234,8 +2240,6 @@
     "security": {
       "title": "Securitate și permisiuni",
       "description": "Controlează accesul și verificarea",
-      "requireLinkingToken": "Solicită un token API din joc la asocierea conturilor",
-      "requireLinkingTokenDescription": "Dezactivat implicit. Când este activat, fiecare asociere pe acest server necesită un token valid, inclusiv pentru conturile verificate. Selectarea conturilor pentru loturi și tichete rămâne neschimbată.",
       "fullWhitelistRole": "Rol cu acces complet",
       "fullWhitelistRoleDesc": "Rol Discord cu acces complet la toate comenzile botului, care ocolește toate verificările permisiunilor",
       "noRole": "Niciun rol",

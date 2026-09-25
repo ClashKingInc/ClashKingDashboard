@@ -396,6 +396,7 @@
       "message": "Message"
     },
     "edit": {
+      "imageWarning": "Layoutlinket og billederne kan ikke erstattes. Du kan fjerne ekstra billeder, men mindst ét skal blive. Efter lagring kan fjernede billeder ikke gendannes.",
       "action": "Edit"
     }
   },
@@ -589,6 +590,7 @@
     }
   },
   "RostersPage": {
+    "publication": { "signup": "Tilmeld hold", "removeSignup": "Afmeld" },
     "title": "Trupplaner & opstillinger",
     "description": "Administrer krigstrupplaner, opstillinger og medlemstildelinger",
     "stats": {
@@ -633,7 +635,8 @@
       "typeFamily": "Familie",
       "signupScopeLabel": "Tilmeldingsomfang",
       "scopeClanOnly": "Kun klanen",
-      "scopeFamilyWide": "Hele familien",
+      "scopeFamilyOnly": "Kun familie",
+      "scopeAnyone": "Alle",
       "clanLabel": "Klan",
       "clanPlaceholder": "Vælg en klan",
       "descriptionLabel": "Beskrivelse (valgfri)",
@@ -1095,7 +1098,8 @@
       "typeFamily": "Familie",
       "signupScope": "Tilmeldingsomfang",
       "scopeClanOnly": "Kun klanen",
-      "scopeFamilyWide": "Hele familien",
+      "scopeFamilyOnly": "Kun familie",
+      "scopeAnyone": "Alle",
       "clan": "Klan",
       "selectClan": "Vælg en klan",
       "description": "Beskrivelse",
@@ -1120,6 +1124,8 @@
       "rosterSize": "Trupplanens størrelse",
       "rosterSizeHint": "Højeste antal medlemmer",
       "minSignups": "Mindste antal tilmeldinger",
+      "maxSignups": "Maks. tilmeldinger",
+      "requireVerified": "Kræv verificerede konti",
       "minSignupsHint": "Minimumantal tilmeldinger, der kræves for at fylde trupplanen",
       "maxAccountsPerUser": "Maks. antal konti pr. bruger",
       "maxAccountsHint": "Begræns antallet af konti pr. Discord-bruger",
@@ -2234,8 +2240,6 @@
     "security": {
       "title": "Sikkerhed og tilladelser",
       "description": "Styr adgang og bekræftelse",
-      "requireLinkingToken": "Kræv en API-token fra spillet ved tilknytning",
-      "requireLinkingTokenDescription": "Slået fra som standard. Når det er aktiveret, kræver hver tilknytning på serveren en gyldig token, også for bekræftede konti. Valg af konti til holdlister og tickets ændres ikke.",
       "fullWhitelistRole": "Rolle med fuld hvidlisteadgang",
       "fullWhitelistRoleDesc": "Discord-rolle med fuld adgang til alle botkommandoer, som springer alle tilladelseskontroller over",
       "noRole": "Ingen rolle",

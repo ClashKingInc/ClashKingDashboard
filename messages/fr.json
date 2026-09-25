@@ -396,6 +396,7 @@
       "message": "Message"
     },
     "edit": {
+      "imageWarning": "Le lien du plan et les images ne peuvent pas être remplacés. Vous pouvez supprimer les images supplémentaires, mais il doit en rester au moins une. Après enregistrement, les images supprimées ne peuvent pas être restaurées.",
       "action": "Edit"
     }
   },
@@ -589,6 +590,7 @@
     }
   },
   "RostersPage": {
+    "publication": { "signup": "Rejoindre l’effectif", "removeSignup": "Se désinscrire" },
     "title": "Compositions",
     "description": "Gérer vos compositions de guerre",
     "stats": {
@@ -633,7 +635,8 @@
       "typeFamily": "Famille",
       "signupScopeLabel": "Portée d’Inscription",
       "scopeClanOnly": "Clan Uniquement",
-      "scopeFamilyWide": "Toute la Famille",
+      "scopeFamilyOnly": "Famille uniquement",
+      "scopeAnyone": "Tout le monde",
       "clanLabel": "Clan",
       "clanPlaceholder": "Sélectionner un clan",
       "descriptionLabel": "Description (Optionnel)",
@@ -1095,7 +1098,8 @@
       "typeFamily": "Famille",
       "signupScope": "Portée des inscriptions",
       "scopeClanOnly": "Clan Uniquement",
-      "scopeFamilyWide": "Famille Entière",
+      "scopeFamilyOnly": "Famille uniquement",
+      "scopeAnyone": "Tout le monde",
       "clan": "Clan",
       "selectClan": "Sélectionner un clan",
       "description": "Description",
@@ -1120,6 +1124,8 @@
       "rosterSize": "Taille de la composition",
       "rosterSizeHint": "Nombre maximum de membres",
       "minSignups": "Seuil de remplissage",
+      "maxSignups": "Inscriptions maximales",
+      "requireVerified": "Exiger des comptes vérifiés",
       "minSignupsHint": "Nombre minimum d’inscrits pour considérer la composition comme complète",
       "maxAccountsPerUser": "Nombre maximal de comptes par utilisateur",
       "maxAccountsHint": "Limite de comptes par utilisateur Discord",
@@ -2234,8 +2240,6 @@
     "security": {
       "title": "Sécurité et Permissions",
       "description": "Contrôler l’accès et la vérification",
-      "requireLinkingToken": "Exiger un jeton API du jeu pour lier un compte",
-      "requireLinkingTokenDescription": "Désactivé par défaut. Une fois activé, chaque liaison sur ce serveur nécessite un jeton valide, même pour les comptes vérifiés. La sélection des comptes pour les compositions et les tickets reste inchangée.",
       "fullWhitelistRole": "Rôle super-administrateur",
       "fullWhitelistRoleDesc": "Rôle Discord avec un accès complet à toutes les commandes du bot (contourne toutes les vérifications de permissions)",
       "noRole": "Aucun Rôle",

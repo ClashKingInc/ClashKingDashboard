@@ -396,6 +396,7 @@
       "message": "Message"
     },
     "edit": {
+      "imageWarning": "Il link della disposizione e le immagini non possono essere sostituiti. Puoi rimuovere le immagini aggiuntive, ma deve rimanerne almeno una. Dopo il salvataggio, le immagini rimosse non possono essere ripristinate.",
       "action": "Edit"
     }
   },
@@ -589,6 +590,7 @@
     }
   },
   "RostersPage": {
+    "publication": { "signup": "Unisciti alla rosa", "removeSignup": "Annulla iscrizione" },
     "title": "Roster e formazioni",
     "description": "Gestisci roster di guerra, formazioni e assegnazioni dei membri",
     "stats": {
@@ -633,7 +635,8 @@
       "typeFamily": "Famiglia",
       "signupScopeLabel": "Ambito delle iscrizioni",
       "scopeClanOnly": "Solo clan",
-      "scopeFamilyWide": "Intera famiglia",
+      "scopeFamilyOnly": "Solo famiglia",
+      "scopeAnyone": "Chiunque",
       "clanLabel": "Clan",
       "clanPlaceholder": "Seleziona un clan",
       "descriptionLabel": "Descrizione (facoltativa)",
@@ -1095,7 +1098,8 @@
       "typeFamily": "Famiglia",
       "signupScope": "Ambito delle iscrizioni",
       "scopeClanOnly": "Solo clan",
-      "scopeFamilyWide": "Intera famiglia",
+      "scopeFamilyOnly": "Solo famiglia",
+      "scopeAnyone": "Chiunque",
       "clan": "Clan",
       "selectClan": "Seleziona un clan",
       "description": "Descrizione",
@@ -1120,6 +1124,8 @@
       "rosterSize": "Dimensione roster",
       "rosterSizeHint": "Numero massimo di membri",
       "minSignups": "Iscrizioni minime",
+      "maxSignups": "Iscrizioni massime",
+      "requireVerified": "Richiedi account verificati",
       "minSignupsHint": "Numero minimo di iscrizioni necessario per completare il roster",
       "maxAccountsPerUser": "Account massimi per utente",
       "maxAccountsHint": "Limita gli account per utente Discord",
@@ -2234,8 +2240,6 @@
     "security": {
       "title": "Sicurezza e autorizzazioni",
       "description": "Controlla accesso e verifica",
-      "requireLinkingToken": "Richiedi un token API del gioco per collegare un account",
-      "requireLinkingTokenDescription": "Disattivato per impostazione predefinita. Se attivo, ogni collegamento nel server richiede un token valido, anche per gli account verificati. La selezione degli account per roster e ticket non cambia.",
       "fullWhitelistRole": "Ruolo con accesso completo",
       "fullWhitelistRoleDesc": "Ruolo Discord con accesso completo a tutti i comandi del bot (ignora tutti i controlli delle autorizzazioni)",
       "noRole": "Nessun ruolo",

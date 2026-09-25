@@ -396,6 +396,7 @@
       "message": "Message"
     },
     "edit": {
+      "imageWarning": "Không thể thay thế liên kết bố trí hoặc hình ảnh. Bạn có thể xóa ảnh thừa nhưng phải giữ lại ít nhất một ảnh. Sau khi lưu, không thể khôi phục ảnh đã xóa.",
       "action": "Edit"
     }
   },
@@ -589,6 +590,7 @@
     }
   },
   "RostersPage": {
+    "publication": { "signup": "Tham gia đội hình", "removeSignup": "Hủy đăng ký" },
     "title": "Danh sách thi đấu và đội hình",
     "description": "Quản lý danh sách thi đấu, đội hình hội chiến và phân công thành viên",
     "stats": {
@@ -633,7 +635,8 @@
       "typeFamily": "Hệ thống bang hội",
       "signupScopeLabel": "Phạm vi đăng ký",
       "scopeClanOnly": "Chỉ bang hội",
-      "scopeFamilyWide": "Toàn hệ thống bang hội",
+      "scopeFamilyOnly": "Chỉ gia đình",
+      "scopeAnyone": "Bất kỳ ai",
       "clanLabel": "Bang hội",
       "clanPlaceholder": "Chọn bang hội",
       "descriptionLabel": "Mô tả (không bắt buộc)",
@@ -1095,7 +1098,8 @@
       "typeFamily": "Hệ thống bang hội",
       "signupScope": "Phạm vi đăng ký",
       "scopeClanOnly": "Chỉ bang hội",
-      "scopeFamilyWide": "Toàn hệ thống bang hội",
+      "scopeFamilyOnly": "Chỉ gia đình",
+      "scopeAnyone": "Bất kỳ ai",
       "clan": "Bang hội",
       "selectClan": "Chọn bang hội",
       "description": "Mô tả",
@@ -1120,6 +1124,8 @@
       "rosterSize": "Quy mô danh sách",
       "rosterSizeHint": "Số thành viên tối đa",
       "minSignups": "Số lượng đăng ký tối thiểu",
+      "maxSignups": "Số đăng ký tối đa",
+      "requireVerified": "Yêu cầu tài khoản đã xác minh",
       "minSignupsHint": "Số lượt đăng ký tối thiểu cần có để lấp đầy danh sách",
       "maxAccountsPerUser": "Số tài khoản tối đa mỗi người dùng",
       "maxAccountsHint": "Giới hạn tài khoản cho mỗi người dùng Discord",
@@ -2234,8 +2240,6 @@
     "security": {
       "title": "Bảo mật và quyền hạn",
       "description": "Kiểm soát quyền truy cập và xác minh",
-      "requireLinkingToken": "Yêu cầu mã API trong trò chơi khi liên kết tài khoản",
-      "requireLinkingTokenDescription": "Mặc định tắt. Khi bật, mỗi lần liên kết trên máy chủ này đều cần mã hợp lệ, kể cả tài khoản đã xác minh. Việc chọn tài khoản cho đội hình và phiếu hỗ trợ không thay đổi.",
       "fullWhitelistRole": "Vai trò toàn quyền",
       "fullWhitelistRoleDesc": "Vai trò Discord có toàn quyền truy cập mọi lệnh bot và bỏ qua các bước kiểm tra quyền",
       "noRole": "Không có vai trò",

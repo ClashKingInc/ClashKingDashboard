@@ -363,8 +363,8 @@ describe("calculateRosterStats — extra branches", () => {
     const s = calculateRosterStats([{ name: "A", tag: "#AAA", townhall: 14, current_clan_tag: null }], "#CLAN");
     expect(s.external).toBe(1);
   });
-  it("avgHitrate 0 when all hitrates are null", () => {
+  it("avgHitrate is unavailable when all hitrates are null", () => {
     const s = calculateRosterStats([{ name: "A", tag: "#AAA", townhall: 14, hitrate: null }]);
-    expect(s.avgHitrate).toBe(0);
+    expect(s.avgHitrate).toBeNull();
   });
 });
