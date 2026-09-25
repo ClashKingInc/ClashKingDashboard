@@ -87,6 +87,7 @@ import {
   getColumnInternal,
   getSortLabel,
   getSortInternal,
+  recurrenceDayOfMonth,
   ROSTER_COLUMNS,
 } from "../_lib";
 import type { EditRosterFormData, RosterAutomation, AutomationActionType, RosterGroup } from "../_lib/types";
@@ -360,8 +361,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
         event_start_time: datetimeLocalToUnix(editData.event_start_time),
         recurrence_days: editData.recurrence_mode === 'days' && editData.recurrence_days
           ? Number.parseInt(editData.recurrence_days) : null,
-        recurrence_day_of_month: editData.recurrence_mode === 'day_of_month' && editData.event_start_time
-          ? new Date(editData.event_start_time).getDate() : null,
+        recurrence_day_of_month: recurrenceDayOfMonth(editData.recurrence_mode, editData.event_start_time, editData.recurrence_day_of_month),
         columns: editData.columns.map(getColumnInternal),
 		sort: editData.sort.map((label) => {
 		  const internal = getSortInternal(label);

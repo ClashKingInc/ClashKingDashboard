@@ -19,7 +19,14 @@ import {
   getAutomationIcon,
   getAutomationLabel,
   formatOffsetSeconds,
+  recurrenceDayOfMonth,
 } from "./utils";
+
+it("preserves a stored monthly day when the event start is empty", () => {
+  expect(recurrenceDayOfMonth("day_of_month", "", "17")).toBe(17);
+  expect(recurrenceDayOfMonth("day_of_month", "2026-10-05T12:00", "17")).toBe(5);
+  expect(recurrenceDayOfMonth("once", "", "17")).toBeNull();
+});
 
 // ─── validatePlayerTag ────────────────────────────────────────────────────────
 

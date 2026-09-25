@@ -2,6 +2,13 @@
 
 import type { RosterMember, RosterStats, AutomationActionType } from './types';
 
+export function recurrenceDayOfMonth(mode: 'once' | 'days' | 'day_of_month', eventStart: string, storedDay: string): number | null {
+  if (mode !== 'day_of_month') return null;
+  if (eventStart) return new Date(eventStart).getDate();
+  const day = Number(storedDay);
+  return Number.isInteger(day) && day >= 1 && day <= 31 ? day : null;
+}
+
 // ============================================
 // Player Tag Validation
 // ============================================
