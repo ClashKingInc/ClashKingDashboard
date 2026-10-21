@@ -18,7 +18,8 @@ import { useTranslations } from "use-intl";
 import type { GuildInfo } from "@/lib/api/types/server";
 import { useDashboardAccess } from "./dashboard-access-provider";
 import { dashboardHref } from "@/lib/dashboard-route";
-import { dashboardNavigationSections } from "./dashboard-navigation";
+import { dashboardNavigationSections, serverScopedDashboardPaths } from "./dashboard-navigation";
+import { embeddedServerId } from "@/lib/auth/embedded";
 import { InactiveServerDialog } from "./inactive-server-dialog";
 import { requiresServerReactivation } from "@/lib/server-activity";
 
@@ -37,6 +38,7 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, availableGuilds
   const t = useTranslations("Sidebar");
   const tNavigation = useTranslations("Navigation");
   const { capabilities, canView } = useDashboardAccess();
+  const embedded = Boolean(embeddedServerId());
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [inactiveGuild, setInactiveGuild] = useState<GuildInfo | null>(null);
@@ -60,6 +62,7 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, availableGuilds
     .map((section) => ({
       ...section,
       items: section.items
+        .filter((item) => !embedded || serverScopedDashboardPaths.has(item.path))
         .filter((item) => item.fullAccess ? capabilities?.full_access : !item.capability || canView(item.capability))
         .map((item) => ({ ...item, href: dashboardHref(item.path, guildId) })),
     }))
@@ -150,6 +153,14 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, availableGuilds
             <div className="space-y-0.5">
               {section.items.map((item) => {
                 const isActive = isNavItemActive(item.href);
+                if (import.meta.env.PROD && item.disabledInProduction) {
+                  return (
+                    <button key={item.nameKey} type="button" disabled aria-disabled="true" className="flex min-h-10 w-full cursor-not-allowed items-center gap-3 rounded-xl px-3 py-2 text-left text-sm font-semibold text-muted-foreground opacity-45">
+                      <item.icon className="h-[18px] w-[18px] shrink-0" />
+                      <span className="min-w-0 flex-1 truncate">{t(item.nameKey)}</span>
+                    </button>
+                  );
+                }
                 return (
                   <Link
                     key={item.nameKey}
@@ -183,7 +194,7 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, availableGuilds
         ))}
       </nav>
 
-      <div className="border-t border-border bg-card p-3">
+      {!embedded && <div className="border-t border-border bg-card p-3">
         <Link
           href={dashboardHref("support", guildId)}
           prefetch={false}
@@ -210,7 +221,7 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, availableGuilds
           </span>
           <ArrowUpRight className="h-4 w-4 text-muted-foreground transition-colors group-hover:text-primary" aria-hidden="true" />
         </Link>
-      </div>
+      </div>}
       <InactiveServerDialog
         guild={inactiveGuild}
         locale={locale}

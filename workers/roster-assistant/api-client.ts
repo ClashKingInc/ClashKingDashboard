@@ -1,4 +1,4 @@
-import { ApiResponseError, createApiClient, httpTransport, ResponseDecodeError } from "@clashking/api-client";
+import { ApiResponseError, RequestBuildError, createApiClient, httpTransport, ResponseDecodeError } from "@clashking/api-client";
 import type { AnyEndpoint, EndpointRequest, EndpointResponse } from "@clashking/api-contracts";
 import { Effect } from "effect";
 
@@ -37,6 +37,7 @@ export async function executeAssistantEndpoint<E extends AnyEndpoint>(
     return await Effect.runPromise(client.execute(endpoint, input, { signal }));
   } catch (error) {
     if (error instanceof ApiResponseError) throw new AssistantApiError(error.status, responseMessage(error.body, error.status));
+    if (error instanceof RequestBuildError) throw new AssistantApiError(400, `Invalid ${error.operationId} request: ${String(error.cause)}`);
     if (error instanceof ResponseDecodeError) throw new AssistantApiError(502, "Roster API response is invalid");
     throw error;
   }

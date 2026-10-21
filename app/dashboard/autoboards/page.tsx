@@ -104,6 +104,7 @@ function formatTargetKind(value: string): string {
 
 function formatSchedule(item: AutoboardItem, weekdayLabels: string[]): string {
   if (item.deliveryMode === "refresh") {
+    if (item.intervalSeconds != null) return `${item.intervalSeconds} s`;
     return item.intervalMinutes === null ? "—" : `${item.intervalMinutes} min`;
   }
   if (!item.schedule) return "—";
@@ -288,8 +289,8 @@ export default function AutoboardsPage() {
         {
         min: selectedCapability?.minTargets ?? 0,
         max: selectedCapability?.maxTargets ?? 0,
-        minimum: selectedCapability?.refreshInterval?.minMinutes ?? 0,
-        maximum: selectedCapability?.refreshInterval?.maxMinutes ?? 0,
+        minimum: selectedCapability?.refreshSeconds?.min ?? selectedCapability?.refreshInterval?.minMinutes ?? 0,
+        maximum: selectedCapability?.refreshSeconds?.max ?? selectedCapability?.refreshInterval?.maxMinutes ?? 0,
         },
       ));
       return;
@@ -655,6 +656,26 @@ export default function AutoboardsPage() {
                   </Select>
                 </Field>
               </div>}
+
+              {selectedCapability?.uiCapabilities.includes("rowLimit") && (
+                <Field label={t("donationRows.label")} description={form.boardType === "farming" ? t("farming.description") : t("donationRows.description")}>
+                  <Input type="number" min={1} max={form.boardType === "farming" ? 5 : 50} value={form.rowLimit}
+                    onChange={(event) => setForm({ ...form, rowLimit: event.target.value })} />
+                  {form.boardType !== "farming" && <p className="text-sm text-muted-foreground">{t("donationRows.delivery")}</p>}
+                </Field>
+              )}
+
+              {selectedCapability?.refreshSeconds && <Field label={t("farming.seconds")}>
+                <Input type="number" min={selectedCapability.refreshSeconds.min} max={selectedCapability.refreshSeconds.max}
+                  value={form.intervalSeconds} onChange={(event) => setForm({ ...form, intervalSeconds: event.target.value })} />
+              </Field>}
+              {selectedCapability?.uiCapabilities.includes("farmingWindow") && <Field label={t("farming.window")}>
+                <Select value={form.farmingWindow} onValueChange={(value) => setForm({ ...form, farmingWindow: value as AutoboardFormState["farmingWindow"] })}>
+                  <SelectTrigger><SelectValue /></SelectTrigger><SelectContent>
+                    {(["since_start", "calendar_month", "game_season"] as const).map((window) => <SelectItem key={window} value={window}>{t(`farming.${window}`)}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </Field>}
 
               {form.deliveryMode === "refresh" && selectedCapability?.refreshInterval && (
                 <Field

@@ -147,7 +147,6 @@ export default function GeneralSettingsPage() {
         type: 'status',
         option: String(newTenureRole.months),
         role_id: newTenureRole.id,
-        mode: 'both',
       });
       if (response.error) throw new Error(response.error);
 

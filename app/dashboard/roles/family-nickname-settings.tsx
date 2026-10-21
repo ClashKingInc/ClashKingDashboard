@@ -6,33 +6,33 @@ import { useGuildId } from "@/lib/dashboard-route";
 import React, { useRef, useState, useEffect, useEffectEvent } from "react";
 import { useTranslations } from "use-intl";
 import { useQueryClient } from "@tanstack/react-query";
-import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Check, RotateCcw, AlertCircle, Loader2, Shield, Trash2, Users } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { apiClient } from "@/lib/api/client";
 import {
   normalizeDiscordRolesPayload,
-  normalizeServerSettingsPayload,
 } from "@/lib/dashboard-cache";
 import { dashboardQueryKeys } from "@/lib/dashboard-query";
 import { dashboardQueryOptions } from "@/lib/dashboard-query-options";
 import { Skeleton } from "@/components/ui/skeleton";
 import { RoleCombobox } from "@/components/ui/role-combobox";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 import type { FamilyRole, FamilyRolesResponse, FamilyRoleType } from "@/lib/api/types/family-roles";
-import type { RoleMode } from "@/lib/api/types/roles";
-import { NicknameFormatInput } from "./nickname-format-input";
-import type { PlaceholderOption } from "./nickname-format";
-import { InfoPopover } from "@/components/ui/info-popover";
-import { presentFamilyRoles } from "./family-role-presentation";
+import { NicknameFormatInput } from "../family-settings/nickname-format-input";
+import type { PlaceholderOption } from "../family-settings/nickname-format";
+import { presentFamilyRoles } from "../family-settings/family-role-presentation";
 
 interface NicknameSettings {
   change_nickname: boolean;
   nickname_rule: string;
   non_family_nickname_rule: string;
 }
+
+const defaultNicknameFormats = {
+  nickname_rule: "[{player_clan_abbreviation}] {player_name}",
+  non_family_nickname_rule: "{player_name}",
+};
 
 // Color classes for role type cards
 const colorClasses: Record<string, { bg: string; text: string }> = {
@@ -58,7 +58,6 @@ interface FamilyRoleCardProps {
   readonly removeLabel: string;
   readonly onAdd: (roleId: string) => Promise<void>;
   readonly onRemove: (id: string, roleId: string) => Promise<void>;
-  readonly onModeChange: (id: string, mode: RoleMode) => Promise<void>;
   readonly t: (key: string) => string;
 }
 
@@ -79,7 +78,6 @@ function FamilyRoleCard({
   removeLabel,
   onAdd,
   onRemove,
-  onModeChange,
   t,
 }: FamilyRoleCardProps) {
   const colors = colorClasses[color] || colorClasses.gray;
@@ -160,16 +158,6 @@ function FamilyRoleCard({
                       </span>
                     </div>
                     <div data-slot="family-role-actions" className="flex w-full min-w-0 items-center gap-2 sm:w-auto sm:shrink-0 sm:gap-1.5">
-                      <Select value={role.mode} onValueChange={(mode) => void onModeChange(role.id, mode as RoleMode)} disabled={isLoading}>
-                        <SelectTrigger className="h-10 min-w-0 flex-1 border-0 bg-background/70 text-xs shadow-sm shadow-black/5 sm:h-8 sm:w-[8.5rem] sm:flex-none">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="both">{t("familyRoles.modes.both")}</SelectItem>
-                          <SelectItem value="add">{t("familyRoles.modes.add")}</SelectItem>
-                          <SelectItem value="remove">{t("familyRoles.modes.remove")}</SelectItem>
-                        </SelectContent>
-                      </Select>
                       <button
                         type="button"
                         onClick={() => onRemove(role.id, role.role_id)}
@@ -198,12 +186,13 @@ function FamilyRoleCard({
   );
 }
 
-export default function FamilySettingsPage() {
+export function FamilyNicknameSettings({ section }: { readonly section: "family" | "nicknames" }) {
   const guildId = useGuildId();
   const queryClient = useQueryClient();
   const t = useTranslations("FamilySettingsPage");
   const tCommon = useTranslations("Common");
   const { toast } = useToast();
+  const activeNicknameInput = useRef<HTMLInputElement | null>(null);
 
   const placeholders: PlaceholderOption[] = [
     { key: "{discord_name}", description: t("nickname.placeholders.discordName"), example: "JohnDoe#1234" },
@@ -221,8 +210,7 @@ export default function FamilySettingsPage() {
 
   const [settings, setSettings] = useState<NicknameSettings>({
     change_nickname: true,
-    nickname_rule: "[{player_clan_abbreviation}] {player_name}",
-    non_family_nickname_rule: "{player_name}",
+    ...defaultNicknameFormats,
   });
   const [initialSettings, setInitialSettings] = useState<NicknameSettings | null>(null);
 
@@ -247,17 +235,19 @@ export default function FamilySettingsPage() {
       setError(null);
 
       if (forceRefresh) {
-        await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.settings(guildId), exact: true });
+        await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.route("role-settings", guildId), exact: true });
       }
 
-      const settingsPayload = await queryClient.fetchQuery(dashboardQueryOptions.settings(guildId));
-      const settingsData = normalizeServerSettingsPayload(settingsPayload);
+      const settingsData = await queryClient.fetchQuery({
+        queryKey: dashboardQueryKeys.route("role-settings", guildId),
+        queryFn: async () => { const response = await apiClient.roles.getRoleSettings(guildId); if (!response.data) throw new Error(response.error); return response.data; },
+      });
 
       if (settingsData) {
         const loadedSettings = {
           change_nickname: settingsData.change_nickname ?? true,
-          nickname_rule: settingsData.nickname_rule ?? "[{player_clan_abbreviation}] {player_name}",
-          non_family_nickname_rule: settingsData.non_family_nickname_rule ?? "{player_name}",
+          nickname_rule: settingsData.nickname_rule ?? defaultNicknameFormats.nickname_rule,
+          non_family_nickname_rule: settingsData.non_family_nickname_rule ?? defaultNicknameFormats.non_family_nickname_rule,
         };
 
         settingsRef.current = loadedSettings;
@@ -383,33 +373,19 @@ export default function FamilySettingsPage() {
     }
   };
 
-  const handleFamilyRoleModeChange = async (id: string, mode: RoleMode) => {
-    try {
-      setFamilyRolesLoading(true);
-      setError(null);
-      const response = await apiClient.familyRoles.updateFamilyRoleMode(guildId, id, mode);
-      if (response.error) {
-        setError(response.error);
-        return;
-      }
-      await loadFamilyRoles(true);
-    } catch (err: any) {
-      setError(err.message || "Failed to update family role behavior");
-    } finally {
-      setFamilyRolesLoading(false);
-    }
-  };
-
   const persistSettings = (nextSettings: NicknameSettings) => {
     saveQueueRef.current = saveQueueRef.current.catch(() => undefined).then(async () => {
       try {
         setIsSaving(true);
         setShowSaved(false);
         setError(null);
-        const response = await apiClient.servers.updateSettings(guildId, nextSettings);
+        const response = await apiClient.roles.updateRoleSettings(guildId, {
+          nickname_rule: nextSettings.nickname_rule,
+          non_family_nickname_rule: nextSettings.non_family_nickname_rule,
+        });
         if (response.error) throw new Error(response.error);
 
-        await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.settings(guildId), exact: true });
+        await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.route("role-settings", guildId), exact: true });
         setInitialSettings(nextSettings);
         setShowSaved(true);
         if (savedIndicatorTimerRef.current) clearTimeout(savedIndicatorTimerRef.current);
@@ -453,20 +429,13 @@ export default function FamilySettingsPage() {
     void persistSettings(settingsRef.current);
   };
 
-  const handleNicknameToggle = (checked: boolean) => {
-    cancelPendingSave();
-    const nextSettings = { ...settingsRef.current, change_nickname: checked };
-    settingsRef.current = nextSettings;
-    setSettings(nextSettings);
-    setShowSaved(false);
-    void persistSettings(nextSettings);
-  };
-
   const handleReset = async () => {
     cancelPendingSave();
     setShowSaved(false);
-    await saveQueueRef.current;
-    await loadSettings(true);
+    const nextSettings = { ...settingsRef.current, ...defaultNicknameFormats };
+    settingsRef.current = nextSettings;
+    setSettings(nextSettings);
+    await persistSettings(nextSettings);
   };
 
   const isSettingsDirty =
@@ -474,6 +443,9 @@ export default function FamilySettingsPage() {
     (settings.change_nickname !== initialSettings.change_nickname ||
       settings.nickname_rule !== initialSettings.nickname_rule ||
       settings.non_family_nickname_rule !== initialSettings.non_family_nickname_rule);
+
+  const formatsAreDefault = settings.nickname_rule === defaultNicknameFormats.nickname_rule &&
+    settings.non_family_nickname_rule === defaultNicknameFormats.non_family_nickname_rule;
 
   // Generate preview of nickname format
   const generatePreview = (format: string): string => {
@@ -501,12 +473,7 @@ export default function FamilySettingsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background p-4 md:p-6">
-      <div className="mx-auto max-w-7xl space-y-8">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground md:text-3xl">{t("title")}</h1>
-          <p className="mt-1 text-muted-foreground">{t("description")}</p>
-        </div>
+    <div className="space-y-6">
 
         {error && (
           <Alert variant="destructive" className="rounded-2xl">
@@ -515,7 +482,7 @@ export default function FamilySettingsPage() {
           </Alert>
         )}
 
-        <section className="space-y-4" aria-labelledby="nickname-settings-heading">
+        {section === "nicknames" && <section className="space-y-4" aria-labelledby="nickname-settings-heading">
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
               <h2 id="nickname-settings-heading" className="text-lg font-semibold text-foreground">
@@ -525,25 +492,6 @@ export default function FamilySettingsPage() {
             </div>
 
             <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center sm:justify-between md:w-auto md:justify-end">
-              <div className="flex min-h-11 w-full items-center justify-between gap-3 rounded-2xl bg-muted/45 px-3 py-2 sm:w-auto">
-                <div className="flex min-w-0 items-center gap-1.5">
-                  <label htmlFor="change-nicknames" className="truncate text-sm font-medium">
-                    {t("nickname.automaticChanges")}
-                  </label>
-                  <InfoPopover content={t("nickname.automaticChangesDesc")} label={t("nickname.automaticChangesDesc")} />
-                </div>
-                {isLoading ? (
-                  <Skeleton className="h-6 w-11 rounded-full" />
-                ) : (
-                  <Switch
-                    id="change-nicknames"
-                    checked={settings.change_nickname}
-                    disabled={isSaving}
-                    onCheckedChange={handleNicknameToggle}
-                  />
-                )}
-              </div>
-
               <div className="flex min-h-11 items-center justify-end gap-2">
                 {(isSaving || isSettingsDirty || showSaved) && <span className="flex items-center justify-end gap-1.5 text-xs text-muted-foreground" aria-live="polite">
                   {isSaving ? (
@@ -558,7 +506,7 @@ export default function FamilySettingsPage() {
                   type="button"
                   variant="secondary"
                   size="sm"
-                  disabled={isLoading || isSaving}
+                  disabled={isLoading || isSaving || (formatsAreDefault && !isSettingsDirty)}
                   onClick={() => void handleReset()}
                   className="border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted"
                 >
@@ -578,6 +526,7 @@ export default function FamilySettingsPage() {
             <div className="grid gap-4 lg:grid-cols-2">
               <NicknameFormatInput
                 id="family-convention"
+                onSelectionChange={(input) => { activeNicknameInput.current = input; }}
                 label={t("nickname.familyFormat")}
                 value={settings.nickname_rule}
                 preview={generatePreview(settings.nickname_rule)}
@@ -589,6 +538,7 @@ export default function FamilySettingsPage() {
               />
               <NicknameFormatInput
                 id="non-family-convention"
+                onSelectionChange={(input) => { activeNicknameInput.current = input; }}
                 label={t("nickname.nonFamilyFormat")}
                 value={settings.non_family_nickname_rule}
                 preview={generatePreview(settings.non_family_nickname_rule)}
@@ -607,16 +557,30 @@ export default function FamilySettingsPage() {
             </summary>
             <div className="mt-3 grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
               {placeholders.map((placeholder) => (
-                <div key={placeholder.key} className="flex min-w-0 items-center gap-2 rounded-xl bg-background/55 px-3 py-2">
-                  <code className="shrink-0 text-xs font-semibold text-primary">{placeholder.key}</code>
-                  <span className="truncate text-xs text-muted-foreground">{placeholder.description}</span>
-                </div>
+                <button key={placeholder.key} type="button" className="flex min-w-0 items-center gap-2 rounded-xl bg-muted/55 px-3 py-2 text-left hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
+                  onMouseDown={(event) => event.preventDefault()}
+                  onClick={() => {
+                    const input = activeNicknameInput.current ?? document.getElementById("family-convention") as HTMLInputElement | null;
+                    if (!input) return;
+                    const field = input.id === "non-family-convention" ? "non_family_nickname_rule" : "nickname_rule";
+                    const value = settingsRef.current[field];
+                    const start = input.selectionStart ?? value.length;
+                    const end = input.selectionEnd ?? start;
+                    updateNicknameFormat(field, value.slice(0, start) + placeholder.key + value.slice(end));
+                    requestAnimationFrame(() => {
+                      input.focus();
+                      input.setSelectionRange(start + placeholder.key.length, start + placeholder.key.length);
+                    });
+                  }}>
+                  <span className="min-w-0 flex-1"><span className="block text-xs font-medium">{placeholder.description}</span><span className="block truncate text-xs text-muted-foreground">{placeholder.example}</span></span>
+                  <code className="shrink-0 text-xs text-primary">{placeholder.key}</code>
+                </button>
               ))}
             </div>
           </details>
-        </section>
+        </section>}
 
-        <section className="space-y-4" aria-labelledby="family-roles-heading">
+        {section === "family" && <section className="space-y-4" aria-labelledby="family-roles-heading">
           <div>
             <h2 id="family-roles-heading" className="text-lg font-semibold text-foreground">
               {t("familyRoles.title")}
@@ -644,13 +608,11 @@ export default function FamilySettingsPage() {
                 removeLabel={tCommon("remove")}
                 onAdd={(roleId) => handleAddFamilyRole(roleType.key as FamilyRoleType, roleId)}
                 onRemove={(id, roleId) => handleRemoveFamilyRole(roleType.key as FamilyRoleType, id, roleId)}
-                onModeChange={handleFamilyRoleModeChange}
                 t={t}
               />
             ))}
           </div>
-        </section>
-      </div>
+        </section>}
     </div>
   );
 }

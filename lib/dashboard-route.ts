@@ -2,6 +2,7 @@
 
 import { createContext, createElement, useContext, useEffect, useState, type ReactNode } from "react";
 import { useSearchParams } from "@/lib/navigation";
+import { embeddedServerId } from './auth/embedded';
 
 const DashboardRouteContext = createContext<{ guildId?: string }>({});
 
@@ -38,7 +39,7 @@ export function useGuildId(): string {
     }
   }, [context.guildId, routeGuildId]);
 
-  return context.guildId ?? (routeGuildId || storedGuildId);
+  return embeddedServerId() ?? context.guildId ?? (routeGuildId || storedGuildId);
 }
 
 export function useRosterId(): string {

@@ -1,15 +1,23 @@
 "use client";
 
-import { useGuildId } from "@/lib/dashboard-route";
-import { type Dispatch, type ReactNode, type SetStateAction, useCallback, useEffect, useEffectEvent, useMemo, useRef, useState } from "react";
+import { useGuildId, dashboardHref } from "@/lib/dashboard-route";
+import { useSearchParams } from "@/lib/navigation";
+import { type Dispatch, type ReactNode, type SetStateAction, lazy, Suspense, useCallback, useEffect, useEffectEvent, useId, useRef, useState } from "react";
+import { nativePanelMessage } from "./ticket-panel-message";
+import { TicketActivity } from "./ticket-activity";
+import { TicketMessageLibrary } from "./ticket-message-library";
+import { SignupQuestionsEditor } from "../rosters/_components/SignupQuestionsEditor";
+import { hasInvalidDropdownOptions } from "../rosters/_lib/signup-questions";
 import Link from "@/components/app-link";
 import { useTranslations } from "use-intl";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   ArrowDown,
+  ArrowLeft,
   ArrowUp,
   ChevronDown,
   ChevronUp,
+  Eye,
   Loader2,
   MessageSquare,
   Plus,
@@ -37,19 +45,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ChannelCombobox } from "@/components/ui/channel-combobox";
 import { RoleCombobox } from "@/components/ui/role-combobox";
 import { DashboardTabsList, DashboardTabTrigger } from "@/components/ui/dashboard-tabs";
 import { InfoPopover } from "@/components/ui/info-popover";
 import { useToast } from "@/components/ui/use-toast";
 import {
-  DiscordEmbedPreview,
-  DiscordMessagePreview,
   extractEmbeds,
   extractMessageContent,
-  extractMessageProfile,
-  type DiscordEmbed,
 } from "@/components/dashboard/discord-embed-preview";
 import { normalizeAllChannelsPayload } from "@/lib/dashboard-cache";
 import { dashboardQueryKeys } from "@/lib/dashboard-query";
@@ -59,7 +62,6 @@ import type {
   ApproveMessage,
   ServerEmbed,
   ServerEmbedsResponse,
-  THRequirement,
   TicketButton,
   TicketButtonSettings,
   TicketPanel,
@@ -85,7 +87,7 @@ interface DiscordRole {
 const getTicketsPanelsCacheKey = (guildId: string) => `ticket-panels-${guildId}`;
 const MAX_APPROVE_MESSAGE_NAME_LENGTH = 100;
 const MAX_APPROVE_MESSAGE_CONTENT_LENGTH = 2000;
-const DEFAULT_TOWNHALL_REQUIREMENT_FIELDS = ["BK", "AQ", "GW", "RC", "WARST"];
+
 
 const ticketPanelsQuery = (guildId: string) => ({
   queryKey: dashboardQueryKeys.route("ticket-panels", guildId),
@@ -139,300 +141,129 @@ const toEmbedDataRecord = (data: unknown): Record<string, unknown> | null => {
 
   return typeof data === "object" ? (data as Record<string, unknown>) : null;
 };
-const DEFAULT_PREVIEW_ACCENT = "#3ba55d";
 const CANCEL_BUTTON_CLASS = "!bg-black !text-white hover:!bg-zinc-900";
 const CLASHKING_RED_BUTTON_CLASS = "bg-red-600 hover:bg-red-700 text-white";
-const DEFAULT_TICKET_MESSAGE_SELECT_VALUE = "__ck_default_ticket_message__";
 const LEGACY_DISABLED_EMBED_TOKEN = "disabled";
-const TICKET_WORKSPACE_TAB_CLASS = "mt-0 min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-5 pb-8 sm:px-7";
+const TICKET_INPUT_CLASS = "rounded-xl border-0 bg-muted/55 shadow-sm shadow-black/5";
+const TICKET_WORKSPACE_TAB_CLASS = "mt-0 min-w-0 space-y-5";
+const NativeMessageEditor = lazy(() => import("@/components/dashboard/embed-editor").then(module => ({ default: module.EmbedEditor })));
 
-const normalizeTownhallRequirementFields = (fields: readonly string[] | null | undefined): string[] => {
-  const normalized = (fields ?? []).filter((field): field is string => typeof field === "string" && field.trim().length > 0);
-  return normalized.length > 0 ? normalized : [...DEFAULT_TOWNHALL_REQUIREMENT_FIELDS];
-};
-
-const createTownhallRequirementRow = (th: string, fields: readonly string[]): THRequirement => {
-  const row: THRequirement = { TH: Number(th) };
-  for (const field of fields) {
-    row[field] = 0;
-  }
-  return row;
-};
-
-function TicketPanelTab({
-  panel, guildId, availableEmbeds, embeds, previewButtons, onOpenButtonsTab,
-}: {
-  readonly panel: TicketPanel;
-  readonly guildId: string;
-  readonly availableEmbeds: string[];
-  readonly embeds: ServerEmbed[];
-  readonly previewButtons: TicketButton[];
-  readonly onOpenButtonsTab: () => void;
+function TicketEditorSurface({ inline = false, open, onOpenChange, title, description, children, busy = false, heading }: {
+  readonly inline?: boolean; readonly open: boolean; readonly onOpenChange: (open: boolean) => void;
+  readonly title: string; readonly description: string; readonly children: ReactNode;
+  readonly busy?: boolean;
+  readonly heading?: ReactNode;
 }) {
-  const t = useTranslations("TicketsSettingsPage");
   const tCommon = useTranslations("Common");
+  if (inline) return open ? <section className="min-w-0 space-y-5" aria-label={title} aria-busy={busy}>
+    {heading ?? <div className="flex items-start justify-between gap-4">
+      <div><h2 className="text-xl font-semibold">{title}</h2>{description && <p className="mt-1 text-sm text-muted-foreground">{description}</p>}</div>
+    </div>}
+    {children}
+  </section> : null;
+  return <Dialog open={open} onOpenChange={onOpenChange}>
+    <DialogContent variant="workspace" closeLabel={tCommon("close")} aria-busy={busy} className="flex min-h-0 flex-col gap-0 overflow-hidden bg-background sm:max-w-5xl">
+      <DialogHeader className="shrink-0 px-5 pb-4 pr-16 pt-5 text-left sm:px-7 sm:pb-5 sm:pr-16 sm:pt-7">
+        <DialogTitle>{title}</DialogTitle><DialogDescription>{description}</DialogDescription>
+      </DialogHeader>
+      {children}
+    </DialogContent>
+  </Dialog>;
+}
+
+export function TicketPanelTab({ panel, guildId, embeds, previewButtons, onOpenButtonsTab, channels = [], roles = [] }: {
+  readonly panel: TicketPanel; readonly guildId: string; readonly embeds: ServerEmbed[];
+  readonly previewButtons: TicketButton[]; readonly onOpenButtonsTab: () => void;
+  readonly channels?: DiscordChannel[]; readonly roles?: DiscordRole[];
+}) {
+  const t = useTranslations("TicketsSettingsPage"), tCommon = useTranslations("Common");
   const { toast } = useToast();
-  const [isSavingEmbed, setIsSavingEmbed] = useState(false);
-  const [embedName, setEmbedName] = useState(panel.embed_name ?? "disabled");
-  const [embedDialogOpen, setEmbedDialogOpen] = useState(false);
-  const [draftEmbedName, setDraftEmbedName] = useState(panel.embed_name ?? "disabled");
-  const embedOptions = Array.from(new Set([...(panel.embed_name ? [panel.embed_name] : []), ...availableEmbeds])).sort((a, b) => a.localeCompare(b));
-  const selectedEmbed = embeds.find((embed) => embed.name === (embedName === "disabled" ? null : embedName));
-  const selectedEmbedData = toEmbedDataRecord(selectedEmbed?.data);
-  const embedPreviews = selectedEmbedData ? extractEmbeds(selectedEmbedData) : [];
-  const draftSelectedEmbed = embeds.find((embed) => embed.name === (draftEmbedName === "disabled" ? null : draftEmbedName));
-  const draftSelectedEmbedData = toEmbedDataRecord(draftSelectedEmbed?.data);
-  const draftEmbedPreviews = draftSelectedEmbedData ? extractEmbeds(draftSelectedEmbedData) : [];
-  const hasDraftChanges = draftEmbedName !== embedName;
-  const embedsInfoTemplate = t("panelEmbedInfoLine1", { dashboardLabel: tCommon("dashboard") });
-  const buttonsInfoTemplate = t("panelEmbedInfoLine2");
-
-  const renderTemplateWithPlaceholder = (template: string, slot: ReactNode) => {
-    const parts = template.split("%s");
-    if (parts.length < 2) {
-      return <>{template} {slot}</>;
-    }
-    return (
-      <>
-        {parts[0]}
-        {slot}
-        {parts.slice(1).join("%s")}
-      </>
-    );
+  const queryClient = useQueryClient();
+  const [isSaving, setIsSaving] = useState(false);
+  const [revision, setRevision] = useState(0);
+  const [savedPanel, setSavedPanel] = useState(panel);
+  const [publishOpen, setPublishOpen] = useState(false);
+  const [publishing, setPublishing] = useState(false);
+  const [editorDirty, setEditorDirty] = useState(false);
+  const [channelId, setChannelId] = useState<string | null>(null);
+  useEffect(() => { setSavedPanel(panel); }, [panel]);
+  const reloadPanel = async () => {
+    apiCache.invalidate(getTicketsPanelsCacheKey(guildId));
+    await queryClient.invalidateQueries({ queryKey: ticketPanelsQuery(guildId).queryKey, exact: true });
+    const result = await apiClient.tickets.getPanels(guildId);
+    if (result.error || !result.data) throw new Error(result.error || tCommon("loadError"));
+    const latest = result.data.items.find(item => item.name === panel.name);
+    if (!latest) throw new Error(tCommon("loadError"));
+    setSavedPanel(latest);
+    return latest;
   };
-
-  const getEmbedPreviewKey = (embed: DiscordEmbed): string => {
-    return JSON.stringify({
-      title: embed.title ?? "",
-      description: embed.description ?? "",
-      url: embed.url ?? "",
-      color: embed.color ?? "",
-      author: embed.author?.name ?? "",
-      footer: embed.footer?.text ?? "",
-      image: embed.image?.url ?? "",
-      thumbnail: embed.thumbnail?.url ?? "",
-      fields: embed.fields?.map((field) => `${field.name}:${field.value}:${field.inline ? "1" : "0"}`) ?? [],
-    });
-  };
-
-  const getPreviewButtonClass = (style: number): string => {
-    switch (style) {
-      case 1:
-        return "bg-[#5865f2] hover:bg-[#4752c4] text-white";
-      case 3:
-        return "bg-[#3ba55d] hover:bg-[#2d7d46] text-white";
-      case 4:
-        return "bg-[#ed4245] hover:bg-[#c03537] text-white";
-      default:
-        return "bg-[#4e5058] hover:bg-[#6d6f78] text-white";
-    }
-  };
-
-  const renderEmbedPreviewList = (previewEmbeds: DiscordEmbed[], keyPrefix: string): ReactNode => {
-    if (previewEmbeds.length === 0) {
-      return (
-        <div className="rounded-lg border border-dashed border-border p-4 text-xs text-muted-foreground">
-          {t("panelEmbedPreviewEmpty")}
-        </div>
-      );
-    }
-
-    const duplicateCounts = new Map<string, number>();
-    return (
-      <div className="space-y-2">
-        {previewEmbeds.map((embed) => {
-          const baseKey = getEmbedPreviewKey(embed);
-          const occurrence = duplicateCounts.get(baseKey) ?? 0;
-          duplicateCounts.set(baseKey, occurrence + 1);
-          return (
-            <DiscordEmbedPreview
-              key={`${keyPrefix}-${baseKey}-${occurrence}`}
-              embed={embed}
-            />
-          );
-        })}
-      </div>
-    );
-  };
-
-  useEffect(() => {
-    const currentEmbedName = panel.embed_name ?? "disabled";
-    setEmbedName(currentEmbedName);
-    setDraftEmbedName(currentEmbedName);
-    setEmbedDialogOpen(false);
-  }, [panel.name, panel.embed_name]);
-
-  const openEmbedDialog = () => {
-    setDraftEmbedName(embedName);
-    setEmbedDialogOpen(true);
-  };
-
-  const handleSaveEmbed = async () => {
-    if (!hasDraftChanges) {
-      setEmbedDialogOpen(false);
-      return;
-    }
-
-    setIsSavingEmbed(true);
+  const draftChanged = !savedPanel.publication || new Date(savedPanel.draftUpdatedAt ?? "").getTime() !== new Date(savedPanel.publication.sourceUpdatedAt).getTime();
+  const publish = async () => {
+    if (!savedPanel.draftUpdatedAt || publishing || (!savedPanel.publication && !channelId)) return;
+    setPublishing(true);
     try {
-      const payload: UpdateTicketPanelRequest = {
-        embed_name: draftEmbedName === "disabled" ? null : draftEmbedName,
-      };
-      const res = await apiClient.tickets.updatePanel(guildId, panel.name, payload);
-      if (res.error) throw new Error(res.error);
-      apiCache.invalidate(getTicketsPanelsCacheKey(guildId));
-      setEmbedName(draftEmbedName);
-      setEmbedDialogOpen(false);
-      toast({ title: tCommon("success"), description: t("savedSuccess", { panel: panel.name }) });
-    } catch (err) {
-      toast({ title: t("autoSaveErrorTitle"), description: err instanceof Error ? err.message : t("autoSaveErrorDescription"), variant: "destructive" });
-    } finally {
-      setIsSavingEmbed(false);
-    }
+      const body = { nonce: `${Date.now()}${Math.floor(Math.random() * 900000 + 100000)}`, expectedUpdatedAt: savedPanel.draftUpdatedAt,
+        ...(!savedPanel.publication && channelId ? { channelId } : {}) };
+      let result = await apiClient.tickets.publishPanel(guildId, panel.name, body);
+      for (let attempt = 0; !result.error && result.data && ["pending", "executing"].includes(result.data.state) && attempt < 10; attempt++) {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        result = await apiClient.tickets.publishPanel(guildId, panel.name, body);
+      }
+      if (result.error || !result.data) throw new Error(result.error || tCommon("loadError"));
+      if (result.data.state !== "succeeded") throw new Error(t(result.data.state === "failed" ? "panelPublishFailed" : "panelPublishPending"));
+      setPublishOpen(false);
+      await reloadPanel();
+      toast({ title: tCommon("success"), description: t("panelPublished") });
+    } catch (error) {
+      toast({ title: tCommon("error"), description: error instanceof Error ? error.message : tCommon("loadError"), variant: "destructive" });
+    } finally { setPublishing(false); }
   };
-
-  return (
-    <div className="space-y-6">
-      <Dialog
-        open={embedDialogOpen}
-        onOpenChange={(open) => {
-          setEmbedDialogOpen(open);
-          if (open) {
-            setDraftEmbedName(embedName);
-          }
-        }}
-      >
-        <DialogContent variant="workspace" className="flex min-h-0 flex-col gap-0 overflow-hidden bg-background sm:max-w-4xl">
-          <DialogHeader className="shrink-0 px-5 pb-4 pr-16 pt-5 text-left sm:px-7 sm:pb-5 sm:pr-16 sm:pt-7">
-            <DialogTitle>{t("panelEmbed")}</DialogTitle>
-            <DialogDescription>{t("panelEmbedHint")}</DialogDescription>
-          </DialogHeader>
-
-          <div className="grid min-h-0 flex-1 gap-4 overflow-y-auto overscroll-contain px-5 py-5 pb-8 sm:px-7 lg:grid-cols-2 lg:items-start">
-            <div className="space-y-1.5">
-              <div className="flex items-center gap-1.5">
-                <Label className="text-sm">{t("panelEmbed")}</Label>
-                <InfoPopover content={t("panelEmbedHint")} />
-              </div>
-              <Select value={draftEmbedName} onValueChange={setDraftEmbedName}>
-                <SelectTrigger
-                  className={cn(
-                    draftEmbedName !== "disabled" && "!border-red-600 focus-visible:!ring-red-600/30",
-                  )}
-                >
-                  <SelectValue placeholder={t("selectEmbed")} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="disabled">{t("defaultEmbed")}</SelectItem>
-                  {embedOptions.map((embed) => (
-                    <SelectItem key={embed} value={embed}>{embed}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2 lg:max-h-[58vh] lg:overflow-y-auto lg:pr-1">
-              <Label className="text-sm">{t("panelEmbedPreview")}</Label>
-              {renderEmbedPreviewList(draftEmbedPreviews, draftSelectedEmbed?.name ?? "ticket-panel-embed-draft")}
-              {previewButtons.length > 0 ? (
-                <div className="pt-2 flex flex-wrap gap-2">
-                  {previewButtons.map((button) => (
-                    <span
-                      key={`draft-${button.custom_id}`}
-                      className={cn(
-                        "inline-flex h-8 items-center gap-1.5 rounded px-3 text-xs font-medium transition-colors",
-                        getPreviewButtonClass(button.style),
-                      )}
-                    >
-                      <span>{button.label}</span>
-                    </span>
-                  ))}
-                </div>
-              ) : null}
-            </div>
-          </div>
-
-          <DialogFooter className="shrink-0 flex-row gap-2 border-t border-border/50 bg-background px-5 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-7 sm:py-4 [&>*]:w-auto">
-            <Button variant="secondary" className="min-w-0 flex-1 border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted sm:flex-none" onClick={() => setEmbedDialogOpen(false)}>{tCommon("cancel")}</Button>
-            <Button className="min-w-0 flex-1 sm:flex-none" onClick={handleSaveEmbed} disabled={isSavingEmbed || !hasDraftChanges}>
-              {isSavingEmbed && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {tCommon("save")}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
-        <div className="space-y-3 rounded-[20px] bg-muted/35 p-4">
-          <div className="space-y-1.5">
-            <div className="flex items-center gap-1.5">
-              <Label className="text-sm">{t("panelEmbed")}</Label>
-              <InfoPopover
-                content={(
-                  <div className="space-y-2">
-                    <p>{t("panelEmbedHint")}</p>
-                    <p>
-                      {renderTemplateWithPlaceholder(
-                        embedsInfoTemplate,
-                        <Link href="../embeds" className="font-medium text-primary underline underline-offset-2">
-                          {t("embeds")}
-                        </Link>,
-                      )}
-                    </p>
-                    <p>
-                      {renderTemplateWithPlaceholder(
-                        buttonsInfoTemplate,
-                        <button type="button" onClick={onOpenButtonsTab} className="font-medium text-primary underline underline-offset-2">
-                          {t("tabButtons")}
-                        </button>,
-                      )}
-                    </p>
-                  </div>
-                )}
-              />
-            </div>
-          </div>
-
-          <div className="grid gap-2 pt-1 sm:grid-cols-4 sm:items-stretch">
-            <div
-              className="flex h-9 items-center rounded-xl bg-card px-3 shadow-sm shadow-black/5 sm:col-span-3"
-            >
-              <p className="truncate text-sm font-medium">
-                {embedName === "disabled" ? t("defaultEmbed") : embedName}
-              </p>
-            </div>
-            <Button
-              onClick={openEmbedDialog}
-              className={cn("sm:col-span-1 h-9", CLASHKING_RED_BUTTON_CLASS)}
-            >
-              {tCommon("edit")}
-            </Button>
-          </div>
-
-        </div>
-        <div className="space-y-2 rounded-[20px] bg-muted/35 p-4">
-          <Label className="text-sm">{t("panelEmbedPreview")}</Label>
-          {renderEmbedPreviewList(embedPreviews, selectedEmbed?.name ?? "ticket-panel-embed")}
-
-          {previewButtons.length > 0 ? (
-            <div className="pt-2 flex flex-wrap gap-2">
-              {previewButtons.map((button) => (
-                <span
-                  key={button.custom_id}
-                  className={cn(
-                    "inline-flex h-8 items-center gap-1.5 rounded px-3 text-xs font-medium transition-colors",
-                    getPreviewButtonClass(button.style),
-                  )}
-                >
-                  <span>{button.label}</span>
-                </span>
-              ))}
-            </div>
-          ) : null}
-        </div>
+  const legacy = toEmbedDataRecord(embeds.find(embed => embed.name === panel.embed_name)?.data);
+  // Only persisted content establishes a format; starter actions must not silently choose Classic.
+  const initial = panel.panel_message ?? (legacy ? {
+    content: extractMessageContent(legacy) ?? undefined, embeds: extractEmbeds(legacy),
+    components: previewButtons.length ? [{ type: 1, components: previewButtons }] : [],
+  } : null);
+  const [saved, setSaved] = useState<Record<string, unknown> | null>(initial);
+  const save = async (payload: Record<string, unknown>) => {
+    setIsSaving(true);
+    try {
+      const message = nativePanelMessage(payload, previewButtons[0]?.custom_id.split(":")[3]);
+      const result = await apiClient.tickets.updatePanel(guildId, panel.name, { panel_message: message, embed_name: null });
+      if (result.error) throw new Error(result.error);
+      setSaved(message);
+      await reloadPanel();
+      setPublishOpen(true);
+      toast({ title: tCommon("success"), description: t("panelMessageSaved") });
+    } catch (error) {
+      toast({ title: tCommon("error"), description: error instanceof Error ? error.message : tCommon("loadError"), variant: "destructive" });
+      throw error;
+    } finally { setIsSaving(false); }
+  };
+  return <div className="space-y-4">
+    <div className="flex items-center justify-between gap-3"><p className="text-sm text-muted-foreground">{t("panelActionHint")}</p>
+      <Button size="sm" variant="secondary" onClick={onOpenButtonsTab}>{t("manageTicketActions")}</Button></div>
+    <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="text-sm text-muted-foreground">
+        <p>{t(draftChanged ? "panelDraftSaved" : "panelUpToDate")}</p>
+        {savedPanel.publication && <a className="text-primary hover:underline" href={`https://discord.com/channels/${guildId}/${savedPanel.publication.channelId}/${savedPanel.publication.messageId}`} target="_blank" rel="noreferrer">{t("panelViewLive")}</a>}
       </div>
+      <Button variant="secondary" disabled={isSaving || publishing || editorDirty || !saved || !savedPanel.draftUpdatedAt || !draftChanged} onClick={() => setPublishOpen(true)}>{t("panelPublishChanges")}</Button>
     </div>
-  );
+    <Dialog open={publishOpen} onOpenChange={open => { if (!publishing) setPublishOpen(open); }}>
+      <DialogContent variant="form">
+        <DialogHeader><DialogTitle>{t("panelPublishTitle")}</DialogTitle><DialogDescription>{t(savedPanel.publication ? "panelPublishUpdateDescription" : "panelPublishFirstDescription")}</DialogDescription></DialogHeader>
+        {!savedPanel.publication && <ChannelCombobox channels={channels.filter(channel => Number(channel.type) === 0 || Number(channel.type) === 5)} value={channelId ?? ""} onValueChange={setChannelId} placeholder={t("selectChannel")} />}
+        <DialogFooter><Button variant="outline" disabled={publishing} onClick={() => setPublishOpen(false)}>{t("panelPublishLater")}</Button><Button disabled={publishing || (!savedPanel.publication && !channelId)} onClick={publish}>{publishing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}{t("panelPublishNow")}</Button></DialogFooter>
+      </DialogContent>
+    </Dialog>
+    <div className="min-w-0 rounded-3xl bg-card">
+    <Suspense fallback={<Skeleton className="h-96 rounded-3xl" />}>
+      <NativeMessageEditor key={revision} initialData={saved} variant="ticket-panel" channels={channels} roles={roles} serverId={guildId}
+        ticketActions={previewButtons.map(button => ({ customId: button.custom_id, label: button.label }))} isSaving={isSaving || publishing} onDirtyChange={setEditorDirty} onSave={save} onCancel={() => setRevision(value => value + 1)} />
+    </Suspense>
+    </div>
+  </div>;
 }
 
 function PanelSettingsTab({
@@ -447,20 +278,20 @@ function PanelSettingsTab({
   const tCommon = useTranslations("Common");
   const { toast } = useToast();
   type PanelSettingsForm = {
+    applicant_can_close: string;
+    transcripts_enabled: string;
     open_category: string;
     sleep_category: string;
-    closed_category: string;
     status_change_log: string;
     ticket_button_click_log: string;
-    ticket_close_log: string;
   };
   const createFormState = (): PanelSettingsForm => ({
+    applicant_can_close: panel.applicant_can_close === true ? "enabled" : "disabled",
+    transcripts_enabled: panel.transcripts_enabled === false ? "disabled" : "enabled",
     open_category: panel.open_category ?? "disabled",
     sleep_category: panel.sleep_category ?? "disabled",
-    closed_category: panel.closed_category ?? "disabled",
-    status_change_log: panel.status_change_log ?? "disabled",
+    status_change_log: panel.status_change_log ?? panel.ticket_close_log ?? "disabled",
     ticket_button_click_log: panel.ticket_button_click_log ?? "disabled",
-    ticket_close_log: panel.ticket_close_log ?? "disabled",
   });
   const skipNextAutosave = useRef(true);
   const hasPendingUserChange = useRef(false);
@@ -474,11 +305,12 @@ function PanelSettingsTab({
   };
 
   const getSavedValueLabel = (key: keyof PanelSettingsForm, value: string): string => {
+    if (key === "transcripts_enabled" || key === "applicant_can_close") return t(value === "enabled" ? "transcriptsOn" : "transcriptsOff");
     if (value === "disabled") {
       return tCommon("disabled");
     }
 
-    if (key === "open_category" || key === "sleep_category" || key === "closed_category") {
+    if (key === "open_category" || key === "sleep_category") {
       return categories.find((channel) => channel.id === value)?.name ?? value;
     }
 
@@ -500,9 +332,10 @@ function PanelSettingsTab({
     resetForm();
   }, [
     panel.name,
+    panel.transcripts_enabled,
+    panel.applicant_can_close,
     panel.open_category,
     panel.sleep_category,
-    panel.closed_category,
     panel.status_change_log,
     panel.ticket_button_click_log,
     panel.ticket_close_log,
@@ -519,12 +352,12 @@ function PanelSettingsTab({
 
     const timer = setTimeout(async () => {
       const settingFields: Array<keyof PanelSettingsForm> = [
+        "applicant_can_close",
+        "transcripts_enabled",
         "open_category",
         "sleep_category",
-        "closed_category",
         "status_change_log",
         "ticket_button_click_log",
-        "ticket_close_log",
       ];
       const nextForm: PanelSettingsForm = { ...form };
       const changedFields = settingFields.filter((field) => lastSavedFormRef.current[field] !== nextForm[field]);
@@ -536,12 +369,12 @@ function PanelSettingsTab({
 
       try {
         const payload: UpdateTicketPanelRequest = {
+          applicant_can_close: nextForm.applicant_can_close === "enabled",
+          transcripts_enabled: nextForm.transcripts_enabled !== "disabled",
           open_category: toNullable(nextForm.open_category),
           sleep_category: toNullable(nextForm.sleep_category),
-          closed_category: toNullable(nextForm.closed_category),
           status_change_log: toNullable(nextForm.status_change_log),
           ticket_button_click_log: toNullable(nextForm.ticket_button_click_log),
-          ticket_close_log: toNullable(nextForm.ticket_close_log),
         };
         const res = await apiClient.tickets.updatePanel(guildId, panel.name, payload);
         if (res.error) throw new Error(res.error);
@@ -570,13 +403,22 @@ function PanelSettingsTab({
 
   return (
     <div className="space-y-6">
-      <div className="rounded-xl border border-border/60 bg-card p-4">
-        <p className="mb-3 text-xs font-semibold text-muted-foreground">{t("categories")}</p>
-        <div className="grid gap-3 sm:grid-cols-3">
-          {(["open_category", "sleep_category", "closed_category"] as const).map((key) => (
-            <div key={key} className="space-y-1.5 rounded-lg border border-border/50 bg-muted/20 p-3">
-              <Label className="text-sm">{t(key)}</Label>
+      <section className="flex items-center justify-between gap-4">
+        <div className="space-y-1"><Label htmlFor="applicant-close">{t("applicant_can_close")}</Label><p className="text-sm text-muted-foreground">{t("applicantCanCloseHint")}</p></div>
+        <Switch id="applicant-close" checked={form.applicant_can_close === "enabled"} onCheckedChange={value => set("applicant_can_close")(value ? "enabled" : "disabled")} />
+      </section>
+      <section className="flex items-center justify-between gap-4">
+        <div className="space-y-1"><Label htmlFor="panel-transcripts">{t("transcripts_enabled")}</Label><p className="text-sm text-muted-foreground">{t("transcriptsEnabledHint")}</p></div>
+        <Switch id="panel-transcripts" checked={form.transcripts_enabled !== "disabled"} onCheckedChange={value => set("transcripts_enabled")(value ? "enabled" : "disabled")} />
+      </section>
+      <section className="space-y-4">
+        <h2 className="text-base font-semibold">{t("categories")}</h2>
+        <div className="grid gap-4 sm:grid-cols-2">
+          {(["open_category", "sleep_category"] as const).map((key) => (
+            <div key={key} className="min-w-0 space-y-2">
+              <Label className="text-sm text-muted-foreground"><span aria-hidden="true" className="mr-2">{key === "open_category" ? "✅" : "💤"}</span>{t(key)}</Label>
               <ChannelCombobox
+                className="rounded-xl border-0 bg-muted/55 shadow-sm shadow-black/5 hover:bg-muted"
                 channels={catChannels}
                 value={form[key]}
                 onValueChange={set(key)}
@@ -586,28 +428,21 @@ function PanelSettingsTab({
             </div>
           ))}
         </div>
-      </div>
-      <div className="rounded-xl border border-border/60 bg-card p-4">
-        <p className="mb-3 text-xs font-semibold text-muted-foreground">{t("logChannels")}</p>
-        <div className="grid gap-3 sm:grid-cols-3">
-          {(["status_change_log", "ticket_button_click_log", "ticket_close_log"] as const).map((key) => (
-            <div key={key} className="space-y-1.5 rounded-lg border border-border/50 bg-muted/20 p-3">
-              <Label className="text-sm">{t(key)}</Label>
-              <ChannelCombobox channels={txtChannels} value={form[key]} onValueChange={set(key)} placeholder={t("selectChannel")} />
+      </section>
+      <section className="space-y-4">
+        <h2 className="text-base font-semibold">{t("logChannels")}</h2>
+        <div className="grid gap-4 sm:grid-cols-2">
+          {(["status_change_log", "ticket_button_click_log"] as const).map((key) => (
+            <div key={key} className="min-w-0 space-y-2">
+              <Label className="text-sm text-muted-foreground"><span aria-hidden="true" className="mr-2">{key === "status_change_log" ? "🔄" : key === "ticket_button_click_log" ? "🖱️" : "❌"}</span>{t(key)}</Label>
+              <ChannelCombobox className="rounded-xl border-0 bg-muted/55 shadow-sm shadow-black/5 hover:bg-muted" channels={txtChannels} value={form[key]} onValueChange={set(key)} placeholder={t("selectChannel")} />
             </div>
           ))}
         </div>
-      </div>
+      </section>
     </div>
   );
 }
-
-const BUTTON_STYLE_COLOR: Record<number, string> = {
-  1: "bg-[#5865F2]",
-  2: "bg-[#4f545c]",
-  3: "bg-[#57F287]",
-  4: "bg-[#ED4245]",
-};
 
 const createDefaultButtonSettings = (): TicketButtonSettings => ({
   questions: [],
@@ -615,7 +450,7 @@ const createDefaultButtonSettings = (): TicketButtonSettings => ({
   no_ping_mod_role: [],
   private_thread: false,
   th_min: 0,
-  num_apply: 25,
+  num_apply: 1,
   naming: "{ticket_count}-{user}",
   account_apply: false,
   player_info: false,
@@ -624,22 +459,27 @@ const createDefaultButtonSettings = (): TicketButtonSettings => ({
   roles_to_remove: [],
   townhall_requirements: {},
   new_message: null,
+  opening_message: null,
+  application_questions: [],
 });
 
 const createSettingsForm = (settings: TicketButtonSettings): UpdateButtonSettingsRequest => ({
-  questions: [...settings.questions, "", "", "", "", ""].slice(0, 5),
+  questions: [...settings.questions],
+  application_questions: settings.application_questions ? [...settings.application_questions] : settings.questions.filter(question => question.trim()).map((label, order) => ({ id: `legacy-${order}`, label, type: "text" as const, required: true, options: [], order })),
+  opening_message: settings.opening_message ?? null,
   mod_role: [...settings.mod_role],
   no_ping_mod_role: [...settings.no_ping_mod_role],
   private_thread: settings.private_thread,
   th_min: settings.th_min,
-  num_apply: settings.num_apply,
+  hero_min_percent: settings.hero_min_percent ?? 0,
+  num_apply: 1,
   naming: settings.naming || "{ticket_count}-{user}",
   account_apply: settings.account_apply,
   player_info: settings.player_info,
-  apply_clans: [...(settings.apply_clans ?? [])],
+  apply_clans: [],
   roles_to_add: [...(settings.roles_to_add ?? [])],
   roles_to_remove: [...(settings.roles_to_remove ?? [])],
-  townhall_requirements: { ...settings.townhall_requirements },
+  townhall_requirements: {},
   new_message: settings.new_message ?? null,
 });
 
@@ -650,43 +490,49 @@ const createButtonSettingsFromForm = (form: UpdateButtonSettingsRequest): Ticket
   no_ping_mod_role: [...form.no_ping_mod_role],
   private_thread: form.private_thread,
   th_min: form.th_min,
-  num_apply: form.num_apply,
+  hero_min_percent: form.hero_min_percent ?? 0,
+  num_apply: 1,
   naming: form.naming,
   account_apply: form.account_apply,
   player_info: form.player_info,
-  apply_clans: [...form.apply_clans],
+  apply_clans: [],
   roles_to_add: [...form.roles_to_add],
   roles_to_remove: [...form.roles_to_remove],
-  townhall_requirements: { ...form.townhall_requirements },
+  townhall_requirements: {},
   new_message: form.new_message ?? null,
+  opening_message: form.opening_message ?? null,
+  application_questions: form.application_questions ?? [],
 });
 
-function ButtonCard({
-  customId, label, style, settings, panelName, guildId, roles, availableEmbeds, embeds, townhallRequirementFields, onDeleted, onAppearanceUpdated,
+export function ButtonCard({
+  customId, label, style, emoji, settings, panelName, guildId, roles, embeds, onDeleted, onAppearanceUpdated,
 }: {
   readonly customId: string;
   readonly label: string;
   readonly style: number;
+  readonly emoji?: TicketButton["emoji"];
   readonly settings: TicketButtonSettings;
   readonly panelName: string;
   readonly guildId: string;
   readonly roles: DiscordRole[];
   readonly availableEmbeds: string[];
   readonly embeds: ServerEmbed[];
-  readonly townhallRequirementFields: string[];
   readonly onDeleted: () => void;
   readonly onAppearanceUpdated: (label: string, style: number) => void;
 }) {
   const t = useTranslations("TicketsSettingsPage");
   const tCommon = useTranslations("Common");
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const namingInputId = useId();
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [editLabel, setEditLabel] = useState(label);
-  const [editStyle, setEditStyle] = useState(style);
-  const [settingsSection, setSettingsSection] = useState<"general" | "requirements" | "embeds">("general");
+  const editStyle = style;
+  const [openingDirty, setOpeningDirty] = useState(false);
+  const [settingsSection, setSettingsSection] = useState<"general" | "questions" | "embeds">("general");
   const [latestSettings, setLatestSettings] = useState<TicketButtonSettings>(settings);
 
   const handleDeleteButton = async () => {
@@ -694,7 +540,8 @@ function ButtonCard({
     try {
       const res = await apiClient.tickets.deleteButton(guildId, panelName, customId);
       if (res.error) throw new Error(res.error);
-      toast({ title: tCommon("success"), description: t("buttonDeleted") });
+      toast({ title: tCommon("success"), description: t("actionDeleted") });
+      await queryClient.invalidateQueries({ queryKey: ticketPanelsQuery(guildId).queryKey, exact: true });
       onDeleted();
     } catch (err) {
       toast({ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
@@ -705,7 +552,6 @@ function ButtonCard({
   };
 
   const [form, setForm] = useState<UpdateButtonSettingsRequest>(() => createSettingsForm(settings));
-  const [clanTagInput, setClanTagInput] = useState("");
 
   useEffect(() => {
     if (settingsOpen) return;
@@ -716,81 +562,26 @@ function ButtonCard({
     if (!settingsOpen) return;
     setSettingsSection("general");
     setEditLabel(label);
-    setEditStyle(style);
     setForm(createSettingsForm(latestSettings));
-    setClanTagInput("");
   }, [settingsOpen, label, style, latestSettings]);
-  const hasDisabledEmbedOption = availableEmbeds.includes(LEGACY_DISABLED_EMBED_TOKEN)
-    || settings.new_message === LEGACY_DISABLED_EMBED_TOKEN;
-  const hasLegacyDisabledToken = form.new_message === LEGACY_DISABLED_EMBED_TOKEN && !hasDisabledEmbedOption;
-  const effectiveButtonEmbedName = hasLegacyDisabledToken ? null : (form.new_message ?? null);
-  const embedOptions = Array.from(new Set([
-    ...(settings.new_message && (settings.new_message !== LEGACY_DISABLED_EMBED_TOKEN || hasDisabledEmbedOption) ? [settings.new_message] : []),
-    ...availableEmbeds,
-  ])).sort((a, b) => a.localeCompare(b));
-  const selectedButtonEmbed = embeds.find((embed) => embed.name === (effectiveButtonEmbedName ?? ""));
-  const selectedButtonEmbedData = toEmbedDataRecord(selectedButtonEmbed?.data);
-  const buttonEmbedPreviews = selectedButtonEmbedData ? extractEmbeds(selectedButtonEmbedData) : [];
-  const buttonMessageContentPreview = selectedButtonEmbedData ? extractMessageContent(selectedButtonEmbedData) : null;
-  const isUsingDefaultTicketMessage = effectiveButtonEmbedName === null;
-  const effectiveTownhallRequirementFields = useMemo(
-    () => normalizeTownhallRequirementFields(townhallRequirementFields),
-    [townhallRequirementFields],
-  );
-
   const setField = <K extends keyof UpdateButtonSettingsRequest>(key: K, val: UpdateButtonSettingsRequest[K]) =>
     setForm((p) => ({ ...p, [key]: val }));
-  const setQuestion = (i: number, val: string) =>
-    setForm((p) => { const q = [...p.questions]; q[i] = val; return { ...p, questions: q }; });
   const addRole = (type: "mod_role" | "no_ping_mod_role" | "roles_to_add" | "roles_to_remove") => (id: string) =>
     setForm((p) => ({ ...p, [type]: [...p[type], id] }));
   const removeRole = (type: "mod_role" | "no_ping_mod_role" | "roles_to_add" | "roles_to_remove", id: string) =>
     setForm((p) => ({ ...p, [type]: p[type].filter((r) => r !== id) }));
 
-  const addClanTag = () => {
-    const normalizedTag = clanTagInput.trim().toUpperCase();
-    const tag = normalizedTag.startsWith("#") ? normalizedTag : `#${normalizedTag}`;
-    if (!tag || tag === "#" || form.apply_clans.includes(tag)) { setClanTagInput(""); return; }
-    setForm((p) => ({ ...p, apply_clans: [...p.apply_clans, tag] }));
-    setClanTagInput("");
-  };
-  const removeClanTag = (tag: string) =>
-    setForm((p) => ({ ...p, apply_clans: p.apply_clans.filter((c) => c !== tag) }));
-
-  const addTHRow = () => {
-    const th = String(
-      [3,4,5,6,7,8,9,10,11,12,13,14,15,16,17].find((n) => !form.townhall_requirements[String(n)]) ?? 17
-    );
-    setForm((p) => ({
-      ...p,
-      townhall_requirements: {
-        ...p.townhall_requirements,
-        [th]: createTownhallRequirementRow(th, effectiveTownhallRequirementFields),
-      },
-    }));
-  };
-  const removeTHRow = (th: string) =>
-    setForm((p) => {
-      const next = { ...p.townhall_requirements };
-      delete next[th];
-      return { ...p, townhall_requirements: next };
-    });
-  const setTHField = (th: string, field: string, val: number) =>
-    setForm((p) => ({
-      ...p,
-      townhall_requirements: {
-        ...p.townhall_requirements,
-        [th]: { ...p.townhall_requirements[th], [field]: val },
-      },
-    }));
-
   const buildButtonSettingsPayload = (sourceForm: UpdateButtonSettingsRequest): UpdateButtonSettingsRequest => {
-    const normalizedNewMessage = sourceForm.new_message === LEGACY_DISABLED_EMBED_TOKEN && !hasDisabledEmbedOption
+    const normalizedNewMessage = sourceForm.new_message === LEGACY_DISABLED_EMBED_TOKEN
       ? null
       : (sourceForm.new_message ?? null);
 
     return {
       ...sourceForm,
+      num_apply: 1, apply_clans: [], townhall_requirements: {},
+      th_min: sourceForm.account_apply ? sourceForm.th_min : 0,
+      hero_min_percent: sourceForm.account_apply ? sourceForm.hero_min_percent ?? 0 : 0,
+      player_info: sourceForm.account_apply && sourceForm.player_info,
       new_message: normalizedNewMessage,
       questions: sourceForm.questions.filter(Boolean),
     };
@@ -802,6 +593,7 @@ function ButtonCard({
     const appearanceRes = await apiClient.tickets.updateButtonAppearance(guildId, panelName, customId, {
       label: editLabel,
       style: editStyle,
+      ...(emoji ? { emoji } : {}),
     });
     if (appearanceRes.error) throw new Error(appearanceRes.error);
     return true;
@@ -823,18 +615,19 @@ function ButtonCard({
     const rollbackRes = await apiClient.tickets.updateButtonAppearance(guildId, panelName, customId, {
       label,
       style,
+      ...(emoji ? { emoji } : {}),
     });
     if (!rollbackRes.error) {
       onAppearanceUpdated(label, style);
     }
   };
 
-  const handleSave = async () => {
-    if (!editLabel.trim()) return;
+  const handleSave = async (sourceForm = form, propagateError = false) => {
+    if (!editLabel.trim() || invalidQuestions) throw new Error(t("invalidApplicationQuestions"));
 
     setIsSaving(true);
     const didChangeAppearance = editLabel !== label || editStyle !== style;
-    const payloadForm = buildButtonSettingsPayload(form);
+    const payloadForm = buildButtonSettingsPayload(sourceForm);
     let appearanceUpdated = false;
 
     try {
@@ -842,15 +635,21 @@ function ButtonCard({
       await saveButtonSettings(payloadForm);
       setLatestSettings(createButtonSettingsFromForm(payloadForm));
       syncAppearanceIfNeeded(didChangeAppearance);
-      toast({ title: tCommon("success"), description: t("buttonSaved", { label: editLabel }) });
+      await queryClient.invalidateQueries({ queryKey: ticketPanelsQuery(guildId).queryKey, exact: true });
+      toast({ title: tCommon("success"), description: t("actionSaved", { label: editLabel }) });
       setSettingsOpen(false);
     } catch (err) {
       await rollbackAppearanceIfNeeded(appearanceUpdated);
       toast({ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
+      if (propagateError) throw err;
     } finally {
       setIsSaving(false);
     }
   };
+
+  const invalidQuestions = (form.application_questions?.length ?? 0) > (form.account_apply ? 4 : 5)
+    || (form.application_questions ?? []).some(question => !question.label.trim() || question.label.length > 45)
+    || hasInvalidDropdownOptions((form.application_questions ?? []).map(question => ({ ...question, options: [...question.options] })));
 
   const roleOptions = roles.filter((r) => r.name !== "@everyone");
   const namingPlaceholders = [
@@ -862,57 +661,33 @@ function ButtonCard({
     "{emoji_status}",
   ] as const;
 
-  const STYLE_COLORS: Record<number, string> = { 1: "bg-[#5865F2]", 2: "bg-[#4f545c]", 3: "bg-[#57F287]", 4: "bg-[#ED4245]" };
-
-  return (
-    <>
-      {/* Settings dialog */}
-      <Dialog open={settingsOpen} onOpenChange={setSettingsOpen}>
-        <DialogContent variant="workspace" className="flex min-h-0 flex-col gap-0 overflow-hidden bg-background sm:max-w-5xl">
-          <DialogHeader className="shrink-0 px-5 pb-4 pr-16 pt-5 text-left sm:px-7 sm:pb-5 sm:pr-16 sm:pt-7">
-            <DialogTitle>{t("editButtonTitle")}</DialogTitle>
-            <DialogDescription className="sr-only">{t("editButtonDescription")}</DialogDescription>
-          </DialogHeader>
+  const settingsEditor = (
+      <section className="min-w-0 space-y-5" aria-label={t("editTicketAction")}>
           <Tabs
             value={settingsSection}
-            onValueChange={(value) => setSettingsSection(value as "general" | "requirements" | "embeds")}
-            className="flex min-h-0 flex-1 flex-col overflow-hidden"
+            onValueChange={(value) => setSettingsSection(value as "general" | "questions" | "embeds")}
+            className="min-w-0 space-y-5"
           >
-            <DashboardTabsList className="mx-5 w-[calc(100%-2.5rem)] shrink-0 sm:mx-7 sm:w-[calc(100%-3.5rem)]">
+            <DashboardTabsList className="w-fit max-w-full">
               <DashboardTabTrigger value="general">
-                General
+                {t("generalSettings")}
               </DashboardTabTrigger>
-              <DashboardTabTrigger value="requirements">
-                Requirements
-              </DashboardTabTrigger>
-              <DashboardTabTrigger value="embeds">
-                Embeds and Questions
-              </DashboardTabTrigger>
+              <DashboardTabTrigger value="embeds">{t("messageSection")}</DashboardTabTrigger>
+              <DashboardTabTrigger value="questions">{t("questionsSection")}</DashboardTabTrigger>
             </DashboardTabsList>
 
             <TabsContent value="general" className={cn(TICKET_WORKSPACE_TAB_CLASS, "space-y-4")}>
-              <div className="space-y-4 rounded-xl border border-border bg-background p-4">
-                <div className="space-y-1.5">
-                  <Label>{t("buttonLabel")}</Label>
-                  <Input value={editLabel} onChange={(e) => setEditLabel(e.target.value)} placeholder={t("buttonLabelPlaceholder")} maxLength={80} />
-                </div>
-                <div className="space-y-1.5">
-                  <Label>{t("buttonStyle")}</Label>
-                  <div className="flex gap-2">
-                    {([1, 2, 3, 4] as const).map((s) => (
-                      <button key={s} type="button" onClick={() => setEditStyle(s)}
-                        className={cn("h-7 w-7 rounded", STYLE_COLORS[s], editStyle === s ? "ring-2 ring-offset-2 ring-offset-background ring-white/80" : "opacity-60 hover:opacity-100")} />
-                    ))}
-                  </div>
-                </div>
+              <div className="max-w-xl space-y-2">
+                <Label htmlFor={`action-name-${customId}`}>{t("actionName")}</Label>
+                <Input id={`action-name-${customId}`} value={editLabel} onChange={(e) => setEditLabel(e.target.value)} placeholder={t("actionNamePlaceholder")} maxLength={80} className={TICKET_INPUT_CLASS} />
               </div>
 
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid gap-x-6 gap-y-5 sm:grid-cols-2">
                 {(["mod_role", "no_ping_mod_role"] as const).map((type) => (
-                  <div key={type} className="space-y-2 rounded-xl border border-border bg-background p-4">
+                  <div key={type} className="min-w-0 space-y-2">
                     <Label className="text-sm font-medium">{t(type === "mod_role" ? "modRoles" : "noPingRoles")}</Label>
                     <p className="text-xs text-muted-foreground">{t(type === "mod_role" ? "modRolesHint" : "noPingRolesHint")}</p>
-                    <div className="flex flex-wrap gap-2 min-h-[28px]">
+                    <div className={cn("flex flex-wrap gap-2", form[type].length === 0 && "hidden")}>
                       {form[type].map((id) => {
                         const role = roleOptions.find((r) => r.id === id);
                         return (
@@ -923,17 +698,17 @@ function ButtonCard({
                         );
                       })}
                     </div>
-                    <RoleCombobox roles={roleOptions} mode="add" excludeRoleIds={[...form[type]]} onAdd={addRole(type)} />
+                    <RoleCombobox className={TICKET_INPUT_CLASS} roles={roleOptions} mode="add" excludeRoleIds={[...form[type]]} onAdd={addRole(type)} />
                   </div>
                 ))}
               </div>
 
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid gap-x-6 gap-y-5 sm:grid-cols-2">
                 {(["roles_to_add", "roles_to_remove"] as const).map((type) => (
-                  <div key={type} className="space-y-2 rounded-xl border border-border bg-background p-4">
+                  <div key={type} className="min-w-0 space-y-2">
                     <Label className="text-sm font-medium">{t(type === "roles_to_add" ? "rolesToAdd" : "rolesToRemove")}</Label>
                     <p className="text-xs text-muted-foreground">{t(type === "roles_to_add" ? "rolesToAddHint" : "rolesToRemoveHint")}</p>
-                    <div className="flex flex-wrap gap-2 min-h-[28px]">
+                    <div className={cn("flex flex-wrap gap-2", form[type].length === 0 && "hidden")}>
                       {form[type].map((id) => {
                         const role = roleOptions.find((r) => r.id === id);
                         return (
@@ -944,7 +719,7 @@ function ButtonCard({
                         );
                       })}
                     </div>
-                    <RoleCombobox roles={roleOptions} mode="add" excludeRoleIds={[...form[type]]} onAdd={addRole(type)} />
+                    <RoleCombobox className={TICKET_INPUT_CLASS} roles={roleOptions} mode="add" excludeRoleIds={[...form[type]]} onAdd={addRole(type)} />
                   </div>
                 ))}
               </div>
@@ -952,9 +727,8 @@ function ButtonCard({
               <div className="grid gap-3 sm:grid-cols-2">
                 {([
                   ["private_thread", "privateThread", "privateThreadHint"],
-                  ["player_info", "playerInfo", "playerInfoHint"],
                 ] as const).map(([field, labelKey, hintKey]) => (
-                  <div key={field} className="flex items-center justify-between rounded-xl border border-border bg-background p-3">
+                  <div key={field} className="flex items-center justify-between gap-4 py-2">
                     <div>
                       <p className="text-sm font-medium">{t(labelKey)}</p>
                       <p className="text-xs text-muted-foreground">{t(hintKey)}</p>
@@ -967,15 +741,15 @@ function ButtonCard({
                 ))}
               </div>
 
-              <div className="rounded-xl border border-border bg-background p-4">
+              <div className="min-w-0 space-y-3">
                 <div className="space-y-1.5">
-                  <Label htmlFor="ticket-naming-convention" className="text-sm font-medium">{t("naming")}</Label>
+                  <Label htmlFor={namingInputId} className="text-sm font-medium">{t("naming")}</Label>
                   <Input
-                    id="ticket-naming-convention"
+                    id={namingInputId}
                     value={form.naming}
                     onChange={(e) => setField("naming", e.target.value)}
                     placeholder="{ticket_count}-{user}"
-                    className="font-mono text-sm"
+                    className={cn(TICKET_INPUT_CLASS, "font-mono text-sm")}
                   />
                 </div>
                 <p className="mt-3 text-xs font-medium text-muted-foreground">{t("namingPlaceholders")}</p>
@@ -986,7 +760,7 @@ function ButtonCard({
                       variant="secondary"
                       className="cursor-pointer font-mono text-xs hover:bg-primary/20"
                       onClick={() => {
-                        const input = document.getElementById("ticket-naming-convention") as HTMLInputElement | null;
+                        const input = document.getElementById(namingInputId) as HTMLInputElement | null;
                         if (!input) return;
                         const start = input.selectionStart ?? form.naming.length;
                         const end = input.selectionEnd ?? form.naming.length;
@@ -1007,203 +781,55 @@ function ButtonCard({
                   ))}
                 </div>
               </div>
+              <section className="space-y-4 pt-2">
+                <div className="flex items-center justify-between gap-4">
+                  <div className="space-y-1"><Label htmlFor={`require-account-${customId}`}>{t("accountApply")}</Label><p className="text-xs text-muted-foreground">{t("singleAccountHint")}</p></div>
+                  <Switch id={`require-account-${customId}`} checked={form.account_apply} onCheckedChange={value => setField("account_apply", value)} />
+                </div>
+                {form.account_apply && <div className="grid gap-x-6 gap-y-5 sm:grid-cols-2">
+                  <div className="space-y-2"><Label htmlFor={`min-th-${customId}`}>{t("thMin")}</Label>
+                    <Input id={`min-th-${customId}`} className={TICKET_INPUT_CLASS} type="number" min={0} max={18} value={form.th_min} onChange={event => setField("th_min", Number(event.target.value))} /></div>
+                  <div className="space-y-2"><div className="flex items-center gap-2"><Label htmlFor={`hero-percent-${customId}`}>{t("heroMinPercent")}</Label><InfoPopover content={t("heroMinPercentHint")} /></div>
+                    <div className="relative"><Input id={`hero-percent-${customId}`} className={cn(TICKET_INPUT_CLASS, "pr-10")} type="number" min={0} max={100} value={form.hero_min_percent ?? 0} onChange={event => setField("hero_min_percent", Number(event.target.value))} /><span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">%</span></div></div>
+                </div>}
+              </section>
             </TabsContent>
 
-            <TabsContent value="requirements" className={cn(TICKET_WORKSPACE_TAB_CLASS, "space-y-4")}>
-              <div className="grid gap-4 sm:grid-cols-3">
-                <div className="space-y-2 rounded-xl border border-border bg-background p-4 sm:col-span-3">
-                  <Label className="text-sm font-medium">{t("applyClans")}</Label>
-                  <p className="text-xs text-muted-foreground">{t("applyClansHint")}</p>
-                  <div className="flex flex-wrap gap-2 min-h-[28px]">
-                    {form.apply_clans.map((tag) => (
-                      <Badge key={tag} variant="secondary" className="flex items-center gap-1 font-mono">
-                        {tag}
-                        <button onClick={() => removeClanTag(tag)}><X className="h-3 w-3" /></button>
-                      </Badge>
-                    ))}
-                  </div>
-                  <div className="flex gap-2">
-                    <Input
-                      value={clanTagInput}
-                      onChange={(e) => setClanTagInput(e.target.value)}
-                      onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addClanTag(); } }}
-                      placeholder={t("clanTagPlaceholder")}
-                      className="font-mono"
-                    />
-                    <Button variant="outline" size="sm" onClick={addClanTag} type="button">
-                      <Plus className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="space-y-1.5 rounded-xl border border-border bg-background p-4">
-                  <Label className="text-sm font-medium">{t("thMin")}</Label>
-                  <Input type="number" min={0} max={17} value={form.th_min} onChange={(e) => setField("th_min", Number(e.target.value))} />
-                </div>
-                <div className="space-y-1.5 rounded-xl border border-border bg-background p-4">
-                  <Label className="text-sm font-medium">{t("numApply")}</Label>
-                  <Input type="number" min={1} max={25} value={form.num_apply} onChange={(e) => setField("num_apply", Number(e.target.value))} />
-                  <p className="text-xs text-muted-foreground">{t("numApplyHint")}</p>
-                </div>
-
-                <div className="flex items-center justify-between rounded-xl border border-border bg-background p-3">
-                  <div>
-                    <p className="text-sm font-medium">{t("accountApply")}</p>
-                    <p className="text-xs text-muted-foreground">{t("accountApplyHint")}</p>
-                  </div>
-                  <Switch
-                    checked={form.account_apply}
-                    onCheckedChange={(v) => setField("account_apply", v)}
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2 rounded-xl border border-border bg-background p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Label className="text-sm font-medium">{t("thRequirements")}</Label>
-                    <p className="text-xs text-muted-foreground">{t("thRequirementsHint")}</p>
-                  </div>
-                  <Button variant="outline" size="sm" onClick={addTHRow} type="button"
-                    disabled={Object.keys(form.townhall_requirements).length >= 15}>
-                    <Plus className="mr-1.5 h-4 w-4" />{t("addThLevel")}
-                  </Button>
-                </div>
-                {Object.keys(form.townhall_requirements).length > 0 && (
-                  <div className="overflow-x-auto rounded-lg border border-border">
-                    <table className="w-full text-sm">
-                      <thead>
-                        <tr className="border-b border-border bg-muted/50">
-                          <th className="px-3 py-2 text-left font-medium text-xs text-muted-foreground">{t("thLevel")}</th>
-                          {effectiveTownhallRequirementFields.map((h) => (
-                            <th key={h} className="px-3 py-2 text-center font-medium text-xs text-muted-foreground">{h}</th>
-                          ))}
-                          <th className="px-3 py-2" />
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {Object.entries(form.townhall_requirements)
-                          .sort(([a], [b]) => Number(a) - Number(b))
-                          .map(([th, reqs]) => (
-                            <tr key={th} className="border-b border-border last:border-0">
-                              <td className="px-3 py-2 font-semibold">TH{th}</td>
-                              {effectiveTownhallRequirementFields.map((hero) => (
-                                <td key={hero} className="px-2 py-1.5">
-                                  <Input
-                                    type="number" min={0} max={100}
-                                    value={reqs[hero] ?? 0}
-                                    onChange={(e) => setTHField(th, hero, Number(e.target.value))}
-                                    className="h-8 w-16 text-center px-1"
-                                  />
-                                </td>
-                              ))}
-                              <td className="px-2 py-1.5">
-                                <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive"
-                                  onClick={() => removeTHRow(th)}>
-                                  <Trash2 className="h-4 w-4" />
-                                </Button>
-                              </td>
-                            </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
-              </div>
+            <TabsContent value="embeds" className={TICKET_WORKSPACE_TAB_CLASS} forceMount>
+              <section className="min-w-0 space-y-3">
+                <div className="flex items-center gap-2"><h3 className="text-sm font-semibold">{t("openingMessage")}</h3><InfoPopover content={t("openingMessageHint")} /></div>
+                <Suspense fallback={<Skeleton className="h-48 w-full rounded-2xl" />}>
+                  <NativeMessageEditor variant="ticket-panel" serverId={guildId} roles={roles}
+                    initialData={form.opening_message ? form.opening_message as Record<string, unknown> : toEmbedDataRecord(embeds.find(embed => embed.name === form.new_message)?.data)}
+                    isSaving={isSaving} onDirtyChange={setOpeningDirty} onCancel={() => setSettingsOpen(false)}
+                    onSave={async payload => { const message = nativePanelMessage(payload); await handleSave({ ...form, new_message: null, opening_message: message }, true); }} />
+                </Suspense>
+              </section>
             </TabsContent>
-
-            <TabsContent value="embeds" className={cn(TICKET_WORKSPACE_TAB_CLASS, "space-y-4")}>
-              <div className="space-y-4">
-                <div className="rounded-xl border border-border bg-background p-4">
-                  <div className="grid gap-4 lg:grid-cols-2 items-start">
-                    <div className="space-y-2">
-                      <Label className="text-sm font-medium">{t("ticketOpenEmbed")}</Label>
-                      <p className="text-xs text-muted-foreground">{t("ticketOpenEmbedHint")}</p>
-                      <Select
-                        value={effectiveButtonEmbedName ?? DEFAULT_TICKET_MESSAGE_SELECT_VALUE}
-                        onValueChange={(value) => setField("new_message", value === DEFAULT_TICKET_MESSAGE_SELECT_VALUE ? null : value)}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder={t("selectEmbed")} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value={DEFAULT_TICKET_MESSAGE_SELECT_VALUE}>{t("noCustomMessage")}</SelectItem>
-                          {embedOptions.map((embed) => (
-                            <SelectItem key={embed} value={embed}>{embed}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium">Preview</Label>
-                  <div className="space-y-2">
-                    {(() => {
-                      if (isUsingDefaultTicketMessage) {
-                        return (
-                          <div className="rounded-md border-l-4 bg-[#2b2d31]/70 p-3 text-sm leading-relaxed text-slate-100 whitespace-pre-line" style={{ borderLeftColor: DEFAULT_PREVIEW_ACCENT }}>
-                            {"This ticket will be handled shortly!\nPlease be patient."}
-                          </div>
-                        );
-                      }
-                      if (buttonEmbedPreviews.length > 0) {
-                        return (
-                          <div className="space-y-2">
-                            {buttonEmbedPreviews.map((embed, i) => (
-                              <DiscordEmbedPreview
-                                key={`${selectedButtonEmbed?.name ?? "button-embed"}-${i}`}
-                                embed={embed}
-                              />
-                            ))}
-                          </div>
-                        );
-                      }
-                      if (buttonMessageContentPreview) {
-                        return (
-                          <div className="rounded-md border-l-4 bg-[#2b2d31]/70 p-3 text-sm leading-relaxed text-slate-100 whitespace-pre-line" style={{ borderLeftColor: DEFAULT_PREVIEW_ACCENT }}>
-                            {buttonMessageContentPreview}
-                          </div>
-                        );
-                      }
-                      return (
-                        <div className="rounded-lg border border-dashed border-border p-4 text-xs text-muted-foreground">
-                          {t("panelEmbedPreviewEmpty")}
-                        </div>
-                      );
-                    })()}
-                  </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-2 rounded-xl border border-border bg-background p-4">
-                  <Label className="text-sm font-medium">{t("questions")}</Label>
-                  <p className="text-xs text-muted-foreground">{t("questionsHint")}</p>
-                  <div className="space-y-2">
-                    {form.questions.map((q, i) => (
-                      <Input key={i} value={q} onChange={(e) => setQuestion(i, e.target.value)} placeholder={`${t("question")} ${i + 1}`} /> // NOSONAR — index is the only stable key for these items (skeleton/static list)
-                    ))}
-                  </div>
-                </div>
-              </div>
+            <TabsContent value="questions" className={TICKET_WORKSPACE_TAB_CLASS}>
+              <SignupQuestionsEditor context="ticket" accountEnabled={form.account_apply}
+                questions={(form.application_questions ?? []).map(question => ({ ...question, options: [...question.options] }))}
+                onChange={questions => setField("application_questions", questions.map(question => ({ ...question, options: question.options ?? [] })))} />
             </TabsContent>
           </Tabs>
-          <DialogFooter className="shrink-0 flex-row gap-2 border-t border-border/50 bg-background px-5 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-7 sm:py-4 [&>*]:w-auto">
+          {invalidQuestions && <p role="alert" className="text-sm text-destructive">{t("invalidApplicationQuestions")}</p>}
+          <div className="flex justify-end gap-2 pt-2">
             <Button variant="secondary" className="min-w-0 flex-1 border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted sm:flex-none" onClick={() => setSettingsOpen(false)}>{tCommon("cancel")}</Button>
-            <Button className="min-w-0 flex-1 sm:flex-none" onClick={handleSave} disabled={isSaving || !editLabel.trim()}>
+            <Button className="min-w-0 flex-1 sm:flex-none" onClick={() => void handleSave()} disabled={isSaving || !editLabel.trim() || openingDirty || invalidQuestions}>
               {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {tCommon("save")}
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
+          </div>
+      </section>
+  );
+  return (
+    <>
       {/* Confirm delete dialog */}
       <Dialog open={confirmDeleteOpen} onOpenChange={setConfirmDeleteOpen}>
         <DialogContent className="sm:max-w-sm">
           <DialogHeader>
-            <DialogTitle>{t("confirmDeleteButton", { label })}</DialogTitle>
-            <DialogDescription>{t("confirmDeleteButtonHint")}</DialogDescription>
+            <DialogTitle>{t("deleteTicketAction", { label })}</DialogTitle>
+            <DialogDescription>{t("deleteTicketActionHint")}</DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button className={CANCEL_BUTTON_CLASS} onClick={() => setConfirmDeleteOpen(false)}>{tCommon("cancel")}</Button>
@@ -1215,11 +841,10 @@ function ButtonCard({
         </DialogContent>
       </Dialog>
 
-      <div className="overflow-hidden rounded-xl border border-border/60 bg-card">
-        <div className="flex w-full flex-wrap items-center gap-3 p-4">
+      <article className="min-w-0 rounded-3xl bg-card p-5 shadow-sm shadow-black/5">
+        <div className="flex w-full flex-wrap items-center gap-3">
           <div className="flex flex-1 min-w-0 flex-wrap items-center gap-3">
-          <span className={`h-3 w-3 rounded-sm shrink-0 ${BUTTON_STYLE_COLOR[style] ?? "bg-muted"}`} />
-          <span className="min-w-0 flex-1 font-medium">{label}</span>
+          <button type="button" aria-expanded={settingsOpen} onClick={() => setSettingsOpen(open => !open)} className="flex min-w-0 flex-1 items-center gap-2 rounded-lg text-left font-semibold focus-visible:ring-2 focus-visible:ring-ring"><ChevronDown className={cn("h-4 w-4 text-muted-foreground transition-transform", settingsOpen && "rotate-180")} />{label}</button>
           <div className="flex flex-wrap items-center gap-2 text-xs">
             {settings.account_apply && <Badge variant="secondary">{t("badge.accountApply")}</Badge>}
             {settings.private_thread && <Badge variant="secondary">{t("badge.privateThread")}</Badge>}
@@ -1228,16 +853,17 @@ function ButtonCard({
         </div>
           <div className="flex items-center gap-1 shrink-0">
             <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-foreground"
-              onClick={() => { setEditLabel(label); setEditStyle(style); setSettingsOpen(true); }}>
+              aria-label={t("editTicketAction")} onClick={() => setSettingsOpen(open => !open)}>
               <Settings className="h-3.5 w-3.5" />
             </Button>
             <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive/80 hover:bg-destructive/10 hover:text-destructive"
-              onClick={() => setConfirmDeleteOpen(true)}>
+              aria-label={tCommon("delete")} onClick={() => setConfirmDeleteOpen(true)}>
               <Trash2 className="h-3.5 w-3.5" />
             </Button>
           </div>
         </div>
-      </div>
+        {settingsOpen && <div className="pt-5">{settingsEditor}</div>}
+      </article>
     </>
   );
 }
@@ -1246,7 +872,7 @@ function createLocalMessageId(): string {
   return globalThis.crypto.randomUUID();
 }
 
-export function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly guildId: string }) {
+export function MessagesTab({ panel, guildId, inline = false }: { readonly panel: TicketPanel; readonly guildId: string; readonly inline?: boolean }) {
   const t = useTranslations("TicketsSettingsPage");
   const tCommon = useTranslations("Common");
   const { toast } = useToast();
@@ -1355,7 +981,7 @@ export function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; r
 
   return (
     <>
-      <Dialog open={editOpen} onOpenChange={(open) => {
+      <TicketEditorSurface inline={inline} busy={isSaving} open={editOpen} title={t("editMessagesTitle")} description={t("editMessagesDescription")} onOpenChange={(open) => {
         if (isSaving) return;
         setEditOpen(open);
         if (open) {
@@ -1366,12 +992,6 @@ export function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; r
         setDraftMessages(cloneMessages(messages));
         setExpandedEditorIds(new Set());
       }}>
-        <DialogContent variant="workspace" closeLabel={tCommon("close")} aria-busy={isSaving} className="flex min-h-0 flex-col gap-0 overflow-hidden bg-background sm:max-w-3xl">
-          <DialogHeader className="shrink-0 px-5 pb-4 pr-16 pt-5 text-left sm:px-7 sm:pb-5 sm:pr-16 sm:pt-7">
-            <DialogTitle>{t("editMessagesTitle")}</DialogTitle>
-            <DialogDescription>{t("editMessagesDescription")}</DialogDescription>
-          </DialogHeader>
-
           <fieldset disabled={isSaving} className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain px-5 py-5 pb-8 sm:px-7">
             <div className="flex items-center justify-between gap-3">
               <p className="text-xs text-muted-foreground">{t("messagesMaxHint")}</p>
@@ -1478,10 +1098,9 @@ export function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; r
               {tCommon("save")}
             </Button>
           </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      </TicketEditorSurface>
 
-      <div className="space-y-4">
+      {(!inline || !editOpen) && <div className="space-y-4">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0">
             <p className="text-sm font-medium">{t("approveMessages")}</p>
@@ -1527,13 +1146,13 @@ export function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; r
             })}
           </div>
         )}
-      </div>
+      </div>}
     </>
   );
 }
 
 function PanelCard({
-  panel, categories, textChannels, roles, guildId, availableEmbeds, embeds, townhallRequirementFields, onDeleted, onConfigure,
+  panel, categories, textChannels, roles, guildId, availableEmbeds, embeds, onDeleted, detail = false,
 }: {
   readonly panel: TicketPanel;
   readonly categories: DiscordChannel[];
@@ -1542,42 +1161,23 @@ function PanelCard({
   readonly guildId: string;
   readonly availableEmbeds: string[];
   readonly embeds: ServerEmbed[];
-  readonly townhallRequirementFields: string[];
   readonly onDeleted: () => void;
-  readonly onConfigure: () => void;
+  readonly detail?: boolean;
 }) {
   const t = useTranslations("TicketsSettingsPage");
   const tCommon = useTranslations("Common");
   const { toast } = useToast();
-  const [configOpen, setConfigOpen] = useState(false);
   const [components, setComponents] = useState(panel.components);
+  useEffect(() => setComponents(panel.components), [panel.components]);
   const [confirmDeletePanelOpen, setConfirmDeletePanelOpen] = useState(false);
   const [isDeletingPanel, setIsDeletingPanel] = useState(false);
   const [addButtonOpen, setAddButtonOpen] = useState(false);
   const [newButtonLabel, setNewButtonLabel] = useState("");
-  const [newButtonStyle, setNewButtonStyle] = useState(2);
   const [isAddingButton, setIsAddingButton] = useState(false);
-  const [activeConfigTab, setActiveConfigTab] = useState("ticket-panel");
-  const [previewOpen, setPreviewOpen] = useState(false);
-
-  const STYLE_COLORS: Record<number, string> = { 1: "bg-[#5865F2]", 2: "bg-[#4f545c]", 3: "bg-[#57F287]", 4: "bg-[#ED4245]" };
-  const selectedPanelEmbed = embeds.find((embed) => embed.name === panel.embed_name);
-  const selectedPanelEmbedData = toEmbedDataRecord(selectedPanelEmbed?.data);
-  const panelPreviewEmbeds = selectedPanelEmbedData ? extractEmbeds(selectedPanelEmbedData) : [];
-  const panelPreviewContent = selectedPanelEmbedData ? extractMessageContent(selectedPanelEmbedData) : null;
-  const panelPreviewProfile = selectedPanelEmbedData ? extractMessageProfile(selectedPanelEmbedData) : null;
-  const configuredCategoryCount = [panel.open_category, panel.sleep_category, panel.closed_category].filter(Boolean).length;
-  const configuredLogCount = [panel.status_change_log, panel.ticket_button_click_log, panel.ticket_close_log].filter(Boolean).length;
-  const hasPanelPreview = panelPreviewEmbeds.length > 0 || Boolean(panelPreviewContent) || Boolean(panelPreviewProfile);
-
-  const getPreviewButtonClass = (style: number): string => {
-    switch (style) {
-      case 1: return "bg-[#5865f2] text-white";
-      case 3: return "bg-[#3ba55d] text-white";
-      case 4: return "bg-[#ed4245] text-white";
-      default: return "bg-[#4e5058] text-white";
-    }
-  };
+  const params = useSearchParams();
+  const [activeConfigTab, setActiveConfigTab] = useState(params.get("tab") === "ticket-panel" ? "ticket-panel" : "activity");
+  const configuredCategoryCount = [panel.open_category, panel.sleep_category].filter(Boolean).length;
+  const configuredLogCount = [panel.status_change_log ?? panel.ticket_close_log, panel.ticket_button_click_log].filter(Boolean).length;
 
   const handleDeletePanel = async () => {
     setIsDeletingPanel(true);
@@ -1601,11 +1201,11 @@ function PanelCard({
     try {
       const res = await apiClient.tickets.createButton(guildId, panel.name, {
         label: newButtonLabel,
-        style: newButtonStyle,
+        style: 2,
         emoji: { name: "📩" },
       });
       if (res.error) throw new Error(res.error);
-      toast({ title: tCommon("success"), description: t("buttonAdded") });
+      toast({ title: tCommon("success"), description: t("actionAdded") });
       // Reload panel data by fetching fresh panels
       apiCache.invalidate(getTicketsPanelsCacheKey(guildId));
       const panelsRes = await apiCache.get(getTicketsPanelsCacheKey(guildId), () => apiClient.tickets.getPanels(guildId));
@@ -1613,7 +1213,6 @@ function PanelCard({
       if (fresh) setComponents(fresh.components);
       setAddButtonOpen(false);
       setNewButtonLabel("");
-      setNewButtonStyle(2);
     } catch (err) {
       toast({ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
     } finally {
@@ -1644,42 +1243,33 @@ function PanelCard({
       <Dialog open={addButtonOpen} onOpenChange={setAddButtonOpen}>
         <DialogContent className="sm:max-w-sm">
           <DialogHeader>
-            <DialogTitle>{t("addButtonTitle")}</DialogTitle>
-            <DialogDescription>{t("addButtonDescription")}</DialogDescription>
+            <DialogTitle>{t("addTicketAction")}</DialogTitle>
+            <DialogDescription>{t("addTicketActionHint")}</DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-2">
             <div className="space-y-1.5">
-              <Label>{t("buttonLabel")}</Label>
-              <Input value={newButtonLabel} onChange={(e) => setNewButtonLabel(e.target.value)} placeholder={t("buttonLabelPlaceholder")} maxLength={80} />
-            </div>
-            <div className="space-y-1.5">
-              <Label>{t("buttonStyle")}</Label>
-              <div className="flex gap-2">
-                {([1, 2, 3, 4] as const).map((s) => (
-                  <button key={s} type="button" onClick={() => setNewButtonStyle(s)}
-                    className={cn("h-7 w-7 rounded", STYLE_COLORS[s], newButtonStyle === s ? "ring-2 ring-offset-2 ring-offset-background ring-white/80" : "opacity-60 hover:opacity-100")} />
-                ))}
-              </div>
+              <Label htmlFor="new-ticket-action">{t("actionName")}</Label>
+              <Input id="new-ticket-action" className={TICKET_INPUT_CLASS} value={newButtonLabel} onChange={(e) => setNewButtonLabel(e.target.value)} placeholder={t("actionNamePlaceholder")} maxLength={80} />
             </div>
           </div>
           <DialogFooter>
             <Button className={CANCEL_BUTTON_CLASS} onClick={() => setAddButtonOpen(false)}>{tCommon("cancel")}</Button>
             <Button className={CLASHKING_RED_BUTTON_CLASS} onClick={handleAddButton} disabled={isAddingButton || !newButtonLabel.trim()}>
               {isAddingButton && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {t("addButton")}
+              {t("addTicketAction")}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      <Dialog open={configOpen} onOpenChange={setConfigOpen}>
-        <DialogContent variant="workspace" className="flex min-h-0 flex-col gap-0 overflow-hidden bg-background shadow-2xl shadow-black/30 sm:max-w-6xl">
-          <DialogHeader className="shrink-0 px-5 pb-4 pr-16 pt-5 text-left sm:px-7 sm:pb-5 sm:pr-16 sm:pt-7">
-            <DialogTitle>{panel.name}</DialogTitle>
-            <DialogDescription className="max-w-3xl leading-relaxed">{t("configurePanelDescription")}</DialogDescription>
-          </DialogHeader>
-            <Tabs value={activeConfigTab} onValueChange={setActiveConfigTab} className="flex min-h-0 flex-1 flex-col">
-              <DashboardTabsList className="mx-5 w-[calc(100%-2.5rem)] shrink-0 sm:mx-7 sm:w-[calc(100%-3.5rem)]">
+      <TicketEditorSurface inline open={detail} onOpenChange={() => {}} title={panel.name} description="" heading={<div className="flex items-center gap-3">
+        <Button variant="ghost" size="icon" asChild className="shrink-0 rounded-xl"><Link href={dashboardHref("tickets", guildId)} aria-label={t("backToPanels")}><ArrowLeft className="h-5 w-5" /></Link></Button>
+        <h1 className="min-w-0 break-words text-2xl font-semibold">{panel.name}</h1>
+        <Button variant="ghost" size="sm" className="ml-auto text-destructive hover:text-destructive" onClick={() => setConfirmDeletePanelOpen(true)}><Trash2 className="h-4 w-4" />{tCommon("delete")}</Button>
+      </div>}>
+            <Tabs value={activeConfigTab} onValueChange={setActiveConfigTab} className="min-w-0 space-y-5">
+              <DashboardTabsList className="w-fit max-w-full">
+                <DashboardTabTrigger value="activity" artwork={<Ticket className="text-blue-500" />}>{t("ticketHistory")}</DashboardTabTrigger>
                 <DashboardTabTrigger
                   value="ticket-panel"
                   artwork={<Ticket className="text-blue-500" />}
@@ -1694,25 +1284,22 @@ function PanelCard({
                   {t("tabButtons")}
                 </DashboardTabTrigger>
                 <DashboardTabTrigger
-                  value="messages"
-                  artwork={<MessageSquare className="text-amber-500" />}
-                  count={panel.approve_messages.length}
-                >
-                  {t("tabMessages")}
-                </DashboardTabTrigger>
-                <DashboardTabTrigger
                   value="settings"
                   artwork={<Settings className="text-purple-500" />}
                 >
                   {t("tabSettings")}
                 </DashboardTabTrigger>
               </DashboardTabsList>
+              <TabsContent value="activity" className={TICKET_WORKSPACE_TAB_CLASS} forceMount>
+                <TicketActivity panel={panel} guildId={guildId} />
+              </TabsContent>
               <TabsContent value="ticket-panel" className={TICKET_WORKSPACE_TAB_CLASS} forceMount>
                 <TicketPanelTab
                   panel={panel}
                   guildId={guildId}
-                  availableEmbeds={availableEmbeds}
                   embeds={embeds}
+                  channels={textChannels}
+                  roles={roles}
                   previewButtons={[...components]}
                   onOpenButtonsTab={() => setActiveConfigTab("buttons")}
                 />
@@ -1720,28 +1307,27 @@ function PanelCard({
               <TabsContent value="buttons" className={TICKET_WORKSPACE_TAB_CLASS} forceMount>
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <p className="text-xs text-muted-foreground">{components.length}/5 {t("buttons")}</p>
+                    <p className="text-xs text-muted-foreground">{components.length}/5 {t("tabButtons")}</p>
                     <Button
                       size="sm"
                       onClick={() => setAddButtonOpen(true)}
                       disabled={components.length >= 5}
                       className={CLASHKING_RED_BUTTON_CLASS}
                     >
-                      <Plus className="mr-1.5 h-4 w-4" />{t("addButton")}
+                      <Plus className="mr-1.5 h-4 w-4" />{t("addTicketAction")}
                     </Button>
                   </div>
                   {components.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-10 text-muted-foreground gap-2">
                       <Ticket className="h-8 w-8 opacity-40" />
-                      <p className="text-sm">{t("noButtons")}</p>
+                      <p className="text-sm">{t("noTicketActions")}</p>
                     </div>
                   ) : (
                     <div className="space-y-3">
                       {components.map((btn) => (
-                        <ButtonCard key={btn.custom_id} customId={btn.custom_id} label={btn.label} style={btn.style}
+                        <ButtonCard key={btn.custom_id} customId={btn.custom_id} label={btn.label} style={btn.style} emoji={btn.emoji}
                           settings={panel.button_settings[btn.custom_id] ?? createDefaultButtonSettings()}
                           panelName={panel.name} guildId={guildId} roles={roles} availableEmbeds={availableEmbeds} embeds={embeds}
-                          townhallRequirementFields={townhallRequirementFields}
                           onDeleted={() => setComponents((prev) => prev.filter(c => c.custom_id !== btn.custom_id))} // NOSONAR — structural JSX complexity from framework nesting
                           onAppearanceUpdated={(newLabel, newStyle) => setComponents((prev) => prev.map(c => c.custom_id === btn.custom_id ? { ...c, label: newLabel, style: newStyle } : c))} // NOSONAR — JSX inline handler nesting is structural, not logic complexity
                         />
@@ -1750,98 +1336,40 @@ function PanelCard({
                   )}
                 </div>
               </TabsContent>
-              <TabsContent value="messages" className={TICKET_WORKSPACE_TAB_CLASS} forceMount>
-                <MessagesTab panel={panel} guildId={guildId} />
-              </TabsContent>
               <TabsContent value="settings" className={TICKET_WORKSPACE_TAB_CLASS} forceMount>
                 <PanelSettingsTab panel={panel} categories={categories} textChannels={textChannels} guildId={guildId} />
               </TabsContent>
             </Tabs>
-        </DialogContent>
-      </Dialog>
+      </TicketEditorSurface>
 
-      <article className="rounded-[24px] bg-card p-4 shadow-sm shadow-black/5 sm:p-5">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-          <button
-            type="button"
-            className="group flex min-w-0 flex-1 items-start gap-3 rounded-2xl text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            onClick={() => setPreviewOpen((open) => !open)}
-            aria-expanded={previewOpen}
-          >
-            <div className="min-w-0 flex-1 space-y-2">
-              <div className="flex flex-wrap items-center gap-2">
-                <h2 className="truncate text-lg font-semibold text-foreground">{panel.name}</h2>
-                <span className="rounded-full bg-muted/65 px-2.5 py-1 text-xs font-medium text-muted-foreground">
-                  {panel.embed_name ?? t("defaultEmbed")}
-                </span>
-              </div>
-              <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground sm:flex sm:flex-wrap">
-                <span className="rounded-full bg-muted/55 px-2.5 py-1 text-center">{components.length} {t("buttons")}</span>
-                <span className="rounded-full bg-muted/55 px-2.5 py-1 text-center">{panel.approve_messages.length} {t("messages")}</span>
-                <span className="rounded-full bg-muted/55 px-2.5 py-1 text-center">{t("categoryCoverage", { configured: configuredCategoryCount, total: 3 })}</span>
-                <span className="rounded-full bg-muted/55 px-2.5 py-1 text-center">{t("logCoverage", { configured: configuredLogCount, total: 3 })}</span>
-              </div>
-            </div>
-            <ChevronDown className={cn("mt-1 h-5 w-5 shrink-0 text-muted-foreground transition-transform duration-150 group-hover:text-foreground", previewOpen && "rotate-180")} />
-          </button>
-          <div className="flex w-full shrink-0 items-center gap-1.5 sm:w-auto">
-            <Button variant="secondary" size="sm" className="min-w-0 flex-1 border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted sm:flex-none" onClick={() => { onConfigure(); setConfigOpen(true); }}>
-              <Settings className="h-4 w-4" />
-              {t("configurePanel")}
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              aria-label={tCommon("delete")}
-              className="h-8 w-8 text-destructive/80 hover:bg-destructive/10 hover:text-destructive"
-              onClick={() => setConfirmDeletePanelOpen(true)}
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
+      {!detail && <article className="flex flex-col gap-3 rounded-3xl bg-card px-5 py-4 shadow-sm shadow-black/5 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0 space-y-1.5">
+          <h2 className="truncate text-base font-semibold">{panel.name}</h2>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+            <span>{components.length} {t("tabButtons")}</span>
+            <span>{t("categoryCoverage", { configured: configuredCategoryCount, total: 2 })}</span>
+            <span>{t("logCoverage", { configured: configuredLogCount, total: 2 })}</span>
           </div>
         </div>
-
-        {previewOpen && <div className="mt-4 rounded-[20px] bg-muted/35 p-4">
-          <div className="mb-3 flex items-center justify-between gap-3">
-            <p className="text-sm font-medium text-foreground">{t("panelPreview")}</p>
-            <InfoPopover content={t("panelPreviewHint")} />
-          </div>
-          {hasPanelPreview ? (
-            <DiscordMessagePreview
-              profile={panelPreviewProfile}
-              content={panelPreviewContent}
-              embeds={panelPreviewEmbeds}
-              mentionContext={{ channels: textChannels, roles }}
-              className="max-w-none"
-            />
-          ) : (
-            <p className="text-sm text-muted-foreground">{t("panelEmbedPreviewEmpty")}</p>
-          )}
-          {components.length > 0 ? (
-            <div className={cn("flex flex-wrap gap-2", hasPanelPreview && "mt-3 pl-0 sm:pl-12")}>
-              {components.map((button) => (
-                <span key={button.custom_id} className={cn("inline-flex h-8 items-center rounded px-3 text-xs font-medium", getPreviewButtonClass(button.style))}>
-                  {button.label}
-                </span>
-              ))}
-            </div>
-          ) : null}
-        </div>}
-      </article>
+        <div className="flex shrink-0 items-center gap-2">
+          <Button variant="ghost" size="sm" asChild><Link href={dashboardHref("tickets/detail", guildId, new URLSearchParams({ panel: panel.name, tab: "activity" }))}><Eye className="h-4 w-4" />{tCommon("view")}</Link></Button>
+          <Button variant="secondary" size="sm" asChild><Link href={dashboardHref("tickets/detail", guildId, new URLSearchParams({ panel: panel.name, tab: "ticket-panel" }))}><Settings className="h-4 w-4" />{t("configurePanel")}</Link></Button>
+        </div>
+      </article>}
     </>
   );
 }
 
-function ConfigTab({ guildId }: { readonly guildId: string }) {
+function ConfigTab({ guildId, panelName }: { readonly guildId: string; readonly panelName?: string }) {
   const t = useTranslations("TicketsSettingsPage");
   const tCommon = useTranslations("Common");
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const panelQuery = useQuery({ ...ticketPanelsQuery(guildId), enabled: Boolean(guildId), refetchInterval: panelName ? 30_000 : false });
 
   const [panels, setPanels] = useState<TicketPanel[]>([]);
   const [embeds, setEmbeds] = useState<ServerEmbed[]>([]);
   const [availableEmbeds, setAvailableEmbeds] = useState<string[]>([]);
-  const [townhallRequirementFields, setTownhallRequirementFields] = useState<string[]>(DEFAULT_TOWNHALL_REQUIREMENT_FIELDS);
   const [categories, setCategories] = useState<DiscordChannel[]>([]);
   const [textChannels, setTextChannels] = useState<DiscordChannel[]>([]);
   const [roles, setRoles] = useState<DiscordRole[]>([]);
@@ -1851,6 +1379,11 @@ function ConfigTab({ guildId }: { readonly guildId: string }) {
   const [isCreatingPanel, setIsCreatingPanel] = useState(false);
   const loadedGuildId = useRef("");
   const metadataLoaded = useRef(false);
+  useEffect(() => {
+    if (!panelQuery.data?.data) return;
+    setPanels([...panelQuery.data.data.items]);
+    setAvailableEmbeds([...panelQuery.data.data.available_embeds]);
+  }, [panelQuery.data]);
 
   const loadDiscordMetadata = useCallback(async () => {
     if (metadataLoaded.current) return;
@@ -1868,6 +1401,8 @@ function ConfigTab({ guildId }: { readonly guildId: string }) {
     if (channelsResult.status === "rejected" && rolesResult.status === "rejected") metadataLoaded.current = false;
   }, [guildId, queryClient]);
 
+  useEffect(() => { if (panelName && guildId) void loadDiscordMetadata(); }, [guildId, panelName, loadDiscordMetadata]);
+
   useEffect(() => {
     if (!guildId || loadedGuildId.current === guildId) return;
     loadedGuildId.current = guildId;
@@ -1884,7 +1419,6 @@ function ConfigTab({ guildId }: { readonly guildId: string }) {
 
         setPanels([...(panelsRes.data?.items ?? [])]);
         setAvailableEmbeds([...(panelsRes.data?.available_embeds ?? [])]);
-        setTownhallRequirementFields(normalizeTownhallRequirementFields(panelsRes.data?.townhall_requirement_fields));
         setEmbeds(normalizeTicketEmbeds(embedsRes.data));
       } catch (err) {
         toast({
@@ -1913,7 +1447,6 @@ function ConfigTab({ guildId }: { readonly guildId: string }) {
       const panelsRes = await queryClient.fetchQuery(ticketPanelsQuery(guildId));
       setPanels([...(panelsRes.data?.items ?? [])]);
       setAvailableEmbeds([...(panelsRes.data?.available_embeds ?? [])]);
-      setTownhallRequirementFields(normalizeTownhallRequirementFields(panelsRes.data?.townhall_requirement_fields));
       setCreatePanelOpen(false);
       setNewPanelName("");
     } catch (err) {
@@ -1926,9 +1459,17 @@ function ConfigTab({ guildId }: { readonly guildId: string }) {
   if (isLoading) {
     return (
       <div className="space-y-4">
-        {["a", "b"].map(id => <Skeleton key={id} className="h-64 w-full rounded-[24px]" />)}
+        {["a", "b"].map(id => <Skeleton key={id} className="h-24 w-full rounded-3xl" />)}
       </div>
     );
+  }
+
+  if (panelName) {
+    const panel = panels.find(item => item.name === panelName);
+    return panel ? <PanelCard panel={panel} categories={categories} textChannels={textChannels} roles={roles} guildId={guildId}
+      availableEmbeds={availableEmbeds} embeds={embeds} detail
+      onDeleted={() => setPanels(previous => previous.filter(item => item.name !== panel.name))} />
+      : <p className="rounded-3xl bg-card p-8 text-muted-foreground">{t("panelNotFound")}</p>;
   }
 
   return (
@@ -1959,7 +1500,7 @@ function ConfigTab({ guildId }: { readonly guildId: string }) {
         </DialogContent>
       </Dialog>
 
-      <div className="space-y-4">
+      <div className="space-y-3">
         <div className="flex justify-end">
           <Button
             size="sm"
@@ -1978,8 +1519,6 @@ function ConfigTab({ guildId }: { readonly guildId: string }) {
         ) : (
           panels.map((panel) => (
             <PanelCard key={panel.name} panel={panel} categories={categories} textChannels={textChannels} roles={roles} guildId={guildId} availableEmbeds={availableEmbeds} embeds={embeds}
-              townhallRequirementFields={townhallRequirementFields}
-              onConfigure={() => { void loadDiscordMetadata(); }}
               onDeleted={() => setPanels((prev) => prev.filter(p => p.name !== panel.name))} // NOSONAR — JSX inline handler nesting is structural, not logic complexity
             />
           ))
@@ -2003,8 +1542,22 @@ export default function TicketsPage() {
           <p className="mt-1 text-sm text-muted-foreground">{t("description")}</p>
         </div>
 
-        <ConfigTab guildId={guildId} />
+        <Tabs defaultValue="panels" className="space-y-4">
+          <DashboardTabsList className="w-fit max-w-full"><DashboardTabTrigger value="panels">{t("ticketPanels")}</DashboardTabTrigger><DashboardTabTrigger value="messages">{t("sharedMessages")}</DashboardTabTrigger></DashboardTabsList>
+          <TabsContent value="panels" className="m-0"><ConfigTab guildId={guildId} /></TabsContent>
+          <TabsContent value="messages" className="m-0"><TicketMessageLibrary guildId={guildId} /></TabsContent>
+        </Tabs>
       </div>
     </div>
   );
+}
+
+export function TicketDetailPage() {
+  const guildId = useGuildId();
+  const params = useSearchParams();
+  return <div className="min-h-screen bg-background p-4 md:p-6">
+    <div className="mx-auto max-w-7xl space-y-6">
+      <ConfigTab guildId={guildId} panelName={params.get("panel") ?? ""} />
+    </div>
+  </div>;
 }

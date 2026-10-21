@@ -1,5 +1,8 @@
 "use client";
 
+import { ClanVerificationControl, ClanVerificationIcon } from "./clan-verification";
+import { Checkbox } from "@/components/ui/checkbox";
+
 import { useGuildId } from "@/lib/dashboard-route";
 import { dashboardHref } from "@/lib/dashboard-route";
 import { getAccessToken } from "@/lib/auth/session";
@@ -56,7 +59,7 @@ import {
 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { apiClient } from "@/lib/api/client";
-import type { RoleMode, ServerRole } from "@/lib/api/types/roles";
+import type { ServerRole } from "@/lib/api/types/roles";
 import { isClanCategoriesResponse, type ClanCategory } from "@/lib/api/types/clan-categories";
 import { normalizeDiscordRolesPayload } from "@/lib/dashboard-cache";
 import { dashboardQueryKeys } from "@/lib/dashboard-query";
@@ -70,7 +73,6 @@ interface ClanSettings {
 
 interface ClanRoleSelection {
   role_id: string | null;
-  mode: RoleMode;
 }
 
 interface Clan {
@@ -121,30 +123,6 @@ const PREMADE_CLAN_CATEGORIES = [
   "Events",
 ] as const;
 
-function RoleModeSelect({
-  value,
-  onChange,
-  disabled = false,
-}: {
-  readonly value: RoleMode;
-  readonly onChange: (mode: RoleMode) => void;
-  readonly disabled?: boolean;
-}) {
-  return (
-    <div className="space-y-1.5">
-      <Label>Role behavior</Label>
-      <Select value={value} onValueChange={(mode) => onChange(mode as RoleMode)} disabled={disabled}>
-        <SelectTrigger><SelectValue /></SelectTrigger>
-        <SelectContent>
-          <SelectItem value="both">Add and remove</SelectItem>
-          <SelectItem value="add">Add only</SelectItem>
-          <SelectItem value="remove">Remove only</SelectItem>
-        </SelectContent>
-      </Select>
-    </div>
-  );
-}
-
 export default function ClansPage() {
   const guildId = useGuildId();
   const locale = useLocale();
@@ -168,12 +146,14 @@ export default function ClansPage() {
   // Dialog states
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [newClanTag, setNewClanTag] = useState("");
+  const [verifyOnAdd, setVerifyOnAdd] = useState(false);
+  const [verificationClanTag, setVerificationClanTag] = useState<string | null>(null);
   const [selectedClan, setSelectedClan] = useState<Clan | null>(null);
   const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false);
   const [clanSettings, setClanSettings] = useState<ClanSettings>({});
   const [clanServerRoles, setClanServerRoles] = useState<ServerRole[]>([]);
-  const [memberRole, setMemberRole] = useState<ClanRoleSelection>({ role_id: null, mode: 'both' });
-  const [leaderRole, setLeaderRole] = useState<ClanRoleSelection>({ role_id: null, mode: 'both' });
+  const [memberRole, setMemberRole] = useState<ClanRoleSelection>({ role_id: null });
+  const [leaderRole, setLeaderRole] = useState<ClanRoleSelection>({ role_id: null });
 
   const fetchClans = async (_accessToken: string, forceRefresh = false): Promise<Clan[]> => {
     if (forceRefresh) {
@@ -244,7 +224,7 @@ export default function ClansPage() {
       setSaving(true);
       const accessToken = getAccessToken();
 
-      await executeSharedEndpoint(dashboardEndpoints.addServerClan, {
+      const added = await executeSharedEndpoint(dashboardEndpoints.addServerClan, {
         path: { serverId: guildId },
         query: {},
         body: { tag: newClanTag },
@@ -259,6 +239,7 @@ export default function ClansPage() {
 
       setNewClanTag("");
       setIsAddDialogOpen(false);
+      if (verifyOnAdd) setVerificationClanTag(added.clan_tag);
     } catch (err) {
       console.error("Error adding clan:", err);
       toast({
@@ -316,13 +297,13 @@ export default function ClansPage() {
       setClanServerRoles([...roles]);
       const member = roles.find((role) => role.option === 'member');
       const leader = roles.find((role) => role.option === 'leader');
-      setMemberRole({ role_id: member?.role_id || null, mode: member?.mode || 'both' });
-      setLeaderRole({ role_id: leader?.role_id || null, mode: leader?.mode || 'both' });
+      setMemberRole({ role_id: member?.role_id || null });
+      setLeaderRole({ role_id: leader?.role_id || null });
     } catch (err) {
       console.error("Error loading clan settings:", err);
       setClanServerRoles([]);
-      setMemberRole({ role_id: null, mode: 'both' });
-      setLeaderRole({ role_id: null, mode: 'both' });
+      setMemberRole({ role_id: null });
+      setLeaderRole({ role_id: null });
       toast({
         title: tCommon("error"),
         description: t("toast.errorLoadingSettings"),
@@ -362,7 +343,6 @@ export default function ClansPage() {
         if (current && selection.role_id) {
           const result = await apiClient.roles.updateServerRole(guildId, current.id, {
             role_id: selection.role_id,
-            mode: selection.mode,
           });
           if (result.error) throw new Error(result.error);
         } else if (current) {
@@ -374,7 +354,6 @@ export default function ClansPage() {
             type: 'clan_role',
             option,
             role_id: selection.role_id,
-            mode: selection.mode,
           });
           if (result.error) throw new Error(result.error);
         }
@@ -558,6 +537,7 @@ export default function ClansPage() {
                           >
                             <Settings className="h-4 w-4" />
                           </Button>
+                          <div className="relative">
                           <Image
                             src={clanBadgeUrl(clanTag)}
                             alt={t("badgeAlt", { name: clanName })}
@@ -566,6 +546,8 @@ export default function ClansPage() {
                             unoptimized
                             className="h-16 w-16 object-contain"
                           />
+                          <ClanVerificationIcon guildId={guildId} clanTag={clanTag} onClick={() => void handleOpenSettings(clan)} />
+                          </div>
                           <h4 className="mt-1.5 max-w-full truncate text-sm font-semibold text-foreground">{clanName}</h4>
                           <div className="flex max-w-full items-center justify-center gap-1">
                             <p className="truncate text-sm text-muted-foreground">{clanTag}</p>
@@ -621,10 +603,17 @@ export default function ClansPage() {
               <Label htmlFor="clan-tag">{t("clanTag")}</Label>
               <Input id="clan-tag" placeholder="#ABCD1234" value={newClanTag} onChange={(event) => setNewClanTag(event.target.value)} onKeyDown={(event) => event.key === "Enter" && void handleAddClan()} />
             </div>
+            <label className="flex items-center gap-2 text-sm"><Checkbox checked={verifyOnAdd} onCheckedChange={value => setVerifyOnAdd(value === true)} />Verify this clan after adding</label>
             <DialogFooter>
               <Button variant="secondary" onClick={() => setIsAddDialogOpen(false)}>{tCommon("cancel")}</Button>
               <Button onClick={() => void handleAddClan()} disabled={saving}>{saving ? <Loader2 className="h-4 w-4 animate-spin" /> : t("addClan")}</Button>
             </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        <Dialog open={Boolean(verificationClanTag)} onOpenChange={open => { if (!open) setVerificationClanTag(null); }}>
+          <DialogContent variant="form"><DialogHeader><DialogTitle>Verify clan</DialogTitle><DialogDescription>Confirm this clan for your Discord server.</DialogDescription></DialogHeader>
+            {verificationClanTag && <ClanVerificationControl key={`${guildId}:${verificationClanTag}`} guildId={guildId} clanTag={verificationClanTag} autoStart />}
           </DialogContent>
         </Dialog>
 
@@ -654,8 +643,9 @@ export default function ClansPage() {
               </DialogTitle>
             </DialogHeader>
             <div className="grid gap-4 py-1">
-                  <div className="grid grid-cols-3 items-end gap-2">
-                    <div className="col-span-2 min-w-0 space-y-1.5">
+              {selectedClan && <ClanVerificationControl key={`${guildId}:${selectedClan.tag}`} guildId={guildId} clanTag={selectedClan.tag || selectedClan.clan_tag || ""} />}
+                  <div className="space-y-2">
+                    <div className="min-w-0 space-y-1.5">
                       <div className="flex items-center gap-1.5">
                         <Label>{t("memberRole")}</Label>
                         <InfoPopover content={t("fieldHelp.memberRole")} label={t("fieldHelp.infoButtonLabel")} />
@@ -667,15 +657,10 @@ export default function ClansPage() {
                         placeholder={t("selectRole")}
                       />
                     </div>
-                    <RoleModeSelect
-                      value={memberRole.mode}
-                      onChange={(mode) => setMemberRole({ ...memberRole, mode })}
-                      disabled={!memberRole.role_id}
-                    />
                   </div>
 
-                  <div className="grid grid-cols-3 items-end gap-2">
-                    <div className="col-span-2 min-w-0 space-y-1.5">
+                  <div className="space-y-2">
+                    <div className="min-w-0 space-y-1.5">
                       <div className="flex items-center gap-1.5">
                         <Label>{t("leaderRole")}</Label>
                         <InfoPopover content={t("fieldHelp.leaderRole")} label={t("fieldHelp.infoButtonLabel")} />
@@ -687,11 +672,6 @@ export default function ClansPage() {
                         placeholder={t("selectRole")}
                       />
                     </div>
-                    <RoleModeSelect
-                      value={leaderRole.mode}
-                      onChange={(mode) => setLeaderRole({ ...leaderRole, mode })}
-                      disabled={!leaderRole.role_id}
-                    />
                   </div>
 
 
@@ -741,7 +721,7 @@ export default function ClansPage() {
                       <InfoPopover
                         content={t.rich("fieldHelp.clanAbbreviation", {
                           familySettingsLink: (chunks) => ( // NOSONAR — framework-required inline render prop (use-intl rich / ReactMarkdown)
-                            <Link href={dashboardHref("family-settings", guildId)} className="font-medium underline underline-offset-2">
+                            <Link href={dashboardHref("roles", guildId)} className="font-medium underline underline-offset-2">
                               {chunks}
                             </Link>
                           ),

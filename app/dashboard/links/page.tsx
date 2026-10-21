@@ -13,6 +13,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import Image from "@/components/app-image";
 import {
   BarChart3,
+  Users,
   ChevronDown,
   ChevronUp,
   Download,
@@ -34,6 +35,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { DashboardTabsList, DashboardTabTrigger } from "@/components/ui/dashboard-tabs";
 import { townHallImageUrl } from "@/lib/theme";
+import { ClanLinks } from "./clan-links";
 import { loadedMembersDetail } from "./links-utils";
 import { dashboardQueryOptions } from "@/lib/dashboard-query-options";
 
@@ -295,7 +297,7 @@ export default function LinksManagementPage() {
     }
   };
 
-  const loadPlayer = async (account: LinkedAccount) => {
+  const loadPlayer = async (account: LinkedAccount, automatic = false) => {
     setPendingAccount(account.player_tag);
     setError(null);
     setNotice(null);
@@ -306,7 +308,7 @@ export default function LinksManagementPage() {
       updateAccount(account.player_tag, current => ({ ...current, player_name: player.name, town_hall: player.townHallLevel }));
     } catch (caught) {
       const notFoundSchema = ProxyPlayerEndpoint.errors?.find((error) => error.status === 404)?.body;
-      if (caught instanceof ApiResponseError && caught.status === 404 && notFoundSchema
+      if (!automatic && caught instanceof ApiResponseError && caught.status === 404 && notFoundSchema
         && Schema.is(notFoundSchema)(caught.body) && caught.body.reason === "notFound") {
         try {
           await executeSharedEndpoint(DeleteServerLinkEndpoint, {
@@ -336,11 +338,19 @@ export default function LinksManagementPage() {
           member={member}
           expanded={expandedMembers.has(member.user_id)}
           pendingAccount={pendingAccount}
-          onToggle={() => setExpandedMembers(current => {
-            const next = new Set(current);
-            if (next.has(member.user_id)) next.delete(member.user_id); else next.add(member.user_id);
-            return next;
-          })}
+          onToggle={() => {
+            const opening = !expandedMembers.has(member.user_id);
+            setExpandedMembers(current => {
+              const next = new Set(current);
+              if (next.has(member.user_id)) next.delete(member.user_id); else next.add(member.user_id);
+              return next;
+            });
+            if (opening) void (async () => {
+              for (const account of member.linked_accounts) {
+                if (!account.player_name || !account.town_hall) await loadPlayer(account, true);
+              }
+            })();
+          }}
           onAdd={() => { setAddTarget(member); setAddTag(""); setAddApiToken(""); }}
           onLoad={loadPlayer}
         />
@@ -372,11 +382,13 @@ export default function LinksManagementPage() {
             <h2 className="text-lg font-semibold">Account links</h2>
             <p className="mt-1 text-sm text-muted-foreground">Search members, player tags, or Discord roles, then expand a member to manage their accounts.</p>
           </div>
-            <Tabs defaultValue="accounts" onValueChange={value => { if (value === "stats") void fetchStats(); }}>
-              <DashboardTabsList className="grid-cols-2">
+            <Tabs defaultValue="clans" onValueChange={value => { if (value === "stats") void fetchStats(); }}>
+              <DashboardTabsList className="grid-cols-3">
+                <DashboardTabTrigger value="clans" artwork={<Users />}>Clans</DashboardTabTrigger>
                 <DashboardTabTrigger value="accounts" artwork={<ListIcon />}>Accounts</DashboardTabTrigger>
                 <DashboardTabTrigger value="stats" artwork={<BarChart3 />}>Stats</DashboardTabTrigger>
               </DashboardTabsList>
+              <TabsContent value="clans" className="mt-5"><ClanLinks guildId={guildId} onLinked={()=>{setStatsData(null);void fetchLinks();}} /></TabsContent>
               <TabsContent value="accounts" className="mt-5 space-y-5">
             {(error || notice) && (
               <div className={`rounded-md border px-3 py-2 text-sm ${error ? "border-destructive/40 bg-destructive/10 text-destructive" : "border-green-500/30 bg-green-500/10 text-green-400"}`}>

@@ -3,6 +3,7 @@
 import { useGuildId } from "@/lib/dashboard-route";
 import { dashboardEndpoints } from "@clashking/api-contracts";
 import { executeSharedEndpoint } from "@/lib/api/shared-client";
+import { FamilyNicknameSettings } from "./family-nickname-settings";
 import { loadRoleMaxLevels } from "./role-max-levels";
 import Image from "@/components/app-image";
 import { useState, useEffect, useEffectEvent, useRef } from "react";
@@ -14,8 +15,6 @@ import { InfoPopover } from "@/components/ui/info-popover";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tabs, TabsContent } from "@/components/ui/tabs";
-import { DashboardTabsList, DashboardTabTrigger } from "@/components/ui/dashboard-tabs";
 import { RoleCombobox } from "@/components/ui/role-combobox";
 import {
   Dialog,
@@ -45,7 +44,6 @@ import { dashboardQueryOptions } from "@/lib/dashboard-query-options";
 import type {
   RoleType,
   DiscordRole,
-  RoleMode,
   RoleSettings,
 } from "@/lib/api/types/roles";
 import { playerLeagueImageUrl, townHallImageUrl } from "@/lib/theme";
@@ -56,6 +54,7 @@ import {
   roleCriteriaImageUrl,
   roleTypeImageUrl,
 } from "./role-assets";
+
 
 const ROLE_TYPES_CONFIG: RoleType[] = ["townhall", "league", "builderhall", "builder_league", "clan_category"];
 
@@ -140,14 +139,14 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
     server_id: guildId,
     auto_eval_status: false,
     auto_eval_nickname: false,
-    autoeval_triggers: [],
+    role_leave_delay_minutes: 5,
     autoeval_log: undefined,
   });
   const [originalRoleSettings, setOriginalRoleSettings] = useState<RoleSettings>({
     server_id: guildId,
     auto_eval_status: false,
     auto_eval_nickname: false,
-    autoeval_triggers: [],
+    role_leave_delay_minutes: 5,
     autoeval_log: undefined,
   });
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
@@ -162,7 +161,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
 
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [currentRoleType, setCurrentRoleType] = useState<RoleType>("townhall");
-  const [newRole, setNewRole] = useState<any>({ mode: 'both' });
+  const [newRole, setNewRole] = useState<any>({});
   const [dialogError, setDialogError] = useState<string | null>(null);
   const [sortCol, setSortCol] = useState<"role" | "criteria" | null>(null);
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
@@ -270,18 +269,19 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
       if (rolesData) {
         const rules = rolesData.roles;
         const normalizedRoles = {
-          townhall: rules.filter((r) => !r.clan_tag && r.type === 'townhall').map((r) => ({ rule_id: r.id, role_id: r.role_id, th: parseRoleLevel(r.option), mode: r.mode })),
-          league: rules.filter((r) => !r.clan_tag && r.type === 'league').map((r) => ({ rule_id: r.id, role_id: r.role_id, type: r.option, mode: r.mode })),
-          builderhall: rules.filter((r) => !r.clan_tag && r.type === 'builderhall').map((r) => ({ rule_id: r.id, role_id: r.role_id, bh: parseRoleLevel(r.option), mode: r.mode })),
-          builder_league: rules.filter((r) => !r.clan_tag && r.type === 'builder_league').map((r) => ({ rule_id: r.id, role_id: r.role_id, type: r.option, mode: r.mode })),
-          clan_category: rules.filter((r) => !r.clan_tag && r.type === 'clan_category').map((r) => ({ rule_id: r.id, role_id: r.role_id, category: r.option, mode: r.mode })),
+          townhall: rules.filter((r) => !r.clan_tag && r.type === 'townhall').map((r) => ({ rule_id: r.id, role_id: r.role_id, th: parseRoleLevel(r.option) })),
+          league: rules.filter((r) => !r.clan_tag && r.type === 'league').map((r) => ({ rule_id: r.id, role_id: r.role_id, type: r.option })),
+          builderhall: rules.filter((r) => !r.clan_tag && r.type === 'builderhall').map((r) => ({ rule_id: r.id, role_id: r.role_id, bh: parseRoleLevel(r.option) })),
+          builder_league: rules.filter((r) => !r.clan_tag && r.type === 'builder_league').map((r) => ({ rule_id: r.id, role_id: r.role_id, type: r.option })),
+          clan_category: rules.filter((r) => !r.clan_tag && r.type === 'clan_category').map((r) => ({ rule_id: r.id, role_id: r.role_id, category: r.option })),
         };
         setAllRoles(normalizedRoles);
       }
 
       if (settingsData) {
-        setRoleSettings(settingsData);
-        setOriginalRoleSettings(settingsData);
+        const loaded = settingsData;
+        setRoleSettings(loaded);
+        setOriginalRoleSettings(loaded);
       }
 
       if (discordRolesData) {
@@ -316,12 +316,14 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
       setSaveStatus('saving');
       setError(null);
 
-      await apiClient.roles.updateRoleSettings(guildId, {
+      const result = await apiClient.roles.updateRoleSettings(guildId, {
         auto_eval_status: roleSettings.auto_eval_status,
         auto_eval_nickname: roleSettings.auto_eval_nickname,
-        autoeval_triggers: roleSettings.autoeval_triggers,
+        role_leave_delay_minutes: roleSettings.role_leave_delay_minutes,
+        flair_non_family: roleSettings.flair_non_family,
         autoeval_log: roleSettings.autoeval_log,
       });
+      if (result.error) throw new Error(result.error);
       await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.route("role-settings", guildId), exact: true });
 
       setOriginalRoleSettings({ ...roleSettings });
@@ -363,7 +365,6 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
         type: currentRoleType,
         option,
         role_id: String(newRole.role_id),
-        mode: newRole.mode as RoleMode,
       });
 
       if (result.error) {
@@ -374,7 +375,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
       await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.route("server-roles", guildId, "all"), exact: true });
       await loadData();
       setIsAddDialogOpen(false);
-      setNewRole({ mode: 'both' });
+      setNewRole({});
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
     } catch (err: any) {
@@ -395,18 +396,6 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
       setTimeout(() => setSuccess(false), 3000);
     } catch (err: any) {
       setError(err.message || "Failed to delete role");
-    }
-  };
-
-  const handleUpdateRoleMode = async (ruleId: string, mode: RoleMode) => {
-    try {
-      setError(null);
-      const result = await apiClient.roles.updateServerRole(guildId, ruleId, { mode });
-      if (result.error) throw new Error(result.error);
-      await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.route("server-roles", guildId, "all"), exact: true });
-      await loadData();
-    } catch (err: any) {
-      setError(err.message || "Failed to update role mode");
     }
   };
 
@@ -702,14 +691,6 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                 </span>
               </div>
               <div className="mt-3 flex items-center gap-2 border-t border-border/60 pt-3">
-                <Select value={role.mode || "both"} onValueChange={(value) => void handleUpdateRoleMode(role.rule_id, value as RoleMode)}>
-                  <SelectTrigger className="min-h-11 min-w-0 flex-1"><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="both">{t("configuredRoles.modeBoth")}</SelectItem>
-                    <SelectItem value="add">{t("configuredRoles.modeAdd")}</SelectItem>
-                    <SelectItem value="remove">{t("configuredRoles.modeRemove")}</SelectItem>
-                  </SelectContent>
-                </Select>
                 <Button variant="ghost" size="touch-icon" onClick={() => handleDeleteRole(roleType, role.rule_id)} className="shrink-0 text-destructive hover:bg-destructive/10 hover:text-destructive" aria-label={t("configuredRoles.remove")}>
                   <Trash2 className="h-4 w-4" />
                 </Button>
@@ -732,7 +713,6 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                   {t("configuredRoles.criteria")}<SortIcon col="criteria" sortCol={sortCol} sortDir={sortDir} />
                 </button>
               </th>
-              <th className="px-4 py-3 text-left">{t("configuredRoles.mode")}</th>
               <th className="px-4 py-3 text-right">{t("configuredRoles.actions")}</th>
             </tr>
           </thead>
@@ -768,18 +748,6 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                     {criteriaImage && <Image src={criteriaImage} alt="" width={28} height={28} unoptimized className="h-7 w-7 object-contain" />}
                     {criteria || "—"}
                   </span>
-                </td>
-                <td className="px-4 py-3">
-                  <Select value={role.mode || 'both'} onValueChange={(value) => void handleUpdateRoleMode(role.rule_id, value as RoleMode)}>
-                    <SelectTrigger className="w-40">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="both">{t("configuredRoles.modeBoth")}</SelectItem>
-                      <SelectItem value="add">{t("configuredRoles.modeAdd")}</SelectItem>
-                      <SelectItem value="remove">{t("configuredRoles.modeRemove")}</SelectItem>
-                    </SelectContent>
-                  </Select>
                 </td>
                 <td className="px-4 py-3 text-right">
                   <Button
@@ -832,7 +800,9 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
   const duplicateState = getRoleDuplicateState();
 
   const hasChanged = roleSettings.auto_eval_status !== originalRoleSettings.auto_eval_status ||
-    roleSettings.auto_eval_nickname !== originalRoleSettings.auto_eval_nickname;
+    roleSettings.auto_eval_nickname !== originalRoleSettings.auto_eval_nickname ||
+    roleSettings.role_leave_delay_minutes !== originalRoleSettings.role_leave_delay_minutes ||
+    roleSettings.flair_non_family !== originalRoleSettings.flair_non_family;
 
   const isAddRoleDisabled = () => {
     const hasRole = !!newRole.role_id;
@@ -852,7 +822,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
   return (
     <div className="mx-auto min-h-screen w-full max-w-[calc(80rem+3rem)] space-y-8 bg-background p-4 pb-12 md:p-6">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight md:text-3xl">{t("title")}</h1>
+          <h1 className="text-2xl font-bold  md:text-3xl">{t("title")}</h1>
           <p className="mt-1 text-sm text-muted-foreground">{t("description")}</p>
         </div>
 
@@ -915,11 +885,11 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                 </Button>
               )}
           </div>
-          <div className="grid gap-3 sm:grid-cols-2">
-            <div className="flex items-center justify-between gap-4 rounded-[24px] bg-card px-5 py-4 shadow-sm shadow-black/5">
-              <div className="min-w-0 space-y-0.5">
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            <div className="flex items-center justify-between gap-4 rounded-[24px] bg-card px-5 py-3 shadow-sm shadow-black/5">
+              <div className="flex min-w-0 items-center gap-2">
                 <Label htmlFor="auto-eval">{t("settings.enableAutoEval")}</Label>
-                <p className="text-xs leading-relaxed text-muted-foreground">{t("settings.enableAutoEvalDesc")}</p>
+                <InfoPopover content={t("settings.enableAutoEvalDesc")} label={t("settings.enableAutoEval")} />
               </div>
               {isLoading ? (
                 <Skeleton className="h-6 w-11 rounded-full animate-pulse" />
@@ -934,10 +904,10 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
               )}
             </div>
 
-            <div className="flex items-center justify-between gap-4 rounded-[24px] bg-card px-5 py-4 shadow-sm shadow-black/5">
-              <div className="min-w-0 space-y-0.5">
+            <div className="flex items-center justify-between gap-4 rounded-[24px] bg-card px-5 py-3 shadow-sm shadow-black/5">
+              <div className="flex min-w-0 items-center gap-2">
                 <Label htmlFor="auto-nickname">{t("settings.autoNickname")}</Label>
-                <p className="text-xs leading-relaxed text-muted-foreground">{t("settings.autoNicknameDesc")}</p>
+                <InfoPopover content={t("settings.autoNicknameDesc")} label={t("settings.autoNickname")} />
               </div>
               {isLoading ? (
                 <Skeleton className="h-6 w-11 rounded-full animate-pulse" />
@@ -951,12 +921,33 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                 />
               )}
             </div>
+            <div className="flex items-center justify-between gap-4 rounded-[24px] bg-card px-5 py-3 shadow-sm shadow-black/5">
+              <div className="flex min-w-0 items-center gap-2">
+                <Label htmlFor="role-leave-delay">{t("settings.leaveDelay")}</Label>
+                <InfoPopover content={t("settings.leaveDelayDesc")} label={t("settings.leaveDelay")} />
+              </div>
+              <Select value={String(roleSettings.role_leave_delay_minutes ?? 5)} disabled={isLoading}
+                onValueChange={value => setRoleSettings({ ...roleSettings, role_leave_delay_minutes: Number(value) })}>
+                <SelectTrigger id="role-leave-delay" className="w-36 shrink-0"><SelectValue /></SelectTrigger>
+                <SelectContent>{Array.from({ length: 12 }, (_, i) => (i + 1) * 5).map(minutes =>
+                  <SelectItem key={minutes} value={String(minutes)}>{t("settings.minutes", { minutes })}</SelectItem>)}</SelectContent>
+              </Select>
+            </div>
+            <div className="flex items-center justify-between gap-4 rounded-[24px] bg-card px-5 py-3 shadow-sm shadow-black/5">
+              <div className="flex min-w-0 items-center gap-2">
+                <Label htmlFor="outside-family-player-roles">{t("settings.flairNonFamily")}</Label>
+                <InfoPopover content={t("settings.flairNonFamilyDesc")} label={t("settings.flairNonFamily")} />
+              </div>
+              <Switch id="outside-family-player-roles" checked={roleSettings.flair_non_family ?? false} disabled={isLoading}
+                onCheckedChange={checked => setRoleSettings({ ...roleSettings, flair_non_family: checked })} />
+            </div>
           </div>
         </section>
 
-        <section className="space-y-4">
+        <FamilyNicknameSettings section="family" />
+        <section className="space-y-6" aria-labelledby="player-roles-heading">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-              <h2 className="font-semibold">{t("configuredRoles.title")}</h2>
+              <h2 id="player-roles-heading" className="text-lg font-semibold">{t("sections.players")}</h2>
               <Dialog open={isAddDialogOpen} onOpenChange={(open) => {
                 setIsAddDialogOpen(open);
                 if (open && !staticOptionsRequested.current) {
@@ -985,7 +976,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                         value={currentRoleType}
                         onValueChange={(value) => {
                           setCurrentRoleType(value as RoleType);
-                          setNewRole({ mode: 'both' });
+                          setNewRole({});
                           setDialogError(null);
                         }}
                       >
@@ -998,20 +989,6 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                               {type.label}
                             </SelectItem>
                           ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="role-mode">{t("addRoleDialog.mode")}</Label>
-                      <Select value={newRole.mode || 'both'} onValueChange={(value) => setNewRole({ ...newRole, mode: value as RoleMode })}>
-                        <SelectTrigger id="role-mode">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="both">{t("configuredRoles.modeBoth")}</SelectItem>
-                          <SelectItem value="add">{t("configuredRoles.modeAdd")}</SelectItem>
-                          <SelectItem value="remove">{t("configuredRoles.modeRemove")}</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -1041,33 +1018,23 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                 </DialogContent>
               </Dialog>
             </div>
-          <div>
-            <Tabs defaultValue="townhall" className="w-full">
-              <DashboardTabsList>
-                {roleTypes.map((type) => (
-                  <DashboardTabTrigger
-                    key={type.value}
-                    value={type.value}
-                    artwork={type.value === "clan_category" ? (
-                      <Tags aria-hidden="true" />
-                    ) : (
-                      <Image
-                        src={roleTypeImageUrl(type.value, townHallMaxLevel, builderHallMaxLevel)}
-                        alt=""
-                        width={22}
-                        height={22}
-                        unoptimized
-                      />
-                    )}
-                    count={isLoading ? <Skeleton className="h-2.5 w-2.5 rounded-[2px]" /> : (allRoles[type.value]?.length ?? 0)}
-                  >
-                    {type.label}
-                  </DashboardTabTrigger>
-                ))}
-              </DashboardTabsList>
-
-              {roleTypes.map((type) => (
-                <TabsContent key={type.value} value={type.value} className="mt-6">
+          <div className="space-y-6">
+            {roleTypes.map((type) => (
+              <section key={type.value} className="space-y-3" aria-labelledby={`player-roles-${type.value}`}>
+                <div className="flex items-center gap-2">
+                  {type.value === "clan_category" ? (
+                    <Tags aria-hidden="true" className="h-5 w-5 text-muted-foreground" />
+                  ) : (
+                    <Image
+                      src={roleTypeImageUrl(type.value, townHallMaxLevel, builderHallMaxLevel)}
+                      alt="" width={24} height={24} unoptimized className="h-6 w-6 object-contain"
+                    />
+                  )}
+                  <h3 id={`player-roles-${type.value}`} className="font-semibold">{type.label}</h3>
+                  {isLoading ? <Skeleton className="h-3 w-5 rounded" /> : (
+                    <span className="text-sm text-muted-foreground">{allRoles[type.value]?.length ?? 0}</span>
+                  )}
+                </div>
                   {isLoading ? (
                     <div className="space-y-3 rounded-[24px] bg-card p-5 shadow-sm shadow-black/5">
                       <div className="grid grid-cols-3 gap-4">
@@ -1086,11 +1053,11 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                   ) : (
                     renderRolesList(type.value)
                   )}
-                </TabsContent>
-              ))}
-            </Tabs>
+              </section>
+            ))}
           </div>
         </section>
+        <FamilyNicknameSettings section="nicknames" />
     </div>
   );
 }

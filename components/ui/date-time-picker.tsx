@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
@@ -13,10 +13,10 @@ export function localDateValue(date: Date): string {
 }
 
 /** Values remain local wall-clock strings; callers convert to UTC only on save. */
-export function DateTimePicker({ value, onChange, type = "datetime-local", className, id, disabled, ...props }: {
+export function DateTimePicker({ value, onChange, type = "datetime-local", className, id, disabled, placeholder, ...props }: {
   value: string; onChange: (event: { target: { value: string } }) => void;
   type?: "date" | "datetime-local"; className?: string; id?: string; disabled?: boolean;
-  "aria-label"?: string;
+  "aria-label"?: string; placeholder?: string;
 }) {
   const [open, setOpen] = useState(false);
   const parsed = value ? new Date(`${value.slice(0, 10)}T12:00:00`) : undefined;
@@ -24,13 +24,13 @@ export function DateTimePicker({ value, onChange, type = "datetime-local", class
   const time = value.slice(11, 16) || "12:00";
   const zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   return <div className={cn("min-w-0 space-y-1.5", className)}>
-    <div className="flex min-w-0 items-center gap-2">
+    <div className="flex min-w-0 items-center gap-1 rounded-xl bg-muted/55 p-1 shadow-sm shadow-black/5">
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button id={id} type="button" variant="secondary" disabled={disabled}
-            aria-label={props["aria-label"]} className="h-10 min-w-0 flex-1 justify-start rounded-xl border-0 bg-muted/55 font-normal">
+            aria-label={props["aria-label"]} className="h-10 min-w-0 flex-1 justify-start rounded-lg border-0 bg-transparent px-3 font-normal text-foreground shadow-none hover:bg-muted">
             <CalendarIcon className="mr-2 h-4 w-4 shrink-0" />
-            <span className="truncate">{selected ? selected.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" }) : "—"}</span>
+            <span className={cn("truncate", !selected && "text-muted-foreground")}>{selected ? selected.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" }) : placeholder ?? props["aria-label"] ?? "—"}</span>
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
@@ -38,16 +38,18 @@ export function DateTimePicker({ value, onChange, type = "datetime-local", class
             onSelect={date => { onChange({ target: { value: date ? `${localDateValue(date)}${type === "date" ? "" : `T${time}`}` : "" } }); setOpen(false); }} />
         </PopoverContent>
       </Popover>
-      {type !== "date" && <div className="flex shrink-0 items-center gap-1">
-        {[24, 60].map((count, part) => <Select key={part} disabled={disabled || !selected}
+      {type !== "date" && <div className="flex shrink-0 items-center gap-0.5">
+        {[24, 60].map((count, part) => <Fragment key={part}>
+          {part === 1 && <span aria-hidden="true" className="text-muted-foreground">:</span>}
+          <Select disabled={disabled || !selected}
           value={time.split(":")[part]} onValueChange={next => {
             if (!selected) return;
             const parts = time.split(":"); parts[part] = next;
             onChange({ target: { value: `${localDateValue(selected)}T${parts.join(":")}` } });
           }}>
-          <SelectTrigger aria-label={`${props["aria-label"] ?? zone} (${part === 0 ? "HH" : "mm"})`} className="h-10 w-20 rounded-xl border-0 bg-muted/55"><SelectValue /></SelectTrigger>
+          <SelectTrigger aria-label={`${props["aria-label"] ?? zone} (${part === 0 ? "HH" : "mm"})`} className="h-10 w-16 rounded-lg border-0 bg-transparent px-2 text-foreground shadow-none focus:ring-2"><SelectValue /></SelectTrigger>
           <SelectContent className="scrollbar-custom max-h-64">{Array.from({ length: count }, (_, n) => String(n).padStart(2, "0")).map(n => <SelectItem key={n} value={n}>{n}</SelectItem>)}</SelectContent>
-        </Select>)}
+        </Select></Fragment>)}
       </div>}
     </div>
     {type !== "date" && <p className="text-xs text-muted-foreground">{zone}</p>}

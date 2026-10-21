@@ -22,7 +22,6 @@ import {
   Pencil,
   Plus,
   RefreshCw,
-  Server,
   Trash2,
   Users,
   X,
@@ -135,6 +134,7 @@ export default function BasesPage() {
   const guildId = useGuildId();
   const locale = useLocale();
   const t = useTranslations("BasesPage");
+  const tDiscord = useTranslations("DiscordUserDisplay");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [bases, setBases] = useState<Base[]>([]);
   const [total, setTotal] = useState(0);
@@ -150,6 +150,7 @@ export default function BasesPage() {
   const [createFeedback, setCreateFeedback] = useState<CreateFeedback | null>(null);
   const [expandedBases, setExpandedBases] = useState<Set<string>>(new Set());
   const [downloaders, setDownloaders] = useState<Record<string, DownloaderState>>({});
+  const resolvingDownloaders = useRef(new Set<string>());
   const [deleteTarget, setDeleteTarget] = useState<Base | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<DeleteFeedback | null>(null);
@@ -328,8 +329,10 @@ export default function BasesPage() {
 
   const resolveDownloader = async (baseId: string, userId: string) => {
     const key = `${baseId}:${userId}`;
-    if (downloaders[key]?.status === "loading" || downloaders[key]?.status === "resolved") return;
+    if (resolvingDownloaders.current.has(key) || downloaders[key]?.status === "resolved") return;
+    resolvingDownloaders.current.add(key);
     setDownloaders((current) => ({ ...current, [key]: { status: "loading" } }));
+    try {
     const response = await apiClient.bases.getDownloader(guildId, baseId, userId);
     if (response.error || !response.data) {
       setDownloaders((current) => ({
@@ -343,15 +346,30 @@ export default function BasesPage() {
       ...current,
       [key]: { status: "resolved", data: downloader },
     }));
+    } catch {
+      setDownloaders((current) => ({ ...current, [key]: { status: "error", message: t("errors.downloader") } }));
+    } finally {
+      resolvingDownloaders.current.delete(key);
+    }
   };
 
-  const toggleDownloaders = (baseId: string) => {
+  const toggleDownloaders = (baseId: string, open: boolean) => {
     setExpandedBases((current) => {
       const next = new Set(current);
-      if (next.has(baseId)) next.delete(baseId);
-      else next.add(baseId);
+      if (open) next.add(baseId);
+      else next.delete(baseId);
       return next;
     });
+    if (open) {
+      const pending = [...(bases.find(base => base.id === baseId)?.downloaders ?? [])];
+      // Resolve only expanded history, with bounded Discord lookup concurrency.
+      void Promise.all(Array.from({ length: Math.min(4, pending.length) }, async () => {
+        while (pending.length) {
+          const userId = pending.shift();
+          if (userId) await resolveDownloader(baseId, userId);
+        }
+      }));
+    }
   };
 
   const openDeleteConfirmation = (base: Base) => {
@@ -532,29 +550,6 @@ export default function BasesPage() {
                   </CardHeader>
 
                   <CardContent className="space-y-4">
-                    <dl className="grid gap-2 rounded-xl bg-muted/45 p-3 text-xs sm:grid-cols-3">
-                      <div className="min-w-0">
-                        <dt className="flex items-center gap-1.5 text-muted-foreground">
-                          <Server className="h-3.5 w-3.5" />
-                          {t("context.server")}
-                        </dt>
-                        <dd className="mt-1 truncate font-mono">{base.serverId}</dd>
-                      </div>
-                      <div className="min-w-0">
-                        <dt className="flex items-center gap-1.5 text-muted-foreground">
-                          <Hash className="h-3.5 w-3.5" />
-                          {t("context.channel")}
-                        </dt>
-                        <dd className="mt-1 truncate font-mono">{base.channelId}</dd>
-                      </div>
-                      <div className="min-w-0">
-                        <dt className="flex items-center gap-1.5 text-muted-foreground">
-                          <MessageSquareText className="h-3.5 w-3.5" />
-                          {t("context.message")}
-                        </dt>
-                        <dd className="mt-1 truncate font-mono">{base.messageId}</dd>
-                      </div>
-                    </dl>
 
                     <div className="grid grid-cols-3 gap-2">
                       <div className="rounded-xl bg-muted/55 p-3 text-center">
@@ -606,7 +601,7 @@ export default function BasesPage() {
                       </Button>
                     </div>
 
-                    <Collapsible open={expanded} onOpenChange={() => toggleDownloaders(base.id)}>
+                    <Collapsible open={expanded} onOpenChange={open => toggleDownloaders(base.id, open)}>
                       <CollapsibleTrigger asChild>
                         <Button variant="ghost" className="w-full justify-between px-3">
                           <span className="flex items-center gap-2">
@@ -631,7 +626,8 @@ export default function BasesPage() {
                                 <button
                                   key={userId}
                                   type="button"
-                                  onClick={() => void resolveDownloader(base.id, userId)}
+                                  onClick={() => state?.status === "error" && void resolveDownloader(base.id, userId)}
+                                  disabled={state?.status !== "error"}
                                   className="flex w-full items-center gap-3 rounded-lg px-2.5 py-2 text-left transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                                 >
                                   <Avatar className="h-8 w-8">
@@ -641,8 +637,7 @@ export default function BasesPage() {
                                     </AvatarFallback>
                                   </Avatar>
                                   <div className="min-w-0 flex-1">
-                                    <div className="truncate text-sm font-medium">{profile?.displayName || userId}</div>
-                                    {profile && <div className="truncate font-mono text-[11px] text-muted-foreground">{userId}</div>}
+                                    <div className="truncate text-sm font-medium">{profile ? profile.displayName || tDiscord("status.notOnServer") : tDiscord("unknownUser")}</div>
                                     {state?.status === "error" && <div className="text-[11px] text-destructive">{state.message}</div>}
                                   </div>
                                   {state?.status === "loading" ? (

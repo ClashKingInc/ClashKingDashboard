@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import type { UserInfo } from "@/lib/api/types/auth";
+import { embeddedServerId, notifyNativeSessionExpired } from '@/lib/auth/embedded';
 import { apiClient, getDefaultBaseUrl } from "@/lib/api/client";
 import {
   cacheUser,
@@ -60,9 +61,10 @@ export function AuthSessionProvider({ children }: { children: React.ReactNode })
       if (result === "anonymous") {
         setStatus("anonymous");
         setUser(undefined);
+        notifyNativeSessionExpired();
         return;
       }
-      const current = await apiClient.auth.getCurrentUser();
+      const current = embeddedServerId() ? {data:undefined} : await apiClient.auth.getCurrentUser();
       if (!active) return;
       if (current.data) {
         cacheUser(current.data);
