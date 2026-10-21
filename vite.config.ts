@@ -17,6 +17,9 @@ export default defineConfig(() => {
   }
 
   return {
+    // Local packed API packages can change without a version/lockfile change.
+    // Rebuild dev dependencies on startup instead of serving a retired schema.
+    optimizeDeps: { force: true },
     build: {
       manifest: true,
     },
