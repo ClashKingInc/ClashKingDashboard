@@ -3953,6 +3953,36 @@
       "privacy": "Adatvédelmi irányelvek",
       "terms": "Felhasználási feltételek",
       "legal": "Ez a tartalom nem áll kapcsolatban a Supercell-lel, és a Supercell nem támogatja, nem szponzorálja, illetve nem hagyta kifejezetten jóvá."
+    },
+    "rally": {
+      "wars": "Archivált háborúk",
+      "players": "Követett játékosok",
+      "clans": "Követett klánok",
+      "countsLabel": "Összesített ClashKing-statisztikák",
+      "copy": "A Clash of Clans társad.",
+      "getApp": "Alkalmazás letöltése",
+      "pause": "Animáció szüneteltetése",
+      "resume": "Animáció bekapcsolása",
+      "reduced": "Csökkentett mozgás",
+      "noResults": "Nincs megfelelő nyelv",
+      "clan": {
+        "first": "Szeretetből",
+        "prefix": "a",
+        "word": "klánért"
+      },
+      "stats": {
+        "first": "Szeretetből",
+        "prefix": "a",
+        "word": "statisztikákért"
+      },
+      "game": {
+        "first": "Szeretetből",
+        "prefix": "a",
+        "word": "játékért"
+      },
+      "label": "Szeretetből a klánért. Szeretetből a statisztikákért. Szeretetből a játékért",
+      "modelName": "Logger Guardian",
+      "modelLabel": "Logger Guardian"
     }
   },
   "PublicSeo": {

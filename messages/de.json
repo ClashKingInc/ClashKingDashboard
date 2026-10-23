@@ -3953,6 +3953,36 @@
       "privacy": "Datenschutzerklärung",
       "terms": "Nutzungsbedingungen",
       "legal": "Dieser Inhalt steht in keiner Verbindung zu Supercell und wird von Supercell weder unterstützt, gesponsert noch ausdrücklich genehmigt."
+    },
+    "rally": {
+      "wars": "Archivierte Kriege",
+      "players": "Erfasste Spieler",
+      "clans": "Erfasste Clans",
+      "countsLabel": "ClashKing-Gesamtstatistiken",
+      "copy": "Dein Clash of Clans-Begleiter.",
+      "getApp": "App herunterladen",
+      "pause": "Animation pausieren",
+      "resume": "Animation aktivieren",
+      "reduced": "Reduzierte Bewegung",
+      "noResults": "Keine passenden Sprachen",
+      "clan": {
+        "first": "Aus Liebe",
+        "prefix": "zum",
+        "word": "Clan"
+      },
+      "stats": {
+        "first": "Aus Liebe",
+        "prefix": "zu den",
+        "word": "Statistiken"
+      },
+      "game": {
+        "first": "Aus Liebe",
+        "prefix": "zum",
+        "word": "Spiel"
+      },
+      "label": "Aus Liebe zum Clan. Aus Liebe zu den Statistiken. Aus Liebe zum Spiel",
+      "modelName": "Logger Guardian",
+      "modelLabel": "Logger Guardian"
     }
   },
   "PublicSeo": {

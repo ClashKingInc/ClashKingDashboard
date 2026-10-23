@@ -3953,6 +3953,36 @@
       "privacy": "Política de privacitat",
       "terms": "Termes del servei",
       "legal": "Aquest contingut no està afiliat, recolzat, patrocinat ni aprovat específicament per Supercell."
+    },
+    "rally": {
+      "wars": "Guerres arxivades",
+      "players": "Jugadors seguits",
+      "clans": "Clans seguits",
+      "countsLabel": "Estadístiques totals de ClashKing",
+      "copy": "El teu company de Clash of Clans.",
+      "getApp": "Baixa l’app",
+      "pause": "Pausa les animacions",
+      "resume": "Activa les animacions",
+      "reduced": "Moviment reduït",
+      "noResults": "Cap llengua coincident",
+      "clan": {
+        "first": "Per amor",
+        "prefix": "al",
+        "word": "clan"
+      },
+      "stats": {
+        "first": "Per amor",
+        "prefix": "a les",
+        "word": "estadístiques"
+      },
+      "game": {
+        "first": "Per amor",
+        "prefix": "al",
+        "word": "joc"
+      },
+      "label": "Per amor al clan. Per amor a les estadístiques. Per amor al joc",
+      "modelName": "Logger Guardian",
+      "modelLabel": "Logger Guardian"
     }
   },
   "PublicSeo": {

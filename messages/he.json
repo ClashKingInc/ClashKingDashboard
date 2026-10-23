@@ -3953,6 +3953,36 @@
       "privacy": "מדיניות פרטיות",
       "terms": "תנאי שימוש",
       "legal": "תוכן זה אינו משויך, מאושר, ממומן או מאושר במפורש על ידי Supercell."
+    },
+    "rally": {
+      "wars": "מלחמות בארכיון",
+      "players": "שחקנים במעקב",
+      "clans": "שבטים במעקב",
+      "countsLabel": "הנתונים המצטברים של ClashKing",
+      "copy": "השותף שלך ל-Clash of Clans.",
+      "getApp": "הורדת האפליקציה",
+      "pause": "השהיית הנפשה",
+      "resume": "הפעלת הנפשה",
+      "reduced": "תנועה מופחתת",
+      "noResults": "לא נמצאו שפות",
+      "clan": {
+        "first": "מתוך אהבה",
+        "prefix": "ל",
+        "word": "שבט"
+      },
+      "stats": {
+        "first": "מתוך אהבה",
+        "prefix": "ל",
+        "word": "נתונים"
+      },
+      "game": {
+        "first": "מתוך אהבה",
+        "prefix": "ל",
+        "word": "משחק"
+      },
+      "label": "מתוך אהבה ל שבט. מתוך אהבה ל נתונים. מתוך אהבה ל משחק",
+      "modelName": "Logger Guardian",
+      "modelLabel": "Logger Guardian"
     }
   },
   "PublicSeo": {

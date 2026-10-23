@@ -3953,6 +3953,36 @@
       "privacy": "Chính sách quyền riêng tư",
       "terms": "Điều khoản dịch vụ",
       "legal": "Nội dung này không liên kết với Supercell và cũng không được Supercell chứng thực, tài trợ hay phê duyệt cụ thể."
+    },
+    "rally": {
+      "wars": "Trận chiến đã lưu",
+      "players": "Người chơi được theo dõi",
+      "clans": "Bang hội được theo dõi",
+      "countsLabel": "Thống kê ClashKing mọi thời đại",
+      "copy": "Bạn đồng hành Clash of Clans.",
+      "getApp": "Tải ứng dụng",
+      "pause": "Tạm dừng chuyển động",
+      "resume": "Bật chuyển động",
+      "reduced": "Giảm chuyển động",
+      "noResults": "Không tìm thấy ngôn ngữ",
+      "clan": {
+        "first": "Vì tình yêu",
+        "prefix": "dành cho",
+        "word": "bang hội"
+      },
+      "stats": {
+        "first": "Vì tình yêu",
+        "prefix": "dành cho",
+        "word": "thống kê"
+      },
+      "game": {
+        "first": "Vì tình yêu",
+        "prefix": "dành cho",
+        "word": "trò chơi"
+      },
+      "label": "Vì tình yêu dành cho bang hội. Vì tình yêu dành cho thống kê. Vì tình yêu dành cho trò chơi",
+      "modelName": "Logger Guardian",
+      "modelLabel": "Logger Guardian"
     }
   },
   "PublicSeo": {

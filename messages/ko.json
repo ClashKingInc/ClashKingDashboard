@@ -3953,6 +3953,36 @@
       "privacy": "개인정보 처리방침",
       "terms": "서비스 이용약관",
       "legal": "이 콘텐츠는 Supercell과 제휴 관계가 없으며 Supercell이 보증, 후원 또는 특별히 승인한 콘텐츠가 아닙니다."
+    },
+    "rally": {
+      "wars": "보관된 전쟁",
+      "players": "추적 중인 플레이어",
+      "clans": "추적 중인 클랜",
+      "countsLabel": "ClashKing 누적 통계",
+      "copy": "Clash of Clans의 동반자.",
+      "getApp": "앱 다운로드",
+      "pause": "애니메이션 일시 정지",
+      "resume": "애니메이션 켜기",
+      "reduced": "동작 줄이기",
+      "noResults": "일치하는 언어 없음",
+      "clan": {
+        "first": "사랑하는",
+        "prefix": "",
+        "word": "클랜"
+      },
+      "stats": {
+        "first": "사랑하는",
+        "prefix": "",
+        "word": "통계"
+      },
+      "game": {
+        "first": "사랑하는",
+        "prefix": "",
+        "word": "게임"
+      },
+      "label": "사랑하는  클랜. 사랑하는  통계. 사랑하는  게임",
+      "modelName": "Logger Guardian",
+      "modelLabel": "Logger Guardian"
     }
   },
   "PublicSeo": {

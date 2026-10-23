@@ -3953,6 +3953,36 @@
       "privacy": "Politica de confidențialitate",
       "terms": "Termenii serviciului",
       "legal": "Acest conținut nu este afiliat, aprobat, sponsorizat sau susținut în mod special de Supercell."
+    },
+    "rally": {
+      "wars": "Războaie arhivate",
+      "players": "Jucători urmăriți",
+      "clans": "Clanuri urmărite",
+      "countsLabel": "Statistici totale ClashKing",
+      "copy": "Partenerul tău pentru Clash of Clans.",
+      "getApp": "Descarcă aplicația",
+      "pause": "Oprește animația",
+      "resume": "Activează animația",
+      "reduced": "Mișcare redusă",
+      "noResults": "Nicio limbă găsită",
+      "clan": {
+        "first": "Din dragoste",
+        "prefix": "pentru",
+        "word": "clan"
+      },
+      "stats": {
+        "first": "Din dragoste",
+        "prefix": "pentru",
+        "word": "statistici"
+      },
+      "game": {
+        "first": "Din dragoste",
+        "prefix": "pentru",
+        "word": "joc"
+      },
+      "label": "Din dragoste pentru clan. Din dragoste pentru statistici. Din dragoste pentru joc",
+      "modelName": "Logger Guardian",
+      "modelLabel": "Logger Guardian"
     }
   },
   "PublicSeo": {

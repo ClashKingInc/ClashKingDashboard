@@ -3953,6 +3953,36 @@
       "privacy": "Privaatheidsbeleid",
       "terms": "Diensvoorwaardes",
       "legal": "Hierdie Inhoud is nie aan Supercell verbonde, deur hulle goedgekeur, geborg of spesifiek toegelaat nie."
+    },
+    "rally": {
+      "wars": "Oorloë gestoor",
+      "players": "Spelers gevolg",
+      "clans": "Clans gevolg",
+      "countsLabel": "Alle ClashKing-statistieke",
+      "copy": "Jou Clash of Clans-metgesel.",
+      "getApp": "Kry die toepassing",
+      "pause": "Pouseer animasie",
+      "resume": "Aktiveer animasie",
+      "reduced": "Verminderde animasie",
+      "noResults": "Geen tale gevind",
+      "clan": {
+        "first": "Vir die liefde",
+        "prefix": "vir die",
+        "word": "clan"
+      },
+      "stats": {
+        "first": "Vir die liefde",
+        "prefix": "vir die",
+        "word": "statistieke"
+      },
+      "game": {
+        "first": "Vir die liefde",
+        "prefix": "vir die",
+        "word": "spel"
+      },
+      "label": "Vir die liefde vir die clan. Vir die liefde vir die statistieke. Vir die liefde vir die spel",
+      "modelName": "Logger Guardian",
+      "modelLabel": "Logger Guardian"
     }
   },
   "PublicSeo": {

@@ -3953,6 +3953,36 @@
       "privacy": "Politika privatnosti",
       "terms": "Uslovi korišćenja",
       "legal": "Ovaj sadržaj nije povezan sa kompanijom Supercell niti ga je ona podržala, sponzorisala ili posebno odobrila."
+    },
+    "rally": {
+      "wars": "Архивирани ратови",
+      "players": "Праћени играчи",
+      "clans": "Праћени кланови",
+      "countsLabel": "Укупна ClashKing статистика",
+      "copy": "Ваш Clash of Clans сапутник.",
+      "getApp": "Преузми апликацију",
+      "pause": "Паузирај анимацију",
+      "resume": "Укључи анимацију",
+      "reduced": "Смањено кретање",
+      "noResults": "Нема одговарајућих језика",
+      "clan": {
+        "first": "Из љубави",
+        "prefix": "према",
+        "word": "клану"
+      },
+      "stats": {
+        "first": "Из љубави",
+        "prefix": "према",
+        "word": "статистици"
+      },
+      "game": {
+        "first": "Из љубави",
+        "prefix": "према",
+        "word": "игри"
+      },
+      "label": "Из љубави према клану. Из љубави према статистици. Из љубави према игри",
+      "modelName": "Logger Guardian",
+      "modelLabel": "Logger Guardian"
     }
   },
   "PublicSeo": {

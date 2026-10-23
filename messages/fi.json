@@ -3953,6 +3953,36 @@
       "privacy": "Tietosuojakäytäntö",
       "terms": "Käyttöehdot",
       "legal": "Tämä sisältö ei liity Supercelliin eikä ole sen hyväksymä, sponsoroima tai erikseen hyväksymä."
+    },
+    "rally": {
+      "wars": "Arkistoidut sodat",
+      "players": "Seuratut pelaajat",
+      "clans": "Seuratut klaanit",
+      "countsLabel": "ClashKingin kokonaistilastot",
+      "copy": "Clash of Clans -kumppanisi.",
+      "getApp": "Lataa sovellus",
+      "pause": "Keskeytä animaatiot",
+      "resume": "Ota animaatiot käyttöön",
+      "reduced": "Vähennetty liike",
+      "noResults": "Kieliä ei löytynyt",
+      "clan": {
+        "first": "Rakkaudesta",
+        "prefix": "",
+        "word": "klaaniin"
+      },
+      "stats": {
+        "first": "Rakkaudesta",
+        "prefix": "",
+        "word": "tilastoihin"
+      },
+      "game": {
+        "first": "Rakkaudesta",
+        "prefix": "",
+        "word": "peliin"
+      },
+      "label": "Rakkaudesta  klaaniin. Rakkaudesta  tilastoihin. Rakkaudesta  peliin",
+      "modelName": "Logger Guardian",
+      "modelLabel": "Logger Guardian"
     }
   },
   "PublicSeo": {

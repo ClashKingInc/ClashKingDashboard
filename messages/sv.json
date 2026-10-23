@@ -3953,6 +3953,36 @@
       "privacy": "Integritetspolicy",
       "terms": "Användarvillkor",
       "legal": "Detta innehåll är inte knutet till, stött, sponsrat eller uttryckligen godkänt av Supercell."
+    },
+    "rally": {
+      "wars": "Arkiverade krig",
+      "players": "Spelare som följs",
+      "clans": "Klaner som följs",
+      "countsLabel": "Samlad ClashKing-statistik",
+      "copy": "Din Clash of Clans-följeslagare.",
+      "getApp": "Hämta appen",
+      "pause": "Pausa animation",
+      "resume": "Aktivera animation",
+      "reduced": "Minskad rörelse",
+      "noResults": "Inga språk hittades",
+      "clan": {
+        "first": "Av kärlek",
+        "prefix": "till",
+        "word": "klanen"
+      },
+      "stats": {
+        "first": "Av kärlek",
+        "prefix": "till",
+        "word": "statistiken"
+      },
+      "game": {
+        "first": "Av kärlek",
+        "prefix": "till",
+        "word": "spelet"
+      },
+      "label": "Av kärlek till klanen. Av kärlek till statistiken. Av kärlek till spelet",
+      "modelName": "Logger Guardian",
+      "modelLabel": "Logger Guardian"
     }
   },
   "PublicSeo": {

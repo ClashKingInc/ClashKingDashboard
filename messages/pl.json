@@ -3953,6 +3953,36 @@
       "privacy": "Polityka prywatności",
       "terms": "Warunki korzystania",
       "legal": "Ta zawartość nie jest powiązana z firmą Supercell ani przez nią wspierana, sponsorowana czy w szczególny sposób zatwierdzona."
+    },
+    "rally": {
+      "wars": "Zarchiwizowane wojny",
+      "players": "Śledzeni gracze",
+      "clans": "Śledzone klany",
+      "countsLabel": "Łączne statystyki ClashKing",
+      "copy": "Twój towarzysz Clash of Clans.",
+      "getApp": "Pobierz aplikację",
+      "pause": "Wstrzymaj animacje",
+      "resume": "Włącz animacje",
+      "reduced": "Ograniczony ruch",
+      "noResults": "Nie znaleziono języków",
+      "clan": {
+        "first": "Z miłości",
+        "prefix": "do",
+        "word": "klanu"
+      },
+      "stats": {
+        "first": "Z miłości",
+        "prefix": "do",
+        "word": "statystyk"
+      },
+      "game": {
+        "first": "Z miłości",
+        "prefix": "do",
+        "word": "gry"
+      },
+      "label": "Z miłości do klanu. Z miłości do statystyk. Z miłości do gry",
+      "modelName": "Logger Guardian",
+      "modelLabel": "Logger Guardian"
     }
   },
   "PublicSeo": {

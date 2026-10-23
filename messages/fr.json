@@ -3953,6 +3953,36 @@
       "privacy": "Politique de confidentialité",
       "terms": "Conditions d’utilisation",
       "legal": "Ce contenu n’est ni affilié à Supercell, ni approuvé, sponsorisé ou spécifiquement autorisé par Supercell."
+    },
+    "rally": {
+      "wars": "Guerres archivées",
+      "players": "Joueurs suivis",
+      "clans": "Clans suivis",
+      "countsLabel": "Statistiques ClashKing cumulées",
+      "copy": "Votre compagnon Clash of Clans.",
+      "getApp": "Obtenir l’application",
+      "pause": "Mettre en pause",
+      "resume": "Activer les animations",
+      "reduced": "Animations réduites",
+      "noResults": "Aucune langue trouvée",
+      "clan": {
+        "first": "Pour l’amour",
+        "prefix": "du",
+        "word": "clan"
+      },
+      "stats": {
+        "first": "Pour l’amour",
+        "prefix": "des",
+        "word": "stats"
+      },
+      "game": {
+        "first": "Pour l’amour",
+        "prefix": "du",
+        "word": "jeu"
+      },
+      "label": "Pour l’amour du clan. Pour l’amour des stats. Pour l’amour du jeu",
+      "modelName": "Logger Guardian",
+      "modelLabel": "Logger Guardian. Faites glisser horizontalement pour tourner."
     }
   },
   "PublicSeo": {

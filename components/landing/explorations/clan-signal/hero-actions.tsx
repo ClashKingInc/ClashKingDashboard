@@ -1,12 +1,5 @@
-import Image from "@/components/app-image";
-
-const IOS_URL = "https://testflight.apple.com/join/6Q8dfnMX";
-const ANDROID_URL = "https://play.google.com/store/apps/details?id=com.clashking.clashkingapp";
-const DISCORD_URL = "https://invite.clashk.ing/";
-
 type Platform = "ios" | "android" | "app" | "discord";
-
-function PlatformMark({ platform }: Readonly<{ platform: Platform }>) {
+export function PlatformMark({ platform }: Readonly<{ platform: Platform }>) {
   if (platform === "ios") {
     return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.7 12.8c0-2 1.7-3 1.8-3.1a4 4 0 0 0-3.1-1.7c-1.3-.2-2.6.8-3.3.8-.7 0-1.7-.8-2.8-.8-1.5 0-2.9.9-3.7 2.2-1.6 2.7-.4 6.8 1.1 9 .8 1 1.6 2.2 2.8 2.1 1.1 0 1.6-.7 3-.7s1.8.7 3 .7c1.2 0 2-1.1 2.7-2.1.9-1.2 1.2-2.4 1.2-2.5-.1 0-2.7-1.1-2.7-3.9Zm-2.2-6.2c.6-.8 1-1.9.9-3-.9 0-2 .6-2.7 1.4-.6.7-1.1 1.8-1 2.9 1 .1 2.1-.5 2.8-1.3Z" /></svg>;
   }
@@ -22,42 +15,6 @@ function PlatformMark({ platform }: Readonly<{ platform: Platform }>) {
   return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4.8C3 3.8 3.8 3 4.8 3h5.4v8H3V4.8Zm10.8-1.8h5.4c1 0 1.8.8 1.8 1.8V11h-7.2V3ZM3 14h7.2v7H4.8c-1 0-1.8-.8-1.8-1.8V14Zm10.8 0H21v5.2c0 1-.8 1.8-1.8 1.8h-5.4v-7Z" /></svg>;
 }
 
-function ArrowAsset() {
-  return (
-    <Image
-      src="/concepts/local/assets/icons/Icon_DC_ArrowRight.png"
-      alt=""
-      width={12}
-      height={17}
-      className="cs-arrow"
-      unoptimized
-    />
-  );
-}
-
-export function HeroActions({
-  mobileAppLabel,
-  iosLabel,
-  androidLabel,
-  discordLabel,
-}: Readonly<{
-  mobileAppLabel: string;
-  iosLabel: string;
-  androidLabel: string;
-  discordLabel: string;
-}>) {
-  return (
-    <>
-      <div className="cs-actions cs-hero-store-actions cs-hero-actions-desktop">
-        <a className="cs-store-link is-primary" href="#app"><PlatformMark platform="app" /> {mobileAppLabel} <ArrowAsset /></a>
-        <a className="cs-store-link" href={DISCORD_URL} target="_blank" rel="noreferrer"><PlatformMark platform="discord" /> {discordLabel} <ArrowAsset /></a>
-      </div>
-      <div className="cs-actions cs-hero-store-actions cs-hero-actions-mobile">
-        <a className="cs-store-link cs-mobile-app-link is-ios is-primary" href={IOS_URL} target="_blank" rel="noreferrer"><PlatformMark platform="ios" /> {iosLabel} <ArrowAsset /></a>
-        <a className="cs-store-link cs-mobile-app-link is-android is-primary" href={ANDROID_URL} target="_blank" rel="noreferrer"><PlatformMark platform="android" /> {androidLabel} <ArrowAsset /></a>
-        <a className="cs-store-link cs-mobile-app-link is-fallback is-primary" href="#app"><PlatformMark platform="app" /> {mobileAppLabel} <ArrowAsset /></a>
-        <a className="cs-store-link" href={DISCORD_URL} target="_blank" rel="noreferrer"><PlatformMark platform="discord" /> {discordLabel} <ArrowAsset /></a>
-      </div>
-    </>
-  );
+export function HeroActions({ mobileAppLabel, discordLabel }: { mobileAppLabel: string; discordLabel: string }) {
+  return <div className="ck-hero-actions"><a className="ck-discord" href="https://invite.clashk.ing/" target="_blank" rel="noreferrer"><PlatformMark platform="discord" />{discordLabel}</a><a className="ck-get-app" href="#app">{mobileAppLabel}</a></div>;
 }

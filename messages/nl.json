@@ -3953,6 +3953,36 @@
       "privacy": "Privacybeleid",
       "terms": "Servicevoorwaarden",
       "legal": "Deze inhoud is niet gelieerd aan, goedgekeurd, gesponsord of specifiek toegestaan door Supercell."
+    },
+    "rally": {
+      "wars": "Opgeslagen oorlogen",
+      "players": "Gevolgde spelers",
+      "clans": "Gevolgde clans",
+      "countsLabel": "ClashKing-statistieken aller tijden",
+      "copy": "Je Clash of Clans-metgezel.",
+      "getApp": "Download de app",
+      "pause": "Animaties pauzeren",
+      "resume": "Animaties aanzetten",
+      "reduced": "Minder animaties",
+      "noResults": "Geen talen gevonden",
+      "clan": {
+        "first": "Uit liefde",
+        "prefix": "voor de",
+        "word": "clan"
+      },
+      "stats": {
+        "first": "Uit liefde",
+        "prefix": "voor de",
+        "word": "stats"
+      },
+      "game": {
+        "first": "Uit liefde",
+        "prefix": "voor het",
+        "word": "spel"
+      },
+      "label": "Uit liefde voor de clan. Uit liefde voor de stats. Uit liefde voor het spel",
+      "modelName": "Logger Guardian",
+      "modelLabel": "Logger Guardian. Sleep horizontaal om te draaien."
     }
   },
   "PublicSeo": {

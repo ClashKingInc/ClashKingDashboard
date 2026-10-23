@@ -3953,6 +3953,36 @@
       "privacy": "プライバシーポリシー",
       "terms": "利用規約",
       "legal": "このコンテンツはSupercellと提携しておらず、承認、支援、または特別な許可を受けたものではありません。"
+    },
+    "rally": {
+      "wars": "保存された対戦",
+      "players": "追跡中のプレイヤー",
+      "clans": "追跡中のクラン",
+      "countsLabel": "ClashKingの累計統計",
+      "copy": "Clash of Clansのパートナー。",
+      "getApp": "アプリを入手",
+      "pause": "アニメーションを停止",
+      "resume": "アニメーションを有効化",
+      "reduced": "視差効果を減らす",
+      "noResults": "該当する言語はありません",
+      "clan": {
+        "first": "愛する",
+        "prefix": "",
+        "word": "クラン"
+      },
+      "stats": {
+        "first": "愛する",
+        "prefix": "",
+        "word": "データ"
+      },
+      "game": {
+        "first": "愛する",
+        "prefix": "",
+        "word": "ゲーム"
+      },
+      "label": "愛する  クラン. 愛する  データ. 愛する  ゲーム",
+      "modelName": "Logger Guardian",
+      "modelLabel": "Logger Guardian"
     }
   },
   "PublicSeo": {

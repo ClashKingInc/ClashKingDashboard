@@ -3953,6 +3953,36 @@
       "privacy": "Privacy Policy",
       "terms": "Terms of Service",
       "legal": "This content is not affiliated with, endorsed, sponsored, or specifically approved by Supercell."
+    },
+    "rally": {
+      "wars": "Wars archived",
+      "players": "Players tracked",
+      "clans": "Clans tracked",
+      "countsLabel": "All-time ClashKing statistics",
+      "copy": "Your Clash of Clans companion.",
+      "getApp": "Get the app",
+      "pause": "Pause motion",
+      "resume": "Enable motion",
+      "reduced": "Reduced motion",
+      "noResults": "No matching languages",
+      "clan": {
+        "first": "For the love",
+        "prefix": "of the",
+        "word": "clan"
+      },
+      "stats": {
+        "first": "For the love",
+        "prefix": "of the",
+        "word": "stats"
+      },
+      "game": {
+        "first": "For the love",
+        "prefix": "of the",
+        "word": "game"
+      },
+      "label": "For the love of the clan. For the love of the stats. For the love of the game",
+      "modelName": "Logger Guardian",
+      "modelLabel": "Logger Guardian. Drag horizontally to turn."
     }
   },
   "PublicSeo": {

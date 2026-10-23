@@ -3953,6 +3953,36 @@
       "privacy": "سياسة الخصوصية",
       "terms": "شروط الخدمة",
       "legal": "هذا المحتوى غير تابع لـSupercell ولا معتمد أو ممول أو موافق عليه تحديدًا منها."
+    },
+    "rally": {
+      "wars": "حروب مؤرشفة",
+      "players": "لاعبون متابعون",
+      "clans": "عشائر متابعة",
+      "countsLabel": "إحصائيات ClashKing الإجمالية",
+      "copy": "رفيقك في Clash of Clans.",
+      "getApp": "احصل على التطبيق",
+      "pause": "إيقاف الحركة",
+      "resume": "تفعيل الحركة",
+      "reduced": "حركة مخفّضة",
+      "noResults": "لا توجد لغات مطابقة",
+      "clan": {
+        "first": "حبًا في",
+        "prefix": "",
+        "word": "العشيرة"
+      },
+      "stats": {
+        "first": "حبًا في",
+        "prefix": "",
+        "word": "الإحصائيات"
+      },
+      "game": {
+        "first": "حبًا في",
+        "prefix": "",
+        "word": "اللعبة"
+      },
+      "label": "حبًا في  العشيرة. حبًا في  الإحصائيات. حبًا في  اللعبة",
+      "modelName": "Logger Guardian",
+      "modelLabel": "Logger Guardian"
     }
   },
   "PublicSeo": {

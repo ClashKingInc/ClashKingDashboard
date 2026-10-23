@@ -3953,6 +3953,36 @@
       "privacy": "Zásady ochrany osobních údajů",
       "terms": "Podmínky služby",
       "legal": "Tento obsah není přidružen k Supercell, podporován ani sponzorován společností Supercell a nebyl jí výslovně schválen."
+    },
+    "rally": {
+      "wars": "Archivované války",
+      "players": "Sledovaní hráči",
+      "clans": "Sledované klany",
+      "countsLabel": "Celkové statistiky ClashKing",
+      "copy": "Váš společník pro Clash of Clans.",
+      "getApp": "Získat aplikaci",
+      "pause": "Pozastavit animace",
+      "resume": "Zapnout animace",
+      "reduced": "Omezený pohyb",
+      "noResults": "Žádné odpovídající jazyky",
+      "clan": {
+        "first": "Z lásky",
+        "prefix": "ke",
+        "word": "klanu"
+      },
+      "stats": {
+        "first": "Z lásky",
+        "prefix": "ke",
+        "word": "statistikám"
+      },
+      "game": {
+        "first": "Z lásky",
+        "prefix": "ke",
+        "word": "hře"
+      },
+      "label": "Z lásky ke klanu. Z lásky ke statistikám. Z lásky ke hře",
+      "modelName": "Logger Guardian",
+      "modelLabel": "Logger Guardian"
     }
   },
   "PublicSeo": {

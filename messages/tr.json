@@ -3953,6 +3953,36 @@
       "privacy": "Gizlilik Politikası",
       "terms": "Hizmet Şartları",
       "legal": "Bu içerik Supercell ile bağlantılı değildir; Supercell tarafından onaylanmamış veya desteklenmemiştir."
+    },
+    "rally": {
+      "wars": "Arşivlenen savaşlar",
+      "players": "Takip edilen oyuncular",
+      "clans": "Takip edilen klanlar",
+      "countsLabel": "Tüm zamanların ClashKing istatistikleri",
+      "copy": "Clash of Clans yardımcınız.",
+      "getApp": "Uygulamayı indir",
+      "pause": "Animasyonu duraklat",
+      "resume": "Animasyonu etkinleştir",
+      "reduced": "Azaltılmış hareket",
+      "noResults": "Eşleşen dil bulunamadı",
+      "clan": {
+        "first": "Sevgiyle",
+        "prefix": "",
+        "word": "klan"
+      },
+      "stats": {
+        "first": "Sevgiyle",
+        "prefix": "",
+        "word": "istatistikler"
+      },
+      "game": {
+        "first": "Sevgiyle",
+        "prefix": "",
+        "word": "oyun"
+      },
+      "label": "Sevgiyle  klan. Sevgiyle  istatistikler. Sevgiyle  oyun",
+      "modelName": "Logger Guardian",
+      "modelLabel": "Logger Guardian"
     }
   },
   "PublicSeo": {

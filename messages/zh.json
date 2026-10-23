@@ -3953,6 +3953,36 @@
       "privacy": "隐私政策",
       "terms": "服务条款",
       "legal": "此内容与Supercell无关联，且未获得其认可、赞助或特别批准。"
+    },
+    "rally": {
+      "wars": "已存档的部落战",
+      "players": "追踪的玩家",
+      "clans": "追踪的部落",
+      "countsLabel": "ClashKing累计统计",
+      "copy": "你的Clash of Clans伙伴。",
+      "getApp": "下载应用",
+      "pause": "暂停动画",
+      "resume": "启用动画",
+      "reduced": "减少动态效果",
+      "noResults": "未找到匹配语言",
+      "clan": {
+        "first": "因为热爱",
+        "prefix": "",
+        "word": "部落"
+      },
+      "stats": {
+        "first": "因为热爱",
+        "prefix": "",
+        "word": "数据"
+      },
+      "game": {
+        "first": "因为热爱",
+        "prefix": "",
+        "word": "游戏"
+      },
+      "label": "因为热爱  部落. 因为热爱  数据. 因为热爱  游戏",
+      "modelName": "Logger Guardian",
+      "modelLabel": "Logger Guardian"
     }
   },
   "PublicSeo": {

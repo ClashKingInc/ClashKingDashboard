@@ -1,0 +1,107 @@
+@font-face{font-family:Bricolage;src:url('/landing/bricolage.ttf') format('truetype');font-weight:200 800;font-stretch:75% 100%;font-display:swap}
+/* Home-only styles leave the shared legal and support pages unchanged. */
+.ck-home{--ck-gutter:clamp(22px,5vw,80px);--ck-ease:cubic-bezier(.16,1,.3,1)}
+.ck-home .ck-wrap{max-width:1600px;margin-inline:auto;padding-inline:var(--ck-gutter)}
+.ck-sky{position:relative;isolation:isolate;overflow:hidden;background:linear-gradient(180deg,#48a2d5 0,#c1f1ff 480px,#c1f1ff 100%);color:#17352a}
+.ck-sky::before{content:'';position:absolute;z-index:-1;top:65px;bottom:0;left:-100%;width:300%;background:url('/concepts/clan-signal/clash-clouds-transparent.png') center top / max(100vw,1320px) auto repeat-x;pointer-events:none;animation:ck-sky-drift 160s linear infinite}
+@keyframes ck-sky-drift{from{transform:translateX(0)}to{transform:translateX(15%)}}
+.ck-home .ck-nav-shell{position:relative;z-index:3}
+.ck-home .cs-nav{height:96px;display:flex;align-items:center;gap:42px;width:100%}
+.ck-home .cs-nav-brand{width:156px;flex-shrink:0}
+.ck-home .cs-nav-links{display:flex;gap:32px;margin-inline-start:auto;font-size:14px}
+.ck-home .cs-nav-links a{font-size:14px;color:inherit}
+.ck-home .cs-nav-actions{display:flex;gap:12px;flex-shrink:0}
+.ck-home .cs-session-action{min-height:46px;padding:11px 23px;background:#c90d18;border:0;border-radius:13px;color:#fff!important;font-size:14px;box-shadow:none}
+.ck-home .cs-session-action:hover{background:#ae0913}
+.ck-home .cs-language-trigger{display:inline-flex;font-size:12px;color:#17352a;background:#ffffff4d;min-height:44px;padding:9px 12px;font-weight:650}
+.cs-language-trigger .ck-preference-chevron{width:14px;height:14px;flex:0 0 14px}
+.ck-home .cs-language-trigger>span:not(.cs-language-flag){line-height:1}
+.ck-home .cs-language-flag,.ck-preferences .cs-language-flag{width:24px;height:18px;flex-basis:24px}
+.ck-home .ck-hero{display:grid;grid-template-columns:1.18fr 1fr;align-items:center;position:relative;min-height:610px;height:min(720px,calc(100svh - 110px))}
+.ck-hero-copy{position:relative;z-index:1;padding-bottom:16px;min-width:0}
+.ck-home .ck-headline{font-family:Bricolage,ClashKing,sans-serif;font-variation-settings:'opsz' 96,'wdth' 100,'wght' 750;font-weight:750;font-size:clamp(60px,7.5vw,118px);letter-spacing:-.025em;word-spacing:.08em;line-height:.98;color:#122c23}
+.ck-line{display:block;padding-bottom:.14em;margin-bottom:-.14em;overflow:hidden}
+.ck-line-inner{display:block;white-space:nowrap;width:max-content}
+.ck-headline em{font-style:normal;position:relative;display:inline-block;color:#d90709}
+.ck-headline em>span{display:inline-block}
+.ck-headline em svg{position:absolute;left:-2%;bottom:-.09em;width:104%;height:.2em;overflow:visible;fill:none;stroke:#d90709;stroke-width:3;stroke-linecap:round}
+.ck-home .ck-hero-copy>p{font-size:20px;color:#455e58;margin-top:30px}
+.ck-hero-actions{display:flex;align-items:center;gap:30px;margin-top:32px}
+.ck-home .ck-discord{display:inline-flex;align-items:center;justify-content:center;gap:12px;padding:16px 25px;min-height:56px;border-radius:16px;font-size:16px;font-weight:600;background:#5865f2;color:#fff;transition:background 160ms,transform 160ms}
+.ck-discord>svg{width:23px;height:23px;fill:currentColor}
+.ck-home .ck-discord:hover{background:#6975ff}
+.ck-home .ck-get-app{font-size:16px;padding:16px 0;color:inherit;font-weight:600}
+.ck-home .ck-get-app:hover{text-decoration:underline;text-underline-offset:5px}
+.ck-logger{height:100%;position:relative;min-width:0;isolation:isolate}
+.ck-logger>img{position:absolute;height:83%;width:88%;object-fit:contain;bottom:6%;left:6%}
+.ck-logger[data-model=ready]>img{visibility:hidden}
+.ck-logger canvas{position:absolute;inset:0;width:100%;height:100%;cursor:grab;touch-action:pan-y}
+.ck-home .ck-counts{position:relative;display:grid;grid-template-columns:1.15fr 1.05fr 1fr;gap:42px;padding-top:35px;padding-bottom:76px;min-height:164px}
+.ck-stat{display:flex;align-items:center;gap:18px;min-width:0}
+.ck-stat img{width:46px;height:50px;object-fit:contain;flex-shrink:0}
+.ck-stat strong{font-size:clamp(24px,2.8vw,44px);font-variant-numeric:tabular-nums;font-weight:700;line-height:1.2;display:flex;white-space:nowrap}
+.ck-stat>div>span{display:block;color:#455e58;font-size:14px;margin-top:10px}
+.ck-digit{display:inline-block;width:.62em;height:1.14em;position:relative;overflow:hidden;text-align:center}
+.ck-digit-track{position:absolute;top:0;left:0;width:100%;display:flex;flex-direction:column}
+.ck-digit-track>i{display:block;height:1.14em;line-height:1.14;flex-shrink:0;font-style:normal}
+.ck-home .section-scribble{position:relative;display:inline-block;white-space:nowrap}
+.ck-home .section-scribble svg{position:absolute;left:-2%;bottom:-.1em;width:104%;height:.18em;overflow:visible;fill:none;stroke:#d90709;stroke-width:2.6;stroke-linecap:round}
+.ck-home .section-scribble.is-drawn svg path{stroke-dasharray:550;animation:ck-scribble-in 650ms var(--ck-ease) both}
+@keyframes ck-scribble-in{from{stroke-dashoffset:550}to{stroke-dashoffset:0}}
+.ck-home .cs-feature-list{display:grid;gap:16px;margin-top:32px;border:0;max-width:560px}
+.ck-home .cs-feature-list article{display:grid;grid-template-columns:44px minmax(0,1fr);gap:18px;align-items:center;padding:10px 0;border:0;background:none}
+.ck-home .cs-feature-icon{width:44px;height:44px;border-radius:50%;background:#e7b63c1a;box-shadow:none}
+.ck-home .cs-feature-list article:nth-child(2) .cs-feature-icon{background:#4e92be1f}
+.ck-home .cs-feature-list article:nth-child(3) .cs-feature-icon{background:#6fa58221}
+.ck-home .cs-feature-icon img{width:30px;height:30px;object-fit:contain}
+.ck-home .cs-feature-icon img[src$="clock.png"]{filter:brightness(.65) sepia(.6) saturate(2) hue-rotate(130deg)}
+.ck-home .cs-feature-list h3{font-family:Bricolage,ClashKing,sans-serif;font-weight:650;font-size:19px;line-height:1.15}
+.ck-home .cs-feature-list article p{font-size:13px;line-height:1.5;margin-top:5px;color:#586f65}
+.ck-home .cs-mobile h2,.ck-home .cs-bot h2{white-space:nowrap;font-size:clamp(34px,3.6vw,54px)}
+.ck-home .cs-bot{background:transparent;border-radius:0;padding:95px 0;min-height:0;grid-template-columns:minmax(0,1fr) minmax(330px,.9fr);gap:clamp(50px,8vw,110px)}
+.ck-home .cs-bot-art{padding:0;min-height:0;background:none;border-radius:0;overflow:visible;display:flex;justify-content:center;transform:rotate(2deg)}
+.ck-home .cs-bot-art>.cs-discord-preview{width:min(100%,410px);max-width:410px;border-radius:14px;filter:drop-shadow(0 18px 24px #19322c21)}
+.ck-home .ck-downloads{display:flex;gap:12px;margin-top:28px;flex-wrap:nowrap;align-items:stretch}
+.ck-home .ck-download{display:flex;align-items:center;justify-content:center;gap:12px;background:#18362b;color:#fff;padding:12px 20px;min-height:62px;border-radius:14px;white-space:nowrap}
+.ck-download>svg{width:27px;height:29px;fill:currentColor;flex-shrink:0}.ck-download>span{font-size:17px;line-height:1.2;font-weight:600}.ck-download small{display:block;font-size:10px;font-weight:500;line-height:1.5;color:#d4e2dc}
+.ck-home .cs-resources{grid-template-columns:1fr 1.15fr;gap:70px;border-top:0;padding-block:90px}
+.ck-home .cs-resources h2{font-size:clamp(34px,4vw,60px);line-height:1.12}
+.ck-home .cs-resources>div p{font-size:14px;max-width:35ch;margin-top:23px}
+.ck-home .cs-resources nav{display:grid;gap:12px}
+.ck-home .cs-resources nav a{display:grid;grid-template-columns:32px 1fr 19px;gap:17px;align-items:center;min-height:91px;padding:18px 0;border:0;border-radius:0;border-bottom:1px solid var(--cs-line);background:none}
+.ck-home .cs-resources nav a:first-child{border-top:0}
+.ck-home .cs-resources nav a strong{font-family:Bricolage,ClashKing,sans-serif;font-size:19px;font-weight:650}
+.ck-home .cs-resources nav svg{width:18px;height:18px}.ck-home .cs-resources nav .ck-resource-icon{width:25px;height:25px;color:#467867}
+.ck-home .cs-footer-links button{font:inherit;font-size:.74rem;font-weight:750;color:inherit;background:none;border:0;cursor:pointer}
+.ck-home[data-cs-theme=sunset] .ck-sky{background:linear-gradient(180deg,#181a3b 0,#744867 28%,#b96576 48%,#6a415d 68%,#2e2844 100%);color:#fff2d5}
+.ck-home[data-cs-theme=sunset] .ck-sky::before{filter:grayscale(1) sepia(.55) saturate(1.25) hue-rotate(330deg) brightness(.76);opacity:.82}
+.ck-home[data-cs-theme=sunset] .ck-headline{color:#fff2d5}
+.ck-home[data-cs-theme=sunset] .ck-headline em>span{-webkit-text-stroke:3px #fff;paint-order:stroke fill}
+.ck-home[data-cs-theme=sunset] .ck-hero-copy>p,.ck-home[data-cs-theme=sunset] .ck-stat>div>span{color:#e6d6df}
+.ck-home[data-cs-theme=sunset] .cs-language-trigger{background:#241e3580;color:#fff2d5;border-color:#fff3}
+.ck-home[data-cs-theme=sunset] .cs-feature-list article p{color:#dbcbd3}
+.ck-home[data-cs-theme=sunset] .cs-feature-icon{background:#493d56}
+.ck-home[data-cs-theme=sunset] .ck-download{background:#f2e3c9;color:#302637}.ck-home[data-cs-theme=sunset] .ck-download small{color:#5f4f64}
+.ck-home[data-cs-theme=sunset] .section-scribble svg{stroke:#ff9292}
+/* The popover is portaled, so its theme is explicit instead of inherited from the page. */
+.ck-preferences{width:300px!important;padding:14px!important;border-radius:19px!important;border:1px solid #c8d8d1!important;background:#f8fcf9!important;color:#17352a!important;box-shadow:0 12px 40px #17352a26;font:14px ClashKing,sans-serif;max-height:calc(100dvh - 90px)!important}
+.ck-preferences button{cursor:pointer;font:inherit;color:inherit}
+.ck-language-open{display:flex;align-items:center;justify-content:space-between;width:100%;padding:10px 10px 15px;border:0;border-radius:10px;background:none;text-align:start}
+.ck-language-open small{display:block;font-size:11px;color:#658071;margin-bottom:4px}.ck-language-open strong{font-family:Bricolage,ClashKing,sans-serif;font-size:18px;font-weight:600}
+.ck-preferences fieldset{margin:12px 0 0;padding:13px 0 0;border:0;border-top:1px solid #dfe8e2}.ck-preferences legend{float:left;width:100%;margin:0 0 10px;padding:0 8px;font-size:11px;color:#658071}
+.ck-theme-options{clear:both;display:grid;grid-template-columns:1fr 1fr;gap:10px}.ck-theme-options button{position:relative;display:flex;flex-direction:column;align-items:center;gap:8px;padding:6px 6px 9px;border:1px solid transparent;border-radius:12px;background:none;font-size:11px}
+.ck-theme-options button[aria-pressed=true]{background:#e5efe8;border-color:#aec4b6}.ck-theme-options button>svg{position:absolute;right:9px;top:9px;border-radius:50%;background:#17352a;color:white;padding:2px;width:17px;height:17px}
+.ck-theme-preview{width:100%;height:48px;position:relative;overflow:hidden;border-radius:8px}.ck-theme-preview::after{content:'';position:absolute;inset:0;background:url('/concepts/clan-signal/clash-clouds-transparent.png') 50% 15% / 220px auto no-repeat}.ck-theme-day{background:linear-gradient(#4c9dcc,#bdeef9)}.ck-theme-sunset{background:linear-gradient(#282340,#b5657c)}.ck-theme-sunset::after{filter:sepia(.5) brightness(.8)}
+.ck-language-heading{display:flex;align-items:center;gap:8px;margin-bottom:12px}.ck-language-heading button{padding:8px;border:0;background:none}.ck-language-command{background:none!important;color:inherit!important}.ck-language-command [cmdk-input-wrapper]{border:0;background:#e9f1eb;border-radius:10px}.ck-language-command [cmdk-list]{max-height:min(310px,45svh);margin-top:9px}.ck-language-command [cmdk-item]{gap:12px;min-height:40px;padding:11px 10px;color:inherit;border-radius:9px;font-size:13px}.ck-language-command [cmdk-item]>span:not(.cs-language-flag){flex:1}.ck-language-command [cmdk-item] small{font-size:9px;color:#7b9182}.ck-language-command [cmdk-item][data-selected=true]{background:#ddebe1;color:inherit}
+.ck-preferences[data-landing-theme=sunset]{background:#332b48!important;color:#fff2d5!important;border-color:#645570!important}.ck-preferences[data-landing-theme=sunset] .ck-language-open small,.ck-preferences[data-landing-theme=sunset] legend{color:#cbb9d2}.ck-preferences[data-landing-theme=sunset] [cmdk-input-wrapper]{background:#443650}.ck-preferences[data-landing-theme=sunset] [cmdk-item][data-selected=true]{background:#57425f}.ck-preferences[data-landing-theme=sunset] fieldset{border-color:#594763}.ck-preferences[data-landing-theme=sunset] .ck-theme-options button[aria-pressed=true]{background:#624761;border-color:#cc9ba4}
+@media(min-width:1600px){.ck-home .ck-hero{height:730px}}
+@media(max-width:1100px){.ck-home .cs-nav{gap:23px}.ck-home .cs-nav-links{gap:22px}.ck-home .ck-hero{min-height:570px;height:620px;grid-template-columns:1.13fr 1fr}.ck-home .ck-headline{font-size:7.5vw}.ck-home .ck-hero-copy>p{font-size:17px}.ck-home .ck-counts{gap:22px;padding-bottom:50px}.ck-stat{gap:12px}.ck-stat strong{font-size:2.7vw}.ck-stat img{width:37px;height:43px}}
+@media(max-width:900px){.ck-home .cs-bot{grid-template-columns:1fr;gap:45px}}
+@media(max-width:800px){.ck-home .cs-resources{grid-template-columns:1fr;gap:35px}}
+@media(max-width:760px){.ck-home{--ck-gutter:24px}.ck-home .cs-nav{display:grid;grid-template-columns:1fr auto;gap:5px 12px;height:auto;min-height:113px;padding-block:13px 8px}.ck-home .cs-nav-brand{width:124px}.ck-home .cs-nav-actions{grid-column:2;grid-row:1;gap:8px}.ck-home .cs-nav-links{display:flex;grid-row:2;grid-column:1/-1;justify-content:center;margin-inline-start:0;gap:clamp(14px,4vw,30px)}.ck-home .cs-nav-links a{padding-block:8px;font-size:12px}.ck-home .cs-session-action{font-size:12px;padding:9px 15px;min-height:42px}.ck-home .cs-language-trigger{min-height:42px;padding:9px;font-size:11px;gap:6px}.ck-home .ck-hero{display:flex;flex-direction:column;height:auto;min-height:0;align-items:stretch}.ck-hero-copy{padding-top:32px;padding-bottom:0}.ck-home .ck-headline{font-size:11.8vw;line-height:1.02}.ck-home .ck-hero-copy>p{font-size:16px;margin-top:21px}.ck-hero-actions{gap:25px;margin-top:25px}.ck-home .ck-discord{font-size:14px;min-height:50px;padding:14px 21px;border-radius:13px}.ck-home .ck-get-app{font-size:14px}.ck-logger{height:380px;min-height:380px;margin-top:4px;width:100%}.ck-home .ck-counts{padding-top:8px;padding-bottom:60px;grid-template-columns:1fr;gap:27px;max-width:480px}.ck-stat{gap:22px;padding-inline-start:8px}.ck-stat strong{font-size:36px}.ck-stat img{width:45px;height:48px}.ck-stat>div>span{font-size:13px;margin-top:5px}.ck-sky::before{background-size:auto 640px;top:95px}}
+@media(max-width:640px){.ck-home .cs-mobile h2,.ck-home .cs-bot h2{font-size:clamp(28px,8.5vw,40px)}.ck-home .cs-feature-list{gap:15px}.ck-home .cs-feature-list article{gap:14px;padding:8px 0;grid-template-columns:40px minmax(0,1fr)}.ck-home .cs-feature-list h3{font-size:18px}.ck-home .cs-feature-list article p{font-size:12px}.ck-home .cs-feature-icon{width:40px;height:40px}.ck-home .cs-bot{padding:65px 0}.ck-home .ck-download{flex:1;padding:11px 12px;gap:9px;min-height:60px}.ck-home .ck-download>span{font-size:15px}.ck-home .ck-download small{font-size:9px}.ck-home .ck-downloads{gap:10px}}
+@media(max-width:370px){.ck-home .cs-nav-brand{width:111px}.ck-home .cs-session-action{padding:9px 12px}.ck-home .cs-nav-actions{gap:6px}.ck-home .ck-headline{font-size:11.1vw}.ck-logger{height:335px;min-height:335px}.ck-stat strong{font-size:32px}}
+@media(prefers-reduced-motion:reduce){.ck-home *,.ck-home *::before{animation:none!important;transition:none!important}}
+.ck-home[data-motion=paused] *,.ck-home[data-motion=paused] *::before{animation:none!important;transition:none!important}
+/* The shared sunset button rule must not turn the primary session action dark. */
+.ck-home[data-cs-theme=sunset] .cs-session-action{color:#fff!important;background:#c90d18}

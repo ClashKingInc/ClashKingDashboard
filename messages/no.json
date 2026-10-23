@@ -3953,6 +3953,36 @@
       "privacy": "Personvernerklæring",
       "terms": "Servicevilkår",
       "legal": "Dette innholdet er ikke koblet, godkjent eller sponset av Supercell."
+    },
+    "rally": {
+      "wars": "Arkiverte kriger",
+      "players": "Spillere fulgt",
+      "clans": "Klaner fulgt",
+      "countsLabel": "Samlet ClashKing-statistikk",
+      "copy": "Din Clash of Clans-følgesvenn.",
+      "getApp": "Last ned appen",
+      "pause": "Sett animasjon på pause",
+      "resume": "Aktiver animasjon",
+      "reduced": "Redusert bevegelse",
+      "noResults": "Ingen språk funnet",
+      "clan": {
+        "first": "Av kjærlighet",
+        "prefix": "til",
+        "word": "klanen"
+      },
+      "stats": {
+        "first": "Av kjærlighet",
+        "prefix": "til",
+        "word": "statistikken"
+      },
+      "game": {
+        "first": "Av kjærlighet",
+        "prefix": "til",
+        "word": "spillet"
+      },
+      "label": "Av kjærlighet til klanen. Av kjærlighet til statistikken. Av kjærlighet til spillet",
+      "modelName": "Logger Guardian",
+      "modelLabel": "Logger Guardian"
     }
   },
   "PublicSeo": {

@@ -3953,6 +3953,36 @@
       "privacy": "پرائیویسی پالیسی",
       "terms": "سروس کی شرائط",
       "legal": "یہ مواد Supercell سے وابستہ نہیں اور نہ ہی Supercell نے اس کی توثیق، سرپرستی یا خصوصی منظوری دی ہے۔"
+    },
+    "rally": {
+      "wars": "محفوظ جنگیں",
+      "players": "ٹریک کیے گئے کھلاڑی",
+      "clans": "ٹریک کیے گئے قبیلے",
+      "countsLabel": "ClashKing کے مجموعی اعداد و شمار",
+      "copy": "آپ کا Clash of Clans ساتھی۔",
+      "getApp": "ایپ حاصل کریں",
+      "pause": "حرکت روکیں",
+      "resume": "حرکت فعال کریں",
+      "reduced": "کم حرکت",
+      "noResults": "کوئی زبان نہیں ملی",
+      "clan": {
+        "first": "محبت کے لیے",
+        "prefix": "",
+        "word": "قبیلہ"
+      },
+      "stats": {
+        "first": "محبت کے لیے",
+        "prefix": "",
+        "word": "اعداد و شمار"
+      },
+      "game": {
+        "first": "محبت کے لیے",
+        "prefix": "",
+        "word": "کھیل"
+      },
+      "label": "محبت کے لیے  قبیلہ. محبت کے لیے  اعداد و شمار. محبت کے لیے  کھیل",
+      "modelName": "Logger Guardian",
+      "modelLabel": "Logger Guardian"
     }
   },
   "PublicSeo": {
