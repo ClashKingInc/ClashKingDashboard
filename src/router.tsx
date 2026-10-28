@@ -119,7 +119,6 @@ const dashboardRoutes = [
   dashboardPage("bases", () => import("@/app/dashboard/bases/page")),
   dashboardPage("clans", () => import("@/app/dashboard/clans/page")),
   dashboardPage("analytics", () => import("@/app/dashboard/analytics/page")),
-  dashboardPage("competitive", () => import("@/app/dashboard/competitive/page")),
   dashboardPage("embeds", () => import("@/app/dashboard/embeds/page")),
   dashboardPage("general", () => import("@/app/dashboard/general/page")),
   dashboardPage("giveaways", () => import("@/app/dashboard/giveaways/page"), GiveawaysLoadingPage),

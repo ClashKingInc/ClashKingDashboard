@@ -12,7 +12,6 @@ import {
   Settings,
   ShieldCheck,
   TicketIcon,
-  Trophy,
   Users,
 } from "lucide-react";
 import type { DashboardCapabilities, DashboardSection } from "@/lib/api/types/dashboard-access";
@@ -48,7 +47,6 @@ export const dashboardNavigationSections: DashboardNavigationSection[] = [
     items: [
       { nameKey: "clans.name", path: "clans", icon: Users, capability: "clans" },
       { nameKey: "analytics.name", path: "analytics", icon: ChartNoAxesCombined, capability: "clans" },
-      { nameKey: "competitive.name", path: "competitive", icon: Trophy, capability: "competitive" },
       { nameKey: "rosters.name", path: "rosters", icon: ClipboardList, capability: "rosters" },
       { nameKey: "bases.name", path: "bases", icon: Map, fullAccess: true },
       { nameKey: "links.name", path: "links", icon: Link2, capability: "links" },
@@ -64,7 +62,6 @@ export const dashboardNavigationSections: DashboardNavigationSection[] = [
 // personal/account APIs. Hiding a link supplements, never replaces, API checks.
 export const serverScopedDashboardPaths = new Set([
   "general", "logs", "roles", "reminders", "autoboards", "clans", "analytics",
-  "competitive",
   "links", "bans-and-strikes", "giveaways", "tickets",
 ]);
 

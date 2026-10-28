@@ -16,7 +16,6 @@ export type DashboardSection =
   | "settings"
   | "logs"
   | "clans"
-  | "competitive"
   | "rosters"
   | "links"
   | "moderation"
