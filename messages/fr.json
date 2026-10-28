@@ -2631,8 +2631,8 @@
     "security": {
       "title": "Sécurité et Permissions",
       "description": "Contrôler l’accès et la vérification",
-      "fullWhitelistRole": "Rôle super-administrateur",
-      "fullWhitelistRoleDesc": "Rôle Discord avec un accès complet à toutes les commandes du bot (contourne toutes les vérifications de permissions)",
+      "refreshDelegateRole": "Role refresh delegate",
+      "refreshDelegateRoleDesc": "Members of this role can refresh other users’ roles. Dashboard and moderation permissions stay separate.",
       "noRole": "Aucun Rôle",
       "dashboardAccess": {
         "title": "Accès au tableau de bord",

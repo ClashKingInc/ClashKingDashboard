@@ -2631,8 +2631,8 @@
     "security": {
       "title": "Suojaus ja käyttöoikeudet",
       "description": "Hallitse käyttöoikeuksia ja vahvistusta",
-      "fullWhitelistRole": "Täyden käyttöoikeuden rooli",
-      "fullWhitelistRoleDesc": "Discord-rooli, jolla on täydet oikeudet kaikkiin botin komentoihin ja joka ohittaa käyttöoikeustarkistukset",
+      "refreshDelegateRole": "Role refresh delegate",
+      "refreshDelegateRoleDesc": "Members of this role can refresh other users’ roles. Dashboard and moderation permissions stay separate.",
       "noRole": "Ei roolia",
       "dashboardAccess": {
         "title": "Dashboard access",

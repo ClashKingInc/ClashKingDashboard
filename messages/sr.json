@@ -2631,8 +2631,8 @@
     "security": {
       "title": "Bezbednost i dozvole",
       "description": "Upravljajte pristupom i verifikacijom",
-      "fullWhitelistRole": "Uloga sa punim pristupom",
-      "fullWhitelistRoleDesc": "Discord uloga sa punim pristupom svim komandama bota (zaobilazi sve provere dozvola)",
+      "refreshDelegateRole": "Role refresh delegate",
+      "refreshDelegateRoleDesc": "Members of this role can refresh other users’ roles. Dashboard and moderation permissions stay separate.",
       "noRole": "Bez uloge",
       "dashboardAccess": {
         "title": "Dashboard access",

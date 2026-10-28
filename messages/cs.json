@@ -2631,8 +2631,8 @@
     "security": {
       "title": "Zabezpečení a oprávnění",
       "description": "Řízení přístupu a ověřování",
-      "fullWhitelistRole": "Role s úplným přístupem",
-      "fullWhitelistRoleDesc": "Role na Discordu s úplným přístupem ke všem příkazům bota (obchází všechny kontroly oprávnění)",
+      "refreshDelegateRole": "Role refresh delegate",
+      "refreshDelegateRoleDesc": "Members of this role can refresh other users’ roles. Dashboard and moderation permissions stay separate.",
       "noRole": "Žádná role",
       "dashboardAccess": {
         "title": "Dashboard access",

@@ -2631,8 +2631,8 @@
     "security": {
       "title": "Ασφάλεια και δικαιώματα",
       "description": "Ελέγξτε την πρόσβαση και την επαλήθευση",
-      "fullWhitelistRole": "Ρόλος πλήρους πρόσβασης",
-      "fullWhitelistRoleDesc": "Ρόλος Discord με πλήρη πρόσβαση σε όλες τις εντολές του bot (παρακάμπτει όλους τους ελέγχους δικαιωμάτων)",
+      "refreshDelegateRole": "Role refresh delegate",
+      "refreshDelegateRoleDesc": "Members of this role can refresh other users’ roles. Dashboard and moderation permissions stay separate.",
       "noRole": "Χωρίς ρόλο",
       "dashboardAccess": {
         "title": "Dashboard access",

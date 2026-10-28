@@ -2631,8 +2631,8 @@
     "security": {
       "title": "Sikkerhet og tillatelser",
       "description": "Styr tilgang og bekreftelse",
-      "fullWhitelistRole": "Rolle med full tilgang",
-      "fullWhitelistRoleDesc": "Discord-rolle med full tilgang til alle botkommandoer som omgår alle tillatelseskontroller",
+      "refreshDelegateRole": "Role refresh delegate",
+      "refreshDelegateRoleDesc": "Members of this role can refresh other users’ roles. Dashboard and moderation permissions stay separate.",
       "noRole": "Ingen rolle",
       "dashboardAccess": {
         "title": "Dashboard access",

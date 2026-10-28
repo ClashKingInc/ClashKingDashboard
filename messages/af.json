@@ -2631,8 +2631,8 @@
     "security": {
       "title": "sekuriteit & regte",
       "description": "Bestuur toegang en verifikasie",
-      "fullWhitelistRole": "Volledige witlysrol",
-      "fullWhitelistRoleDesc": "Discord-rol met volle toegang tot alle botopdragte (omseil alle toestemmingskontroles)",
+      "refreshDelegateRole": "Role refresh delegate",
+      "refreshDelegateRoleDesc": "Members of this role can refresh other users’ roles. Dashboard and moderation permissions stay separate.",
       "noRole": "geen rol",
       "dashboardAccess": {
         "title": "Dashboard access",

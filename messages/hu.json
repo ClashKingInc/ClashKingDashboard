@@ -2631,8 +2631,8 @@
     "security": {
       "title": "Biztonság és jogosultságok",
       "description": "A hozzáférés és az ellenőrzés szabályozása",
-      "fullWhitelistRole": "Teljes hozzáférésű szerepkör",
-      "fullWhitelistRoleDesc": "Discord-szerepkör, amely minden botparancshoz teljes hozzáférést ad, és megkerüli a jogosultság-ellenőrzéseket",
+      "refreshDelegateRole": "Role refresh delegate",
+      "refreshDelegateRoleDesc": "Members of this role can refresh other users’ roles. Dashboard and moderation permissions stay separate.",
       "noRole": "Nincs szerepkör",
       "dashboardAccess": {
         "title": "Dashboard access",

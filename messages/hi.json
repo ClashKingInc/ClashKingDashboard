@@ -2631,8 +2631,8 @@
     "security": {
       "title": "सुरक्षा और अनुमतियाँ",
       "description": "पहुँच और सत्यापन नियंत्रित करें",
-      "fullWhitelistRole": "पूर्ण श्वेतसूची भूमिका",
-      "fullWhitelistRoleDesc": "सभी बॉट कमांड की पूरी पहुँच वाली Discord भूमिका (सभी अनुमति जाँचों को छोड़ देती है)",
+      "refreshDelegateRole": "Role refresh delegate",
+      "refreshDelegateRoleDesc": "Members of this role can refresh other users’ roles. Dashboard and moderation permissions stay separate.",
       "noRole": "कोई भूमिका",
       "dashboardAccess": {
         "title": "Dashboard access",

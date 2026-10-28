@@ -2631,8 +2631,8 @@
     "security": {
       "title": "Säkerhet och behörigheter",
       "description": "Styr åtkomst och verifiering",
-      "fullWhitelistRole": "Roll med fullständig åtkomst",
-      "fullWhitelistRoleDesc": "Discord-roll med fullständig åtkomst till alla botkommandon (förbigår alla behörighetskontroller)",
+      "refreshDelegateRole": "Role refresh delegate",
+      "refreshDelegateRoleDesc": "Members of this role can refresh other users’ roles. Dashboard and moderation permissions stay separate.",
       "noRole": "Ingen roll",
       "dashboardAccess": {
         "title": "Dashboard access",

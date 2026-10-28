@@ -2631,8 +2631,8 @@
     "security": {
       "title": "Seguretat i permisos",
       "description": "Controla l’accés i la verificació",
-      "fullWhitelistRole": "Rol amb accés complet",
-      "fullWhitelistRoleDesc": "Rol de Discord amb accés a totes les ordres del bot (omet totes les comprovacions de permisos)",
+      "refreshDelegateRole": "Role refresh delegate",
+      "refreshDelegateRoleDesc": "Members of this role can refresh other users’ roles. Dashboard and moderation permissions stay separate.",
       "noRole": "Sense rol",
       "dashboardAccess": {
         "title": "Dashboard access",

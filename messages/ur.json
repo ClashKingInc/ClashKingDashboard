@@ -2631,8 +2631,8 @@
     "security": {
       "title": "سیکیورٹی اور اجازتیں",
       "description": "رسائی اور تصدیق کو کنٹرول کریں",
-      "fullWhitelistRole": "مکمل وائٹ لسٹ رول",
-      "fullWhitelistRoleDesc": "تمام بوٹ کمانڈز تک مکمل رسائی رکھنے والا Discord رول (اجازتوں کی تمام جانچ سے مستثنیٰ)",
+      "refreshDelegateRole": "Role refresh delegate",
+      "refreshDelegateRoleDesc": "Members of this role can refresh other users’ roles. Dashboard and moderation permissions stay separate.",
       "noRole": "کوئی رول نہیں",
       "dashboardAccess": {
         "title": "Dashboard access",

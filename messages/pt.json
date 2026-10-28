@@ -2631,8 +2631,8 @@
     "security": {
       "title": "Segurança e permissões",
       "description": "Controle o acesso e a verificação",
-      "fullWhitelistRole": "Cargo com acesso completo",
-      "fullWhitelistRoleDesc": "Cargo do Discord com acesso a todos os comandos do bot (ignora todas as verificações de permissões)",
+      "refreshDelegateRole": "Role refresh delegate",
+      "refreshDelegateRoleDesc": "Members of this role can refresh other users’ roles. Dashboard and moderation permissions stay separate.",
       "noRole": "Sem cargo",
       "dashboardAccess": {
         "title": "Dashboard access",

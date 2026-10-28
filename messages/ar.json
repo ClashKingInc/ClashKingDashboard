@@ -2631,8 +2631,8 @@
     "security": {
       "title": "الأمان والأذونات",
       "description": "التحكم في الوصول والتحقق",
-      "fullWhitelistRole": "رتبة الوصول الكامل",
-      "fullWhitelistRoleDesc": "رتبة Discord بوصول كامل إلى جميع أوامر البوت وتتجاوز كل فحوص الأذونات",
+      "refreshDelegateRole": "Role refresh delegate",
+      "refreshDelegateRoleDesc": "Members of this role can refresh other users’ roles. Dashboard and moderation permissions stay separate.",
       "noRole": "بلا رتبة",
       "dashboardAccess": {
         "title": "Dashboard access",

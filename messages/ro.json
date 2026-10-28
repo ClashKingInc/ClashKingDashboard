@@ -2631,8 +2631,8 @@
     "security": {
       "title": "Securitate și permisiuni",
       "description": "Controlează accesul și verificarea",
-      "fullWhitelistRole": "Rol cu acces complet",
-      "fullWhitelistRoleDesc": "Rol Discord cu acces complet la toate comenzile botului, care ocolește toate verificările permisiunilor",
+      "refreshDelegateRole": "Role refresh delegate",
+      "refreshDelegateRoleDesc": "Members of this role can refresh other users’ roles. Dashboard and moderation permissions stay separate.",
       "noRole": "Niciun rol",
       "dashboardAccess": {
         "title": "Dashboard access",

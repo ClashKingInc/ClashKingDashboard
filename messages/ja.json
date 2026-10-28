@@ -2631,8 +2631,8 @@
     "security": {
       "title": "セキュリティと権限",
       "description": "アクセスと確認を管理します",
-      "fullWhitelistRole": "フルアクセスロール",
-      "fullWhitelistRoleDesc": "すべてのボットコマンドにフルアクセスできるDiscordロール（すべての権限チェックをスキップ）",
+      "refreshDelegateRole": "Role refresh delegate",
+      "refreshDelegateRoleDesc": "Members of this role can refresh other users’ roles. Dashboard and moderation permissions stay separate.",
       "noRole": "ロールなし",
       "dashboardAccess": {
         "title": "Dashboard access",

@@ -48,7 +48,7 @@ export default function GeneralSettingsPage() {
 
   const [settings, setSettings] = useState({
     embed_color: 14223113, // #D90709 as integer
-    full_whitelist_role: undefined as string | undefined,
+    full_whitelist_role: null as string | null,
   });
 
   const [discordRoles, setDiscordRoles] = useState<Array<{ id: string; name: string; color?: number }>>([]);
@@ -77,7 +77,7 @@ export default function GeneralSettingsPage() {
         const embedColor = Number.isFinite(parsedEmbedColor) ? parsedEmbedColor : 14223113;
         const newSettings = {
           embed_color: embedColor,
-          full_whitelist_role: settingsData.full_whitelist_role?.toString(),
+          full_whitelist_role: settingsData.full_whitelist_role?.toString() ?? null,
         };
         setSettings(newSettings);
         setHasLoadedSettings(true);
@@ -259,8 +259,9 @@ export default function GeneralSettingsPage() {
           <section className="min-w-0 space-y-3">
             <div className="lg:min-h-[4.5rem]"><h2 className="text-lg font-semibold">{t("security.title")}</h2><p className="mt-1 text-sm text-muted-foreground">{t("security.description")}</p></div>
             <div className="space-y-4 rounded-[24px] bg-card p-4 shadow-sm shadow-black/5 sm:p-5">
-              <div><Label htmlFor="whitelist-role" className="text-sm font-medium">{t("security.fullWhitelistRole")}</Label><p className="mt-1 text-xs text-muted-foreground">{t("security.fullWhitelistRoleDesc")}</p></div>
-              <Select value={settings.full_whitelist_role || "none"} onValueChange={(value) => void applySettingsChange({ full_whitelist_role: value === "none" ? undefined : value })}>
+              <div><Label htmlFor="whitelist-role" className="text-sm font-medium">{t("security.refreshDelegateRole")}</Label><p className="mt-1 text-xs text-muted-foreground">{t("security.refreshDelegateRoleDesc")}</p></div>
+              {/* Null clears this grant; undefined would omit the update and retain it. */}
+              <Select value={settings.full_whitelist_role || "none"} onValueChange={(value) => void applySettingsChange({ full_whitelist_role: value === "none" ? null : value })}>
                 <SelectTrigger id="whitelist-role" className="border-0 bg-muted/55 shadow-sm shadow-black/5" disabled={!editable || isSaving}><SelectValue /></SelectTrigger>
                 <SelectContent><SelectItem value="none">{t("security.noRole")}</SelectItem>{discordRoles.map((role) => <SelectItem key={role.id} value={role.id}><span style={{ color: role.color ? intToHex(role.color) : "#99AAB5" }}>@{role.name}</span></SelectItem>)}</SelectContent>
               </Select>

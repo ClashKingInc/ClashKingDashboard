@@ -2631,8 +2631,8 @@
     "security": {
       "title": "אבטחה והרשאות",
       "description": "שליטה בגישה ובאימות",
-      "fullWhitelistRole": "תפקיד גישה מלאה",
-      "fullWhitelistRoleDesc": "תפקיד Discord עם גישה מלאה לכל פקודות הבוט, ללא בדיקות הרשאה",
+      "refreshDelegateRole": "Role refresh delegate",
+      "refreshDelegateRoleDesc": "Members of this role can refresh other users’ roles. Dashboard and moderation permissions stay separate.",
       "noRole": "ללא תפקיד",
       "dashboardAccess": {
         "title": "Dashboard access",

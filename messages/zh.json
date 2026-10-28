@@ -2631,8 +2631,8 @@
     "security": {
       "title": "安全与权限",
       "description": "控制访问权限和验证",
-      "fullWhitelistRole": "完整白名单身份组",
-      "fullWhitelistRoleDesc": "可完整访问所有机器人命令并绕过权限检查的Discord身份组",
+      "refreshDelegateRole": "Role refresh delegate",
+      "refreshDelegateRoleDesc": "Members of this role can refresh other users’ roles. Dashboard and moderation permissions stay separate.",
       "noRole": "无身份组",
       "dashboardAccess": {
         "title": "Dashboard access",

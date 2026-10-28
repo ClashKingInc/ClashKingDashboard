@@ -2631,8 +2631,8 @@
     "security": {
       "title": "Безпека й дозволи",
       "description": "Керуйте доступом і перевіркою",
-      "fullWhitelistRole": "Роль із повним доступом",
-      "fullWhitelistRoleDesc": "Роль Discord із доступом до всіх команд бота, яка обходить усі перевірки дозволів",
+      "refreshDelegateRole": "Role refresh delegate",
+      "refreshDelegateRoleDesc": "Members of this role can refresh other users’ roles. Dashboard and moderation permissions stay separate.",
       "noRole": "Без ролі",
       "dashboardAccess": {
         "title": "Dashboard access",

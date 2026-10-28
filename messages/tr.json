@@ -2631,8 +2631,8 @@
     "security": {
       "title": "Güvenlik ve izinler",
       "description": "Erişimi ve doğrulamayı yönetin",
-      "fullWhitelistRole": "Tam izinli rol",
-      "fullWhitelistRoleDesc": "Tüm izin denetimlerini atlayarak bot komutlarına tam erişim sağlayan Discord rolü",
+      "refreshDelegateRole": "Role refresh delegate",
+      "refreshDelegateRoleDesc": "Members of this role can refresh other users’ roles. Dashboard and moderation permissions stay separate.",
       "noRole": "Rol yok",
       "dashboardAccess": {
         "title": "Dashboard access",

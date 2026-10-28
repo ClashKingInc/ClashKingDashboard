@@ -2631,8 +2631,8 @@
     "security": {
       "title": "보안 및 권한",
       "description": "접근 권한과 인증을 관리합니다",
-      "fullWhitelistRole": "전체 허용 목록 역할",
-      "fullWhitelistRoleDesc": "모든 봇 명령어에 전체 접근 권한을 가지며 모든 권한 확인을 건너뛰는 Discord 역할",
+      "refreshDelegateRole": "Role refresh delegate",
+      "refreshDelegateRoleDesc": "Members of this role can refresh other users’ roles. Dashboard and moderation permissions stay separate.",
       "noRole": "역할 없음",
       "dashboardAccess": {
         "title": "Dashboard access",

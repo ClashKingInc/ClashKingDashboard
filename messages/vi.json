@@ -2631,8 +2631,8 @@
     "security": {
       "title": "Bảo mật và quyền hạn",
       "description": "Kiểm soát quyền truy cập và xác minh",
-      "fullWhitelistRole": "Vai trò toàn quyền",
-      "fullWhitelistRoleDesc": "Vai trò Discord có toàn quyền truy cập mọi lệnh bot và bỏ qua các bước kiểm tra quyền",
+      "refreshDelegateRole": "Role refresh delegate",
+      "refreshDelegateRoleDesc": "Members of this role can refresh other users’ roles. Dashboard and moderation permissions stay separate.",
       "noRole": "Không có vai trò",
       "dashboardAccess": {
         "title": "Dashboard access",
