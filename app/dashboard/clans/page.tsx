@@ -1,5 +1,7 @@
 "use client";
 
+import { MemberWarningSettings } from "./member-warning-settings";
+
 import { ClanVerificationControl, ClanVerificationIcon } from "./clan-verification";
 import { Checkbox } from "@/components/ui/checkbox";
 
@@ -737,6 +739,8 @@ export default function ClansPage() {
                     />
                   </div>
             </div>
+
+            {selectedClan && <MemberWarningSettings key={`${guildId}:${selectedClan.tag || selectedClan.clan_tag}`} serverId={guildId} clanTag={selectedClan.tag || selectedClan.clan_tag || ""} roles={discordRoles} />}
 
             <DialogFooter>
               <Button
