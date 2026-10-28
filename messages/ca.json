@@ -1961,21 +1961,6 @@
       "saved": "War-event settings saved.",
       "loadError": "Could not load war-event settings. Server manager access is required.",
       "saveError": "Could not save war-event settings. Check your access and try again."
-    },
-    "memberWarning": {
-      "title": "Avisos de nombre de membres",
-      "hint": "Avisa quan aquest clan superi un límit. Deixa qualsevol límit en blanc per ignorar-lo. Arribar exactament al límit no genera cap avís. Aquesta configuració es desa per separat.",
-      "channel": "Canal d’avisos",
-      "role": "Rol a mencionar (opcional)",
-      "below": "Per sota d’aquest nombre de membres",
-      "above": "Per sobre d’aquest nombre de membres",
-      "save": "Desa l’avís",
-      "disable": "Desactiva l’avís",
-      "saved": "S’ha desat la configuració dels avisos.",
-      "loading": "S’està carregant la configuració dels avisos…",
-      "loadError": "No s’han pogut carregar els avisos. Cal accés de gestor del servidor.",
-      "saveError": "No s’han pogut desar els avisos. Comprova l’accés i el canal i torna-ho a provar.",
-      "invalid": "Tria un canal i límits vàlids: inferior d’1–50, superior de 0–49. El límit inferior no pot superar el superior."
     }
   },
   "RolesPage": {

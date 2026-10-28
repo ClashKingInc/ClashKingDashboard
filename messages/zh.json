@@ -1961,21 +1961,6 @@
       "saved": "War-event settings saved.",
       "loadError": "Could not load war-event settings. Server manager access is required.",
       "saveError": "Could not save war-event settings. Check your access and try again."
-    },
-    "memberWarning": {
-      "title": "成员数量警告",
-      "hint": "当部落成员数越过阈值时发出警告。将任一阈值留空即可忽略。人数恰好等于阈值时不会触发警告。这些设置单独保存。",
-      "channel": "警告频道",
-      "role": "要提及的身份组（可选）",
-      "below": "低于此成员数",
-      "above": "高于此成员数",
-      "save": "保存警告",
-      "disable": "禁用警告",
-      "saved": "警告设置已保存。",
-      "loading": "正在加载警告设置…",
-      "loadError": "无法加载警告。需要管理服务器的权限。",
-      "saveError": "无法保存警告。请检查权限和频道，然后重试。",
-      "invalid": "请选择频道和有效阈值：下限为1–50，上限为0–49。下限不得超过上限。"
     }
   },
   "RolesPage": {

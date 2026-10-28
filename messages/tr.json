@@ -1961,21 +1961,6 @@
       "saved": "War-event settings saved.",
       "loadError": "Could not load war-event settings. Server manager access is required.",
       "saveError": "Could not save war-event settings. Check your access and try again."
-    },
-    "memberWarning": {
-      "title": "Üye sayısı uyarıları",
-      "hint": "Bu klan bir eşiği aştığında uyar. Bir eşiği yok saymak için boş bırak. Sayının eşiğe eşit olması uyarı oluşturmaz. Bu ayarlar ayrı kaydedilir.",
-      "channel": "Uyarı kanalı",
-      "role": "Etiketlenecek rol (isteğe bağlı)",
-      "below": "Bu üye sayısının altında",
-      "above": "Bu üye sayısının üstünde",
-      "save": "Uyarıyı kaydet",
-      "disable": "Uyarıyı devre dışı bırak",
-      "saved": "Uyarı ayarları kaydedildi.",
-      "loading": "Uyarı ayarları yükleniyor…",
-      "loadError": "Uyarılar yüklenemedi. Sunucuyu yönetme izni gerekiyor.",
-      "saveError": "Uyarılar kaydedilemedi. Erişimini ve kanalı kontrol edip tekrar dene.",
-      "invalid": "Bir kanal ve geçerli eşikler seç: alt eşik 1–50, üst eşik 0–49. Alt eşik üst eşiği aşmamalıdır."
     }
   },
   "RolesPage": {

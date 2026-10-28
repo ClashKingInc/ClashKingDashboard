@@ -1961,21 +1961,6 @@
       "saved": "War-event settings saved.",
       "loadError": "Could not load war-event settings. Server manager access is required.",
       "saveError": "Could not save war-event settings. Check your access and try again."
-    },
-    "memberWarning": {
-      "title": "Jäsenmäärävaroitukset",
-      "hint": "Varoita, kun klaani ylittää tai alittaa rajan. Tyhjä raja ohitetaan. Täsmälleen rajalla oleva määrä ei aiheuta varoitusta. Nämä asetukset tallennetaan erikseen.",
-      "channel": "Varoituskanava",
-      "role": "Mainittava rooli (valinnainen)",
-      "below": "Tämän jäsenmäärän alapuolella",
-      "above": "Tämän jäsenmäärän yläpuolella",
-      "save": "Tallenna varoitus",
-      "disable": "Poista varoitus käytöstä",
-      "saved": "Varoitusasetukset tallennettu.",
-      "loading": "Ladataan varoitusasetuksia…",
-      "loadError": "Varoituksia ei voitu ladata. Palvelimen hallintaoikeus vaaditaan.",
-      "saveError": "Varoituksia ei voitu tallentaa. Tarkista käyttöoikeutesi ja kanava ja yritä uudelleen.",
-      "invalid": "Valitse kanava ja kelvolliset rajat: alaraja 1–50, yläraja 0–49. Alaraja ei saa ylittää ylärajaa."
     }
   },
   "RolesPage": {

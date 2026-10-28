@@ -1961,21 +1961,6 @@
       "saved": "War-event settings saved.",
       "loadError": "Could not load war-event settings. Server manager access is required.",
       "saveError": "Could not save war-event settings. Check your access and try again."
-    },
-    "memberWarning": {
-      "title": "Waarschuwingen voor ledenaantal",
-      "hint": "Waarschuw wanneer deze clan een grens overschrijdt. Laat een grens leeg om die te negeren. Een gelijk ledenaantal activeert geen waarschuwing. Deze instellingen worden apart opgeslagen.",
-      "channel": "Waarschuwingskanaal",
-      "role": "Te vermelden rol (optioneel)",
-      "below": "Onder dit ledenaantal",
-      "above": "Boven dit ledenaantal",
-      "save": "Waarschuwing opslaan",
-      "disable": "Waarschuwing uitschakelen",
-      "saved": "Waarschuwingsinstellingen opgeslagen.",
-      "loading": "Waarschuwingsinstellingen laden…",
-      "loadError": "Kan waarschuwingen niet laden. Beheertoegang tot de server is vereist.",
-      "saveError": "Kan waarschuwingen niet opslaan. Controleer je toegang en het kanaal en probeer opnieuw.",
-      "invalid": "Kies een kanaal en geldige grenzen: ondergrens 1–50, bovengrens 0–49. De ondergrens mag niet hoger zijn dan de bovengrens."
     }
   },
   "RolesPage": {

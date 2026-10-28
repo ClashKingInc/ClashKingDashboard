@@ -1961,21 +1961,6 @@
       "saved": "War-event settings saved.",
       "loadError": "Could not load war-event settings. Server manager access is required.",
       "saveError": "Could not save war-event settings. Check your access and try again."
-    },
-    "memberWarning": {
-      "title": "Warnungen zur Mitgliederzahl",
-      "hint": "Benachrichtigt dich, wenn dieser Clan einen Grenzwert überschreitet. Leere Grenzwerte werden ignoriert. Beim genauen Erreichen eines Grenzwerts wird keine Warnung ausgelöst. Diese Einstellungen werden separat gespeichert.",
-      "channel": "Warnungskanal",
-      "role": "Zu erwähnende Rolle (optional)",
-      "below": "Unter dieser Mitgliederzahl",
-      "above": "Über dieser Mitgliederzahl",
-      "save": "Warnung speichern",
-      "disable": "Warnung deaktivieren",
-      "saved": "Warnungseinstellungen gespeichert.",
-      "loading": "Warnungseinstellungen werden geladen…",
-      "loadError": "Warnungen konnten nicht geladen werden. Die Berechtigung zur Serververwaltung ist erforderlich.",
-      "saveError": "Warnungen konnten nicht gespeichert werden. Prüfe deine Berechtigungen und den Kanal und versuche es erneut.",
-      "invalid": "Wähle einen Kanal und gültige Grenzwerte: unterer 1–50, oberer 0–49. Der untere Grenzwert darf den oberen nicht überschreiten."
     }
   },
   "RolesPage": {

@@ -1961,21 +1961,6 @@
       "saved": "War-event settings saved.",
       "loadError": "Could not load war-event settings. Server manager access is required.",
       "saveError": "Could not save war-event settings. Check your access and try again."
-    },
-    "memberWarning": {
-      "title": "Waarskuwings oor ledetal",
-      "hint": "Waarsku wanneer hierdie stam ’n grens oorskry. Laat ’n grens leeg om dit te ignoreer. Gelykheid aktiveer nie ’n waarskuwing nie. Hierdie instellings word afsonderlik gestoor.",
-      "channel": "Waarskuwingskanaal",
-      "role": "Rol om te noem (opsioneel)",
-      "below": "Onder hierdie ledetal",
-      "above": "Bo hierdie ledetal",
-      "save": "Stoor waarskuwing",
-      "disable": "Deaktiveer waarskuwing",
-      "saved": "Waarskuwingsinstellings gestoor.",
-      "loading": "Laai waarskuwingsinstellings…",
-      "loadError": "Kon nie waarskuwings laai nie. Bedienerbestuurdertoegang word vereis.",
-      "saveError": "Kon nie waarskuwings stoor nie. Kontroleer jou toegang en die kanaal, en probeer weer.",
-      "invalid": "Kies ’n kanaal en geldige grense: onder 1–50, bo 0–49. Die onderste grens mag nie die boonste grens oorskry nie."
     }
   },
   "RolesPage": {

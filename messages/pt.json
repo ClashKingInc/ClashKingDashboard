@@ -1961,21 +1961,6 @@
       "saved": "War-event settings saved.",
       "loadError": "Could not load war-event settings. Server manager access is required.",
       "saveError": "Could not save war-event settings. Check your access and try again."
-    },
-    "memberWarning": {
-      "title": "Alertas de número de membros",
-      "hint": "Avisa quando este clã ultrapassar um limite. Deixa um limite em branco para o ignorar. Um valor igual ao limite não gera um alerta. Estas definições são guardadas separadamente.",
-      "channel": "Canal de alertas",
-      "role": "Cargo a mencionar (opcional)",
-      "below": "Abaixo deste número de membros",
-      "above": "Acima deste número de membros",
-      "save": "Guardar alerta",
-      "disable": "Desativar alerta",
-      "saved": "Definições de alertas guardadas.",
-      "loading": "A carregar definições de alertas…",
-      "loadError": "Não foi possível carregar os alertas. É necessária permissão para gerir o servidor.",
-      "saveError": "Não foi possível guardar os alertas. Verifica o acesso e o canal e tenta novamente.",
-      "invalid": "Escolhe um canal e limites válidos: inferior 1–50, superior 0–49. O limite inferior não pode ultrapassar o superior."
     }
   },
   "RolesPage": {

@@ -1961,21 +1961,6 @@
       "saved": "War-event settings saved.",
       "loadError": "Could not load war-event settings. Server manager access is required.",
       "saveError": "Could not save war-event settings. Check your access and try again."
-    },
-    "memberWarning": {
-      "title": "Varsler om medlemstall",
-      "hint": "Varsle når klanen krysser en grense. La en grense stå tom for å ignorere den. Et medlemstall lik grensen utløser ikke et varsel. Disse innstillingene lagres separat.",
-      "channel": "Varselkanal",
-      "role": "Rolle som skal nevnes (valgfritt)",
-      "below": "Under dette medlemstallet",
-      "above": "Over dette medlemstallet",
-      "save": "Lagre varsel",
-      "disable": "Deaktiver varsel",
-      "saved": "Varselinnstillingene er lagret.",
-      "loading": "Laster varselinnstillinger…",
-      "loadError": "Kunne ikke laste varsler. Tilgang til å administrere serveren kreves.",
-      "saveError": "Kunne ikke lagre varsler. Kontroller tilgangen din og kanalen, og prøv igjen.",
-      "invalid": "Velg en kanal og gyldige grenser: nedre 1–50, øvre 0–49. Nedre grense kan ikke være høyere enn øvre grense."
     }
   },
   "RolesPage": {

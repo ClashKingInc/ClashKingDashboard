@@ -1961,21 +1961,6 @@
       "saved": "War-event settings saved.",
       "loadError": "Could not load war-event settings. Server manager access is required.",
       "saveError": "Could not save war-event settings. Check your access and try again."
-    },
-    "memberWarning": {
-      "title": "メンバー数の警告",
-      "hint": "クランのメンバー数がしきい値を超えた、または下回ったときに通知します。無視するしきい値は空欄にしてください。しきい値と同じ人数では通知されません。この設定は個別に保存されます。",
-      "channel": "警告チャンネル",
-      "role": "メンションするロール（任意）",
-      "below": "この人数未満",
-      "above": "この人数より多い",
-      "save": "警告を保存",
-      "disable": "警告を無効化",
-      "saved": "警告設定を保存しました。",
-      "loading": "警告設定を読み込み中…",
-      "loadError": "警告を読み込めませんでした。サーバー管理権限が必要です。",
-      "saveError": "警告を保存できませんでした。権限とチャンネルを確認して、もう一度お試しください。",
-      "invalid": "チャンネルと有効なしきい値を選択してください。下限は1–50、上限は0–49です。下限は上限以下にしてください。"
     }
   },
   "RolesPage": {

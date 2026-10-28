@@ -1961,21 +1961,6 @@
       "saved": "War-event settings saved.",
       "loadError": "Could not load war-event settings. Server manager access is required.",
       "saveError": "Could not save war-event settings. Check your access and try again."
-    },
-    "memberWarning": {
-      "title": "התראות על מספר חברים",
-      "hint": "שליחת התראה כשהקלאן חוצה סף. השאירו סף ריק כדי להתעלם ממנו. שוויון לסף לא מפעיל התראה. הגדרות אלה נשמרות בנפרד.",
-      "channel": "ערוץ התראות",
-      "role": "תפקיד לאזכור (אופציונלי)",
-      "below": "מתחת למספר חברים זה",
-      "above": "מעל למספר חברים זה",
-      "save": "שמירת התראה",
-      "disable": "השבתת התראה",
-      "saved": "הגדרות ההתראה נשמרו.",
-      "loading": "הגדרות ההתראה נטענות…",
-      "loadError": "לא ניתן לטעון התראות. נדרשת הרשאה לניהול השרת.",
-      "saveError": "לא ניתן לשמור התראות. בדקו את ההרשאות ואת הערוץ ונסו שוב.",
-      "invalid": "בחרו ערוץ וספים תקינים: תחתון 1–50, עליון 0–49. הסף התחתון לא יכול להיות גבוה מהעליון."
     }
   },
   "RolesPage": {

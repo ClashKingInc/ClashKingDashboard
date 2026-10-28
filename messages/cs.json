@@ -1961,21 +1961,6 @@
       "saved": "War-event settings saved.",
       "loadError": "Could not load war-event settings. Server manager access is required.",
       "saveError": "Could not save war-event settings. Check your access and try again."
-    },
-    "memberWarning": {
-      "title": "Upozornění na počet členů",
-      "hint": "Upozornit, když klan překročí limit. Prázdný limit se ignoruje. Dosažení přesného limitu upozornění nespustí. Toto nastavení se ukládá samostatně.",
-      "channel": "Kanál upozornění",
-      "role": "Zmíněná role (volitelné)",
-      "below": "Pod tímto počtem členů",
-      "above": "Nad tímto počtem členů",
-      "save": "Uložit upozornění",
-      "disable": "Vypnout upozornění",
-      "saved": "Nastavení upozornění uloženo.",
-      "loading": "Načítání nastavení upozornění…",
-      "loadError": "Upozornění se nepodařilo načíst. Je vyžadováno oprávnění ke správě serveru.",
-      "saveError": "Upozornění se nepodařilo uložit. Zkontrolujte oprávnění a kanál a zkuste to znovu.",
-      "invalid": "Vyberte kanál a platné limity: dolní 1–50, horní 0–49. Dolní limit nesmí překročit horní."
     }
   },
   "RolesPage": {

@@ -1961,21 +1961,6 @@
       "saved": "War-event settings saved.",
       "loadError": "Could not load war-event settings. Server manager access is required.",
       "saveError": "Could not save war-event settings. Check your access and try again."
-    },
-    "memberWarning": {
-      "title": "Cảnh báo số thành viên",
-      "hint": "Cảnh báo khi số thành viên bang hội vượt qua ngưỡng. Để trống ngưỡng muốn bỏ qua. Số lượng bằng đúng ngưỡng không tạo cảnh báo. Các cài đặt này được lưu riêng.",
-      "channel": "Kênh cảnh báo",
-      "role": "Vai trò cần nhắc đến (không bắt buộc)",
-      "below": "Dưới số thành viên này",
-      "above": "Trên số thành viên này",
-      "save": "Lưu cảnh báo",
-      "disable": "Tắt cảnh báo",
-      "saved": "Đã lưu cài đặt cảnh báo.",
-      "loading": "Đang tải cài đặt cảnh báo…",
-      "loadError": "Không thể tải cảnh báo. Cần có quyền quản lý máy chủ.",
-      "saveError": "Không thể lưu cảnh báo. Kiểm tra quyền truy cập và kênh rồi thử lại.",
-      "invalid": "Chọn kênh và ngưỡng hợp lệ: ngưỡng dưới 1–50, ngưỡng trên 0–49. Ngưỡng dưới không được vượt quá ngưỡng trên."
     }
   },
   "RolesPage": {

@@ -1961,21 +1961,6 @@
       "saved": "War-event settings saved.",
       "loadError": "Could not load war-event settings. Server manager access is required.",
       "saveError": "Could not save war-event settings. Check your access and try again."
-    },
-    "memberWarning": {
-      "title": "Ostrzeżenia o liczbie członków",
-      "hint": "Powiadom, gdy klan przekroczy próg. Pozostaw próg pusty, aby go ignorować. Liczba równa progowi nie wywołuje ostrzeżenia. Te ustawienia zapisują się osobno.",
-      "channel": "Kanał ostrzeżeń",
-      "role": "Rola do wzmiankowania (opcjonalnie)",
-      "below": "Poniżej tej liczby członków",
-      "above": "Powyżej tej liczby członków",
-      "save": "Zapisz ostrzeżenie",
-      "disable": "Wyłącz ostrzeżenie",
-      "saved": "Ustawienia ostrzeżeń zapisane.",
-      "loading": "Wczytywanie ustawień ostrzeżeń…",
-      "loadError": "Nie udało się wczytać ostrzeżeń. Wymagane jest uprawnienie do zarządzania serwerem.",
-      "saveError": "Nie udało się zapisać ostrzeżeń. Sprawdź uprawnienia i kanał, a następnie spróbuj ponownie.",
-      "invalid": "Wybierz kanał i poprawne progi: dolny 1–50, górny 0–49. Dolny próg nie może być wyższy od górnego."
     }
   },
   "RolesPage": {

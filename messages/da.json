@@ -1961,21 +1961,6 @@
       "saved": "War-event settings saved.",
       "loadError": "Could not load war-event settings. Server manager access is required.",
       "saveError": "Could not save war-event settings. Check your access and try again."
-    },
-    "memberWarning": {
-      "title": "Advarsler om medlemstal",
-      "hint": "Giv besked, når klanen krydser en grænse. Lad en grænse stå tom for at ignorere den. Et medlemstal lig med grænsen udløser ingen advarsel. Disse indstillinger gemmes separat.",
-      "channel": "Advarselskanal",
-      "role": "Rolle, der skal nævnes (valgfrit)",
-      "below": "Under dette medlemstal",
-      "above": "Over dette medlemstal",
-      "save": "Gem advarsel",
-      "disable": "Deaktiver advarsel",
-      "saved": "Advarselsindstillinger gemt.",
-      "loading": "Indlæser advarselsindstillinger…",
-      "loadError": "Kunne ikke indlæse advarsler. Adgang til at administrere serveren kræves.",
-      "saveError": "Kunne ikke gemme advarsler. Kontrollér din adgang og kanalen, og prøv igen.",
-      "invalid": "Vælg en kanal og gyldige grænser: nedre 1–50, øvre 0–49. Den nedre grænse må ikke overstige den øvre."
     }
   },
   "RolesPage": {

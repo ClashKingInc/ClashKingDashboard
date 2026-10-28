@@ -1961,21 +1961,6 @@
       "saved": "War-event settings saved.",
       "loadError": "Could not load war-event settings. Server manager access is required.",
       "saveError": "Could not save war-event settings. Check your access and try again."
-    },
-    "memberWarning": {
-      "title": "Taglétszám-figyelmeztetések",
-      "hint": "Jelez, amikor a klán átlép egy határértéket. Az üresen hagyott határértéket figyelmen kívül hagyja. A határértékkel egyező létszám nem vált ki figyelmeztetést. Ezek a beállítások külön menthetők.",
-      "channel": "Figyelmeztetési csatorna",
-      "role": "Megemlítendő szerepkör (nem kötelező)",
-      "below": "Ennél kevesebb tag",
-      "above": "Ennél több tag",
-      "save": "Figyelmeztetés mentése",
-      "disable": "Figyelmeztetés kikapcsolása",
-      "saved": "Figyelmeztetési beállítások mentve.",
-      "loading": "Figyelmeztetési beállítások betöltése…",
-      "loadError": "A figyelmeztetések nem tölthetők be. A szerver kezeléséhez szükséges jogosultság kell.",
-      "saveError": "A figyelmeztetések nem menthetők. Ellenőrizd a jogosultságodat és a csatornát, majd próbáld újra.",
-      "invalid": "Válassz csatornát és érvényes határértékeket: alsó 1–50, felső 0–49. Az alsó határérték nem lehet nagyobb a felsőnél."
     }
   },
   "RolesPage": {
