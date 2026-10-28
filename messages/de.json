@@ -1963,19 +1963,19 @@
       "saveError": "Could not save war-event settings. Check your access and try again."
     },
     "memberWarning": {
-      "title": "Member-count warnings",
-      "hint": "Alert when this clan crosses a limit. Leave either limit blank to ignore it. Equality does not trigger an alert. These settings save separately.",
-      "channel": "Warning channel",
-      "role": "Mention role (optional)",
-      "below": "Below this member count",
-      "above": "Above this member count",
-      "save": "Save warning",
-      "disable": "Disable warning",
-      "saved": "Warning settings saved.",
-      "loading": "Loading warning settings…",
-      "loadError": "Could not load warnings. Server manager access is required.",
-      "saveError": "Could not save warnings. Check your access and channel, then try again.",
-      "invalid": "Choose a channel and valid limits: below 1–50, above 0–49. The below limit must not exceed the above limit."
+      "title": "Warnungen zur Mitgliederzahl",
+      "hint": "Benachrichtigt dich, wenn dieser Clan einen Grenzwert überschreitet. Leere Grenzwerte werden ignoriert. Beim genauen Erreichen eines Grenzwerts wird keine Warnung ausgelöst. Diese Einstellungen werden separat gespeichert.",
+      "channel": "Warnungskanal",
+      "role": "Zu erwähnende Rolle (optional)",
+      "below": "Unter dieser Mitgliederzahl",
+      "above": "Über dieser Mitgliederzahl",
+      "save": "Warnung speichern",
+      "disable": "Warnung deaktivieren",
+      "saved": "Warnungseinstellungen gespeichert.",
+      "loading": "Warnungseinstellungen werden geladen…",
+      "loadError": "Warnungen konnten nicht geladen werden. Die Berechtigung zur Serververwaltung ist erforderlich.",
+      "saveError": "Warnungen konnten nicht gespeichert werden. Prüfe deine Berechtigungen und den Kanal und versuche es erneut.",
+      "invalid": "Wähle einen Kanal und gültige Grenzwerte: unterer 1–50, oberer 0–49. Der untere Grenzwert darf den oberen nicht überschreiten."
     }
   },
   "RolesPage": {

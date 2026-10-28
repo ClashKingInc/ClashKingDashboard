@@ -1963,19 +1963,19 @@
       "saveError": "Could not save war-event settings. Check your access and try again."
     },
     "memberWarning": {
-      "title": "Member-count warnings",
-      "hint": "Alert when this clan crosses a limit. Leave either limit blank to ignore it. Equality does not trigger an alert. These settings save separately.",
-      "channel": "Warning channel",
-      "role": "Mention role (optional)",
-      "below": "Below this member count",
-      "above": "Above this member count",
-      "save": "Save warning",
-      "disable": "Disable warning",
-      "saved": "Warning settings saved.",
-      "loading": "Loading warning settings…",
-      "loadError": "Could not load warnings. Server manager access is required.",
-      "saveError": "Could not save warnings. Check your access and channel, then try again.",
-      "invalid": "Choose a channel and valid limits: below 1–50, above 0–49. The below limit must not exceed the above limit."
+      "title": "Ειδοποιήσεις αριθμού μελών",
+      "hint": "Ειδοποίηση όταν η φυλή ξεπεράσει ένα όριο. Αφήστε κενό όποιο όριο θέλετε να αγνοηθεί. Η ισότητα με το όριο δεν ενεργοποιεί ειδοποίηση. Αυτές οι ρυθμίσεις αποθηκεύονται ξεχωριστά.",
+      "channel": "Κανάλι ειδοποιήσεων",
+      "role": "Ρόλος για αναφορά (προαιρετικό)",
+      "below": "Κάτω από αυτόν τον αριθμό μελών",
+      "above": "Πάνω από αυτόν τον αριθμό μελών",
+      "save": "Αποθήκευση ειδοποίησης",
+      "disable": "Απενεργοποίηση ειδοποίησης",
+      "saved": "Οι ρυθμίσεις ειδοποιήσεων αποθηκεύτηκαν.",
+      "loading": "Φόρτωση ρυθμίσεων ειδοποιήσεων…",
+      "loadError": "Δεν ήταν δυνατή η φόρτωση των ειδοποιήσεων. Απαιτείται δικαίωμα διαχείρισης διακομιστή.",
+      "saveError": "Δεν ήταν δυνατή η αποθήκευση των ειδοποιήσεων. Ελέγξτε την πρόσβαση και το κανάλι και δοκιμάστε ξανά.",
+      "invalid": "Επιλέξτε κανάλι και έγκυρα όρια: κάτω 1–50, πάνω 0–49. Το κάτω όριο δεν πρέπει να υπερβαίνει το πάνω."
     }
   },
   "RolesPage": {

@@ -1963,19 +1963,19 @@
       "saveError": "Could not save war-event settings. Check your access and try again."
     },
     "memberWarning": {
-      "title": "Member-count warnings",
-      "hint": "Alert when this clan crosses a limit. Leave either limit blank to ignore it. Equality does not trigger an alert. These settings save separately.",
-      "channel": "Warning channel",
-      "role": "Mention role (optional)",
-      "below": "Below this member count",
-      "above": "Above this member count",
-      "save": "Save warning",
-      "disable": "Disable warning",
-      "saved": "Warning settings saved.",
-      "loading": "Loading warning settings…",
-      "loadError": "Could not load warnings. Server manager access is required.",
-      "saveError": "Could not save warnings. Check your access and channel, then try again.",
-      "invalid": "Choose a channel and valid limits: below 1–50, above 0–49. The below limit must not exceed the above limit."
+      "title": "멤버 수 알림",
+      "hint": "클랜의 멤버 수가 기준을 벗어나면 알립니다. 사용하지 않을 기준은 비워 두세요. 기준과 같은 수에서는 알림이 발생하지 않습니다. 이 설정은 별도로 저장됩니다.",
+      "channel": "알림 채널",
+      "role": "멘션할 역할 (선택 사항)",
+      "below": "이 멤버 수 미만",
+      "above": "이 멤버 수 초과",
+      "save": "알림 저장",
+      "disable": "알림 비활성화",
+      "saved": "알림 설정을 저장했습니다.",
+      "loading": "알림 설정을 불러오는 중…",
+      "loadError": "알림을 불러올 수 없습니다. 서버 관리 권한이 필요합니다.",
+      "saveError": "알림을 저장할 수 없습니다. 권한과 채널을 확인한 후 다시 시도하세요.",
+      "invalid": "채널과 유효한 기준을 선택하세요. 하한은 1–50, 상한은 0–49이며 하한은 상한보다 클 수 없습니다."
     }
   },
   "RolesPage": {

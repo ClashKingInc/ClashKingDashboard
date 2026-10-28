@@ -1963,19 +1963,19 @@
       "saveError": "Could not save war-event settings. Check your access and try again."
     },
     "memberWarning": {
-      "title": "Member-count warnings",
-      "hint": "Alert when this clan crosses a limit. Leave either limit blank to ignore it. Equality does not trigger an alert. These settings save separately.",
-      "channel": "Warning channel",
-      "role": "Mention role (optional)",
-      "below": "Below this member count",
-      "above": "Above this member count",
-      "save": "Save warning",
-      "disable": "Disable warning",
-      "saved": "Warning settings saved.",
-      "loading": "Loading warning settings…",
-      "loadError": "Could not load warnings. Server manager access is required.",
-      "saveError": "Could not save warnings. Check your access and channel, then try again.",
-      "invalid": "Choose a channel and valid limits: below 1–50, above 0–49. The below limit must not exceed the above limit."
+      "title": "Alertas de número de membros",
+      "hint": "Avisa quando este clã ultrapassar um limite. Deixa um limite em branco para o ignorar. Um valor igual ao limite não gera um alerta. Estas definições são guardadas separadamente.",
+      "channel": "Canal de alertas",
+      "role": "Cargo a mencionar (opcional)",
+      "below": "Abaixo deste número de membros",
+      "above": "Acima deste número de membros",
+      "save": "Guardar alerta",
+      "disable": "Desativar alerta",
+      "saved": "Definições de alertas guardadas.",
+      "loading": "A carregar definições de alertas…",
+      "loadError": "Não foi possível carregar os alertas. É necessária permissão para gerir o servidor.",
+      "saveError": "Não foi possível guardar os alertas. Verifica o acesso e o canal e tenta novamente.",
+      "invalid": "Escolhe um canal e limites válidos: inferior 1–50, superior 0–49. O limite inferior não pode ultrapassar o superior."
     }
   },
   "RolesPage": {

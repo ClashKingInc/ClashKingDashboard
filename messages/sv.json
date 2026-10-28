@@ -1963,19 +1963,19 @@
       "saveError": "Could not save war-event settings. Check your access and try again."
     },
     "memberWarning": {
-      "title": "Member-count warnings",
-      "hint": "Alert when this clan crosses a limit. Leave either limit blank to ignore it. Equality does not trigger an alert. These settings save separately.",
-      "channel": "Warning channel",
-      "role": "Mention role (optional)",
-      "below": "Below this member count",
-      "above": "Above this member count",
-      "save": "Save warning",
-      "disable": "Disable warning",
-      "saved": "Warning settings saved.",
-      "loading": "Loading warning settings…",
-      "loadError": "Could not load warnings. Server manager access is required.",
-      "saveError": "Could not save warnings. Check your access and channel, then try again.",
-      "invalid": "Choose a channel and valid limits: below 1–50, above 0–49. The below limit must not exceed the above limit."
+      "title": "Varningar för medlemsantal",
+      "hint": "Varna när klanen passerar en gräns. Lämna en gräns tom för att ignorera den. Ett medlemsantal som är lika med gränsen utlöser ingen varning. Dessa inställningar sparas separat.",
+      "channel": "Varningskanal",
+      "role": "Roll att nämna (valfritt)",
+      "below": "Under detta medlemsantal",
+      "above": "Över detta medlemsantal",
+      "save": "Spara varning",
+      "disable": "Inaktivera varning",
+      "saved": "Varningsinställningarna har sparats.",
+      "loading": "Läser in varningsinställningar…",
+      "loadError": "Kunde inte läsa in varningar. Behörighet att hantera servern krävs.",
+      "saveError": "Kunde inte spara varningar. Kontrollera din behörighet och kanalen och försök igen.",
+      "invalid": "Välj en kanal och giltiga gränser: nedre 1–50, övre 0–49. Den nedre gränsen får inte överstiga den övre."
     }
   },
   "RolesPage": {

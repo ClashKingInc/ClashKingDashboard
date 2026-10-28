@@ -1963,19 +1963,19 @@
       "saveError": "Could not save war-event settings. Check your access and try again."
     },
     "memberWarning": {
-      "title": "Member-count warnings",
-      "hint": "Alert when this clan crosses a limit. Leave either limit blank to ignore it. Equality does not trigger an alert. These settings save separately.",
-      "channel": "Warning channel",
-      "role": "Mention role (optional)",
-      "below": "Below this member count",
-      "above": "Above this member count",
-      "save": "Save warning",
-      "disable": "Disable warning",
-      "saved": "Warning settings saved.",
-      "loading": "Loading warning settings…",
-      "loadError": "Could not load warnings. Server manager access is required.",
-      "saveError": "Could not save warnings. Check your access and channel, then try again.",
-      "invalid": "Choose a channel and valid limits: below 1–50, above 0–49. The below limit must not exceed the above limit."
+      "title": "Avvisi sul numero di membri",
+      "hint": "Avvisa quando il clan supera una soglia. Lascia vuota una soglia per ignorarla. Un valore uguale alla soglia non genera un avviso. Queste impostazioni si salvano separatamente.",
+      "channel": "Canale degli avvisi",
+      "role": "Ruolo da menzionare (facoltativo)",
+      "below": "Sotto questo numero di membri",
+      "above": "Sopra questo numero di membri",
+      "save": "Salva avviso",
+      "disable": "Disattiva avviso",
+      "saved": "Impostazioni degli avvisi salvate.",
+      "loading": "Caricamento delle impostazioni degli avvisi…",
+      "loadError": "Impossibile caricare gli avvisi. È necessaria l’autorizzazione a gestire il server.",
+      "saveError": "Impossibile salvare gli avvisi. Controlla le autorizzazioni e il canale, poi riprova.",
+      "invalid": "Scegli un canale e soglie valide: inferiore 1–50, superiore 0–49. La soglia inferiore non deve superare quella superiore."
     }
   },
   "RolesPage": {

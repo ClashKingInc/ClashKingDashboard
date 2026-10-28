@@ -1963,19 +1963,19 @@
       "saveError": "Could not save war-event settings. Check your access and try again."
     },
     "memberWarning": {
-      "title": "Member-count warnings",
-      "hint": "Alert when this clan crosses a limit. Leave either limit blank to ignore it. Equality does not trigger an alert. These settings save separately.",
-      "channel": "Warning channel",
-      "role": "Mention role (optional)",
-      "below": "Below this member count",
-      "above": "Above this member count",
-      "save": "Save warning",
-      "disable": "Disable warning",
-      "saved": "Warning settings saved.",
-      "loading": "Loading warning settings…",
-      "loadError": "Could not load warnings. Server manager access is required.",
-      "saveError": "Could not save warnings. Check your access and channel, then try again.",
-      "invalid": "Choose a channel and valid limits: below 1–50, above 0–49. The below limit must not exceed the above limit."
+      "title": "Avertizări privind numărul de membri",
+      "hint": "Avertizează când clanul depășește un prag. Lasă un prag gol pentru a-l ignora. O valoare egală cu pragul nu declanșează avertizarea. Aceste setări se salvează separat.",
+      "channel": "Canal de avertizări",
+      "role": "Rol de menționat (opțional)",
+      "below": "Sub acest număr de membri",
+      "above": "Peste acest număr de membri",
+      "save": "Salvează avertizarea",
+      "disable": "Dezactivează avertizarea",
+      "saved": "Setările avertizărilor au fost salvate.",
+      "loading": "Se încarcă setările avertizărilor…",
+      "loadError": "Avertizările nu au putut fi încărcate. Este necesară permisiunea de administrare a serverului.",
+      "saveError": "Avertizările nu au putut fi salvate. Verifică accesul și canalul, apoi încearcă din nou.",
+      "invalid": "Alege un canal și praguri valide: inferior 1–50, superior 0–49. Pragul inferior nu trebuie să-l depășească pe cel superior."
     }
   },
   "RolesPage": {
