@@ -13,6 +13,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { InfoPopover } from "@/components/ui/info-popover";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RoleCombobox } from "@/components/ui/role-combobox";
@@ -55,6 +56,8 @@ import {
   roleTypeImageUrl,
 } from "./role-assets";
 
+
+const AUTO_ROLE_TRIGGERS = ["member_join", "member_leave", "townhall_change", "league_change", "role_change"] as const;
 
 const ROLE_TYPES_CONFIG: RoleType[] = ["townhall", "league", "builderhall", "builder_league", "clan_category"];
 
@@ -327,6 +330,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
           auto_eval_role_treatment: roleSettings.auto_eval_role_treatment,
           auto_eval_blacklist_roles: roleSettings.auto_eval_blacklist_roles,
         } : {}),
+        ...(roleSettings.auto_eval_triggers !== undefined ? {auto_eval_triggers: roleSettings.auto_eval_triggers} : {}),
         role_leave_delay_minutes: roleSettings.role_leave_delay_minutes,
         flair_non_family: roleSettings.flair_non_family,
         autoeval_log: roleSettings.autoeval_log,
@@ -811,7 +815,9 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
   // API would silently ignore on save during a rolling update.
   const autoPolicySupported = roleSettings.auto_eval_role_treatment !== undefined
     && Array.isArray(roleSettings.auto_eval_blacklist_roles);
-  const hasChanged = roleSettings.auto_eval_status !== originalRoleSettings.auto_eval_status ||
+  const autoTriggersSupported = roleSettings.auto_eval_triggers !== undefined;
+  const hasChanged = JSON.stringify(roleSettings.auto_eval_triggers) !== JSON.stringify(originalRoleSettings.auto_eval_triggers) ||
+    roleSettings.auto_eval_status !== originalRoleSettings.auto_eval_status ||
     roleSettings.auto_eval_nickname !== originalRoleSettings.auto_eval_nickname ||
     roleSettings.role_leave_delay_minutes !== originalRoleSettings.role_leave_delay_minutes ||
     roleSettings.flair_non_family !== originalRoleSettings.flair_non_family ||
@@ -956,6 +962,33 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                 onCheckedChange={checked => setRoleSettings({ ...roleSettings, flair_non_family: checked })} />
             </div>
           </div>
+          {autoTriggersSupported && <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <Label htmlFor="auto-role-trigger-mode">{t("settings.triggers")}</Label>
+              <InfoPopover content={t("settings.triggerHelp")} label={t("settings.triggers")} />
+            </div>
+            <Select value={roleSettings.auto_eval_triggers === null ? "all" : "selected"}
+              disabled={isLoading || saveStatus === 'saving'}
+              onValueChange={value => setRoleSettings({...roleSettings,auto_eval_triggers:value === "all" ? null : [...AUTO_ROLE_TRIGGERS].sort()})}>
+              <SelectTrigger id="auto-role-trigger-mode" className="w-full sm:max-w-sm"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t("settings.triggerAll")}</SelectItem>
+                <SelectItem value="selected">{t("settings.triggerSelected")}</SelectItem>
+              </SelectContent>
+            </Select>
+            {Array.isArray(roleSettings.auto_eval_triggers) && <fieldset className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              <legend className="sr-only">{t("settings.triggerSelected")}</legend>
+              {AUTO_ROLE_TRIGGERS.map(trigger => <div key={trigger} className="flex items-center gap-2">
+                <Checkbox id={`auto-trigger-${trigger}`} checked={roleSettings.auto_eval_triggers?.includes(trigger) ?? false}
+                  disabled={isLoading || saveStatus === 'saving'}
+                  onCheckedChange={checked => setRoleSettings({...roleSettings,auto_eval_triggers:[...new Set([
+                    ...(roleSettings.auto_eval_triggers ?? []).filter(value => value !== trigger),
+                    ...(checked === true ? [trigger] : []),
+                  ])].sort()})} />
+                <Label htmlFor={`auto-trigger-${trigger}`} className="cursor-pointer font-normal">{t(`triggers.${trigger}`)}</Label>
+              </div>)}
+            </fieldset>}
+          </div>}
           {autoPolicySupported && <div className="grid gap-5 md:grid-cols-2">
             <div className="space-y-2">
               <div className="flex items-center gap-2">

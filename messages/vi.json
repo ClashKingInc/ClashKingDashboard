@@ -2017,7 +2017,10 @@
       "treatmentRemove": "Chỉ xóa",
       "excludedRoles": "Bỏ qua thành viên có các vai trò này",
       "excludedRolesDesc": "Bỏ qua các thành viên này khi trò chơi kích hoạt cập nhật. Cập nhật thủ công, đội hình và thời gian tham gia vẫn hoạt động.",
-      "removeExcludedRole": "Bỏ loại trừ"
+      "removeExcludedRole": "Bỏ loại trừ",
+      "triggerAll": "Mọi thay đổi hồ sơ",
+      "triggerSelected": "Sự kiện đã chọn",
+      "triggerHelp": "Chọn sự kiện trong trò chơi. Làm mới thủ công và thay đổi cấu hình vẫn hoạt động độc lập."
     },
     "roleTypes": {
       "townhall": "Nhà Chính",

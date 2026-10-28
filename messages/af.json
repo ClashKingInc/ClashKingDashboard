@@ -2017,7 +2017,10 @@
       "treatmentRemove": "Verwyder slegs",
       "excludedRoles": "Slaan lede met hierdie rolle oor",
       "excludedRolesDesc": "Hierdie lede slaan spelgedrewe verfrissing oor. Handmatige, rooster- en dienstydopdaterings werk steeds.",
-      "removeExcludedRole": "Verwyder uitsluiting"
+      "removeExcludedRole": "Verwyder uitsluiting",
+      "triggerAll": "Alle profielveranderings",
+      "triggerSelected": "Gekose gebeure",
+      "triggerHelp": "Kies spelgebeure. Handmatige verversings en konfigurasieveranderings bly onafhanklik."
     },
     "roleTypes": {
       "townhall": "Stadsaal",

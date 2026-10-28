@@ -2017,7 +2017,10 @@
       "treatmentRemove": "Solo quitar",
       "excludedRoles": "Omitir miembros con estos roles",
       "excludedRolesDesc": "Estos miembros omiten las actualizaciones del juego. Las actualizaciones manuales, de plantillas y de antigüedad siguen funcionando.",
-      "removeExcludedRole": "Quitar exclusión"
+      "removeExcludedRole": "Quitar exclusión",
+      "triggerAll": "Todos los cambios del perfil",
+      "triggerSelected": "Eventos seleccionados",
+      "triggerHelp": "Elige eventos del juego. Las actualizaciones manuales y los cambios de configuración son independientes."
     },
     "roleTypes": {
       "townhall": "Ayuntamiento",

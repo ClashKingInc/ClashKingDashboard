@@ -2017,7 +2017,10 @@
       "treatmentRemove": "Pouze odebírat",
       "excludedRoles": "Přeskočit členy s těmito rolemi",
       "excludedRolesDesc": "Tito členové přeskočí aktualizace vyvolané hrou. Ruční aktualizace, aktualizace soupisek a délky členství fungují dál.",
-      "removeExcludedRole": "Zrušit vyloučení"
+      "removeExcludedRole": "Zrušit vyloučení",
+      "triggerAll": "Všechny změny profilu",
+      "triggerSelected": "Vybrané události",
+      "triggerHelp": "Vyberte herní události. Ruční obnovení a změny nastavení zůstávají nezávislé."
     },
     "roleTypes": {
       "townhall": "Radnice",

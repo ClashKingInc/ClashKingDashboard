@@ -2017,7 +2017,10 @@
       "treatmentRemove": "Tylko usuwaj",
       "excludedRoles": "Pomijaj członków z tymi rolami",
       "excludedRolesDesc": "Ci członkowie są pomijani przy aktualizacjach wywołanych grą. Aktualizacje ręczne, składów i stażu członkowskiego nadal działają.",
-      "removeExcludedRole": "Usuń wykluczenie"
+      "removeExcludedRole": "Usuń wykluczenie",
+      "triggerAll": "Wszystkie zmiany profilu",
+      "triggerSelected": "Wybrane zdarzenia",
+      "triggerHelp": "Wybierz zdarzenia w grze. Ręczne odświeżanie i zmiany konfiguracji pozostają niezależne."
     },
     "roleTypes": {
       "townhall": "Ratusz",

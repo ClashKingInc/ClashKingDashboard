@@ -2017,7 +2017,10 @@
       "treatmentRemove": "Doar elimină",
       "excludedRoles": "Omite membrii cu aceste roluri",
       "excludedRolesDesc": "Acești membri sunt omiși la actualizările jocului. Actualizările manuale, ale loturilor și ale vechimii continuă să funcționeze.",
-      "removeExcludedRole": "Elimină excluderea"
+      "removeExcludedRole": "Elimină excluderea",
+      "triggerAll": "Toate modificările profilului",
+      "triggerSelected": "Evenimente selectate",
+      "triggerHelp": "Alege evenimentele din joc. Actualizările manuale și modificările configurației rămân independente."
     },
     "roleTypes": {
       "townhall": "Primărie",

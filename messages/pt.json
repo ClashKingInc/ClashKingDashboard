@@ -2017,7 +2017,10 @@
       "treatmentRemove": "Apenas remover",
       "excludedRoles": "Ignorar membros com estes cargos",
       "excludedRolesDesc": "Estes membros são ignorados nas atualizações do jogo. Atualizações manuais, de escalações e de tempo de participação continuam funcionando.",
-      "removeExcludedRole": "Remover exclusão"
+      "removeExcludedRole": "Remover exclusão",
+      "triggerAll": "Todas as alterações do perfil",
+      "triggerSelected": "Eventos selecionados",
+      "triggerHelp": "Escolhe eventos do jogo. As atualizações manuais e as alterações de configuração permanecem independentes."
     },
     "roleTypes": {
       "townhall": "Centro da Vila",

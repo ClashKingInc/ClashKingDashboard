@@ -2017,7 +2017,10 @@
       "treatmentRemove": "Només eliminar",
       "excludedRoles": "Omet els membres amb aquests rols",
       "excludedRolesDesc": "Aquests membres ometen les actualitzacions del joc. Les actualitzacions manuals, de plantilles i d’antiguitat continuen funcionant.",
-      "removeExcludedRole": "Elimina l’exclusió"
+      "removeExcludedRole": "Elimina l’exclusió",
+      "triggerAll": "Tots els canvis del perfil",
+      "triggerSelected": "Esdeveniments seleccionats",
+      "triggerHelp": "Tria els esdeveniments del joc. Les actualitzacions manuals i els canvis de configuració són independents."
     },
     "roleTypes": {
       "townhall": "Ajuntament",

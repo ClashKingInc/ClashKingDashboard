@@ -2017,7 +2017,10 @@
       "treatmentRemove": "Ta bara bort",
       "excludedRoles": "Hoppa över medlemmar med dessa roller",
       "excludedRolesDesc": "Dessa medlemmar hoppas över vid spelutlösta uppdateringar. Manuella uppdateringar, laguppställningar och medlemstid fungerar fortfarande.",
-      "removeExcludedRole": "Ta bort undantag"
+      "removeExcludedRole": "Ta bort undantag",
+      "triggerAll": "Alla profiländringar",
+      "triggerSelected": "Valda händelser",
+      "triggerHelp": "Välj spelhändelser. Manuella uppdateringar och konfigurationsändringar är oberoende."
     },
     "roleTypes": {
       "townhall": "Rådhus",

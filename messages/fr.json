@@ -2017,7 +2017,10 @@
       "treatmentRemove": "Retirer uniquement",
       "excludedRoles": "Ignorer les membres ayant ces rôles",
       "excludedRolesDesc": "Ces membres sont ignorés lors des mises à jour du jeu. Les mises à jour manuelles, des effectifs et d’ancienneté restent actives.",
-      "removeExcludedRole": "Retirer l’exclusion"
+      "removeExcludedRole": "Retirer l’exclusion",
+      "triggerAll": "Tous les changements du profil",
+      "triggerSelected": "Événements sélectionnés",
+      "triggerHelp": "Choisissez les événements du jeu. Les actualisations manuelles et les changements de configuration restent indépendants."
     },
     "roleTypes": {
       "townhall": "Hôtel de ville",

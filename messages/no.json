@@ -2017,7 +2017,10 @@
       "treatmentRemove": "Bare fjern",
       "excludedRoles": "Hopp over medlemmer med disse rollene",
       "excludedRolesDesc": "Disse medlemmene hoppes over ved spillutløste oppdateringer. Manuelle oppdateringer, laglister og medlemsansiennitet fungerer fortsatt.",
-      "removeExcludedRole": "Fjern unntak"
+      "removeExcludedRole": "Fjern unntak",
+      "triggerAll": "Alle profilendringer",
+      "triggerSelected": "Valgte hendelser",
+      "triggerHelp": "Velg spillhendelser. Manuelle oppdateringer og konfigurasjonsendringer er uavhengige."
     },
     "roleTypes": {
       "townhall": "Rådhus",

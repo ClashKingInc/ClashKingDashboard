@@ -2017,7 +2017,10 @@
       "treatmentRemove": "Remove only",
       "excludedRoles": "Skip members with these roles",
       "excludedRolesDesc": "These members skip game-triggered refresh. Manual, roster and tenure updates still work.",
-      "removeExcludedRole": "Remove exclusion"
+      "removeExcludedRole": "Remove exclusion",
+      "triggerAll": "All profile changes",
+      "triggerSelected": "Selected events",
+      "triggerHelp": "Choose game events. Manual refreshes and configuration changes remain independent."
     },
     "roleTypes": {
       "townhall": "Town Hall",

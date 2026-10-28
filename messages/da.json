@@ -2017,7 +2017,10 @@
       "treatmentRemove": "Fjern kun",
       "excludedRoles": "Spring medlemmer med disse roller over",
       "excludedRolesDesc": "Disse medlemmer springes over ved spiludløste opdateringer. Manuelle opdateringer, holdlister og medlemsanciennitet virker stadig.",
-      "removeExcludedRole": "Fjern undtagelse"
+      "removeExcludedRole": "Fjern undtagelse",
+      "triggerAll": "Alle profilændringer",
+      "triggerSelected": "Valgte hændelser",
+      "triggerHelp": "Vælg spilhændelser. Manuelle opdateringer og konfigurationsændringer er uafhængige."
     },
     "roleTypes": {
       "townhall": "Rådhus",

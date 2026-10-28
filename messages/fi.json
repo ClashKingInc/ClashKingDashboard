@@ -2017,7 +2017,10 @@
       "treatmentRemove": "Vain poista",
       "excludedRoles": "Ohita jäsenet, joilla on nämä roolit",
       "excludedRolesDesc": "Nämä jäsenet ohitetaan pelin käynnistämissä päivityksissä. Manuaaliset, kokoonpano- ja jäsenyysajan päivitykset toimivat edelleen.",
-      "removeExcludedRole": "Poista rajaus"
+      "removeExcludedRole": "Poista rajaus",
+      "triggerAll": "Kaikki profiilin muutokset",
+      "triggerSelected": "Valitut tapahtumat",
+      "triggerHelp": "Valitse pelitapahtumat. Manuaaliset päivitykset ja asetusmuutokset toimivat itsenäisesti."
     },
     "roleTypes": {
       "townhall": "Kaupungintalo",

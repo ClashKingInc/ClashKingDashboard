@@ -2017,7 +2017,10 @@
       "treatmentRemove": "Nur entfernen",
       "excludedRoles": "Mitglieder mit diesen Rollen überspringen",
       "excludedRolesDesc": "Diese Mitglieder werden bei spielbedingten Aktualisierungen übersprungen. Manuelle, Kader- und Mitgliedsdauer-Aktualisierungen bleiben aktiv.",
-      "removeExcludedRole": "Ausnahme entfernen"
+      "removeExcludedRole": "Ausnahme entfernen",
+      "triggerAll": "Alle Profiländerungen",
+      "triggerSelected": "Ausgewählte Ereignisse",
+      "triggerHelp": "Wähle Spielereignisse aus. Manuelle Aktualisierungen und Konfigurationsänderungen bleiben unabhängig."
     },
     "roleTypes": {
       "townhall": "Rathaus",

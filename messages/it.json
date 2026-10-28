@@ -2017,7 +2017,10 @@
       "treatmentRemove": "Solo rimozione",
       "excludedRoles": "Salta i membri con questi ruoli",
       "excludedRolesDesc": "Questi membri vengono saltati negli aggiornamenti del gioco. Gli aggiornamenti manuali, delle formazioni e di anzianità restano attivi.",
-      "removeExcludedRole": "Rimuovi esclusione"
+      "removeExcludedRole": "Rimuovi esclusione",
+      "triggerAll": "Tutte le modifiche al profilo",
+      "triggerSelected": "Eventi selezionati",
+      "triggerHelp": "Scegli gli eventi di gioco. Gli aggiornamenti manuali e le modifiche alla configurazione restano indipendenti."
     },
     "roleTypes": {
       "townhall": "Municipio",

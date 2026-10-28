@@ -2017,7 +2017,10 @@
       "treatmentRemove": "仅移除",
       "excludedRoles": "跳过拥有这些角色的成员",
       "excludedRolesDesc": "游戏事件触发的更新会跳过这些成员。手动更新、阵容更新和成员资历更新仍会正常运行。",
-      "removeExcludedRole": "取消排除"
+      "removeExcludedRole": "取消排除",
+      "triggerAll": "所有个人资料更改",
+      "triggerSelected": "所选事件",
+      "triggerHelp": "选择游戏事件。手动刷新和配置更改仍独立运行。"
     },
     "roleTypes": {
       "townhall": "大本营",

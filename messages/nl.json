@@ -2017,7 +2017,10 @@
       "treatmentRemove": "Alleen verwijderen",
       "excludedRoles": "Leden met deze rollen overslaan",
       "excludedRolesDesc": "Deze leden worden overgeslagen bij spelupdates. Handmatige updates en updates van roosters en lidmaatschapsduur blijven werken.",
-      "removeExcludedRole": "Uitsluiting verwijderen"
+      "removeExcludedRole": "Uitsluiting verwijderen",
+      "triggerAll": "Alle profielwijzigingen",
+      "triggerSelected": "Geselecteerde gebeurtenissen",
+      "triggerHelp": "Kies spelgebeurtenissen. Handmatige vernieuwingen en configuratiewijzigingen blijven onafhankelijk."
     },
     "roleTypes": {
       "townhall": "Stadhuis",

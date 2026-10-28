@@ -2017,7 +2017,10 @@
       "treatmentRemove": "削除のみ",
       "excludedRoles": "これらのロールを持つメンバーを除外",
       "excludedRolesDesc": "ゲームを契機とする更新から除外します。手動更新、ロスター更新、在籍期間による更新は引き続き動作します。",
-      "removeExcludedRole": "除外を解除"
+      "removeExcludedRole": "除外を解除",
+      "triggerAll": "すべてのプロフィール変更",
+      "triggerSelected": "選択したイベント",
+      "triggerHelp": "ゲーム内イベントを選択します。手動更新と設定変更は独立して動作します。"
     },
     "roleTypes": {
       "townhall": "タウンホール",

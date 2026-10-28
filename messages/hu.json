@@ -2017,7 +2017,10 @@
       "treatmentRemove": "Csak eltávolítás",
       "excludedRoles": "Az ilyen szerepkörű tagok kihagyása",
       "excludedRolesDesc": "A játék által indított frissítések kihagyják ezeket a tagokat. A kézi, névsor- és tagságiidő-frissítések tovább működnek.",
-      "removeExcludedRole": "Kizárás eltávolítása"
+      "removeExcludedRole": "Kizárás eltávolítása",
+      "triggerAll": "Minden profilváltozás",
+      "triggerSelected": "Kiválasztott események",
+      "triggerHelp": "Válaszd ki a játékeseményeket. A kézi frissítések és a beállítások módosításai ettől függetlenek."
     },
     "roleTypes": {
       "townhall": "Városháza",

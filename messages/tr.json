@@ -2017,7 +2017,10 @@
       "treatmentRemove": "Yalnızca kaldır",
       "excludedRoles": "Bu rollere sahip üyeleri atla",
       "excludedRolesDesc": "Bu üyeler oyun güncellemelerinde atlanır. Manuel, kadro ve üyelik süresi güncellemeleri çalışmaya devam eder.",
-      "removeExcludedRole": "Hariç tutmayı kaldır"
+      "removeExcludedRole": "Hariç tutmayı kaldır",
+      "triggerAll": "Tüm profil değişiklikleri",
+      "triggerSelected": "Seçilen olaylar",
+      "triggerHelp": "Oyun olaylarını seçin. Manuel yenilemeler ve yapılandırma değişiklikleri bağımsız kalır."
     },
     "roleTypes": {
       "townhall": "Belediye Binası",
