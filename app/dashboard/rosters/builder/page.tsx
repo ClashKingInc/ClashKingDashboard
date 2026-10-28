@@ -1,4 +1,5 @@
 "use client";
+import { useAiNotice } from "./ai-notice";
 
 import { gradientHighlightStyle, rosterColumnPresentation } from "./roster-view-presentation";
 import { RosterStarterPrompts } from "./roster-starter-prompts";
@@ -975,6 +976,7 @@ function RosterBuilderWorkspace() {
   const guildId = useGuildId();
   const router = useRouter();
   const { user } = useAuthSession();
+  const aiNotice = useAiNotice(user?.user_id, () => router.push(dashboardHref("rosters", guildId)));
   const chatStorageScope = user?.user_id && guildId ? `${user.user_id}:${guildId}` : undefined;
   const showDeveloperContext = isDeveloperUserId(user?.user_id);
   const [prompt, setPrompt] = useState("");
@@ -1258,7 +1260,7 @@ function RosterBuilderWorkspace() {
       ...mentionedRosterIds,
       ...playerContexts.map((player) => player.rosterId),
     ]);
-    if (!text || status === "streaming" || status === "submitted") return;
+    if (!aiNotice.accepted || !text || status === "streaming" || status === "submitted") return;
     setRequestStartedAt(Date.now());
     setViewRosterIds(requestRosterIds);
     setPrompt("");
@@ -1521,6 +1523,7 @@ function RosterBuilderWorkspace() {
 
   return (
     <div className="flex h-full min-h-0 flex-col bg-background">
+      {aiNotice.notice}
       <DashboardHeaderPortal>
         <div className="flex min-w-0 items-center gap-2">
         <Button variant="ghost" size="icon" aria-label="Back to rosters" onClick={() => router.push(dashboardHref("rosters", guildId))}>
