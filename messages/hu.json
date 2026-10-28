@@ -2009,7 +2009,15 @@
       "accountPolicy": "Only visible linked accounts count. Refresh assigns earned roles and removes configured roles that are no longer earned. Members can choose a main account with /main-account.",
       "triggers": "Refresh when",
       "flairNonFamily": "Player roles for accounts outside the family",
-      "flairNonFamilyDesc": "Let visible accounts outside your family clans earn Town Hall, Builder Hall, and league roles."
+      "flairNonFamilyDesc": "Let visible accounts outside your family clans earn Town Hall, Builder Hall, and league roles.",
+      "automaticTreatment": "Automatikus szerepkörváltozások",
+      "automaticTreatmentDesc": "Csak a játék által indított frissítésekre. A beceneveknek külön beállításuk van.",
+      "treatmentBoth": "Hozzáadás és eltávolítás",
+      "treatmentAdd": "Csak hozzáadás",
+      "treatmentRemove": "Csak eltávolítás",
+      "excludedRoles": "Az ilyen szerepkörű tagok kihagyása",
+      "excludedRolesDesc": "A játék által indított frissítések kihagyják ezeket a tagokat. A kézi, névsor- és tagságiidő-frissítések tovább működnek.",
+      "removeExcludedRole": "Kizárás eltávolítása"
     },
     "roleTypes": {
       "townhall": "Városháza",

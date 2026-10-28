@@ -2009,7 +2009,15 @@
       "accountPolicy": "Only visible linked accounts count. Refresh assigns earned roles and removes configured roles that are no longer earned. Members can choose a main account with /main-account.",
       "triggers": "Refresh when",
       "flairNonFamily": "Player roles for accounts outside the family",
-      "flairNonFamilyDesc": "Let visible accounts outside your family clans earn Town Hall, Builder Hall, and league roles."
+      "flairNonFamilyDesc": "Let visible accounts outside your family clans earn Town Hall, Builder Hall, and league roles.",
+      "automaticTreatment": "Thay đổi vai trò tự động",
+      "automaticTreatmentDesc": "Chỉ áp dụng cho cập nhật do trò chơi kích hoạt. Biệt danh có cài đặt riêng.",
+      "treatmentBoth": "Thêm và xóa",
+      "treatmentAdd": "Chỉ thêm",
+      "treatmentRemove": "Chỉ xóa",
+      "excludedRoles": "Bỏ qua thành viên có các vai trò này",
+      "excludedRolesDesc": "Bỏ qua các thành viên này khi trò chơi kích hoạt cập nhật. Cập nhật thủ công, đội hình và thời gian tham gia vẫn hoạt động.",
+      "removeExcludedRole": "Bỏ loại trừ"
     },
     "roleTypes": {
       "townhall": "Nhà Chính",

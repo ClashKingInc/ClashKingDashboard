@@ -2009,7 +2009,15 @@
       "accountPolicy": "Only visible linked accounts count. Refresh assigns earned roles and removes configured roles that are no longer earned. Members can choose a main account with /main-account.",
       "triggers": "Refresh when",
       "flairNonFamily": "Player roles for accounts outside the family",
-      "flairNonFamilyDesc": "Let visible accounts outside your family clans earn Town Hall, Builder Hall, and league roles."
+      "flairNonFamilyDesc": "Let visible accounts outside your family clans earn Town Hall, Builder Hall, and league roles.",
+      "automaticTreatment": "Automatické změny rolí",
+      "automaticTreatmentDesc": "Jen pro aktualizace vyvolané hrou. Přezdívky mají vlastní nastavení.",
+      "treatmentBoth": "Přidávat a odebírat",
+      "treatmentAdd": "Pouze přidávat",
+      "treatmentRemove": "Pouze odebírat",
+      "excludedRoles": "Přeskočit členy s těmito rolemi",
+      "excludedRolesDesc": "Tito členové přeskočí aktualizace vyvolané hrou. Ruční aktualizace, aktualizace soupisek a délky členství fungují dál.",
+      "removeExcludedRole": "Zrušit vyloučení"
     },
     "roleTypes": {
       "townhall": "Radnice",

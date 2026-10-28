@@ -2009,7 +2009,15 @@
       "accountPolicy": "Only visible linked accounts count. Refresh assigns earned roles and removes configured roles that are no longer earned. Members can choose a main account with /main-account.",
       "triggers": "Refresh when",
       "flairNonFamily": "Player roles for accounts outside the family",
-      "flairNonFamilyDesc": "Let visible accounts outside your family clans earn Town Hall, Builder Hall, and league roles."
+      "flairNonFamilyDesc": "Let visible accounts outside your family clans earn Town Hall, Builder Hall, and league roles.",
+      "automaticTreatment": "Modifiche automatiche dei ruoli",
+      "automaticTreatmentDesc": "Solo per gli aggiornamenti attivati dal gioco. I soprannomi hanno una propria impostazione.",
+      "treatmentBoth": "Aggiungi e rimuovi",
+      "treatmentAdd": "Solo aggiunta",
+      "treatmentRemove": "Solo rimozione",
+      "excludedRoles": "Salta i membri con questi ruoli",
+      "excludedRolesDesc": "Questi membri vengono saltati negli aggiornamenti del gioco. Gli aggiornamenti manuali, delle formazioni e di anzianità restano attivi.",
+      "removeExcludedRole": "Rimuovi esclusione"
     },
     "roleTypes": {
       "townhall": "Municipio",

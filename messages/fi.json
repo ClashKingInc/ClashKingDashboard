@@ -2009,7 +2009,15 @@
       "accountPolicy": "Only visible linked accounts count. Refresh assigns earned roles and removes configured roles that are no longer earned. Members can choose a main account with /main-account.",
       "triggers": "Refresh when",
       "flairNonFamily": "Player roles for accounts outside the family",
-      "flairNonFamilyDesc": "Let visible accounts outside your family clans earn Town Hall, Builder Hall, and league roles."
+      "flairNonFamilyDesc": "Let visible accounts outside your family clans earn Town Hall, Builder Hall, and league roles.",
+      "automaticTreatment": "Automaattiset roolimuutokset",
+      "automaticTreatmentDesc": "Vain pelin käynnistämiin päivityksiin. Lempinimillä on oma asetus.",
+      "treatmentBoth": "Lisää ja poista",
+      "treatmentAdd": "Vain lisää",
+      "treatmentRemove": "Vain poista",
+      "excludedRoles": "Ohita jäsenet, joilla on nämä roolit",
+      "excludedRolesDesc": "Nämä jäsenet ohitetaan pelin käynnistämissä päivityksissä. Manuaaliset, kokoonpano- ja jäsenyysajan päivitykset toimivat edelleen.",
+      "removeExcludedRole": "Poista rajaus"
     },
     "roleTypes": {
       "townhall": "Kaupungintalo",

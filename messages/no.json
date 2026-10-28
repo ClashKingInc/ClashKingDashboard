@@ -2009,7 +2009,15 @@
       "accountPolicy": "Only visible linked accounts count. Refresh assigns earned roles and removes configured roles that are no longer earned. Members can choose a main account with /main-account.",
       "triggers": "Refresh when",
       "flairNonFamily": "Player roles for accounts outside the family",
-      "flairNonFamilyDesc": "Let visible accounts outside your family clans earn Town Hall, Builder Hall, and league roles."
+      "flairNonFamilyDesc": "Let visible accounts outside your family clans earn Town Hall, Builder Hall, and league roles.",
+      "automaticTreatment": "Automatiske rolleendringer",
+      "automaticTreatmentDesc": "Bare for oppdateringer utløst av spillet. Kallenavn har sin egen innstilling.",
+      "treatmentBoth": "Legg til og fjern",
+      "treatmentAdd": "Bare legg til",
+      "treatmentRemove": "Bare fjern",
+      "excludedRoles": "Hopp over medlemmer med disse rollene",
+      "excludedRolesDesc": "Disse medlemmene hoppes over ved spillutløste oppdateringer. Manuelle oppdateringer, laglister og medlemsansiennitet fungerer fortsatt.",
+      "removeExcludedRole": "Fjern unntak"
     },
     "roleTypes": {
       "townhall": "Rådhus",

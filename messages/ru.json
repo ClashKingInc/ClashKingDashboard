@@ -2009,7 +2009,15 @@
       "accountPolicy": "Only visible linked accounts count. Refresh assigns earned roles and removes configured roles that are no longer earned. Members can choose a main account with /main-account.",
       "triggers": "Refresh when",
       "flairNonFamily": "Player roles for accounts outside the family",
-      "flairNonFamilyDesc": "Let visible accounts outside your family clans earn Town Hall, Builder Hall, and league roles."
+      "flairNonFamilyDesc": "Let visible accounts outside your family clans earn Town Hall, Builder Hall, and league roles.",
+      "automaticTreatment": "Автоматические изменения ролей",
+      "automaticTreatmentDesc": "Только для обновлений по событиям игры. У никнеймов отдельная настройка.",
+      "treatmentBoth": "Добавлять и удалять",
+      "treatmentAdd": "Только добавлять",
+      "treatmentRemove": "Только удалять",
+      "excludedRoles": "Пропускать участников с этими ролями",
+      "excludedRolesDesc": "Эти участники пропускаются при обновлениях по событиям игры. Ручные обновления, обновления составов и стажа участия продолжают работать.",
+      "removeExcludedRole": "Снять исключение"
     },
     "roleTypes": {
       "townhall": "Ратуша",

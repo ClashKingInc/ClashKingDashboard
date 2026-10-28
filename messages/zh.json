@@ -2009,7 +2009,15 @@
       "accountPolicy": "Only visible linked accounts count. Refresh assigns earned roles and removes configured roles that are no longer earned. Members can choose a main account with /main-account.",
       "triggers": "Refresh when",
       "flairNonFamily": "Player roles for accounts outside the family",
-      "flairNonFamilyDesc": "Let visible accounts outside your family clans earn Town Hall, Builder Hall, and league roles."
+      "flairNonFamilyDesc": "Let visible accounts outside your family clans earn Town Hall, Builder Hall, and league roles.",
+      "automaticTreatment": "自动角色变更",
+      "automaticTreatmentDesc": "仅用于游戏事件触发的更新。昵称遵循单独的设置。",
+      "treatmentBoth": "添加和移除",
+      "treatmentAdd": "仅添加",
+      "treatmentRemove": "仅移除",
+      "excludedRoles": "跳过拥有这些角色的成员",
+      "excludedRolesDesc": "游戏事件触发的更新会跳过这些成员。手动更新、阵容更新和成员资历更新仍会正常运行。",
+      "removeExcludedRole": "取消排除"
     },
     "roleTypes": {
       "townhall": "大本营",

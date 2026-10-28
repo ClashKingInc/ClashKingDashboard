@@ -2009,7 +2009,15 @@
       "accountPolicy": "Only visible linked accounts count. Refresh assigns earned roles and removes configured roles that are no longer earned. Members can choose a main account with /main-account.",
       "triggers": "Refresh when",
       "flairNonFamily": "Player roles for accounts outside the family",
-      "flairNonFamilyDesc": "Let visible accounts outside your family clans earn Town Hall, Builder Hall, and league roles."
+      "flairNonFamilyDesc": "Let visible accounts outside your family clans earn Town Hall, Builder Hall, and league roles.",
+      "automaticTreatment": "Schimbări automate de roluri",
+      "automaticTreatmentDesc": "Doar pentru actualizările declanșate de joc. Poreclele au o setare separată.",
+      "treatmentBoth": "Adaugă și elimină",
+      "treatmentAdd": "Doar adaugă",
+      "treatmentRemove": "Doar elimină",
+      "excludedRoles": "Omite membrii cu aceste roluri",
+      "excludedRolesDesc": "Acești membri sunt omiși la actualizările jocului. Actualizările manuale, ale loturilor și ale vechimii continuă să funcționeze.",
+      "removeExcludedRole": "Elimină excluderea"
     },
     "roleTypes": {
       "townhall": "Primărie",

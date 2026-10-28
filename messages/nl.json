@@ -2009,7 +2009,15 @@
       "accountPolicy": "Only visible linked accounts count. Refresh assigns earned roles and removes configured roles that are no longer earned. Members can choose a main account with /main-account.",
       "triggers": "Refresh when",
       "flairNonFamily": "Player roles for accounts outside the family",
-      "flairNonFamilyDesc": "Let visible accounts outside your family clans earn Town Hall, Builder Hall, and league roles."
+      "flairNonFamilyDesc": "Let visible accounts outside your family clans earn Town Hall, Builder Hall, and league roles.",
+      "automaticTreatment": "Automatische rolwijzigingen",
+      "automaticTreatmentDesc": "Alleen voor updates vanuit het spel. Bijnamen hebben hun eigen instelling.",
+      "treatmentBoth": "Toevoegen en verwijderen",
+      "treatmentAdd": "Alleen toevoegen",
+      "treatmentRemove": "Alleen verwijderen",
+      "excludedRoles": "Leden met deze rollen overslaan",
+      "excludedRolesDesc": "Deze leden worden overgeslagen bij spelupdates. Handmatige updates en updates van roosters en lidmaatschapsduur blijven werken.",
+      "removeExcludedRole": "Uitsluiting verwijderen"
     },
     "roleTypes": {
       "townhall": "Stadhuis",

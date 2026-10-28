@@ -2009,7 +2009,15 @@
       "accountPolicy": "Only visible linked accounts count. Refresh assigns earned roles and removes configured roles that are no longer earned. Members can choose a main account with /main-account.",
       "triggers": "Refresh when",
       "flairNonFamily": "Player roles for accounts outside the family",
-      "flairNonFamilyDesc": "Let visible accounts outside your family clans earn Town Hall, Builder Hall, and league roles."
+      "flairNonFamilyDesc": "Let visible accounts outside your family clans earn Town Hall, Builder Hall, and league roles.",
+      "automaticTreatment": "स्वचालित भूमिका बदलाव",
+      "automaticTreatmentDesc": "केवल गेम से शुरू हुए अपडेट के लिए। उपनामों की अलग सेटिंग है।",
+      "treatmentBoth": "जोड़ें और हटाएँ",
+      "treatmentAdd": "केवल जोड़ें",
+      "treatmentRemove": "केवल हटाएँ",
+      "excludedRoles": "इन भूमिकाओं वाले सदस्यों को छोड़ें",
+      "excludedRolesDesc": "गेम से शुरू हुए अपडेट में इन सदस्यों को छोड़ा जाएगा। मैनुअल, रोस्टर और सदस्यता अवधि के अपडेट चलते रहेंगे।",
+      "removeExcludedRole": "अपवाद हटाएँ"
     },
     "roleTypes": {
       "townhall": "टाउन हॉल",

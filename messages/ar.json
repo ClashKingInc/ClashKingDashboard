@@ -2009,7 +2009,15 @@
       "accountPolicy": "Only visible linked accounts count. Refresh assigns earned roles and removes configured roles that are no longer earned. Members can choose a main account with /main-account.",
       "triggers": "Refresh when",
       "flairNonFamily": "Player roles for accounts outside the family",
-      "flairNonFamilyDesc": "Let visible accounts outside your family clans earn Town Hall, Builder Hall, and league roles."
+      "flairNonFamilyDesc": "Let visible accounts outside your family clans earn Town Hall, Builder Hall, and league roles.",
+      "automaticTreatment": "تغييرات الأدوار التلقائية",
+      "automaticTreatmentDesc": "للتحديث الناتج عن أحداث اللعبة فقط. للألقاب إعداد مستقل.",
+      "treatmentBoth": "إضافة وإزالة",
+      "treatmentAdd": "إضافة فقط",
+      "treatmentRemove": "إزالة فقط",
+      "excludedRoles": "تخطي الأعضاء الذين يحملون هذه الأدوار",
+      "excludedRolesDesc": "يتم تخطي تحديث أحداث اللعبة لهؤلاء الأعضاء. تبقى التحديثات اليدوية وتحديثات القوائم ومدة العضوية فعالة.",
+      "removeExcludedRole": "إزالة الاستثناء"
     },
     "roleTypes": {
       "townhall": "قاعة المدينة",

@@ -2009,7 +2009,15 @@
       "accountPolicy": "Only visible linked accounts count. Refresh assigns earned roles and removes configured roles that are no longer earned. Members can choose a main account with /main-account.",
       "triggers": "Refresh when",
       "flairNonFamily": "Player roles for accounts outside the family",
-      "flairNonFamilyDesc": "Let visible accounts outside your family clans earn Town Hall, Builder Hall, and league roles."
+      "flairNonFamilyDesc": "Let visible accounts outside your family clans earn Town Hall, Builder Hall, and league roles.",
+      "automaticTreatment": "Automatic role changes",
+      "automaticTreatmentDesc": "For game-triggered refresh only. Nicknames keep their own setting.",
+      "treatmentBoth": "Add and remove",
+      "treatmentAdd": "Add only",
+      "treatmentRemove": "Remove only",
+      "excludedRoles": "Skip members with these roles",
+      "excludedRolesDesc": "These members skip game-triggered refresh. Manual, roster and tenure updates still work.",
+      "removeExcludedRole": "Remove exclusion"
     },
     "roleTypes": {
       "townhall": "Town Hall",

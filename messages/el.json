@@ -2009,7 +2009,15 @@
       "accountPolicy": "Only visible linked accounts count. Refresh assigns earned roles and removes configured roles that are no longer earned. Members can choose a main account with /main-account.",
       "triggers": "Refresh when",
       "flairNonFamily": "Player roles for accounts outside the family",
-      "flairNonFamilyDesc": "Let visible accounts outside your family clans earn Town Hall, Builder Hall, and league roles."
+      "flairNonFamilyDesc": "Let visible accounts outside your family clans earn Town Hall, Builder Hall, and league roles.",
+      "automaticTreatment": "Αυτόματες αλλαγές ρόλων",
+      "automaticTreatmentDesc": "Μόνο για ενημερώσεις από το παιχνίδι. Τα ψευδώνυμα έχουν ξεχωριστή ρύθμιση.",
+      "treatmentBoth": "Προσθήκη και αφαίρεση",
+      "treatmentAdd": "Μόνο προσθήκη",
+      "treatmentRemove": "Μόνο αφαίρεση",
+      "excludedRoles": "Παράλειψη μελών με αυτούς τους ρόλους",
+      "excludedRolesDesc": "Αυτά τα μέλη παραλείπονται στις ενημερώσεις του παιχνιδιού. Οι χειροκίνητες ενημερώσεις και οι ενημερώσεις ρόστερ και διάρκειας συμμετοχής συνεχίζονται.",
+      "removeExcludedRole": "Αφαίρεση εξαίρεσης"
     },
     "roleTypes": {
       "townhall": "Δημαρχείο",

@@ -2009,7 +2009,15 @@
       "accountPolicy": "Only visible linked accounts count. Refresh assigns earned roles and removes configured roles that are no longer earned. Members can choose a main account with /main-account.",
       "triggers": "Refresh when",
       "flairNonFamily": "Player roles for accounts outside the family",
-      "flairNonFamilyDesc": "Let visible accounts outside your family clans earn Town Hall, Builder Hall, and league roles."
+      "flairNonFamilyDesc": "Let visible accounts outside your family clans earn Town Hall, Builder Hall, and league roles.",
+      "automaticTreatment": "Automatyczne zmiany ról",
+      "automaticTreatmentDesc": "Tylko dla aktualizacji wywołanych grą. Pseudonimy mają osobne ustawienie.",
+      "treatmentBoth": "Dodawaj i usuwaj",
+      "treatmentAdd": "Tylko dodawaj",
+      "treatmentRemove": "Tylko usuwaj",
+      "excludedRoles": "Pomijaj członków z tymi rolami",
+      "excludedRolesDesc": "Ci członkowie są pomijani przy aktualizacjach wywołanych grą. Aktualizacje ręczne, składów i stażu członkowskiego nadal działają.",
+      "removeExcludedRole": "Usuń wykluczenie"
     },
     "roleTypes": {
       "townhall": "Ratusz",

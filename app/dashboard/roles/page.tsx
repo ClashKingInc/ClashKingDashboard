@@ -139,6 +139,8 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
     server_id: guildId,
     auto_eval_status: false,
     auto_eval_nickname: false,
+    auto_eval_role_treatment: "both",
+    auto_eval_blacklist_roles: [],
     role_leave_delay_minutes: 5,
     autoeval_log: undefined,
   });
@@ -146,6 +148,8 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
     server_id: guildId,
     auto_eval_status: false,
     auto_eval_nickname: false,
+    auto_eval_role_treatment: "both",
+    auto_eval_blacklist_roles: [],
     role_leave_delay_minutes: 5,
     autoeval_log: undefined,
   });
@@ -319,6 +323,10 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
       const result = await apiClient.roles.updateRoleSettings(guildId, {
         auto_eval_status: roleSettings.auto_eval_status,
         auto_eval_nickname: roleSettings.auto_eval_nickname,
+        ...(autoPolicySupported ? {
+          auto_eval_role_treatment: roleSettings.auto_eval_role_treatment,
+          auto_eval_blacklist_roles: roleSettings.auto_eval_blacklist_roles,
+        } : {}),
         role_leave_delay_minutes: roleSettings.role_leave_delay_minutes,
         flair_non_family: roleSettings.flair_non_family,
         autoeval_log: roleSettings.autoeval_log,
@@ -799,10 +807,16 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
 
   const duplicateState = getRoleDuplicateState();
 
+  // Older APIs omit these optional fields. Do not offer controls that such an
+  // API would silently ignore on save during a rolling update.
+  const autoPolicySupported = roleSettings.auto_eval_role_treatment !== undefined
+    && Array.isArray(roleSettings.auto_eval_blacklist_roles);
   const hasChanged = roleSettings.auto_eval_status !== originalRoleSettings.auto_eval_status ||
     roleSettings.auto_eval_nickname !== originalRoleSettings.auto_eval_nickname ||
     roleSettings.role_leave_delay_minutes !== originalRoleSettings.role_leave_delay_minutes ||
-    roleSettings.flair_non_family !== originalRoleSettings.flair_non_family;
+    roleSettings.flair_non_family !== originalRoleSettings.flair_non_family ||
+    roleSettings.auto_eval_role_treatment !== originalRoleSettings.auto_eval_role_treatment ||
+    JSON.stringify(roleSettings.auto_eval_blacklist_roles ?? []) !== JSON.stringify(originalRoleSettings.auto_eval_blacklist_roles ?? []);
 
   const isAddRoleDisabled = () => {
     const hasRole = !!newRole.role_id;
@@ -942,6 +956,42 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                 onCheckedChange={checked => setRoleSettings({ ...roleSettings, flair_non_family: checked })} />
             </div>
           </div>
+          {autoPolicySupported && <div className="grid gap-5 md:grid-cols-2">
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <Label htmlFor="auto-role-treatment">{t("settings.automaticTreatment")}</Label>
+                <InfoPopover content={t("settings.automaticTreatmentDesc")} label={t("settings.automaticTreatment")} />
+              </div>
+              <Select value={roleSettings.auto_eval_role_treatment ?? "both"} disabled={isLoading || saveStatus === 'saving'}
+                onValueChange={value => setRoleSettings({...roleSettings, auto_eval_role_treatment: value as 'add' | 'remove' | 'both'})}>
+                <SelectTrigger id="auto-role-treatment"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="both">{t("settings.treatmentBoth")}</SelectItem>
+                  <SelectItem value="add">{t("settings.treatmentAdd")}</SelectItem>
+                  <SelectItem value="remove">{t("settings.treatmentRemove")}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <Label htmlFor="auto-role-exclusions">{t("settings.excludedRoles")}</Label>
+                <InfoPopover content={t("settings.excludedRolesDesc")} label={t("settings.excludedRoles")} />
+              </div>
+              <RoleCombobox id="auto-role-exclusions" roles={discordRoles} mode="add"
+                excludeRoleIds={roleSettings.auto_eval_blacklist_roles ?? []}
+                placeholder={t("addRoleDialog.selectRole")} addPlaceholder={t("addRoleDialog.selectRole")}
+                disabled={isLoading || saveStatus === 'saving'}
+                onAdd={roleId => setRoleSettings({...roleSettings,auto_eval_blacklist_roles:[...new Set([...(roleSettings.auto_eval_blacklist_roles ?? []),roleId])].sort()})} />
+              <div className="flex flex-wrap gap-2">
+                {(roleSettings.auto_eval_blacklist_roles ?? []).map(roleId => <Button key={roleId} size="sm" variant="ghost" className="rounded-full bg-muted"
+                  disabled={isLoading || saveStatus === 'saving'}
+                  aria-label={`${t("settings.removeExcludedRole")}: ${discordRoles.find(role => role.id === roleId)?.name ?? roleId}`}
+                  onClick={() => setRoleSettings({...roleSettings,auto_eval_blacklist_roles:(roleSettings.auto_eval_blacklist_roles ?? []).filter(id => id !== roleId)})}>
+                  {discordRoles.find(role => role.id === roleId)?.name ?? roleId}<Trash2 className="ml-2 h-3.5 w-3.5" aria-hidden="true" />
+                </Button>)}
+              </div>
+            </div>
+          </div>}
         </section>
 
         <FamilyNicknameSettings section="family" />
