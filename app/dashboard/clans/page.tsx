@@ -1,5 +1,6 @@
 "use client";
 
+import { WarEventSettings } from "./war-event-settings";
 import { MemberWarningSettings } from "./member-warning-settings";
 
 import { ClanVerificationControl, ClanVerificationIcon } from "./clan-verification";
@@ -739,6 +740,8 @@ export default function ClansPage() {
                     />
                   </div>
             </div>
+
+            {selectedClan && <WarEventSettings key={`war:${guildId}:${selectedClan.tag || selectedClan.clan_tag}`} serverId={guildId} clanTag={selectedClan.tag || selectedClan.clan_tag || ""} />}
 
             {selectedClan && <MemberWarningSettings key={`${guildId}:${selectedClan.tag || selectedClan.clan_tag}`} serverId={guildId} clanTag={selectedClan.tag || selectedClan.clan_tag || ""} roles={discordRoles} />}
 

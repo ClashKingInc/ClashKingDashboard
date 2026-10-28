@@ -1953,6 +1953,15 @@
     "addedOnLabel": "Show when {name} was added",
     "configureClanLabel": "Configure {name}",
     "deleteClan": "Delete clan",
+    "warEvents": {
+      "title": "Automatic war events",
+      "hint": "Create a Discord event for each visible regular or CWL war. The bot needs Create Events permission. Disabling leaves existing events in place. Saves separately.",
+      "loading": "Loading war-event settings…",
+      "save": "Save war events",
+      "saved": "War-event settings saved.",
+      "loadError": "Could not load war-event settings. Server manager access is required.",
+      "saveError": "Could not save war-event settings. Check your access and try again."
+    },
     "memberWarning": {
       "title": "Member-count warnings",
       "hint": "Alert when this clan crosses a limit. Leave either limit blank to ignore it. Equality does not trigger an alert. These settings save separately.",
