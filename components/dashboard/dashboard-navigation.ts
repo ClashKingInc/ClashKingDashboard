@@ -39,7 +39,7 @@ export const dashboardNavigationSections: DashboardNavigationSection[] = [
       { nameKey: "logs.name", path: "logs", icon: ScrollText, capability: "logs" },
       { nameKey: "roles.name", path: "roles", icon: ShieldCheck, capability: "roles" },
       { nameKey: "reminders.name", path: "reminders", icon: Bell, capability: "reminders" },
-      { nameKey: "autoboards.name", path: "autoboards", icon: LayoutDashboard, capability: "autoboards", disabledInProduction: true },
+      { nameKey: "autoboards.name", path: "autoboards", icon: LayoutDashboard, capability: "autoboards" },
     ],
   },
   {
