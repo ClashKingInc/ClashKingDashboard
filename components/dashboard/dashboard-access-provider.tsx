@@ -44,6 +44,7 @@ function writeCachedCapabilities(guildId: string, capabilities: DashboardCapabil
 
 const pathSections: Array<[string, DashboardSection]> = [
   ["/logs", "logs"], ["/clans", "clans"], ["/analytics", "clans"],
+  ["/competitive", "competitive"],
   ["/rosters", "rosters"], ["/links", "links"], ["/bans-and-strikes", "moderation"],
   ["/roles", "roles"], ["/reminders", "reminders"], ["/autoboards", "autoboards"],
   ["/giveaways", "giveaways"], ["/panels", "panels"], ["/tickets", "tickets"],
