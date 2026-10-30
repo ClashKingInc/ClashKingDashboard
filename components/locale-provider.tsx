@@ -3,6 +3,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { IntlProvider } from "use-intl";
 import englishMessages from "@/messages/en.json";
+import { embeddedServerId } from '@/lib/auth/embedded';
 import {
   DASHBOARD_LOCALE_MODE_STORAGE_KEY,
   DASHBOARD_LOCALE_STORAGE_KEY,
@@ -105,6 +106,10 @@ export function LocaleProvider({ children, pathname = globalThis.location.pathna
   );
 
   useEffect(() => {
+    if(embeddedServerId()){
+      const candidate=(new URLSearchParams(window.location.search).get('locale')??sessionStorage.getItem('ck_embedded_locale')??'en').split(/[-_]/)[0];
+      if(candidate && candidate in messageLoaders){sessionStorage.setItem('ck_embedded_locale',candidate);void applyLocale(candidate as SupportedLocale);return;}
+    }
     const publicRoute = getFixedPublicRoute(pathname);
     if (publicRoute) {
       void applyLocale(publicRoute.locale);

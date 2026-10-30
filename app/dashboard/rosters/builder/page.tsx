@@ -1,4 +1,8 @@
 "use client";
+import { useAiNotice } from "./ai-notice";
+
+import { gradientHighlightStyle, rosterColumnPresentation } from "./roster-view-presentation";
+import { RosterStarterPrompts } from "./roster-starter-prompts";
 
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent } from "react";
 import { useRouter } from "@/lib/navigation";
@@ -82,7 +86,7 @@ import { apiClient, getDefaultBaseUrl } from "@/lib/api/client";
 import { readBrowserRuntimeConfig } from "@/lib/runtime-config";
 import type { MaterializedRosterView, RosterMembershipProposal, RosterView, RosterViewResult } from "@/lib/api/types/roster";
 import { dashboardHref, useGuildId } from "@/lib/dashboard-route";
-import { clearRosterBuilderChats, loadRosterBuilderChat, saveRosterBuilderChat } from "@/lib/roster-builder-session";
+import { clearRosterBuilderChats, loadRosterBuilderChat, loadRosterBuilderWorkspace, saveRosterBuilderChat } from "@/lib/roster-builder-session";
 import { rosterAssistantErrorText } from "@/lib/roster-assistant-error";
 import {
   ROSTER_ASSISTANT_COMPACTION_THRESHOLD,
@@ -104,6 +108,8 @@ import { mergeRosterContextIds, removeAtomicMention, rosterMentionIds } from "./
 import { RosterAssistantChart, type RosterAssistantChartSpec } from "./roster-assistant-chart";
 import { downloadRosterViewExcel } from "./roster-view-export";
 
+type NewRosterProposal = { type: "createRosterProposal"; generatedAt: string; name: string; rosterType: "clan" | "family"; clanTag: string | null; memberTags: string[] };
+
 type RosterChatData = {
   usage: {
     promptTokens: number;
@@ -116,6 +122,7 @@ type RosterChatData = {
   viewResult: RosterViewResult;
   viewDraft: MaterializedRosterView;
   membershipProposal: RosterMembershipProposal;
+  createRosterProposal: NewRosterProposal;
   rosterTool: { id: string; name: string; state: "started" | "completed" | "failed"; error?: string };
   playerContexts: PlayerChatContext[];
   toolProgress: {
@@ -256,6 +263,7 @@ function compareHighlightValue(actual: unknown, expected: unknown): number {
 }
 
 function highlightMatches(actual: unknown, operator: string, expected: unknown): boolean {
+  if (typeof expected === "number" && (typeof actual !== "number" || !Number.isFinite(actual))) return false;
   const comparison = compareHighlightValue(actual, expected);
   if (operator === "eq") return comparison === 0;
   if (operator === "neq") return comparison !== 0;
@@ -367,6 +375,8 @@ const toolLabels: Record<string, string> = {
   render_roster_view: "Building roster view",
   publish_roster_chart: "Building roster chart",
   propose_roster_membership_changes: "Preparing roster changes",
+  propose_new_roster: "Preparing a new roster",
+  get_family_members: "Reading configured family clans",
 };
 
 type MembershipProposalInput = {
@@ -531,6 +541,7 @@ function RequestInfo({ usage }: { readonly usage: RosterChatData["usage"] }) {
 function ChatMessage({
   message,
   onApplyProposal,
+  onCreateRoster,
   onDismissProposal,
   rosterRevisions,
   dismissedProposalKeys,
@@ -540,7 +551,8 @@ function ChatMessage({
   activeSince,
 }: {
   readonly message: RosterChatMessage;
-  readonly onApplyProposal: (proposal: RosterMembershipProposal) => void;
+  readonly onApplyProposal: (proposal: RosterMembershipProposal) => Promise<void>;
+  readonly onCreateRoster: (proposal: NewRosterProposal) => Promise<void>;
   readonly onDismissProposal: (proposal: RosterMembershipProposal) => void;
   readonly rosterRevisions: ReadonlyMap<string, number>;
   readonly dismissedProposalKeys: ReadonlySet<string>;
@@ -549,6 +561,7 @@ function ChatMessage({
   readonly active: boolean;
   readonly activeSince?: number;
 }) {
+  const [applyingProposal, setApplyingProposal] = useState(false);
   const text = messageText(message);
   const isUser = message.role === "user";
   const toolParts = message.parts.filter(
@@ -571,10 +584,11 @@ function ChatMessage({
   const chartParts = message.parts.filter((part) => part.type === "data-chart");
   const messagePlayerContexts = message.parts.find((part) => part.type === "data-playerContexts")?.data ?? [];
   const proposal = proposalPart?.data;
+  const newRoster = message.parts.find((part) => part.type === "data-createRosterProposal")?.data;
   const proposalStale = proposal ? Object.entries(proposal.expectedRevisions).some(([rosterId, revision]) => rosterRevisions.get(rosterId) !== revision) : false;
   const usage = usagePart?.data;
   const hasToolActivity = progressToolParts.length > 0 || rosterToolSteps.length > 0;
-  const hasResponseActivity = Boolean(text || hasToolActivity || proposal || chartParts.length > 0 || usage);
+  const hasResponseActivity = Boolean(text || hasToolActivity || proposal || newRoster || chartParts.length > 0 || usage);
   const showThinking = useDelayedThinking(active, hasResponseActivity, activeSince);
   const toolsComplete = (progressToolParts.length > 0 || rosterToolSteps.length > 0)
     && progressToolParts.every((part) => "state" in part && (part.state === "output-available" || part.state === "output-error"))
@@ -647,6 +661,13 @@ function ChatMessage({
             </CollapsibleContent>}
           </Collapsible>
         )}
+        {!isUser && !active && !text.trim() && usage && !message.parts.some((part) => ["data-viewResult", "data-chart", "data-membershipProposal", "data-createRosterProposal"].includes(part.type)) && (
+          <p className="mb-3 text-sm text-destructive">
+            {rosterToolSteps.some((event) => event.state === "failed")
+              ? `The assistant couldn't complete this request: ${rosterToolSteps.findLast((event) => event.state === "failed")?.error ?? "a roster tool failed"}. Please try again.`
+              : "The assistant finished without an answer. Please try again."}
+          </p>
+        )}
         {text && (
           <div className="max-w-none space-y-2 text-inherit [&_h1]:text-lg [&_h1]:font-semibold [&_h2]:text-base [&_h2]:font-semibold [&_h3]:font-semibold [&_ol]:list-decimal [&_ol]:space-y-1 [&_ol]:pl-5 [&_p]:leading-relaxed [&_ul]:list-disc [&_ul]:space-y-1 [&_ul]:pl-5 [&_strong]:font-semibold">
             {isUser ? (
@@ -671,13 +692,27 @@ function ChatMessage({
                 Roster data changed after this proposal was created, so it can no longer be applied.
               </p>
             )}
+            {proposal.changes.some(change => change.action !== "add") && <p className="mb-3 text-xs text-muted-foreground">Review moves and removals carefully. Undo is available for add-only proposals; removed signup data and original move positions cannot be restored by the current API.</p>}
             <MembershipApprovalPreview
               input={proposal}
               playerNames={playerNames}
               onCancel={() => onDismissProposal(proposal)}
-              onApply={() => !proposalStale && onApplyProposal(proposal)}
-              disabled={proposalStale}
+              onApply={() => {
+                if (proposalStale || applyingProposal) return;
+                setApplyingProposal(true);
+                void onApplyProposal(proposal).finally(() => setApplyingProposal(false));
+              }}
+              disabled={proposalStale || applyingProposal}
             />
+          </section>
+        )}
+        {!isUser && newRoster && !dismissedProposalKeys.has(newRoster.generatedAt) && (
+          <section className="mt-4 rounded-2xl bg-muted/45 p-4">
+            <h3 className="mb-2 font-semibold">Create {newRoster.name}</h3>
+            <p className="mb-3 text-sm text-muted-foreground">{newRoster.rosterType === "family" ? "Family roster" : newRoster.clanTag} · Only currently unassigned players will be accepted.</p>
+            <MembershipApprovalPreview input={{ counts: { add: newRoster.memberTags.length }, items: newRoster.memberTags.map(playerTag => ({ action: "add", playerTag, toRoster: newRoster.name })) }} playerNames={playerNames}
+              disabled={applyingProposal} onCancel={() => onDismissProposal({ generatedAt: newRoster.generatedAt } as RosterMembershipProposal)}
+              onApply={() => { if (applyingProposal) return; setApplyingProposal(true); void onCreateRoster(newRoster).finally(() => setApplyingProposal(false)); }} />
           </section>
         )}
         {!isUser && usage && (
@@ -702,6 +737,7 @@ function ViewTable({
   readonly onPlayerContext: (row: RosterViewResult["rows"][number]) => void;
 }) {
   const { columns, highlights = [] } = spec;
+  const columnPresentation = useMemo(() => columns.map((column) => rosterColumnPresentation(column, result.rows)), [columns, result.rows]);
   const [sortRules, setSortRules] = useState(spec.sort ?? []);
   const [filters, setFilters] = useState<Record<string, string[]>>({});
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -762,13 +798,13 @@ function ViewTable({
     return highlightMatches(actual, rule.when.operator, rule.when.value);
   };
 
-  const rowTone = (row: RosterViewResult["rows"][number], rowIndex: number) =>
-    highlights.findLast((rule) => rule.target === "row" && ruleMatches(rule, row, rowIndex))?.tone;
+  const rowRule = (row: RosterViewResult["rows"][number], rowIndex: number) =>
+    highlights.findLast((rule) => rule.target === "row" && ruleMatches(rule, row, rowIndex));
 
-  const cellTone = (columnId: string, row: RosterViewResult["rows"][number], rowIndex: number) =>
+  const cellRule = (columnId: string, row: RosterViewResult["rows"][number], rowIndex: number) =>
     highlights.findLast((rule) =>
       (rule.target === "column" || rule.target === "cell") && rule.columnId === columnId && ruleMatches(rule, row, rowIndex),
-    )?.tone;
+    );
 
   const exportExcel = async () => {
     setExporting(true);
@@ -813,15 +849,16 @@ function ViewTable({
         </span>
       </div>
       <div className="scrollbar-custom relative w-full overflow-x-auto border-t border-border/60">
-      <table className="w-full caption-bottom text-sm">
+      <table className="w-full table-fixed caption-bottom text-sm" style={{ minWidth: columnPresentation.reduce((sum, column) => sum + column.width, 0) }}>
+      <colgroup>{columns.map((column, index) => <col key={column.id} style={{ width: columnPresentation[index].width }} />)}</colgroup>
       <TableHeader>
         <TableRow>
           {columns.map((column) => {
-            const tone = highlights.findLast((rule) => rule.target === "column" && rule.columnId === column.id && !rule.when)?.tone;
+            const tone = highlights.findLast((rule) => rule.target === "column" && rule.columnId === column.id && !rule.when && !rule.gradient)?.tone;
             const sortIndex = sortRules.findIndex((rule) => rule.columnId === column.id);
             const sort = sortIndex >= 0 ? sortRules[sortIndex] : undefined;
             return (
-              <TableHead key={column.id} title={column.description ?? "Click to sort; Shift-click to add another sort"} className={tone ? highlightClasses[tone] : undefined}>
+              <TableHead key={column.id} title={column.description ?? "Click to sort; Shift-click to add another sort"} className={cn("normal-case align-bottom whitespace-normal", tone ? highlightClasses[tone] : undefined)}>
                 <button type="button" className="flex w-full items-center gap-1.5 py-1 text-left" onClick={(event) => toggleSort(column.id, event.shiftKey)}>
                   <span>{column.label}</span>
                   {sort?.direction === "asc" && <ArrowUp className="h-3.5 w-3.5" />}
@@ -875,20 +912,25 @@ function ViewTable({
       </TableHeader>
       <TableBody>
         {displayedRows.map((row, rowIndex) => {
-          const tone = rowTone(row, rowIndex);
+          const rule = rowRule(row, rowIndex);
+          const tone = rule?.gradient ? undefined : rule?.tone;
           return (
             <TableRow
               key={`${row.rosterId}:${row.playerTag}`}
               className={cn("cursor-default border-border/50 hover:bg-muted/35", tone ? highlightClasses[tone] : undefined)}
-              style={row.highlight ? { backgroundColor: `${row.highlight}24` } : undefined}
+              style={gradientHighlightStyle(rule, row.values) ?? (row.highlight ? { backgroundColor: `${row.highlight}24` } : undefined)}
               title="Double-click to add this player to the chat"
               onDoubleClick={() => onPlayerContext(row)}
             >
-              {columns.map((column) => {
-                const columnTone = cellTone(column.id, row, rowIndex);
+              {columns.map((column, columnIndex) => {
+                const rule = cellRule(column.id, row, rowIndex);
+                const columnTone = rule?.gradient ? undefined : rule?.tone;
+                const paragraph = columnPresentation[columnIndex].paragraph;
                 return (
-                  <TableCell key={column.id} className={columnTone ? highlightClasses[columnTone] : undefined}>
-                    <RosterCellValue metricId={column.metricId} value={row.values[column.id]} />
+                  <TableCell key={column.id} className={cn(paragraph && "align-top", columnTone ? highlightClasses[columnTone] : undefined)} style={gradientHighlightStyle(rule, row.values)}>
+                    <div className={cn("whitespace-pre-wrap [overflow-wrap:anywhere]", paragraph && "text-sm font-normal leading-relaxed")}>
+                      <RosterCellValue metricId={column.metricId} value={row.values[column.id]} />
+                    </div>
                   </TableCell>
                 );
               })}
@@ -934,10 +976,13 @@ function RosterBuilderWorkspace() {
   const guildId = useGuildId();
   const router = useRouter();
   const { user } = useAuthSession();
+  const aiNotice = useAiNotice(user?.user_id, () => router.push(dashboardHref("rosters", guildId)));
   const chatStorageScope = user?.user_id && guildId ? `${user.user_id}:${guildId}` : undefined;
   const showDeveloperContext = isDeveloperUserId(user?.user_id);
   const [prompt, setPrompt] = useState("");
   const [rosters, setRosters] = useState<Roster[]>([]);
+  const [undoProposal, setUndoProposal] = useState<RosterMembershipProposal>();
+  const [undoing, setUndoing] = useState(false);
   const [views, setViews] = useState<RosterView[]>([]);
   const [viewRosterIds, setViewRosterIds] = useState<string[]>([]);
   const [chatMentionIds, setChatMentionIds] = useState<string[]>([]);
@@ -1009,7 +1054,7 @@ function RosterBuilderWorkspace() {
     [],
   );
 
-  const { messages, setMessages, sendMessage, status, error, stop } = useChat<RosterChatMessage>({
+  const { messages, setMessages, sendMessage, status, error, stop, clearError } = useChat<RosterChatMessage>({
     transport,
     throttle: 40,
     onData: (part) => {
@@ -1037,19 +1082,37 @@ function RosterBuilderWorkspace() {
   }, [prompt, resizePrompt]);
 
   useEffect(() => {
+    replayAbortRef.current?.abort();
+    if (replayTimerRef.current) clearTimeout(replayTimerRef.current);
+    setSelectedView(undefined);
+    setUndoProposal(undefined);
+    setViewResult(undefined);
+    setViewRosterIds([]);
+    setViewOpen(false);
+    setViewDirty(false);
     if (!guildId || !user?.user_id || !chatStorageScope) {
       setMessages([]);
       setRestoredChatForGuild(undefined);
       return;
     }
     setMessages(loadRosterBuilderChat(user.user_id, guildId) as RosterChatMessage[]);
+    const workspace = loadRosterBuilderWorkspace(user.user_id, guildId);
+    if (workspace) {
+      setSelectedView(workspace.selectedView);
+      setViewResult(workspace.viewResult);
+      setViewRosterIds(workspace.rosterIds);
+      setViewOpen(workspace.viewOpen);
+      setViewDirty(workspace.viewDirty);
+    }
     setRestoredChatForGuild(chatStorageScope);
   }, [chatStorageScope, guildId, setMessages, user?.user_id]);
 
   useEffect(() => {
     if (!guildId || !user?.user_id || restoredChatForGuild !== chatStorageScope) return;
-    saveRosterBuilderChat(user.user_id, guildId, messages);
-  }, [chatStorageScope, guildId, messages, restoredChatForGuild, user?.user_id]);
+    saveRosterBuilderChat(user.user_id, guildId, messages, Date.now(), {
+      selectedView, viewResult, rosterIds: viewRosterIds, viewOpen, viewDirty,
+    });
+  }, [chatStorageScope, guildId, messages, restoredChatForGuild, user?.user_id, selectedView, viewResult, viewRosterIds, viewOpen, viewDirty]);
 
   useEffect(() => subscribeSession((event) => {
     if (event === "anonymous") clearRosterBuilderChats();
@@ -1088,8 +1151,48 @@ function RosterBuilderWorkspace() {
       if (response.status === 409) void loadData();
       return;
     }
+    setDismissedProposalKeys((current) => new Set(current).add(proposal.generatedAt));
+    // Reversing a removal with an add would lose signup answers and stored fields.
+    // A reversed move appends rather than restoring the original position.
+    // Only additions have a complete inverse through the existing endpoint.
+    setUndoProposal(proposal.changes.every(change => change.action === "add") && response.data ? {
+      ...proposal,
+      generatedAt: crypto.randomUUID(),
+      changes: [...proposal.changes].reverse().map(change => change.action === "add"
+        ? { ...change, action: "remove", fromRosterId: change.toRosterId, toRosterId: undefined }
+        : { ...change, fromRosterId: change.toRosterId, toRosterId: change.fromRosterId }),
+      expectedRevisions: response.data.revisions,
+    } : undefined);
+    setMessages((current) => [...current, { id: crypto.randomUUID(), role: "assistant", parts: [{ type: "text", text: `Applied ${response.data?.changeCount ?? proposal.changes.length} roster membership changes.` }] }]);
     await loadData();
-  }, [guildId, loadData]);
+  }, [guildId, loadData, setMessages]);
+
+  const undoLastMembershipChange = async () => {
+    if (!guildId || !undoProposal || undoing) return;
+    setUndoing(true);
+    try {
+      const response = await apiClient.rosters.applyMembershipChanges(guildId, { serverId: guildId, changes: undoProposal.changes, expectedRevisions: undoProposal.expectedRevisions });
+      if (response.error) { setPageError(response.error); return; }
+      setUndoProposal(undefined);
+      setMessages(current => [...current, { id: crypto.randomUUID(), role: "assistant", parts: [{ type: "text", text: "Undid the last roster membership change." }] }]);
+      await loadData();
+    } finally { setUndoing(false); }
+  };
+
+  const createProposedRoster = useCallback(async (proposal: NewRosterProposal) => {
+    if (!guildId) return;
+    setPageError(undefined);
+    try {
+      const current = await fetchRosters(guildId);
+      const assigned = new Set(current.flatMap(roster => roster.members?.map(member => normalizePlayerTag(member.tag)) ?? []));
+      if (proposal.memberTags.some(tag => assigned.has(normalizePlayerTag(tag)))) throw new Error("Some proposed players are already in a roster. Request an updated proposal before creating it.");
+      const response = await apiClient.rosters.create(guildId, { alias: proposal.name, roster_type: proposal.rosterType, signup_scope: proposal.rosterType === "clan" ? "clan-only" : "family-only", ...(proposal.clanTag ? { clan_tag: proposal.clanTag } : {}), members: proposal.memberTags.map(tag => ({ tag })) }, true);
+      if (response.error || !response.data) throw new Error(response.error ?? "Roster creation returned no result.");
+      setDismissedProposalKeys(current => new Set(current).add(proposal.generatedAt));
+      setMessages(current => [...current, { id: crypto.randomUUID(), role: "assistant", parts: [{ type: "text", text: `Created ${proposal.name} with ${proposal.memberTags.length} members.` }] }]);
+      await loadData();
+    } catch (error) { setPageError(error instanceof Error ? error.message : "Unable to create roster."); }
+  }, [guildId, loadData, setMessages]);
 
   useEffect(() => {
     void loadData();
@@ -1157,7 +1260,7 @@ function RosterBuilderWorkspace() {
       ...mentionedRosterIds,
       ...playerContexts.map((player) => player.rosterId),
     ]);
-    if (!text || requestRosterIds.length === 0 || status === "streaming" || status === "submitted") return;
+    if (!aiNotice.accepted || !text || status === "streaming" || status === "submitted") return;
     setRequestStartedAt(Date.now());
     setViewRosterIds(requestRosterIds);
     setPrompt("");
@@ -1180,6 +1283,7 @@ function RosterBuilderWorkspace() {
             name: selectedView.name,
             sourceCode: selectedView.sourceCode,
             sourceVersion: selectedView.sourceVersion,
+            spec: selectedView.spec,
           } : undefined,
           playerContexts: submittedPlayerContexts,
         },
@@ -1390,13 +1494,36 @@ function RosterBuilderWorkspace() {
   const canShowView = evaluating || Boolean(viewResult && selectedView);
 
   const clearChat = () => {
+    if (replayTimerRef.current) clearTimeout(replayTimerRef.current);
+    replayAbortRef.current?.abort();
+    replayAbortRef.current = undefined;
+    setEvaluating(false);
+    startNewView();
+    setViewDialogMode(undefined);
+    setDeleteViewOpen(false);
+    setPrompt("");
+    setPlayerContexts([]);
+    setChatMentionIds([]);
+    setMentionState(undefined);
+    setPageError(undefined);
+    clearError();
     setMessages([]);
     setDismissedProposalKeys(new Set());
     setRequestStartedAt(undefined);
+    if (user?.user_id && guildId) saveRosterBuilderChat(user.user_id, guildId, []);
+  };
+
+  const chooseStarterPrompt = (text: string) => {
+    setPrompt(text);
+    requestAnimationFrame(() => {
+      textareaRef.current?.focus();
+      textareaRef.current?.setSelectionRange(text.length, text.length);
+    });
   };
 
   return (
     <div className="flex h-full min-h-0 flex-col bg-background">
+      {aiNotice.notice}
       <DashboardHeaderPortal>
         <div className="flex min-w-0 items-center gap-2">
         <Button variant="ghost" size="icon" aria-label="Back to rosters" onClick={() => router.push(dashboardHref("rosters", guildId))}>
@@ -1408,12 +1535,16 @@ function RosterBuilderWorkspace() {
             <DropdownMenuTrigger asChild>
               <Button size="sm" variant="ghost" className="max-w-44 gap-1.5" disabled={loadingData}>
                 <Users className="h-3.5 w-3.5" />
-                <span className="truncate">{viewedRosters.length === 1 ? viewedRosters[0].alias : `${viewedRosters.length} rosters`}</span>
+                <span className="truncate">{viewedRosters.length === 0 ? "Family" : viewedRosters.length === 1 ? viewedRosters[0].alias : `${viewedRosters.length} rosters`}</span>
                 <ChevronDown className="h-3.5 w-3.5" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-72" onCloseAutoFocus={(event) => event.preventDefault()}>
               <DropdownMenuLabel>Roster data</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onSelect={() => { setViewRosterIds([]); setChatMentionIds([]); setSelectedView(undefined); setViewResult(undefined); setViewOpen(false); }}>
+                <Users className="mr-2 h-4 w-4" /> Family · configured clans
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <div className="px-1.5 pb-1.5" onKeyDown={(event) => event.stopPropagation()}>
                 <div className="relative">
@@ -1498,9 +1629,9 @@ function RosterBuilderWorkspace() {
           <Button
             size="icon"
             variant="ghost"
-            aria-label="Clear chat"
-            title="Clear chat"
-            disabled={messages.length === 0 || busy}
+            aria-label="New chat"
+            title="New chat"
+            disabled={busy || (messages.length === 0 && !selectedView && !prompt)}
             onClick={clearChat}
           >
             <MessageSquareX className="h-4 w-4" />
@@ -1577,7 +1708,7 @@ function RosterBuilderWorkspace() {
                 </>
               )}
               {messages.length > 0 && (
-                <DropdownMenuItem disabled={busy} onClick={clearChat}><MessageSquareX className="mr-2 h-4 w-4" /> Clear chat</DropdownMenuItem>
+                <DropdownMenuItem disabled={busy} onClick={clearChat}><MessageSquareX className="mr-2 h-4 w-4" /> New chat</DropdownMenuItem>
               )}
             </DropdownMenuContent>
           </DropdownMenu>
@@ -1594,6 +1725,12 @@ function RosterBuilderWorkspace() {
               <Alert variant="destructive"><AlertDescription>{pageError}</AlertDescription></Alert>
             </div>
           )}
+          {undoProposal && (
+            <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-3 px-5 pt-4 text-sm">
+              <span className="text-muted-foreground">Roster changes applied. Undo is available until an affected roster changes again.</span>
+              <Button size="sm" variant="outline" disabled={undoing} onClick={() => void undoLastMembershipChange()}>{undoing ? "Undoing…" : "Undo"}</Button>
+            </div>
+          )}
           <div className="scrollbar-custom min-h-0 flex-1 overflow-y-auto">
             <div className="mx-auto w-full max-w-5xl px-5 py-8 md:px-8 md:py-10">
               <div className="space-y-7">
@@ -1608,6 +1745,7 @@ function RosterBuilderWorkspace() {
                     />
                     <h2 className="mt-4 text-lg font-semibold">What do you want to build?</h2>
                     <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">Mention a roster with @, then describe the lineup, comparison, or view you need.</p>
+                    <RosterStarterPrompts onChoose={chooseStarterPrompt} />
                   </div>
                 )}
                 {messages.map((message) => (
@@ -1618,7 +1756,8 @@ function RosterBuilderWorkspace() {
                     rosters={rosters}
                     active={busy && messages.at(-1)?.id === message.id}
                     activeSince={busy ? requestStartedAt : undefined}
-                    onApplyProposal={(proposal) => void applyProposal(proposal)}
+                    onApplyProposal={applyProposal}
+                    onCreateRoster={createProposedRoster}
                     onDismissProposal={(proposal) => setDismissedProposalKeys((current) => new Set(current).add(proposal.generatedAt))}
                     rosterRevisions={rosterRevisions}
                     dismissedProposalKeys={dismissedProposalKeys}
@@ -1757,12 +1896,12 @@ function RosterBuilderWorkspace() {
                   {busy ? (
                     <Button size="icon" variant="ghost" aria-label="Stop generation" onClick={stop}><Square className="h-4 w-4 fill-current" /></Button>
                   ) : (
-                    <Button size="icon" className="rounded-xl" aria-label="Send message" disabled={!prompt.trim() || chatTargetRosterIds.length === 0} onClick={() => void submit()}><Send className="h-4 w-4" /></Button>
+                    <Button size="icon" className="rounded-xl" aria-label="Send message" disabled={!prompt.trim()} onClick={() => void submit()}><Send className="h-4 w-4" /></Button>
                   )}
                 </div>
               </div>
             </div>
-            {chatTargetRosterIds.length === 0 && <p className="mt-2 px-2 text-xs text-amber-500">Choose a roster above or mention one with @.</p>}
+            {chatTargetRosterIds.length === 0 && <p className="mt-2 px-2 text-xs text-muted-foreground">Family mode uses this server’s configured clans. Roster changes always require your approval.</p>}
             </div>
           </div>
         </div>

@@ -46,6 +46,7 @@ import {
 } from "lucide-react";
 import { apiClient } from "@/lib/api/client";
 import { useGuildId } from "@/lib/dashboard-route";
+import { useRouter, useSearchParams } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
 import { useAuthSession } from "@/components/auth-session-provider";
 import { Button } from "@/components/ui/button";
@@ -272,6 +273,8 @@ interface PendingProjectSave {
 
 export function GraphicEditor() {
   const guildId = useGuildId();
+  const router = useRouter(), searchParams = useSearchParams();
+  const warShortcutHandled = useRef(false);
   const { user } = useAuthSession();
   const projectStorageKey = user?.user_id ? graphicProjectsStorageKey(user.user_id, guildId) : null;
   const [projects, setProjects] = useState<GraphicProjectRecord[]>([]);
@@ -445,16 +448,33 @@ export function GraphicEditor() {
   }, [flushPendingProjectSave]);
 
   const createProject = useCallback((kind: GraphicProjectRecord["kind"], warSize?: number) => {
-    if (!flushPendingProjectSave()) return;
+    if (!flushPendingProjectSave()) return false;
     const project = createGraphicProject(kind, warSize);
     const next = [project, ...projectsRef.current];
-    if (!persistProjects(next)) return;
+    if (!persistProjects(next)) return false;
     setHistory({ past: [], present: structuredClone(project.document), future: [] });
     setSelectedIds([]);
     setZoom(1);
     setPan({ x: 0, y: 0 });
     setActiveProjectId(project.id);
+    return true;
   }, [flushPendingProjectSave, persistProjects]);
+
+  useEffect(() => {
+    const warSize = Number(searchParams.get("warSize"));
+    if (warShortcutHandled.current || !projectsLoaded || !projectStorageKey || ![2, 3, 5, 10].includes(warSize)) return;
+    // A competitive shortcut creates one local draft only after existing drafts
+    // load. Consume the parameter so refreshing cannot duplicate that project.
+    warShortcutHandled.current = true;
+    if (createProject("war", warSize)) {
+      // Router-normalized search can coerce snowflakes to unsafe JS numbers.
+      // Preserve raw query strings and the exact server identity for draft keys.
+      const remaining = new URLSearchParams(globalThis.location.search);
+      remaining.delete("warSize");
+      remaining.set("guildId", guildId);
+      router.replace(`/dashboard/graphics?${remaining.toString()}`);
+    }
+  }, [createProject, guildId, projectStorageKey, projectsLoaded, router, searchParams]);
 
   const deleteProject = useCallback((id: string) => {
     if (!flushPendingProjectSave()) return;

@@ -120,7 +120,11 @@ export function getDynamicFieldsForDocument(document: Pick<GraphicDocument, "kin
   const baseFields = getDynamicFieldsForKind(kind);
   if (kind !== "war") return baseFields;
   const size = normalizeGraphicWarSize(document.warSize);
-  return [...baseFields, ...warMemberDynamicFields(size)];
+  const sizedFields = baseFields.map(field => field.key === "war_team_size" ? { ...field, placeholder: String(size) }
+    : field.key === "war_clan_stars" ? { ...field, placeholder: String(size * 3) }
+    : field.key === "war_opponent_stars" ? { ...field, placeholder: String(Math.max(0, size * 3 - 1)) }
+    : field);
+  return [...sizedFields, ...warMemberDynamicFields(size)];
 }
 
 export const PLACEHOLDER_BINDINGS: BindingValues = Object.fromEntries(

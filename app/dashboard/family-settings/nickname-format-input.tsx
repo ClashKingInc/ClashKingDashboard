@@ -25,6 +25,7 @@ interface NicknameFormatInputProps {
   disabled?: boolean;
   onChange: (value: string) => void;
   onCommit: () => void;
+  onSelectionChange?: (input: HTMLInputElement) => void;
 }
 
 export function NicknameFormatInput({
@@ -38,6 +39,7 @@ export function NicknameFormatInput({
   disabled = false,
   onChange,
   onCommit,
+  onSelectionChange,
 }: NicknameFormatInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState<PlaceholderQuery | null>(null);
@@ -92,6 +94,8 @@ export function NicknameFormatInput({
             updateQuery(event.target.value, event.target.selectionStart);
           }}
           onClick={(event) => updateQuery(value, event.currentTarget.selectionStart)}
+          onFocus={(event) => onSelectionChange?.(event.currentTarget)}
+          onSelect={(event) => onSelectionChange?.(event.currentTarget)}
           onKeyUp={(event) => {
             if (!["ArrowDown", "ArrowUp", "Enter", "Tab", "Escape"].includes(event.key)) {
               updateQuery(value, event.currentTarget.selectionStart);

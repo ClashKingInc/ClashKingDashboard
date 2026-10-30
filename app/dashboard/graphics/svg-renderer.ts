@@ -29,7 +29,10 @@ export function resolveTextElement(
   bindings: BindingValues,
 ): string {
   return element.content.replace(/\{([a-z][a-z0-9_]*)\}/gi, (_token, key: string) => {
-    const value = mode === "live" ? bindings[key] : PLACEHOLDER_BINDINGS[key];
+    // Small-war presets size their sample stars to the roster. The global
+    // 36/34 examples must not override those document-specific score fallbacks.
+    const sizedStars = key === "war_clan_stars" || key === "war_opponent_stars" ? element.fallbacks[key] : undefined;
+    const value = mode === "live" ? bindings[key] : sizedStars ?? PLACEHOLDER_BINDINGS[key];
     if (value !== null && value !== undefined && String(value) !== "") return String(value);
     return element.fallbacks[key] ?? findDynamicField(key)?.placeholder ?? "";
   });

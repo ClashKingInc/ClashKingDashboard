@@ -1,4 +1,6 @@
 "use client";
+import { DateTimePicker } from "@/components/ui/date-time-picker";
+import { ImageUploadControl } from "@/components/dashboard/image-upload-control";
 
 import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -27,6 +29,7 @@ import { DiscordOpenPopover } from "@/components/ui/discord-open-popover";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { AlertCircle, CalendarRange, CheckCircle2, Copy, Ellipsis, ExternalLink, Eye, Loader2, Pencil, Plus, RefreshCw, Sword, Trash2, Trophy, User, Users, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { discordMessageAppUrl } from "@/lib/discord-links";
 import { apiClient } from "@/lib/api/client";
 import {
   normalizeChannelsPayload,
@@ -49,7 +52,7 @@ type FormState = {
 
 const ENDED_LIMIT = 20;
 const MAX_IMAGE_BYTES = 8 * 1024 * 1024;
-const GIVEAWAY_FORM_TAB_CLASS = "mt-0 min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-5 pb-8 sm:px-7";
+const GIVEAWAY_FORM_TAB_CLASS = "mt-0 min-h-0 min-w-0 w-full flex-1 overflow-y-auto overscroll-contain px-5 py-5 pb-8 sm:px-7";
 
 const buildEmptyState = (t: (key: string) => string): FormState => ({
   prize: "", channelId: "", startTime: "", startNow: false, endTime: "", winners: "1", mentions: [],
@@ -63,6 +66,10 @@ const statusVariant = (status: Giveaway["status"]): "default" | "secondary" | "o
   return "outline";
 };
 const boostChoices = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3];
+
+export function isGiveawayClosed(giveaway: Giveaway | null, now = Date.now()): boolean {
+  return giveaway !== null && (giveaway.status === "ended" || new Date(giveaway.end).getTime() <= now);
+}
 
 interface GiveawaysClientProps {
   guildId: string;
@@ -341,13 +348,13 @@ export function GiveawaysList({
 
   return (
     <div className={cn("space-y-3", tableLoading && "pointer-events-none opacity-50 transition-opacity")}>
-      <div className="space-y-3">
+      <div className="space-y-3 xl:grid xl:grid-cols-[minmax(14rem,1.1fr)_auto_minmax(8rem,.55fr)_minmax(8rem,.55fr)_minmax(9rem,.65fr)_auto] xl:gap-x-4 xl:gap-y-3 xl:space-y-0">
             {displayItems.map((g) => {
               const ch = channelName(g.channelId ?? null);
-              const isEnded = g.status === "ended";
-              const isOngoing = g.status === "ongoing";
+              const isEnded = isGiveawayClosed(g);
+              const isOngoing = !isEnded && g.status === "ongoing";
               return (
-                <article key={g.id} className="grid gap-3 rounded-[24px] bg-card px-4 py-4 shadow-sm shadow-black/5 transition-shadow hover:shadow-md hover:shadow-black/5 md:px-5 xl:grid-cols-[minmax(14rem,1.1fr)_auto_minmax(8rem,.55fr)_minmax(8rem,.55fr)_minmax(9rem,.65fr)_auto] xl:items-center xl:gap-4">
+                <article key={g.id} className="grid gap-3 rounded-[24px] bg-card px-4 py-4 shadow-sm shadow-black/5 transition-shadow hover:shadow-md hover:shadow-black/5 md:px-5 xl:col-span-full xl:grid-cols-subgrid xl:items-center xl:gap-4">
                   <div className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-start gap-3 xl:contents">
                     <div className="min-w-0">
                         <span className="min-w-0 break-words text-base font-semibold leading-snug text-foreground">{g.prize}</span>
@@ -387,7 +394,7 @@ export function GiveawaysList({
                           </div>
                         )}
                     </div>
-                    <Badge className={cn("shrink-0 border-0 px-2.5 py-1 shadow-none xl:self-center", isOngoing && "bg-emerald-500/12 text-emerald-700 hover:bg-emerald-500/12 dark:text-emerald-300", g.status === "scheduled" && "bg-amber-500/12 text-amber-700 hover:bg-amber-500/12 dark:text-amber-300", isEnded && "bg-muted text-muted-foreground hover:bg-muted")}>{t(`status.${g.status}`)}</Badge>
+                    <Badge className={cn("shrink-0 border-0 px-2.5 py-1 shadow-none xl:self-center xl:justify-self-start", isOngoing && "bg-emerald-500/12 text-emerald-700 hover:bg-emerald-500/12 dark:text-emerald-300", g.status === "scheduled" && "bg-amber-500/12 text-amber-700 hover:bg-amber-500/12 dark:text-amber-300", isEnded && "bg-muted text-muted-foreground hover:bg-muted")}>{t(`status.${g.status}`)}</Badge>
                   </div>
                   <div className="flex min-w-0 flex-wrap items-center gap-x-4 gap-y-2 rounded-2xl bg-muted/45 px-3 py-2.5 xl:contents">
                   <div className="min-w-0 text-sm text-muted-foreground">
@@ -439,15 +446,17 @@ export function GiveawaysList({
                   </div>
                   <div className="flex items-center gap-1.5 border-t border-border/50 pt-3 xl:justify-end xl:border-0 xl:pt-0">
                       <Button variant="secondary" size="sm" className="min-w-0 flex-1 border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted xl:flex-none" onClick={() => onOpenEdit(g)}>
-                        {isEnded && !g.disabled ? <Eye className="h-4 w-4" /> : <Pencil className="h-4 w-4" />}
-                        {isEnded && !g.disabled ? t("table.viewGiveaway") : t("table.editGiveaway")}
+                        {isEnded ? <Eye className="h-4 w-4" /> : <Pencil className="h-4 w-4" />}
+                        {isEnded ? t("table.viewGiveaway") : t("table.editGiveaway")}
                       </Button>
                       {g.messageId && g.channelId && (
                         <TooltipProvider delayDuration={200}>
                           <Tooltip>
                             <TooltipTrigger asChild>
-                              <Button variant="ghost" size="icon" className="h-8 w-8" aria-label={t("table.viewInDiscord")} onClick={() => window.open(`https://discord.com/channels/${guildId}/${g.channelId}/${g.messageId}`, "_blank", "noreferrer")}>
-                                <ExternalLink className="h-4 w-4" />
+                              <Button asChild variant="ghost" size="icon" className="h-8 w-8">
+                                <a href={discordMessageAppUrl(guildId, g.channelId, g.messageId)} aria-label={t("table.viewInDiscord")}>
+                                  <ExternalLink className="h-4 w-4" />
+                                </a>
                               </Button>
                             </TooltipTrigger>
                             <TooltipContent>{t("table.viewInDiscord")}</TooltipContent>
@@ -468,6 +477,13 @@ export function GiveawaysList({
                           </Tooltip>
                         </TooltipProvider>
                         <DropdownMenuContent align="end" className="w-48 rounded-xl">
+                          {g.messageId && g.channelId && (
+                            <DropdownMenuItem asChild className="gap-2 rounded-lg">
+                              <a href={`https://discord.com/channels/${guildId}/${g.channelId}/${g.messageId}`} target="_blank" rel="noopener noreferrer">
+                                <ExternalLink className="h-4 w-4" />{tCommon("openInBrowser")}
+                              </a>
+                            </DropdownMenuItem>
+                          )}
                           <DropdownMenuItem className="gap-2 rounded-lg" onSelect={() => onDuplicate(g)}>
                             <Copy className="h-4 w-4" />{t("table.duplicate")}
                           </DropdownMenuItem>
@@ -556,6 +572,7 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
   const queryClient = useQueryClient();
   const t = useTranslations("GiveawaysPage");
   const tCommon = useTranslations("Common");
+  const tEmbed = useTranslations("EmbedEditor");
 
   const [loading, setLoading] = useState(true);
   const [tableLoading, setTableLoading] = useState(false);
@@ -589,7 +606,16 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
   const [channels, setChannels] = useState<Channel[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
   const [form, setForm] = useState<FormState>(buildEmptyState(t));
+  useEffect(() => {
+    const preview = form.imagePreview;
+    return () => { if (preview?.startsWith("blob:")) URL.revokeObjectURL(preview); };
+  }, [form.imagePreview]);
+  const readOnly = isGiveawayClosed(editingGiveaway);
+  const canStartImmediately = !editingGiveaway || (
+    !readOnly && editingGiveaway.status === "scheduled" && new Date(editingGiveaway.start).getTime() > Date.now()
+  );
   const updateForm = (updater: (prev: FormState) => FormState) => {
+    if (readOnly) return;
     setFormModified(true);
     setForm(updater);
   };
@@ -700,7 +726,7 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
 
   const roleBadges = (ids: string[], onRemove: (id: string) => void) => (
     <div className="flex flex-wrap gap-2">
-      {ids.map((id) => <Badge key={id} variant="secondary" className="gap-1">{`@${roles.find((r) => r.id === id)?.name || id}`}<button type="button" onClick={() => onRemove(id)}><X className="h-3 w-3" /></button></Badge>)}
+      {ids.map((id) => <Badge key={id} variant="secondary" className="max-w-full gap-1 rounded-full border-0 bg-muted/65"><span className="truncate">{`@${roles.find((r) => r.id === id)?.name || id}`}</span>{!readOnly && <button type="button" aria-label={`${tCommon("remove")} @${roles.find((r) => r.id === id)?.name || id}`} onClick={() => onRemove(id)}><X className="h-3 w-3" /></button>}</Badge>)}
     </div>
   );
 
@@ -727,6 +753,7 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
   };
 
   const submit = async () => {
+    if (readOnly) return;
     try {
       validateForm(form, t);
       setSaving(true);
@@ -818,8 +845,8 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
             className="flex min-h-0 flex-col gap-0 overflow-hidden bg-background shadow-2xl shadow-black/30 sm:max-w-3xl"
           >
             <DialogHeader className="shrink-0 px-5 pb-4 pr-16 pt-5 text-left sm:px-7 sm:pb-5 sm:pr-16 sm:pt-7">
-              <DialogTitle>{editingId ? t("dialog.editTitle") : t("dialog.createTitle")}</DialogTitle>
-              <DialogDescription className="max-w-2xl leading-relaxed">{t("dialog.description")}</DialogDescription>
+              <DialogTitle>{readOnly ? t("table.viewGiveaway") : editingId ? t("dialog.editTitle") : t("dialog.createTitle")}</DialogTitle>
+              <DialogDescription className="max-w-2xl leading-relaxed">{readOnly ? editingGiveaway?.prize : t("dialog.description")}</DialogDescription>
             </DialogHeader>
 
             <Tabs
@@ -835,7 +862,8 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
                 {editingGiveaway && <DashboardTabTrigger value="winners">{t("formTabs.winners")}</DashboardTabTrigger>}
               </DashboardTabsList>
 
-              <TabsContent value="general" className={cn(GIVEAWAY_FORM_TAB_CLASS, "space-y-5")}>
+              <TabsContent value="general" asChild>
+                <fieldset disabled={readOnly} aria-label={t("formTabs.general")} className={cn(GIVEAWAY_FORM_TAB_CLASS, "space-y-5")}>
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
                     <Label>{t("form.prize")}<span className="ml-1 text-destructive">*</span></Label>
@@ -848,16 +876,16 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
                 </div>
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
-                    <Label>{t("form.startTime")}<span className="ml-1 text-destructive">*</span></Label>
-                    <div className="flex items-center gap-2">
+                    <Label htmlFor="giveaway-start-time">{t("form.startTime")}<span className="ml-1 text-destructive">*</span></Label>
+                    {!form.startNow && <DateTimePicker id="giveaway-start-time" aria-label={t("form.startTime")} placeholder={t("form.startTime")} className="min-w-0 max-w-full" type="datetime-local" value={form.startTime} onChange={(e) => updateForm((s) => ({ ...s, startTime: e.target.value }))} />}
+                    {canStartImmediately && <div className="flex items-center gap-2">
                       <Checkbox id="startNow" checked={form.startNow} onCheckedChange={(checked) => updateForm((s) => ({ ...s, startNow: checked === true, startTime: checked === true ? "" : s.startTime }))} />
                       <Label htmlFor="startNow" className="cursor-pointer font-normal">{t("form.startNow")}</Label>
-                    </div>
-                    {!form.startNow && <Input className="mt-2 min-w-0 max-w-full border-0 bg-muted/55 shadow-sm shadow-black/5" type="datetime-local" value={form.startTime} onChange={(e) => updateForm((s) => ({ ...s, startTime: e.target.value }))} />}
+                    </div>}
                   </div>
                   <div className="space-y-2">
-                    <Label>{t("form.endTime")}<span className="ml-1 text-destructive">*</span></Label>
-                    <Input className="min-w-0 max-w-full border-0 bg-muted/55 shadow-sm shadow-black/5" type="datetime-local" value={form.endTime} onChange={(e) => updateForm((s) => ({ ...s, endTime: e.target.value }))} />
+                    <Label htmlFor="giveaway-end-time">{t("form.endTime")}<span className="ml-1 text-destructive">*</span></Label>
+                    <DateTimePicker id="giveaway-end-time" aria-label={t("form.endTime")} placeholder={t("form.endTime")} className="min-w-0 max-w-full" type="datetime-local" value={form.endTime} onChange={(e) => updateForm((s) => ({ ...s, endTime: e.target.value }))} />
                   </div>
                 </div>
                 <div className="md:w-1/2 md:pr-2">
@@ -866,9 +894,11 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
                     <Input className="border-0 bg-muted/55 shadow-sm shadow-black/5" type="number" min="1" max="100" value={form.winners} onChange={(e) => updateForm((s) => ({ ...s, winners: e.target.value }))} />
                   </div>
                 </div>
+                </fieldset>
               </TabsContent>
 
-              <TabsContent value="messages" className={cn(GIVEAWAY_FORM_TAB_CLASS, "space-y-4")}>
+              <TabsContent value="messages" asChild>
+                <fieldset disabled={readOnly} aria-label={t("formTabs.messages")} className={cn(GIVEAWAY_FORM_TAB_CLASS, "space-y-4")}>
                 <div className="space-y-2">
                   <Label>{t("form.textAboveEmbed")}</Label>
                   <Textarea rows={4} className="border-0 bg-muted/55 shadow-sm shadow-black/5" value={form.textAbove} onChange={(e) => updateForm((s) => ({ ...s, textAbove: e.target.value }))} />
@@ -889,9 +919,11 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
                     <Trophy className="mr-2 h-4 w-4" />{t("form.previewEnd")}
                   </Button>
                 </div>
+                </fieldset>
               </TabsContent>
 
-              <TabsContent value="restrictions" className={cn(GIVEAWAY_FORM_TAB_CLASS, "space-y-5")}>
+              <TabsContent value="restrictions" asChild>
+                <fieldset disabled={readOnly} aria-label={t("formTabs.restrictions")} className={cn(GIVEAWAY_FORM_TAB_CLASS, "space-y-5")}>
                 <div className="space-y-2">
                   <Label>{t("form.mentions")}</Label>
                   <RoleCombobox className="border-0 bg-muted/55 shadow-sm shadow-black/5 hover:bg-muted" roles={roles} mode="add" excludeRoleIds={form.mentions} onAdd={(id) => updateForm((s) => ({ ...s, mentions: [...s.mentions, id] }))} />
@@ -927,63 +959,57 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
                     <Label htmlFor="accountRequired" className="cursor-pointer font-normal">{t("form.cocAccountRequired")}</Label>
                   </div>
                 </div>
+                </fieldset>
               </TabsContent>
 
-              <TabsContent value="advanced" className={cn(GIVEAWAY_FORM_TAB_CLASS, "space-y-4")}>
-                <div className="space-y-3 rounded-[20px] bg-muted/35 p-4">
-                  <Label>{t("form.image")}</Label>
-                  <Input className="border-0 bg-card shadow-sm shadow-black/5" type="file" accept="image/*" onChange={(e) => {
-                    const file = e.target.files?.[0] || null;
-                    if (file && file.size > MAX_IMAGE_BYTES) {
-                      toast({ title: t("toast.errorTitle"), description: t("validation.imageTooLarge"), variant: "destructive" });
-                      e.target.value = ""; return;
-                    }
-                    updateForm((s) => ({ ...s, imageFile: file, imagePreview: file ? URL.createObjectURL(file) : s.imagePreview, removeImage: false }));
-                  }} />
-                  {form.imageFile && <p className="text-xs text-muted-foreground">{(form.imageFile.size / 1024 / 1024).toFixed(2)} MB</p>}
-                  <div className="flex items-center gap-2">
-                    <Checkbox id="removeImage" checked={form.removeImage} onCheckedChange={(checked) => updateForm((s) => ({ ...s, removeImage: checked === true, imageFile: checked === true ? null : s.imageFile, imagePreview: checked === true ? null : s.imagePreview }))} />
-                    <Label htmlFor="removeImage" className="cursor-pointer font-normal">{t("form.removeImage")}</Label>
-                  </div>
-                  {form.imagePreview && !form.removeImage && <Image src={form.imagePreview} alt={t("form.imagePreviewAlt")} width={640} height={240} unoptimized className="max-h-40 w-full rounded-xl object-cover" />}
+              <TabsContent value="advanced" asChild>
+                <fieldset disabled={readOnly} aria-label={t("formTabs.advanced")} className={cn(GIVEAWAY_FORM_TAB_CLASS, "space-y-7")}>
+                <div className="space-y-3">
+                  <h3 className="text-sm font-medium">{t("form.image")}</h3>
+                  <ImageUploadControl image={form.removeImage ? null : form.imagePreview} file={form.imageFile} disabled={readOnly}
+                    label={t("form.image")} chooseLabel={form.imagePreview ? tCommon("edit") : tEmbed("addImage")} removeLabel={t("form.removeImage")} maxBytes={MAX_IMAGE_BYTES}
+                    onChoose={file => updateForm(s => ({ ...s, imageFile: file, imagePreview: URL.createObjectURL(file), removeImage: false }))}
+                    onRemove={() => updateForm(s => ({ ...s, removeImage: true, imageFile: null, imagePreview: null }))}
+                    onTooLarge={() => toast({ title: t("toast.errorTitle"), description: t("validation.imageTooLarge"), variant: "destructive" })} />
                 </div>
 
-                <div className="space-y-3 rounded-[20px] bg-muted/35 p-4">
-                  <div className="flex items-center justify-between">
-                    <Label>{t("form.boosters")}</Label>
-                    <Button type="button" variant="secondary" size="sm" className="border-0 bg-card shadow-sm shadow-black/5 hover:bg-muted" onClick={addBooster}>
+                <div className="space-y-3">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <h3 className="text-sm font-medium">{t("form.boosters")}</h3>
+                    {!readOnly && <Button type="button" variant="secondary" size="sm" className="border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted" onClick={addBooster}>
                       <Plus className="mr-2 h-4 w-4" />{t("form.addBooster")}
-                    </Button>
+                    </Button>}
                   </div>
                   {form.boosters.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">{t("form.noBoosters")}</p>
+                    <p className="rounded-2xl bg-muted/35 px-4 py-5 text-sm text-muted-foreground">{t("form.noBoosters")}</p>
                   ) : (
-                    <div className="space-y-4">
+                    <div className="space-y-3">
                       {form.boosters.map((booster, index) => (
-                        <div key={booster.id} className="rounded-2xl bg-card p-4 shadow-sm shadow-black/5">
-                          <div className="mb-3 flex items-center justify-between">
+                        <div key={booster.id} className="min-w-0 rounded-[20px] bg-muted/45 p-4 shadow-sm shadow-black/5">
+                          <div className="mb-3 flex min-h-8 items-center justify-between gap-2">
                             <div className="text-sm font-medium">{t("form.boosterLabel", { index: index + 1 })}</div>
-                            <Button type="button" variant="ghost" size="sm" onClick={() => removeBooster(index)}><Trash2 className="h-4 w-4" /></Button>
+                            {!readOnly && <Button type="button" variant="ghost" size="icon" className="h-8 w-8 shrink-0" aria-label={`${tCommon("remove")} ${t("form.boosterLabel", { index: index + 1 })}`} onClick={() => removeBooster(index)}><Trash2 className="h-4 w-4" /></Button>}
                           </div>
-                          <div className="grid gap-4 md:grid-cols-[180px_1fr]">
-                            <div className="space-y-2">
-                              <Label>{t("form.boostValue")}</Label>
+                          <div className="grid items-start gap-3 sm:grid-cols-[8rem_minmax(0,1fr)]">
+                            <div className="min-w-0 space-y-2">
+                              <Label htmlFor={`booster-${booster.id}-value`} className="block">{t("form.boostValue")}</Label>
                               <Select value={String(booster.value)} onValueChange={(value) => updateBooster(index, { ...booster, value: Number(value) })}>
-                              <SelectTrigger className="border-0 bg-muted/55 shadow-sm shadow-black/5"><SelectValue /></SelectTrigger>
+                              <SelectTrigger id={`booster-${booster.id}-value`} className="h-10 border-0 bg-card shadow-sm shadow-black/5"><SelectValue /></SelectTrigger>
                                 <SelectContent>{boostChoices.map((choice) => <SelectItem key={choice} value={String(choice)}>{`x${choice}`}</SelectItem>)}</SelectContent>
                               </Select>
                             </div>
-                            <div className="space-y-2">
-                              <Label>{t("form.boostRoles")}</Label>
-                              <RoleCombobox className="border-0 bg-muted/55 shadow-sm shadow-black/5 hover:bg-muted" roles={roles} mode="add" excludeRoleIds={booster.roles} onAdd={(id) => updateBooster(index, { ...booster, roles: [...booster.roles, id] })} />
-                              {booster.roles.length > 0 && roleBadges(booster.roles, (id) => updateBooster(index, { ...booster, roles: booster.roles.filter((x) => x !== id) }))}
+                            <div className="min-w-0 space-y-2">
+                              <Label htmlFor={`booster-${booster.id}-roles`} className="block">{t("form.boostRoles")}</Label>
+                              <RoleCombobox id={`booster-${booster.id}-roles`} className="h-10 min-w-0 border-0 bg-card shadow-sm shadow-black/5 hover:bg-muted [&>span]:min-w-0 [&>span]:truncate" roles={roles} mode="add" excludeRoleIds={booster.roles} onAdd={(id) => updateBooster(index, { ...booster, roles: [...booster.roles, id] })} />
                             </div>
                           </div>
+                          {booster.roles.length > 0 && <div className="mt-3">{roleBadges(booster.roles, (id) => updateBooster(index, { ...booster, roles: booster.roles.filter((x) => x !== id) }))}</div>}
                         </div>
                       ))}
                     </div>
                   )}
                 </div>
+                </fieldset>
               </TabsContent>
               {editingGiveaway && (
                 <TabsContent value="winners" className={cn(GIVEAWAY_FORM_TAB_CLASS, "overflow-hidden")}>
@@ -993,11 +1019,11 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
             </Tabs>
 
             <DialogFooter className="shrink-0 flex-row gap-2 border-t border-border/50 bg-background px-5 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-7 sm:py-4 sm:space-x-0 [&>*]:w-auto">
-              <Button variant="secondary" className="min-w-0 flex-1 border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted sm:flex-none" onClick={closeDialog} disabled={saving}>{tCommon("cancel")}</Button>
-              <Button className="min-w-0 flex-1 sm:flex-none" onClick={submit} disabled={saving || !hasRequiredFields}>
+              <Button variant="secondary" className="min-w-0 flex-1 border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted sm:flex-none" onClick={closeDialog} disabled={saving}>{readOnly ? tCommon("close") : tCommon("cancel")}</Button>
+              {!readOnly && <Button className="min-w-0 flex-1 sm:flex-none" onClick={submit} disabled={saving || !hasRequiredFields}>
                 {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {editingId ? t("dialog.saveChanges") : t("dialog.create")}
-              </Button>
+              </Button>}
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -1148,7 +1174,7 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
                       {form.imagePreview && !form.removeImage && <Image src={form.imagePreview} alt={t("form.imagePreviewAlt")} width={900} height={360} unoptimized className="mt-4 max-h-72 w-full rounded-lg border border-white/10 object-cover" />}
                       <div className="mt-4 flex items-center gap-2 text-xs text-slate-400"><span>{t("preview.endsFooter")}</span><span>{discordTimestamp}</span></div>
                     </div>
-                    <div className="mt-3"><div className="rounded-md bg-[#5865f2] px-3 py-2 text-sm font-medium text-white inline-block">{`🎟️ ${t("preview.participate")} (${previewParticipantCount})`}</div></div>
+                    <div className="mt-3"><div className="rounded-md bg-[#5865f2] px-3 py-2 text-sm font-medium text-white inline-block">{`🎟️ ${t("preview.participate")}`}</div></div>
                   </div>
                   {requirementBadges.length > 0 && <div className="flex flex-wrap gap-2">{requirementBadges.map((b) => <Badge key={b} variant="secondary">{b}</Badge>)}</div>}
                   {roleRestrictionLabels.length > 0 && <div className="flex flex-wrap gap-2">{roleRestrictionLabels.map((r) => <Badge key={r} variant="outline">{r}</Badge>)}</div>}
@@ -1159,7 +1185,7 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
                     <div className="text-xs font-medium text-slate-400">{t("preview.discordPreview")}</div>
                     <div className="mt-4 text-sm text-sky-300">@Winner</div>
                     <div className="mt-4 prose prose-invert max-w-none text-sm text-slate-200">{renderMarkdown(form.textEnd, t("preview.noEndText"))}</div>
-                    <div className="mt-4 rounded-xl border-l-4 border-l-[#ed4245] border border-white/10 bg-[#2b2d31] p-4 text-slate-100">
+                    <div className="mt-4 rounded-xl border-l-4 border-l-[#e74c3c] border border-white/10 bg-[#2b2d31] p-4 text-slate-100">
                       <div className="text-[15px] font-semibold">{`🎉 ${form.prize || t("preview.noPrize")} - ${winnerCount} ${t("preview.winnerWord", { count: winnerCount })} 🎉`}</div>
                       <div className="mt-3 prose prose-invert max-w-none text-sm text-slate-200">{renderMarkdown(`**${t("preview.totalParticipants", { count: previewParticipantCount })}**`)}</div>
                       {form.imagePreview && !form.removeImage && <Image src={form.imagePreview} alt={t("form.imagePreviewAlt")} width={900} height={360} unoptimized className="mt-4 max-h-72 w-full rounded-lg border border-white/10 object-cover" />}

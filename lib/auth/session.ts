@@ -4,6 +4,7 @@ import { DashboardAuthWebRefreshResponse } from "@clashking/api-contracts";
 import { Schema } from "effect";
 
 import type { UserInfo } from "@/lib/api/types/auth";
+import { embeddedServerId } from './embedded';
 
 const CHANNEL_NAME = "clashking-auth";
 const LOCK_NAME = "clashking-refresh";
@@ -50,14 +51,16 @@ function createRuntime(enableChannel: boolean): AuthRuntime {
     refreshPromise: null,
     listeners: new Set<SessionListener>(),
     tabId: createTabId(enableChannel),
-    channel: enableChannel && typeof BroadcastChannel !== "undefined" ? new BroadcastChannel(CHANNEL_NAME) : null,
+    channel: enableChannel && typeof BroadcastChannel !== "undefined" ? new BroadcastChannel(CHANNEL_NAME+(embeddedServerId()?`:server:${embeddedServerId()}`:'')) : null,
     listening: false,
   };
 }
 
 function getRuntime(): AuthRuntime {
   if (typeof window === "undefined") return serverRuntime;
-  const target = window as Window & { __clashkingAuthRuntime?: AuthRuntime };
+  const target = window as Window & { __clashkingAuthRuntime?: AuthRuntime; __clashkingScopedRuntime?: Record<string,AuthRuntime> };
+  const scoped=embeddedServerId();
+  if(scoped){target.__clashkingScopedRuntime??={};return target.__clashkingScopedRuntime[scoped]??=(createRuntime(false));}
   target.__clashkingAuthRuntime ??= createRuntime(true);
   const runtime = target.__clashkingAuthRuntime;
   if (!runtime.listening) {
@@ -87,7 +90,7 @@ export function setAccessToken(token: string, broadcast = true): void {
   runtime.accessToken = token;
   runtime.generation = nextGeneration(runtime);
   scheduleAccessTokenRefresh(runtime);
-  if (typeof window !== "undefined") {
+  if (typeof window !== "undefined" && !embeddedServerId()) {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
   }
@@ -100,7 +103,7 @@ export function clearSession(broadcast = true): void {
   runtime.accessToken = undefined;
   runtime.generation = nextGeneration(runtime);
   scheduleAccessTokenRefresh(runtime);
-  if (typeof window !== "undefined") {
+  if (typeof window !== "undefined" && !embeddedServerId()) {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
     localStorage.removeItem("user");
@@ -111,6 +114,7 @@ export function clearSession(broadcast = true): void {
 
 export function getCachedUser(): UserInfo | undefined {
   if (typeof window === "undefined") return undefined;
+  if (embeddedServerId()) return undefined;
   const raw = localStorage.getItem("user");
   if (!raw) return undefined;
   try {
@@ -123,6 +127,7 @@ export function getCachedUser(): UserInfo | undefined {
 
 export function cacheUser(user: UserInfo | undefined): void {
   if (typeof window === "undefined") return;
+  if (embeddedServerId()) return;
   if (user) localStorage.setItem("user", JSON.stringify(user));
   else localStorage.removeItem("user");
   notifyRuntime(getRuntime(), "user");
@@ -185,9 +190,11 @@ function resultAfterConcurrentSessionChange(
 }
 
 function requestRefresh(baseUrl: string): Promise<Response> {
-  return fetch(`${baseUrl}/v2/auth/web/refresh`, {
+  const serverId=embeddedServerId();
+  return fetch(`${baseUrl}/v2/auth/${embeddedServerId()?'server-dashboard':'web'}/refresh`, {
     method: "POST",
     credentials: "include",
+    ...(serverId?{headers:{'Content-Type':'application/json'},body:JSON.stringify({serverId})}:{}),
   });
 }
 

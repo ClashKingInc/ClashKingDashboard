@@ -3,6 +3,7 @@ import {
   createRootRoute,
   createRoute,
   createRouter,
+  redirect,
   lazyRouteComponent,
   useLocation,
   type RouteComponent,
@@ -23,8 +24,11 @@ type PageImporter = () => Promise<PageModule>;
 
 function RootLayout() {
   const pathname = useLocation({ select: (location) => location.pathname });
+  const requestedTheme=new URLSearchParams(globalThis.location?.search??'').get('theme');
+  if(requestedTheme==='light'||requestedTheme==='dark')sessionStorage.setItem('ck_embedded_theme',requestedTheme);
+  const forcedTheme=typeof window!=='undefined'&&sessionStorage.getItem('ck_scoped_server')?sessionStorage.getItem('ck_embedded_theme')??undefined:undefined;
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+    <ThemeProvider attribute="class" defaultTheme="system" forcedTheme={forcedTheme} enableSystem disableTransitionOnChange>
       <LocaleProvider pathname={pathname}>
         <AuthSessionProvider>
           <DocumentMetadata />
@@ -71,6 +75,11 @@ function dashboardPage<const TPath extends string>(
   return createRoute({
     getParentRoute: () => dashboardRoute,
     path,
+    beforeLoad: ({ location }) => {
+      if (import.meta.env.PROD && path === "autoboards") {
+        throw redirect({ href: `/dashboard${location.searchStr}`, replace: true });
+      }
+    },
     component: lazyRouteComponent(importer),
     pendingComponent,
   });
@@ -94,6 +103,8 @@ const publicRoutes = [
 ] as const;
 
 const applicationRoutes = [
+  rootPage("access", () => import("@/app/access/page")),
+  rootPage("transcript", () => import("@/app/transcript/page")),
   rootPage("login", () => import("@/app/login/page")),
   rootPage("servers", () => import("@/app/servers/page")),
   rootPage("auth/callback", () => import("@/app/auth/callback/page")),
@@ -107,8 +118,8 @@ const dashboardRoutes = [
   dashboardPage("bans-and-strikes", () => import("@/app/dashboard/bans-and-strikes/page")),
   dashboardPage("bases", () => import("@/app/dashboard/bases/page")),
   dashboardPage("clans", () => import("@/app/dashboard/clans/page")),
+  dashboardPage("analytics", () => import("@/app/dashboard/analytics/page")),
   dashboardPage("embeds", () => import("@/app/dashboard/embeds/page")),
-  dashboardPage("family-settings", () => import("@/app/dashboard/family-settings/page")),
   dashboardPage("general", () => import("@/app/dashboard/general/page")),
   dashboardPage("giveaways", () => import("@/app/dashboard/giveaways/page"), GiveawaysLoadingPage),
   dashboardPage("graphics", () => import("@/app/dashboard/graphics/page")),
@@ -126,6 +137,7 @@ const dashboardRoutes = [
   dashboardPage("settings/billing", () => import("@/app/dashboard/settings/billing/page")),
   dashboardPage("support", () => import("@/app/dashboard/support/page")),
   dashboardPage("tickets", () => import("@/app/dashboard/tickets/page")),
+  dashboardPage("tickets/detail", () => import("@/app/dashboard/tickets/detail/page")),
   dashboardPage("tickets/settings", () => import("@/app/dashboard/tickets/settings/page")),
 ] as const;
 

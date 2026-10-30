@@ -26,16 +26,15 @@ cp .env.example .env.local
 npm run dev
 ```
 
-The Vite server listens on `http://localhost:3002`. The default example points API calls at `http://localhost:8000` and the roster assistant at `http://localhost:8788`; credentialed API CORS must explicitly allow the dashboard origin.
+The Vite server listens on `http://localhost:3002`. The default example points API calls at `http://localhost:8787` and the roster assistant at `http://localhost:8789`; credentialed API CORS must explicitly allow the dashboard origin.
 
-The roster AI assistant remains a separate Cloudflare Worker. Copy `.dev.vars.example` to the ignored `.dev.vars`, add the OpenAI project key and the same `AI_USAGE_SECRET` used by the API Worker, then run `npm run assistant:dev`.
+The roster AI assistant remains a separate Cloudflare Worker. Copy `.dev.vars.example` to the ignored `.dev.vars`, add the OpenAI project key and the same `AI_USAGE_SECRET` used by the API Worker, then run `npm run assistant:dev`. For the managed local stack, `clashking up assistant` reads the OpenAI key from that file and securely supplies the API's existing metering secret from `.clashking/local.env`. It serves the assistant on port 8789; the Dashboard tunnel uses `https://local-ai.clashk.ing`. See [roster assistant capabilities and local setup](workers/roster-assistant/README.md).
 
 ## Validation
 
 ```bash
 npm run typecheck
 npm run lint
-npm test
 npm run build:production
 ```
 

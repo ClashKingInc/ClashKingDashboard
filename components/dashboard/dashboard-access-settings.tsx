@@ -12,7 +12,6 @@ import type { DashboardAccessConfig, DashboardAccessGrant, DashboardAccessLevel,
 
 const sectionMessageKeys: Record<DashboardSection, string> = {
   settings: "general.name",
-  family_settings: "familySettings.name",
   logs: "logs.name",
   clans: "clans.name",
   rosters: "rosters.name",

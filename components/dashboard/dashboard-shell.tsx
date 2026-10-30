@@ -14,6 +14,8 @@ import {
   DashboardRouteAccess,
 } from "@/components/dashboard/dashboard-access-provider";
 import { DashboardRouteProvider, useGuildId } from "@/lib/dashboard-route";
+import { embeddedServerId, notifyNativeSessionExpired } from '@/lib/auth/embedded';
+import { EmbeddedDashboard } from './embedded-dashboard';
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const locale = useLocale();
@@ -22,7 +24,9 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const { status: authStatus } = useAuthSession();
 
   useEffect(() => {
-    if (authStatus === "anonymous") router.replace("/login");
+    if (authStatus === "anonymous") {
+      if(embeddedServerId())notifyNativeSessionExpired();else router.replace("/login");
+    }
   }, [authStatus, router]);
 
   // Dashboard pages contain client-side data effects. Mount them only after
@@ -38,9 +42,9 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
 
   return (
     <DashboardQueryProvider>
-      <DashboardRouteProvider guildId={guildId}>
+      <DashboardRouteProvider key={guildId} guildId={guildId}>
         <DashboardAccessProvider guildId={guildId}>
-          <SidebarDataProvider guildId={guildId}>
+          {embeddedServerId() ? <EmbeddedDashboard guildId={guildId}>{children}</EmbeddedDashboard> : <SidebarDataProvider guildId={guildId}>
             <DashboardLayoutWrapper
               guildId={guildId}
               sidebar={<SidebarClient guildId={guildId} locale={locale} />}
@@ -48,7 +52,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             >
               <DashboardRouteAccess>{children}</DashboardRouteAccess>
             </DashboardLayoutWrapper>
-          </SidebarDataProvider>
+          </SidebarDataProvider>}
         </DashboardAccessProvider>
       </DashboardRouteProvider>
     </DashboardQueryProvider>

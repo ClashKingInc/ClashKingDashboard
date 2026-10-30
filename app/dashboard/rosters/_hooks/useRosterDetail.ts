@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import type {
   Roster,
   Clan,
@@ -13,6 +13,7 @@ import type {
 import * as api from '../_lib/api';
 
 interface UseRosterDetailResult {
+  hitrateError: string | null;
   // Data
   roster: Roster | null;
   clans: Clan[];
@@ -65,6 +66,23 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
 
   // Data state
   const [roster, setRoster] = useState<Roster | null>(null);
+  const [hitRates, setHitRates] = useState<Awaited<ReturnType<typeof api.fetchRosterHitRates>>>(new Map());
+  const [hitrateError, setHitrateError] = useState<string | null>(null);
+  const rosterWithMetrics = useMemo(() => roster ? { ...roster,
+    members: (roster.members ?? []).map(member => ({ ...member, hitrate: hitRates.get(member.tag)?.rate ?? null, hitrate_attacks: hitRates.get(member.tag)?.attacks })),
+  } : null, [roster, hitRates]);
+  const metricMembers = roster?.members?.map(member => member.tag).sort().join(",") ?? "";
+  const metricRevision = roster?.updated_at;
+  useEffect(() => {
+    let current = true;
+    setHitRates(new Map());
+    setHitrateError(null);
+    if (metricMembers) {
+      api.fetchRosterHitRates(rosterId, serverId).then(values => { if (current) setHitRates(values); })
+        .catch(error => { if (current) setHitrateError(error instanceof Error ? error.message : "Unable to load hit rates"); });
+    }
+    return () => { current = false; };
+  }, [rosterId, serverId, metricMembers, metricRevision]);
   const [clans, setClans] = useState<Clan[]>([]);
   const [clanMembers, setClanMembers] = useState<ClanMember[]>([]);
   const [serverMembers, setServerMembers] = useState<ClanMember[]>([]);
@@ -201,7 +219,6 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
     const updated = await api.updateRoster(rosterId, serverId, data);
     // Preserve existing members if the API response doesn't include them
     setRoster(prev => ({
-      ...prev,
       ...updated,
       members: updated.members ?? prev?.members,
     } as Roster));
@@ -316,7 +333,8 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
 
   return {
     // Data
-    roster,
+    roster: rosterWithMetrics,
+    hitrateError,
     clans,
     clanMembers,
     serverMembers,

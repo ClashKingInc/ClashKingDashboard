@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "@/components/app-image";
 import Link from "@/components/app-link";
 
 import { useAuthSession } from "@/components/auth-session-provider";
@@ -22,14 +21,7 @@ export function LandingSessionAction({
       aria-busy={status === "restoring"}
     >
       {isAuthenticated ? dashboardLabel : loginLabel}
-      <Image
-        src="/concepts/local/assets/icons/Icon_DC_ArrowRight.png"
-        alt=""
-        width={12}
-        height={17}
-        className="cs-arrow"
-        unoptimized
-      />
+
     </Link>
   );
 }

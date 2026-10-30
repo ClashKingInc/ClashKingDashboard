@@ -32,7 +32,6 @@ import { ClanCombobox } from "@/components/ui/clan-combobox";
 import { JoinPanelSettings } from "@/components/dashboard/join-panel-settings";
 import {
   Users,
-  Gift,
   Swords,
   Castle,
   TrendingUp,
@@ -237,7 +236,6 @@ export default function LogsPage() {
   const CLAN_LOGS: LogTypeDefinition[] = [
     { keys: ['join_log'], label: t('clanLogs.joinLog.label'), description: t('clanLogs.joinLog.description'), icon: Users, color: 'green', exampleLink: 'https://discord.com/channels/923764211845312533/1128182552121839648' },
     { keys: ['leave_log'], label: t('clanLogs.leaveLog.label'), description: t('clanLogs.leaveLog.description'), icon: Users, color: 'red', exampleLink: 'https://discord.com/channels/923764211845312533/1128182846218055722' },
-    { keys: ['donation_log'], label: t('clanLogs.donationLog.label'), description: t('clanLogs.donationLog.description'), icon: Gift, color: 'purple' },
     { keys: ['clan_achievement_log'], label: t('clanLogs.clanAchievementLog.label'), description: t('clanLogs.clanAchievementLog.description'), icon: Award, color: 'yellow' },
     { keys: ['clan_requirements_log'], label: t('clanLogs.clanRequirementsLog.label'), description: t('clanLogs.clanRequirementsLog.description'), icon: FileCheck, color: 'blue' },
     { keys: ['clan_description_log'], label: t('clanLogs.clanDescriptionLog.label'), description: t('clanLogs.clanDescriptionLog.description'), icon: MessageCircle, color: 'gray' },
@@ -506,6 +504,7 @@ export default function LogsPage() {
     const destinationValid = isDestinationValid(selectedChannel, selectedThread, channels, threads);
     const draftChannel = pendingChannel || selectedChannel;
     const draftThread = pendingThread;
+    const destinationChanged = !isConfigured || draftChannel !== selectedChannel || draftThread !== selectedThread;
     const draftNeedsThread = destinationNeedsThread(draftChannel, channels);
     const channelThreads = draftChannel
       ? threads.filter(t => t.parent_channel_id === draftChannel)
@@ -714,7 +713,7 @@ export default function LogsPage() {
                   )}
                 </div>
               )}
-              <Button
+              {destinationChanged && <Button
                 type="button"
                 size="sm"
                 onClick={saveDestination}
@@ -722,7 +721,7 @@ export default function LogsPage() {
               >
                 {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {t('logCard.saveDestination')}
-              </Button>
+              </Button>}
             </div>
           )}
         </div>

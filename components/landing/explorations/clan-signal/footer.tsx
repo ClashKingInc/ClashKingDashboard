@@ -1,12 +1,13 @@
 "use client";
 
+import type { ReactNode } from "react";
 import Image from "@/components/app-image";
 import Link from "@/components/app-link";
 import { useLocale, useTranslations } from "use-intl";
 import { ClanSignalWordmark } from "./brand";
 import { isPublicLocale, publicPath, type SupportedLocale } from "@/lib/locale-preference";
 
-export function ClanSignalFooter() {
+export function ClanSignalFooter({ motionAction }: { motionAction?: ReactNode } = {}) {
   const locale = useLocale() as SupportedLocale;
   const t = useTranslations("ClanSignal");
   const navigation = useTranslations("Navigation");
@@ -28,7 +29,7 @@ export function ClanSignalFooter() {
         <div className="cs-footer-brand"><ClanSignalWordmark /><p>{t("footer.tagline")}</p></div>
         <div className="cs-footer-links">
           <a href="https://invite.clashk.ing/">{t("navigation.discordBot")}</a>
-          <a href="https://testflight.apple.com/join/6Q8dfnMX">{t("navigation.mobileApp")}</a>
+          <a href="#app">{t("navigation.mobileApp")}</a>
           <Link href="/servers">{t("navigation.dashboard")}</Link>
           <a href="https://docs.clashk.ing/">{t("footer.docs")}</a>
           <a href="https://github.com/ClashKingInc">GitHub</a>
@@ -39,6 +40,7 @@ export function ClanSignalFooter() {
           <Link href="/support">{navigation("support")}</Link>
           <Link href={publicPath(publicLocale, "/privacy")}>{t("footer.privacy")}</Link>
           <Link href={publicPath(publicLocale, "/terms")}>{t("footer.terms")}</Link>
+          {motionAction}
         </div>
         <p className="cs-legal">{t("footer.legal")}</p>
       </footer>

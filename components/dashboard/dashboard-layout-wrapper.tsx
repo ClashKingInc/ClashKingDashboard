@@ -18,11 +18,13 @@ export function DashboardLayoutWrapper({
   sidebar,
   mobileHeader,
   guildId = "",
+  embedded = false,
   children,
 }: {
   readonly sidebar: React.ReactNode;
   readonly mobileHeader?: React.ReactNode;
   readonly guildId?: string;
+  readonly embedded?: boolean;
   readonly children: React.ReactNode;
 }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -43,7 +45,7 @@ export function DashboardLayoutWrapper({
     router.push("/");
   };
 
-  const accountLink = user ? (
+  const accountLink = user && !embedded ? (
       <Link
         href={dashboardHref("settings", guildId)}
         className="inline-flex items-center gap-1 rounded-full border border-border bg-background/60 p-1 pr-1.5 outline-none transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring"
@@ -59,7 +61,7 @@ export function DashboardLayoutWrapper({
       </Link>
   ) : null;
 
-  const logoutControl = user ? (
+  const logoutControl = user && !embedded ? (
       <Button
         variant="ghost"
         size="icon"
@@ -114,9 +116,9 @@ export function DashboardLayoutWrapper({
       )}
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col h-full overflow-hidden">
+      <div className="min-w-0 flex-1 flex flex-col h-full overflow-hidden">
         {/* Mobile Header */}
-        {!usesEditorShell && <div className="flex min-h-16 items-center border-b border-border bg-card/95 px-4 pb-2 pt-[max(0.5rem,env(safe-area-inset-top))] text-card-foreground backdrop-blur lg:hidden">
+        {!usesEditorShell && <div className={`flex min-h-16 shrink-0 items-center border-b border-border px-4 pb-2 pt-[max(0.5rem,env(safe-area-inset-top))] text-card-foreground lg:hidden ${embedded ? "bg-card" : "bg-card/95 backdrop-blur"}`}>
           <Button variant="ghost" size="touch-icon" onClick={() => setIsSidebarOpen(true)} className="-ml-2" aria-label={tCommon("openMenu")}>
             <Menu className="h-5 w-5" />
           </Button>
@@ -127,7 +129,7 @@ export function DashboardLayoutWrapper({
               mobileHeader ?? <span className="font-semibold">{tCommon("dashboard")}</span>
             )}
           </div>
-          {!usesContextualHeader && (
+          {!usesContextualHeader && !embedded && (
             <div className="ml-1 flex shrink-0 items-center gap-1">
               <SettingsDropdown
                 locale={locale}
@@ -141,7 +143,7 @@ export function DashboardLayoutWrapper({
 
         {!usesEditorShell && <div className="hidden h-[72px] shrink-0 items-center gap-1.5 border-b border-border bg-card/70 px-6 backdrop-blur lg:flex">
           <div id="dashboard-header-actions" className="min-w-0 flex-1" />
-          {!usesContextualHeader && (
+          {!usesContextualHeader && !embedded && (
             <>
               <SettingsDropdown
                 locale={locale}
@@ -154,7 +156,7 @@ export function DashboardLayoutWrapper({
           )}
         </div>}
 
-        <main ref={mainContentRef} className={usesEditorShell ? "min-h-0 flex-1 overflow-hidden" : "dashboard-content @container/dashboard flex-1 overflow-y-auto [scrollbar-gutter:stable]"}>
+        <main ref={mainContentRef} className={usesEditorShell ? "min-h-0 flex-1 overflow-hidden" : `dashboard-content @container/dashboard min-h-0 flex-1 overflow-y-auto [scrollbar-gutter:stable] ${embedded ? "overscroll-y-contain [scroll-behavior:auto]" : ""}`}>
           {children}
         </main>
       </div>

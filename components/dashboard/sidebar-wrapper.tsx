@@ -7,6 +7,7 @@ import { Sidebar } from "./sidebar";
 import { MobileServerDropdown } from "./mobile-server-dropdown";
 import type { GuildInfo } from "@/lib/api/types/server";
 import { dashboardQueryOptions } from "@/lib/dashboard-query-options";
+import { embeddedServerId } from '@/lib/auth/embedded';
 
 interface SidebarWrapperProps {
   readonly guildId: string;
@@ -61,7 +62,7 @@ export function SidebarDataProvider({ guildId, children }: { readonly guildId: s
 
   const guildsQuery = useQuery({
     ...dashboardQueryOptions.guilds(),
-    enabled,
+    enabled: enabled && !embeddedServerId(),
   });
 
   useEffect(() => {
