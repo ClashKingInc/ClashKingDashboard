@@ -416,7 +416,7 @@
   },
   "analytics": {
     "totalLoot": "Resources looted",
-   "retentionTitle": "Observed 30-day retention",
+    "retentionTitle": "Observed 30-day retention",
     "retentionHint": "Accounts that arrived in this range and were still in the selected family at day 30. Rejoins count; polling gaps can hide movement.",
     "retentionCount": "{retained} of {eligible} mature arrivals retained · {immature} not yet 30 days old",
     "leagueComposition": "League composition",
@@ -532,8 +532,14 @@
     }
   },
   "Sidebar": {
-    "competitive": { "name": "Competitive", "description": "Clan teams and tournaments" },
-    "analytics": { "name": "Analytics", "description": "Clan family activity and history" },
+    "competitive": {
+      "name": "Competitive",
+      "description": "Clan teams and tournaments"
+    },
+    "analytics": {
+      "name": "Analytics",
+      "description": "Clan family activity and history"
+    },
     "overview": {
       "name": "개요",
       "description": "대시보드 홈"
@@ -2904,11 +2910,6 @@
   "SupportPage": {
     "title": "후원하기",
     "subtitle": "ClashKing은 무료 오픈 소스 프로젝트입니다. 여러분의 후원은 서버를 운영하고 커뮤니티를 위한 새 기능을 계속 개발하는 데 사용됩니다.",
-    "patreon": {
-      "title": "Patreon 후원자 되기",
-      "description": "Patreon에서 매달 후원하면 전용 혜택과 기능 우선 이용 권한을 받고 호스팅 비용에도 도움을 줄 수 있습니다.",
-      "cta": "Patreon에서 후원"
-    },
     "creatorCode": {
       "title": "크리에이터 코드 사용",
       "description": "크리에이터 코드를 사용하여 무료로 후원하세요",
@@ -2919,19 +2920,6 @@
     "whySupport": {
       "title": "왜 후원이 필요한가요?",
       "description": "금액에 관계없이 모든 후원금은 서버 비용과 API 요금에 직접 사용됩니다. 크리에이터 코드는 추가 비용 없이 ClashKing에 큰 도움을 줄 수 있습니다!"
-    },
-    "subscription": {
-      "title": "Support the project and unlock more",
-      "price": "$6.99 / month",
-      "perks": {
-        "notifications": "Notifications for up to 10 bookmarked players",
-        "credit": "$5 of AI assistant usage every month",
-        "botProfile": "Customize the bot's name and profile picture",
-        "autoBoards": "Increase a server from {freeLimit} to {paidLimit} AutoBoards",
-        "crossPlatform": "One subscription across dashboard and mobile"
-      },
-      "cta": "Sign in to subscribe",
-      "ctaDashboard": "View subscription"
     }
   },
   "ServersPage": {
@@ -2965,8 +2953,19 @@
     }
   },
   "AutoboardsPage": {
-    "farming": {"window":"자원 약탈 집계 기간","since_start":"보드 생성 이후","calendar_month":"달력 기준 월","game_season":"게임 시즌","seconds":"새로고침 간격(초)","description":"현재 멤버 상위 1~5명. 메시지 하나를 수정하고 기록된 자원 약탈 공격을 집계합니다."},
-    "donationRows": {"label": "Players to show", "description": "Show the top 1–50 donors.", "delivery": "Refresh edits the same message after donation changes. Scheduled send posts a new message; choose Daily for one post each day. Create one of each for both."},
+    "farming": {
+      "window": "자원 약탈 집계 기간",
+      "since_start": "보드 생성 이후",
+      "calendar_month": "달력 기준 월",
+      "game_season": "게임 시즌",
+      "seconds": "새로고침 간격(초)",
+      "description": "현재 멤버 상위 1~5명. 메시지 하나를 수정하고 기록된 자원 약탈 공격을 집계합니다."
+    },
+    "donationRows": {
+      "label": "Players to show",
+      "description": "Show the top 1–50 donors.",
+      "delivery": "Refresh edits the same message after donation changes. Scheduled send posts a new message; choose Daily for one post each day. Create one of each for both."
+    },
     "title": "자동 보드",
     "description": "운영 일정에 따라 실시간 보드를 새로고침하거나 새 보드를 전송합니다",
     "actions": {
@@ -3101,11 +3100,6 @@
       "load": "자동 보드를 불러오지 못했습니다.",
       "save": "자동 보드를 저장하지 못했습니다.",
       "delete": "자동 보드를 삭제하지 못했습니다."
-    },
-    "entitlement": {
-      "title": "Every server includes {freeLimit} AutoBoards",
-      "description": "Assign a subscription to this server to unlock up to {paidLimit}. Multiple subscriptions do not increase that limit.",
-      "current": "This server currently allows {limit} AutoBoards."
     }
   },
   "TicketsSettingsPage": {
@@ -4060,37 +4054,27 @@
       "infoLabel": "How free usage works",
       "freePoolInfo": "Free server usage is available while ClashKing's shared monthly free allowance still has capacity. It can pause before your server reaches its own limit and resets at the start of each UTC month.",
       "subscribers": "Credit from {count, plural, one {# subscription} other {# subscriptions}}"
-    },
-    "billing": {
-      "active": "Active",
-      "free": "Free plan",
-      "currentPlan": "ClashKing subscription",
-      "supportTitle": "Support ClashKing ❤️",
-      "price": "$6.99 per month",
-      "activeDescription": "Your Stripe subscription is active.",
-      "description": "Assign one subscription to one Discord server. Account features work across the dashboard and mobile app.",
-      "notifications": "Notifications for up to {limit} bookmarked players",
-      "credit": "{credit} of AI assistant usage each month",
-      "crossPlatform": "Available on the dashboard and mobile app",
-      "manage": "Manage subscription in Stripe",
-      "subscribe": "$6.99/month",
-      "learnMore": "Learn more",
-      "secure": "Secure checkout and billing management are handled by Stripe.",
-      "stripeUnavailable": "Stripe is not available right now.",
-      "checkoutUnavailable": "Subscriptions are not available yet. Every server currently uses the $0.05 monthly AI allowance.",
-      "checkoutSuccess": "Checkout completed. Your subscription will update as soon as Stripe confirms it.",
-      "checkoutCancelled": "Checkout was cancelled. Nothing was charged.",
-      "compactDescription": "$6.99 per month, including server perks and $5.00 of AI assistant usage.",
-      "assignServer": "Subscription server",
-      "selectServer": "Select a server",
-      "assignmentHelp": "Server perks follow this selection. Moving it can disable AutoBoards above the free limit on the previous server; AI usage already spent stays with your account.",
-      "checkoutAssignmentHelp": "Choose which server receives the subscription perks and included $5.00 monthly AI credit.",
-      "subscriptionRequired": "Subscribe to choose which server receives subscription perks.",
-      "selectServerFirst": "Choose a server before starting checkout."
     }
   },
   "GraphicsPage": {
     "desktopOnlyTitle": "Graphics is available on desktop",
     "desktopOnlyDescription": "The graphics editor needs a desktop-sized workspace. Open this page on a screen at least 1024 pixels wide."
+  },
+  "ManualLimits": {
+    "title": "Server limits",
+    "clans": "Clans",
+    "autoboards": "AutoBoards",
+    "ai": "Monthly AI spend",
+    "reserved": "${amount} reserved for ongoing or unconfirmed requests",
+    "raise": "Need higher limits? Join our Discord server and ask for raised limits.",
+    "discord": "Join our Discord server",
+    "supportTitle": "Support ClashKing",
+    "supportText": "If you enjoy ClashKing, maybe think about supporting us.",
+    "kofi": "Support us on Ko-fi",
+    "dismiss": "Dismiss support message"
+  },
+  "BotCustomizationGrant": {
+    "required": "Bot customization requires approval.",
+    "request": "Join our Discord server and ask for access."
   }
 }

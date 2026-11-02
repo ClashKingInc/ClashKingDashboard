@@ -46,11 +46,12 @@ export function AuthSessionProvider({ children }: { children: React.ReactNode })
     let retryDelay = 5_000;
 
     const restore = async () => {
+      const restoringScope = embeddedServerId();
       setUser((current) => current ?? getCachedUser());
       const result = getAccessToken()
         ? "restored"
         : await restoreAccessToken(getDefaultBaseUrl());
-      if (!active) return;
+      if (!active || restoringScope !== embeddedServerId()) return;
       if (result === "unavailable") {
         setStatus("restoring");
         retryTimer = setTimeout(() => void restore(), retryDelay);
@@ -65,7 +66,7 @@ export function AuthSessionProvider({ children }: { children: React.ReactNode })
         return;
       }
       const current = embeddedServerId() ? {data:undefined} : await apiClient.auth.getCurrentUser();
-      if (!active) return;
+      if (!active || restoringScope !== embeddedServerId()) return;
       if (current.data) {
         cacheUser(current.data);
         setUser(current.data);

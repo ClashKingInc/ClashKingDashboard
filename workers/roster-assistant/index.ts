@@ -1,3 +1,4 @@
+import { hardBudget } from "./hard-budget";
 import { patchRosterViewSource } from "./view-patch";
 import { cwlPerformanceViewSource } from "./cwl-performance-view";
 import { assistantStepLimit, completionStep, emptyResponseMessage } from "./response-completion";
@@ -29,10 +30,9 @@ import {
 import { AssistantApiError, executeAssistantEndpoint } from "./api-client";
 import { decodeAssistantBrowserRequest, prepareRequest, type AssistantBrowserRequest, type AssistantRequest } from "./request-context";
 import {
-  ROSTER_ASSISTANT_COMPACTION_THRESHOLD,
   ROSTER_ASSISTANT_MODEL,
 } from "../../lib/roster-assistant-constants";
-import { normalizeAIUsage, settleAIUsage, sumAIUsage, type NormalizedAIUsage } from "./usage-reporting";
+import { normalizeAIUsage } from "./usage-reporting";
 import {
   assertAuthorizedMembershipChanges,
   authorizedRosterIds,
@@ -229,7 +229,7 @@ function markLatestUserCacheBreakpoint(messages: ModelMessage[]): ModelMessage[]
 }
 
 const rosterAssistantWorker = {
-  async fetch(request: Request, bindings: RosterAssistantBindings, ctx: ExecutionContext): Promise<Response> {
+  async fetch(request: Request, bindings: RosterAssistantBindings, _ctx: ExecutionContext): Promise<Response> {
     const pathname = new URL(request.url).pathname;
     if (request.method === "GET" && pathname === "/health") return json(request, { status: "ok", model: MODEL });
     if (request.method === "OPTIONS" && pathname === "/chat") {
@@ -665,20 +665,9 @@ const rosterAssistantWorker = {
 
     const executor = new DynamicWorkerExecutor({ loader: constrainedLoader(env.LOADER), globalOutbound: null, timeout: 60_000 });
     const codemode = createCodeTool({ tools, executor });
-    const openai = createOpenAI({ apiKey: env.OPENAI_API_KEY });
+    const budget=hardBudget(env,body.requestId);
+    const openai = createOpenAI({ apiKey: env.OPENAI_API_KEY, fetch: budget.fetch });
     const startedAt = Date.now();
-    let usageSettlementScheduled = false;
-    let completedStepUsages: NormalizedAIUsage[] = [];
-    const scheduleUsageSettlement = (steps: NormalizedAIUsage[], usage = sumAIUsage(steps)): void => {
-      if (usageSettlementScheduled || steps.length === 0 || usage.inputTokens + usage.outputTokens <= 0) return;
-      usageSettlementScheduled = true;
-      ctx.waitUntil(settleAIUsage(env, {
-        requestId: body.requestId,
-        model: body.model,
-        usage,
-        steps,
-      }).catch((error) => console.error(JSON.stringify({ event: "roster_usage_failed", requestId: body.requestId, error: String(error) }))));
-    };
     const conversation = markLatestUserCacheBreakpoint(
       await convertToModelMessages(body.request.messages, { ignoreIncompleteToolCalls: true }),
     );
@@ -695,21 +684,8 @@ const rosterAssistantWorker = {
       ],
       messages: conversation,
       tools: { codemode },
-      onStepEnd: (step) => {
-        completedStepUsages = [...completedStepUsages, normalizeAIUsage(step.usage)];
-      },
-      onEnd: ({ usage, steps }) => {
-        scheduleUsageSettlement(
-          steps.map((step) => normalizeAIUsage(step.usage)),
-          normalizeAIUsage(usage),
-        );
-      },
-      onAbort: ({ steps }) => {
-        scheduleUsageSettlement(steps.map((step) => normalizeAIUsage(step.usage)));
-      },
-      onError: () => {
-        scheduleUsageSettlement(completedStepUsages);
-      },
+      onStepEnd: async (step) => { await budget.settle(normalizeAIUsage(step.usage)); },
+      maxRetries: 0,
       maxOutputTokens: 64_000,
       stopWhen: stepCountIs(assistantStepLimit),
       prepareStep: ({ stepNumber }) => completionStep(stepNumber),
@@ -720,10 +696,6 @@ const rosterAssistantWorker = {
           promptCacheOptions: { mode: "explicit", ttl: "30m" },
           reasoningEffort: "medium",
           reasoningContext: "all_turns",
-          contextManagement: [{
-            type: "compaction",
-            compactThreshold: ROSTER_ASSISTANT_COMPACTION_THRESHOLD,
-          }],
         } satisfies OpenAILanguageModelResponsesOptions,
       },
     });

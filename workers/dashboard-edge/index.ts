@@ -41,8 +41,11 @@ export async function handleDashboardRequest(
   const redirectUrl = resolveDomainRedirect(requestUrl);
   if (redirectUrl) return Response.redirect(redirectUrl.toString(), 308);
   if (requestUrl.pathname === "/api/tenor-media") return resolveTenorMedia(request);
-  if(requestUrl.pathname==='/access') {
+  if(requestUrl.pathname==='/access' || (requestUrl.pathname.startsWith('/dashboard') && requestUrl.searchParams.get('embedded')==='1')) {
     const response=await env.ASSETS.fetch(request),headers=new Headers(response.headers);
+    // /access navigates to an embedded dashboard URL; reloads need the same
+    // restricted frame policy, without the conflicting static DENY header.
+    headers.delete('X-Frame-Options');
     headers.set('Cache-Control','no-store');headers.set('Referrer-Policy','no-referrer');
     headers.set('Content-Security-Policy',"frame-ancestors 'self' https://app.clashk.ing https://dev-app.clashk.ing http://localhost:7357");
     return new Response(response.body,{status:response.status,statusText:response.statusText,headers});

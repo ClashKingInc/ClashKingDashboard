@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'use-intl';
 import { Loader2 } from 'lucide-react';
-import { getAccessToken, setAccessToken } from '@/lib/auth/session';
+import { getAccessToken, setScopedAccessToken } from '@/lib/auth/session';
 import { embeddedServerId } from '@/lib/auth/embedded';
 import { getDefaultBaseUrl } from '@/lib/api/client';
 import { useRouter } from '@/lib/navigation';
@@ -32,7 +32,7 @@ export default function DashboardAccessPage() {
     const data=await pendingExchange.promise;
     if(!active)return;
     sessionStorage.removeItem('ck_pending_dashboard_grant');sessionStorage.removeItem('ck_pending_dashboard_roster');pendingExchange=undefined;
-    sessionStorage.setItem('ck_scoped_server',data.serverId);setAccessToken(data.access_token,false);
+    setScopedAccessToken(data.serverId,data.access_token);
     // Only a roster UUID is accepted, never an arbitrary redirect URL. The
     // authenticated grant supplies guildId even if the fragment was modified.
     const target=rosterId&&rosterPattern.test(rosterId)

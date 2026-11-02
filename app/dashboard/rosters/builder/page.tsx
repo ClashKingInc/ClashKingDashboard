@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "use-intl";
 import { useAiNotice } from "./ai-notice";
 
 import { gradientHighlightStyle, rosterColumnPresentation } from "./roster-view-presentation";
@@ -502,6 +503,7 @@ function PendingAssistantMessage({ startedAt }: { readonly startedAt?: number })
 }
 
 function AssistantErrorMessage({ error }: { readonly error: unknown }) {
+  const tLimits=useTranslations("ManualLimits");
   return (
     <div className="flex gap-3" role="alert">
       <Image src={clashKingAssets.logos.botApp} alt="ClashKing" width={32} height={32} className="mt-1 h-8 w-8 shrink-0 rounded-xl object-cover" />
@@ -509,6 +511,7 @@ function AssistantErrorMessage({ error }: { readonly error: unknown }) {
         <div className="rounded-xl border border-destructive/25 bg-destructive/10 px-4 py-3">
           <p className="font-medium">I couldn’t complete that request.</p>
           <p className="mt-1 leading-relaxed text-muted-foreground">{rosterAssistantErrorText(error)}</p>
+          {rosterAssistantErrorText(error).includes("limit") && <a href="https://discord.gg/clashking" target="_blank" rel="noopener noreferrer" className="text-primary underline">{tLimits("discord")}</a>}
         </div>
       </div>
     </div>

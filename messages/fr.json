@@ -416,7 +416,7 @@
   },
   "analytics": {
     "totalLoot": "Resources looted",
-   "retentionTitle": "Observed 30-day retention",
+    "retentionTitle": "Observed 30-day retention",
     "retentionHint": "Accounts that arrived in this range and were still in the selected family at day 30. Rejoins count; polling gaps can hide movement.",
     "retentionCount": "{retained} of {eligible} mature arrivals retained · {immature} not yet 30 days old",
     "leagueComposition": "League composition",
@@ -532,8 +532,14 @@
     }
   },
   "Sidebar": {
-    "competitive": { "name": "Compétition", "description": "Équipes de clan et tournois" },
-    "analytics": { "name": "Analytics", "description": "Clan family activity and history" },
+    "competitive": {
+      "name": "Compétition",
+      "description": "Équipes de clan et tournois"
+    },
+    "analytics": {
+      "name": "Analytics",
+      "description": "Clan family activity and history"
+    },
     "overview": {
       "name": "Vue d’ensemble",
       "description": "Accueil du tableau de bord"
@@ -2904,11 +2910,6 @@
   "SupportPage": {
     "title": "Nous soutenir",
     "subtitle": "ClashKing est open source, et ses fonctionnalités principales sont gratuites pour tous. Les abonnements facultatifs débloquent quelques avantages et contribuent aux coûts d’hébergement, d’API et d’IA.",
-    "patreon": {
-      "title": "Devenir mécène sur Patreon",
-      "description": "Soutenez-nous chaque mois sur Patreon pour obtenir des avantages exclusifs, accéder aux fonctionnalités en avant-première et nous aider à couvrir nos frais d’hébergement.",
-      "cta": "Nous soutenir sur Patreon"
-    },
     "creatorCode": {
       "title": "Utiliser le code créateur",
       "description": "Soutenez-nous gratuitement en utilisant le code créateur",
@@ -2919,19 +2920,6 @@
     "whySupport": {
       "title": "Pourquoi nous soutenir ?",
       "description": "Les abonnements et les revenus du code créateur financent les serveurs, les frais d’API et le développement continu. Utiliser notre code créateur ne vous coûte rien de plus."
-    },
-    "subscription": {
-      "title": "Soutenez le projet et profitez de plus d'avantages",
-      "price": "6,99 $ / mois",
-      "perks": {
-        "notifications": "Notifications pour jusqu'à 10 joueurs favoris",
-        "credit": "5 $ d'utilisation des assistants IA chaque mois",
-        "botProfile": "Personnalisez le nom et la photo de profil du bot",
-        "autoBoards": "Faites passer un serveur de {freeLimit} à {paidLimit} tableaux automatiques",
-        "crossPlatform": "Un abonnement pour le tableau de bord et l'application mobile"
-      },
-      "cta": "Se connecter pour s'abonner",
-      "ctaDashboard": "Voir l'abonnement"
     }
   },
   "ServersPage": {
@@ -2965,8 +2953,19 @@
     }
   },
   "AutoboardsPage": {
-    "farming": {"window":"Période de pillage","since_start":"Depuis la création du tableau","calendar_month":"Mois calendaire","game_season":"Saison de jeu","seconds":"Intervalle d’actualisation (secondes)","description":"Les 1 à 5 meilleurs membres actuels. Modifie un message et compte les attaques de pillage enregistrées."},
-    "donationRows": {"label": "Players to show", "description": "Show the top 1–50 donors.", "delivery": "Refresh edits the same message after donation changes. Scheduled send posts a new message; choose Daily for one post each day. Create one of each for both."},
+    "farming": {
+      "window": "Période de pillage",
+      "since_start": "Depuis la création du tableau",
+      "calendar_month": "Mois calendaire",
+      "game_season": "Saison de jeu",
+      "seconds": "Intervalle d’actualisation (secondes)",
+      "description": "Les 1 à 5 meilleurs membres actuels. Modifie un message et compte les attaques de pillage enregistrées."
+    },
+    "donationRows": {
+      "label": "Players to show",
+      "description": "Show the top 1–50 donors.",
+      "delivery": "Refresh edits the same message after donation changes. Scheduled send posts a new message; choose Daily for one post each day. Create one of each for both."
+    },
     "title": "Tableaux Automatiques",
     "description": "Gardez automatiquement à jour les embeds Discord, des informations de clan et dons aux classements du serveur.",
     "actions": {
@@ -3101,11 +3100,6 @@
       "load": "Impossible de charger les tableaux.",
       "save": "Impossible d’enregistrer le tableau.",
       "delete": "Impossible de supprimer le tableau."
-    },
-    "entitlement": {
-      "title": "Chaque serveur inclut {freeLimit} tableaux automatiques",
-      "description": "Attribuez un abonnement à ce serveur pour en débloquer jusqu'à {paidLimit}. Plusieurs abonnements n'augmentent pas cette limite.",
-      "current": "Ce serveur autorise actuellement {limit} tableaux automatiques."
     }
   },
   "TicketsSettingsPage": {
@@ -4060,37 +4054,27 @@
       "infoLabel": "Fonctionnement de l’utilisation gratuite",
       "freePoolInfo": "L’utilisation gratuite par serveur est disponible tant que l’allocation mensuelle partagée de ClashKing le permet. Elle peut être suspendue avant que votre serveur atteigne sa propre limite et se réinitialise au début de chaque mois UTC.",
       "subscribers": "Crédit de {count, plural, one {# abonnement} other {# abonnements}}"
-    },
-    "billing": {
-      "active": "Actif",
-      "free": "Forfait gratuit",
-      "currentPlan": "Abonnement ClashKing",
-      "supportTitle": "Soutenir ClashKing ❤️",
-      "price": "6,99 $ par mois",
-      "activeDescription": "Votre abonnement Stripe est actif.",
-      "description": "Attribuez un abonnement à un serveur Discord. Les fonctions du compte restent disponibles sur le tableau de bord et l’application mobile.",
-      "notifications": "Notifications pour jusqu’à {limit} joueurs favoris",
-      "credit": "{credit} d’utilisation des assistants IA chaque mois",
-      "crossPlatform": "Disponible sur le tableau de bord et l’application mobile",
-      "manage": "Gérer l’abonnement dans Stripe",
-      "subscribe": "6,99 $/mois",
-      "learnMore": "En savoir plus",
-      "secure": "Le paiement et la gestion de la facturation sont sécurisés par Stripe.",
-      "stripeUnavailable": "Stripe est indisponible pour le moment.",
-      "checkoutUnavailable": "Les abonnements ne sont pas encore disponibles. Chaque serveur utilise actuellement l’allocation mensuelle de 0,05 $ pour l’IA.",
-      "checkoutSuccess": "Paiement terminé. Votre abonnement sera mis à jour dès la confirmation de Stripe.",
-      "checkoutCancelled": "Le paiement a été annulé. Aucun montant n’a été débité.",
-      "compactDescription": "6,99 $ par mois, avec les avantages serveur et 5,00 $ d’utilisation des assistants IA.",
-      "assignServer": "Serveur de l’abonnement",
-      "selectServer": "Sélectionner un serveur",
-      "assignmentHelp": "Les avantages suivent cette sélection. Un déplacement peut désactiver les tableaux au-delà de la limite gratuite sur l’ancien serveur ; l’utilisation IA déjà consommée reste liée à votre compte.",
-      "checkoutAssignmentHelp": "Choisissez le serveur qui reçoit les avantages et les 5,00 $ de crédit IA mensuel inclus.",
-      "subscriptionRequired": "Abonnez-vous pour choisir le serveur qui reçoit les avantages.",
-      "selectServerFirst": "Choisissez un serveur avant de procéder au paiement."
     }
   },
   "GraphicsPage": {
     "desktopOnlyTitle": "Graphics est disponible sur ordinateur",
     "desktopOnlyDescription": "L’éditeur graphique nécessite un espace de travail de bureau. Ouvrez cette page sur un écran d’au moins 1 024 pixels de large."
+  },
+  "ManualLimits": {
+    "title": "Server limits",
+    "clans": "Clans",
+    "autoboards": "AutoBoards",
+    "ai": "Monthly AI spend",
+    "reserved": "${amount} reserved for ongoing or unconfirmed requests",
+    "raise": "Need higher limits? Join our Discord server and ask for raised limits.",
+    "discord": "Join our Discord server",
+    "supportTitle": "Support ClashKing",
+    "supportText": "If you enjoy ClashKing, maybe think about supporting us.",
+    "kofi": "Support us on Ko-fi",
+    "dismiss": "Dismiss support message"
+  },
+  "BotCustomizationGrant": {
+    "required": "Bot customization requires approval.",
+    "request": "Join our Discord server and ask for access."
   }
 }

@@ -1,4 +1,5 @@
 "use client";
+import { SupportBanner } from "@/components/support/support-banner";
 
 import { useState, useEffect, useRef } from "react";
 import { ChevronDown, LogOut, Menu, PanelLeftClose } from "lucide-react";
@@ -159,6 +160,7 @@ export function DashboardLayoutWrapper({
         <main ref={mainContentRef} className={usesEditorShell ? "min-h-0 flex-1 overflow-hidden" : `dashboard-content @container/dashboard min-h-0 flex-1 overflow-y-auto [scrollbar-gutter:stable] ${embedded ? "overscroll-y-contain [scroll-behavior:auto]" : ""}`}>
           {children}
         </main>
+        {!embedded && <SupportBanner/>}
       </div>
     </div>
   );

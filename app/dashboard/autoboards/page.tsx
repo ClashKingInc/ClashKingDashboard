@@ -78,10 +78,7 @@ import {
   type AutoboardsResponse,
   type AutoboardTargetScope,
 } from "./autoboards";
-import {
-  AUTOBOARD_FREE_LIMIT,
-  AUTOBOARD_SUBSCRIBER_LIMIT,
-} from "@/lib/subscription-entitlements";
+
 import { dashboardQueryOptions } from "@/lib/dashboard-query-options";
 
 type BoardFilter = "all" | AutoboardDeliveryMode;
@@ -121,6 +118,7 @@ function formatSchedule(item: AutoboardItem, weekdayLabels: string[]): string {
 export default function AutoboardsPage() {
   const guildId = useGuildId();
   const locale = useLocale();
+  const tLimits = useTranslations("ManualLimits");
   const t = useTranslations("AutoboardsPage");
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -363,7 +361,7 @@ export default function AutoboardsPage() {
   }
 
   const total = data?.total ?? 0;
-  const limit = data?.limit ?? AUTOBOARD_FREE_LIMIT;
+  const limit = data?.limit ?? 5;
   const remaining = Math.max(0, limit - total);
   const usagePercent = limit > 0 ? Math.min(100, (total / limit) * 100) : 0;
 
@@ -417,7 +415,7 @@ export default function AutoboardsPage() {
                 <div className="mt-3 h-2 overflow-hidden rounded-full bg-muted" role="progressbar" aria-valuemin={0} aria-valuemax={limit} aria-valuenow={total}>
                   <div className="h-full rounded-full bg-primary transition-[width] duration-150" style={{ width: `${usagePercent}%` }} />
                 </div>
-                <p className="mt-2 text-xs text-muted-foreground">{remaining} {t("metrics.remaining")} · {t("entitlement.current", { limit })}</p>
+                <p className="mt-2 text-xs text-muted-foreground">{remaining} {t("metrics.remaining")}</p>
               </div>
             </div>
             <div className="flex flex-wrap gap-2 lg:justify-end">
@@ -425,10 +423,7 @@ export default function AutoboardsPage() {
               <MetricPill icon={Send} label={t("metrics.send")} value={data?.sendCount ?? 0} />
             </div>
           </div>
-          <div className="mt-5 rounded-2xl bg-muted/45 px-4 py-3 text-sm text-muted-foreground">
-            <p className="font-medium text-foreground">{t("entitlement.title", { freeLimit: AUTOBOARD_FREE_LIMIT })}</p>
-            <p className="mt-1 leading-6">{t("entitlement.description", { paidLimit: AUTOBOARD_SUBSCRIBER_LIMIT })}</p>
-          </div>
+          <p className="mt-4 text-sm text-muted-foreground">{tLimits("raise")} <a href="https://discord.gg/clashking" className="text-primary underline" target="_blank" rel="noopener noreferrer">{tLimits("discord")}</a></p>
         </section>
 
         <section aria-labelledby="autoboard-list-title">

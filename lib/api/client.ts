@@ -19,7 +19,6 @@ import { TicketsClient } from './clients/tickets-client';
 import { PanelsClient } from './clients/panels-client';
 import { BasesClient } from './clients/bases-client';
 import { ClanCategoriesClient } from './clients/clan-categories-client';
-import { BillingClient } from './clients/billing-client';
 import { readBrowserRuntimeConfig } from '@/lib/runtime-config';
 
 /**
@@ -41,7 +40,6 @@ export class ClashKingApiClient {
   public readonly panels: PanelsClient;
   public readonly bases: BasesClient;
   public readonly clanCategories: ClanCategoriesClient;
-  public readonly billing: BillingClient;
 
   constructor(config: ApiConfig) {
     // Initialize all specialized clients with the same config
@@ -60,7 +58,6 @@ export class ClashKingApiClient {
     this.panels = new PanelsClient(config);
     this.bases = new BasesClient(config);
     this.clanCategories = new ClanCategoriesClient(config);
-    this.billing = new BillingClient(config);
   }
 
   /**
@@ -82,7 +79,6 @@ export class ClashKingApiClient {
     this.panels.setAccessToken(token);
     this.bases.setAccessToken(token);
     this.clanCategories.setAccessToken(token);
-    this.billing.setAccessToken(token);
   }
 
   /**
@@ -104,7 +100,6 @@ export class ClashKingApiClient {
     this.panels.clearTokens();
     this.bases.clearTokens();
     this.clanCategories.clearTokens();
-    this.billing.clearTokens();
   }
 
   /**

@@ -129,6 +129,7 @@ export default function ClansPage() {
   const guildId = useGuildId();
   const locale = useLocale();
   const { toast } = useToast();
+  const tLimits=useTranslations("ManualLimits");
   const t = useTranslations("ClansPage");
   const tCommon = useTranslations("Common");
   const queryClient = useQueryClient();
@@ -606,6 +607,7 @@ export default function ClansPage() {
               <Input id="clan-tag" placeholder="#ABCD1234" value={newClanTag} onChange={(event) => setNewClanTag(event.target.value)} onKeyDown={(event) => event.key === "Enter" && void handleAddClan()} />
             </div>
             <label className="flex items-center gap-2 text-sm"><Checkbox checked={verifyOnAdd} onCheckedChange={value => setVerifyOnAdd(value === true)} />Verify this clan after adding</label>
+            <p className="text-sm text-muted-foreground">{tLimits("raise")} <a href="https://discord.gg/clashking" target="_blank" rel="noopener noreferrer" className="text-primary underline">{tLimits("discord")}</a></p>
             <DialogFooter>
               <Button variant="secondary" onClick={() => setIsAddDialogOpen(false)}>{tCommon("cancel")}</Button>
               <Button onClick={() => void handleAddClan()} disabled={saving}>{saving ? <Loader2 className="h-4 w-4 animate-spin" /> : t("addClan")}</Button>

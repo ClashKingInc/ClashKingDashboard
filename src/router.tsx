@@ -3,7 +3,6 @@ import {
   createRootRoute,
   createRoute,
   createRouter,
-  redirect,
   lazyRouteComponent,
   useLocation,
   type RouteComponent,
@@ -75,11 +74,6 @@ function dashboardPage<const TPath extends string>(
   return createRoute({
     getParentRoute: () => dashboardRoute,
     path,
-    beforeLoad: ({ location }) => {
-      if (import.meta.env.PROD && path === "autoboards") {
-        throw redirect({ href: `/dashboard${location.searchStr}`, replace: true });
-      }
-    },
     component: lazyRouteComponent(importer),
     pendingComponent,
   });
@@ -134,7 +128,6 @@ const dashboardRoutes = [
   dashboardPage("rosters/cwl-bonuses", () => import("@/app/dashboard/rosters/cwl-bonuses/page")),
   dashboardPage("rosters/detail", () => import("@/app/dashboard/rosters/detail/page")),
   dashboardPage("settings", () => import("@/app/dashboard/settings/page")),
-  dashboardPage("settings/billing", () => import("@/app/dashboard/settings/billing/page")),
   dashboardPage("support", () => import("@/app/dashboard/support/page")),
   dashboardPage("tickets", () => import("@/app/dashboard/tickets/page")),
   dashboardPage("tickets/detail", () => import("@/app/dashboard/tickets/detail/page")),

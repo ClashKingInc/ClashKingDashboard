@@ -416,7 +416,7 @@
   },
   "analytics": {
     "totalLoot": "Resources looted",
-   "retentionTitle": "Observed 30-day retention",
+    "retentionTitle": "Observed 30-day retention",
     "retentionHint": "Accounts that arrived in this range and were still in the selected family at day 30. Rejoins count; polling gaps can hide movement.",
     "retentionCount": "{retained} of {eligible} mature arrivals retained · {immature} not yet 30 days old",
     "leagueComposition": "League composition",
@@ -532,8 +532,14 @@
     }
   },
   "Sidebar": {
-    "competitive": { "name": "Competitie", "description": "Clanteams en toernooien" },
-    "analytics": { "name": "Analytics", "description": "Clan family activity and history" },
+    "competitive": {
+      "name": "Competitie",
+      "description": "Clanteams en toernooien"
+    },
+    "analytics": {
+      "name": "Analytics",
+      "description": "Clan family activity and history"
+    },
     "overview": {
       "name": "Overzicht",
       "description": "Startpagina van het dashboard"
@@ -2904,11 +2910,6 @@
   "SupportPage": {
     "title": "Steun ons",
     "subtitle": "ClashKing is opensource en de belangrijkste functies zijn gratis voor iedereen. Optionele abonnementen ontgrendelen enkele extra's en helpen de kosten voor hosting, API's en AI te dekken.",
-    "patreon": {
-      "title": "Supporter worden op Patreon",
-      "description": "Steun ons maandelijks op Patreon voor exclusieve voordelen en vroege toegang tot functies, en help onze hostingkosten te dekken.",
-      "cta": "Steunen op Patreon"
-    },
     "creatorCode": {
       "title": "Gebruik makerscode",
       "description": "Steun ons gratis door de makerscode te gebruiken",
@@ -2919,19 +2920,6 @@
     "whySupport": {
       "title": "Waarom ons steunen?",
       "description": "Abonnementen en inkomsten uit de makerscode betalen serverkosten, API-kosten en verdere ontwikkeling. Het gebruik van onze makerscode kost jou niets extra."
-    },
-    "subscription": {
-      "title": "Steun het project en krijg meer mogelijkheden",
-      "price": "$ 6,99 / maand",
-      "perks": {
-        "notifications": "Meldingen voor maximaal 10 favoriete spelers",
-        "credit": "Elke maand $ 5 gebruik van AI-assistenten",
-        "botProfile": "Pas de naam en profielfoto van de bot aan",
-        "autoBoards": "Verhoog een server van {freeLimit} naar {paidLimit} AutoBoards",
-        "crossPlatform": "Eén abonnement voor dashboard en mobiele app"
-      },
-      "cta": "Log in om je te abonneren",
-      "ctaDashboard": "Abonnement bekijken"
     }
   },
   "ServersPage": {
@@ -2965,8 +2953,19 @@
     }
   },
   "AutoboardsPage": {
-    "farming": {"window":"Farmperiode","since_start":"Sinds aanmaken van het bord","calendar_month":"Kalendermaand","game_season":"Spelseizoen","seconds":"Verversingsinterval (seconden)","description":"De beste 1–5 huidige leden. Werkt één bericht bij en telt geregistreerde farmaanvallen."},
-    "donationRows": {"label": "Players to show", "description": "Show the top 1–50 donors.", "delivery": "Refresh edits the same message after donation changes. Scheduled send posts a new message; choose Daily for one post each day. Create one of each for both."},
+    "farming": {
+      "window": "Farmperiode",
+      "since_start": "Sinds aanmaken van het bord",
+      "calendar_month": "Kalendermaand",
+      "game_season": "Spelseizoen",
+      "seconds": "Verversingsinterval (seconden)",
+      "description": "De beste 1–5 huidige leden. Werkt één bericht bij en telt geregistreerde farmaanvallen."
+    },
+    "donationRows": {
+      "label": "Players to show",
+      "description": "Show the top 1–50 donors.",
+      "delivery": "Refresh edits the same message after donation changes. Scheduled send posts a new message; choose Daily for one post each day. Create one of each for both."
+    },
     "title": "AutoBoards",
     "description": "Houd Discord-embeds automatisch actueel, van claninfo en donaties tot serverklassementen.",
     "actions": {
@@ -3101,11 +3100,6 @@
       "load": "AutoBoards konden niet worden geladen.",
       "save": "De AutoBoard kon niet worden opgeslagen.",
       "delete": "De AutoBoard kon niet worden verwijderd."
-    },
-    "entitlement": {
-      "title": "Elke server bevat {freeLimit} AutoBoards",
-      "description": "Wijs een abonnement toe aan deze server om er maximaal {paidLimit} te ontgrendelen. Meerdere abonnementen verhogen die limiet niet.",
-      "current": "Deze server staat momenteel {limit} AutoBoards toe."
     }
   },
   "TicketsSettingsPage": {
@@ -4060,37 +4054,27 @@
       "infoLabel": "Hoe gratis gebruik werkt",
       "freePoolInfo": "Gratis servergebruik is beschikbaar zolang de gedeelde maandelijkse gratis ruimte van ClashKing capaciteit heeft. Het kan pauzeren voordat je server zijn eigen limiet bereikt en reset aan het begin van elke UTC-maand.",
       "subscribers": "Tegoed van {count, plural, one {# abonnement} other {# abonnementen}}"
-    },
-    "billing": {
-      "active": "Actief",
-      "free": "Gratis abonnement",
-      "currentPlan": "ClashKing-abonnement",
-      "supportTitle": "Steun ClashKing ❤️",
-      "price": "$6,99 per maand",
-      "activeDescription": "Je Stripe-abonnement is actief.",
-      "description": "Wijs één abonnement toe aan één Discord-server. Accountfuncties werken op het dashboard en in de mobiele app.",
-      "notifications": "Meldingen voor maximaal {limit} favoriete spelers",
-      "credit": "Elke maand {credit} gebruik van AI-assistenten",
-      "crossPlatform": "Beschikbaar op het dashboard en in de mobiele app",
-      "manage": "Abonnement beheren in Stripe",
-      "subscribe": "$6,99/maand",
-      "learnMore": "Meer informatie",
-      "secure": "Veilig afrekenen en factuurbeheer worden door Stripe afgehandeld.",
-      "stripeUnavailable": "Stripe is momenteel niet beschikbaar.",
-      "checkoutUnavailable": "Abonnementen zijn nog niet beschikbaar. Elke server gebruikt momenteel de maandelijkse AI-limiet van $ 0,05.",
-      "checkoutSuccess": "Het afrekenen is voltooid. Je abonnement wordt bijgewerkt zodra Stripe dit bevestigt.",
-      "checkoutCancelled": "Het afrekenen is geannuleerd. Er is niets in rekening gebracht.",
-      "compactDescription": "$6,99 per maand, inclusief servervoordelen en $5,00 gebruik van AI-assistenten.",
-      "assignServer": "Abonnementsserver",
-      "selectServer": "Selecteer een server",
-      "assignmentHelp": "Servervoordelen volgen deze selectie. Verplaatsen kan AutoBoards boven de gratis limiet op de vorige server uitschakelen; eerder AI-gebruik blijft aan je account gekoppeld.",
-      "checkoutAssignmentHelp": "Kies welke server de voordelen en het inbegrepen maandelijkse AI-tegoed van $5,00 ontvangt.",
-      "subscriptionRequired": "Abonneer je om te kiezen welke server de voordelen ontvangt.",
-      "selectServerFirst": "Kies een server voordat je naar afrekenen gaat."
     }
   },
   "GraphicsPage": {
     "desktopOnlyTitle": "Graphics is beschikbaar op desktop",
     "desktopOnlyDescription": "De grafische editor heeft een werkruimte op desktopformaat nodig. Open deze pagina op een scherm van minstens 1024 pixels breed."
+  },
+  "ManualLimits": {
+    "title": "Server limits",
+    "clans": "Clans",
+    "autoboards": "AutoBoards",
+    "ai": "Monthly AI spend",
+    "reserved": "${amount} reserved for ongoing or unconfirmed requests",
+    "raise": "Need higher limits? Join our Discord server and ask for raised limits.",
+    "discord": "Join our Discord server",
+    "supportTitle": "Support ClashKing",
+    "supportText": "If you enjoy ClashKing, maybe think about supporting us.",
+    "kofi": "Support us on Ko-fi",
+    "dismiss": "Dismiss support message"
+  },
+  "BotCustomizationGrant": {
+    "required": "Bot customization requires approval.",
+    "request": "Join our Discord server and ask for access."
   }
 }

@@ -416,7 +416,7 @@
   },
   "analytics": {
     "totalLoot": "Resources looted",
-   "retentionTitle": "Observed 30-day retention",
+    "retentionTitle": "Observed 30-day retention",
     "retentionHint": "Accounts that arrived in this range and were still in the selected family at day 30. Rejoins count; polling gaps can hide movement.",
     "retentionCount": "{retained} of {eligible} mature arrivals retained · {immature} not yet 30 days old",
     "leagueComposition": "League composition",
@@ -532,8 +532,14 @@
     }
   },
   "Sidebar": {
-    "competitive": { "name": "Competitive", "description": "Clan teams and tournaments" },
-    "analytics": { "name": "Analytics", "description": "Clan family activity and history" },
+    "competitive": {
+      "name": "Competitive",
+      "description": "Clan teams and tournaments"
+    },
+    "analytics": {
+      "name": "Analytics",
+      "description": "Clan family activity and history"
+    },
     "overview": {
       "name": "Visió general",
       "description": "Pàgina principal del tauler"
@@ -2904,11 +2910,6 @@
   "SupportPage": {
     "title": "Dona’ns suport",
     "subtitle": "ClashKing és un projecte gratuït i de codi obert. El teu suport ens ajuda a mantenir els servidors i desenvolupar funcions noves.",
-    "patreon": {
-      "title": "Fes-te mecenes a Patreon",
-      "description": "Dona’ns suport cada mes a Patreon per obtenir avantatges exclusius, accés anticipat i ajudar-nos amb l’allotjament.",
-      "cta": "Dona’ns suport a Patreon"
-    },
     "creatorCode": {
       "title": "Fes servir el codi de creador",
       "description": "Dona’ns suport gratuït fent servir el codi de creador",
@@ -2919,19 +2920,6 @@
     "whySupport": {
       "title": "Per què donar-nos suport?",
       "description": "Cada contribució es destina al cost dels servidors i de l’API. Fer servir el nostre codi no et costa res i ens ajuda molt."
-    },
-    "subscription": {
-      "title": "Support the project and unlock more",
-      "price": "$6.99 / month",
-      "perks": {
-        "notifications": "Notifications for up to 10 bookmarked players",
-        "credit": "$5 of AI assistant usage every month",
-        "botProfile": "Customize the bot's name and profile picture",
-        "autoBoards": "Increase a server from {freeLimit} to {paidLimit} AutoBoards",
-        "crossPlatform": "One subscription across dashboard and mobile"
-      },
-      "cta": "Sign in to subscribe",
-      "ctaDashboard": "View subscription"
     }
   },
   "ServersPage": {
@@ -2965,8 +2953,19 @@
     }
   },
   "AutoboardsPage": {
-    "farming": {"window":"Període de recursos","since_start":"Des de la creació del tauler","calendar_month":"Mes natural","game_season":"Temporada del joc","seconds":"Interval d’actualització (segons)","description":"Entre 1 i 5 membres actuals. Edita un missatge i compta els atacs de recursos registrats."},
-    "donationRows": {"label": "Players to show", "description": "Show the top 1–50 donors.", "delivery": "Refresh edits the same message after donation changes. Scheduled send posts a new message; choose Daily for one post each day. Create one of each for both."},
+    "farming": {
+      "window": "Període de recursos",
+      "since_start": "Des de la creació del tauler",
+      "calendar_month": "Mes natural",
+      "game_season": "Temporada del joc",
+      "seconds": "Interval d’actualització (segons)",
+      "description": "Entre 1 i 5 membres actuals. Edita un missatge i compta els atacs de recursos registrats."
+    },
+    "donationRows": {
+      "label": "Players to show",
+      "description": "Show the top 1–50 donors.",
+      "delivery": "Refresh edits the same message after donation changes. Scheduled send posts a new message; choose Daily for one post each day. Create one of each for both."
+    },
     "title": "AutoBoards",
     "description": "Actualitza un tauler actiu o envia taulers nous segons una programació",
     "actions": {
@@ -3101,11 +3100,6 @@
       "load": "No s’han pogut carregar els taulers automàtics.",
       "save": "No s’ha pogut desar el tauler automàtic.",
       "delete": "No s’ha pogut suprimir el tauler automàtic."
-    },
-    "entitlement": {
-      "title": "Every server includes {freeLimit} AutoBoards",
-      "description": "Assign a subscription to this server to unlock up to {paidLimit}. Multiple subscriptions do not increase that limit.",
-      "current": "This server currently allows {limit} AutoBoards."
     }
   },
   "TicketsSettingsPage": {
@@ -4060,37 +4054,27 @@
       "infoLabel": "How free usage works",
       "freePoolInfo": "Free server usage is available while ClashKing's shared monthly free allowance still has capacity. It can pause before your server reaches its own limit and resets at the start of each UTC month.",
       "subscribers": "Credit from {count, plural, one {# subscription} other {# subscriptions}}"
-    },
-    "billing": {
-      "active": "Active",
-      "free": "Free plan",
-      "currentPlan": "ClashKing subscription",
-      "supportTitle": "Support ClashKing ❤️",
-      "price": "$6.99 per month",
-      "activeDescription": "Your Stripe subscription is active.",
-      "description": "Assign one subscription to one Discord server. Account features work across the dashboard and mobile app.",
-      "notifications": "Notifications for up to {limit} bookmarked players",
-      "credit": "{credit} of AI assistant usage each month",
-      "crossPlatform": "Available on the dashboard and mobile app",
-      "manage": "Manage subscription in Stripe",
-      "subscribe": "$6.99/month",
-      "learnMore": "Learn more",
-      "secure": "Secure checkout and billing management are handled by Stripe.",
-      "stripeUnavailable": "Stripe is not available right now.",
-      "checkoutUnavailable": "Subscriptions are not available yet. Every server currently uses the $0.05 monthly AI allowance.",
-      "checkoutSuccess": "Checkout completed. Your subscription will update as soon as Stripe confirms it.",
-      "checkoutCancelled": "Checkout was cancelled. Nothing was charged.",
-      "compactDescription": "$6.99 per month, including server perks and $5.00 of AI assistant usage.",
-      "assignServer": "Subscription server",
-      "selectServer": "Select a server",
-      "assignmentHelp": "Server perks follow this selection. Moving it can disable AutoBoards above the free limit on the previous server; AI usage already spent stays with your account.",
-      "checkoutAssignmentHelp": "Choose which server receives the subscription perks and included $5.00 monthly AI credit.",
-      "subscriptionRequired": "Subscribe to choose which server receives subscription perks.",
-      "selectServerFirst": "Choose a server before starting checkout."
     }
   },
   "GraphicsPage": {
     "desktopOnlyTitle": "Graphics is available on desktop",
     "desktopOnlyDescription": "The graphics editor needs a desktop-sized workspace. Open this page on a screen at least 1024 pixels wide."
+  },
+  "ManualLimits": {
+    "title": "Server limits",
+    "clans": "Clans",
+    "autoboards": "AutoBoards",
+    "ai": "Monthly AI spend",
+    "reserved": "${amount} reserved for ongoing or unconfirmed requests",
+    "raise": "Need higher limits? Join our Discord server and ask for raised limits.",
+    "discord": "Join our Discord server",
+    "supportTitle": "Support ClashKing",
+    "supportText": "If you enjoy ClashKing, maybe think about supporting us.",
+    "kofi": "Support us on Ko-fi",
+    "dismiss": "Dismiss support message"
+  },
+  "BotCustomizationGrant": {
+    "required": "Bot customization requires approval.",
+    "request": "Join our Discord server and ask for access."
   }
 }

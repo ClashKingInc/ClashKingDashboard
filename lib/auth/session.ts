@@ -25,7 +25,6 @@ type AuthRuntime = {
   accessToken?: string;
   generation: number;
   refreshPromise: Promise<SessionRestoreResult> | null;
-  listeners: Set<SessionListener>;
   tabId: string;
   channel: BroadcastChannel | null;
   listening: boolean;
@@ -33,6 +32,7 @@ type AuthRuntime = {
   refreshTimer?: ReturnType<typeof setTimeout>;
 };
 
+const sessionListeners = new Set<SessionListener>();
 const serverRuntime = createRuntime(false);
 
 function createTabId(enableChannel: boolean): string {
@@ -49,7 +49,6 @@ function createRuntime(enableChannel: boolean): AuthRuntime {
   return {
     generation: 0,
     refreshPromise: null,
-    listeners: new Set<SessionListener>(),
     tabId: createTabId(enableChannel),
     channel: enableChannel && typeof BroadcastChannel !== "undefined" ? new BroadcastChannel(CHANNEL_NAME+(embeddedServerId()?`:server:${embeddedServerId()}`:'')) : null,
     listening: false,
@@ -98,7 +97,22 @@ export function setAccessToken(token: string, broadcast = true): void {
   notifyRuntime(runtime, "authenticated");
 }
 
+/** Install a grant without moving a main-account token into server scope. */
+export function setScopedAccessToken(serverId: string, token: string): void {
+  if (!/^\d+$/.test(serverId)) throw new Error("Invalid dashboard server scope");
+  const previous = getRuntime();
+  sessionStorage.setItem("ck_scoped_server", serverId);
+  const next = getRuntime();
+  if (next !== previous) {
+    next.refreshBaseUrl = previous.refreshBaseUrl;
+    if (previous.refreshTimer) clearTimeout(previous.refreshTimer);
+    previous.refreshTimer = undefined;
+  }
+  setAccessToken(token, false);
+}
+
 export function clearSession(broadcast = true): void {
+  if(typeof window!=="undefined")sessionStorage.removeItem("ck_support_dismissed");
   const runtime = getRuntime();
   runtime.accessToken = undefined;
   runtime.generation = nextGeneration(runtime);
@@ -134,9 +148,9 @@ export function cacheUser(user: UserInfo | undefined): void {
 }
 
 export function subscribeSession(listener: SessionListener): () => void {
-  const runtime = getRuntime();
-  runtime.listeners.add(listener);
-  return () => runtime.listeners.delete(listener);
+  getRuntime();
+  sessionListeners.add(listener);
+  return () => { sessionListeners.delete(listener); };
 }
 
 export function startAccessTokenRefresh(baseUrl: string): () => void {
@@ -148,6 +162,12 @@ export function startAccessTokenRefresh(baseUrl: string): () => void {
     runtime.refreshBaseUrl = undefined;
     if (runtime.refreshTimer) clearTimeout(runtime.refreshTimer);
     runtime.refreshTimer = undefined;
+    const active = getRuntime();
+    if (active !== runtime && active.refreshBaseUrl === baseUrl) {
+      active.refreshBaseUrl = undefined;
+      if (active.refreshTimer) clearTimeout(active.refreshTimer);
+      active.refreshTimer = undefined;
+    }
   };
 }
 
@@ -185,6 +205,7 @@ function resultAfterConcurrentSessionChange(
   runtime: AuthRuntime,
   observedGeneration: number,
 ): SessionRestoreResult | undefined {
+  if (runtime !== getRuntime()) return getRuntime().accessToken ? "restored" : "unavailable";
   if (runtime.generation === observedGeneration) return undefined;
   return runtime.accessToken ? "restored" : "anonymous";
 }
@@ -286,7 +307,10 @@ function readLease(): { owner: string; expiresAt: number } | undefined {
 }
 
 function notifyRuntime(runtime: AuthRuntime, event: SessionEvent): void {
-  runtime.listeners.forEach((listener) => listener(event));
+  // Ignore an in-flight refresh from the previous scope. Providers stay
+  // subscribed while an /access grant switches to its server-only runtime.
+  if (runtime !== getRuntime()) return;
+  sessionListeners.forEach((listener) => listener(event));
 }
 
 function nextGeneration(runtime: AuthRuntime): number {

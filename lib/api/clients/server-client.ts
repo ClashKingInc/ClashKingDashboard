@@ -1,3 +1,4 @@
+import { ServerLimitsEndpoint } from "@clashking/api-contracts";
 /**
  * Server/Guild API client
  */
@@ -85,6 +86,10 @@ function failedResponse(response: ApiResponse<unknown>): ApiResponse<never> {
 }
 
 export class ServerClient extends BaseApiClient {
+  async getResourceLimits(serverId:string) {
+    return this.executeEndpoint(ServerLimitsEndpoint,{path:{serverId},query:{},body:{}});
+  }
+
   async getDashboardCapabilities(
     serverId: string,
     signal?: AbortSignal,
