@@ -19,6 +19,9 @@ import {
   type DiscordDestinationThread,
 } from "@/lib/discord-destinations";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { RoleCombobox } from "@/components/ui/role-combobox";
+import type { DiscordRole } from "@/lib/api/types/roles";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -276,6 +279,7 @@ export default function LogsPage() {
   const [saving, setSaving] = useState<string | null>(null);
   const [channels, setChannels] = useState<Channel[]>([]);
   const [threads, setThreads] = useState<Thread[]>([]);
+  const [roles, setRoles] = useState<DiscordRole[]>([]);
   const [clans, setClans] = useState<ClanSummary[]>([]);
   const [serverLogs, setServerLogs] = useState<ServerLog[]>([]);
   const [selectedClan, setSelectedClan] = useState<string>("");
@@ -306,7 +310,7 @@ export default function LogsPage() {
           console.error("Failed to fetch threads:", error);
           return [];
         });
-        const [channelsData, clansData, logsData, guildData] = await Promise.all([
+        const [channelsData, clansData, logsData, guildData, rolesData] = await Promise.all([
           queryClient.fetchQuery(dashboardQueryOptions.channels(guildId)),
           queryClient.fetchQuery(dashboardQueryOptions.clans(guildId)),
           queryClient.fetchQuery({
@@ -321,9 +325,11 @@ export default function LogsPage() {
             },
           }),
           queryClient.fetchQuery(dashboardQueryOptions.guild(guildId)).catch(() => null),
+          queryClient.fetchQuery(dashboardQueryOptions.roles(guildId)).catch(() => ({ roles: [] })),
         ]);
 
         setChannels(normalizeDestinationChannels(channelsData));
+        setRoles([...rolesData.roles]);
         setClans(clansData);
         setServerLogs([...logsData.logs]);
         if (guildData) setServerIdentity({ name: guildData.name, icon: guildData.icon });
@@ -382,6 +388,7 @@ export default function LogsPage() {
     channelId: string,
     threadId: string | null,
     serverScoped = false,
+    redditOptions?: { reddit_role_id: string | null; reddit_accounts: string[] },
   ) => {
     if (!serverScoped && !selectedClan) return;
     if (getSelectedLog(logKeys, serverScoped)?.disabled) return;
@@ -392,7 +399,8 @@ export default function LogsPage() {
         ...(!serverScoped ? { clan_tag: selectedClan } : {}),
         channel_id: channelId,
         thread_id: threadId,
-        log_types: logKeys
+        log_types: logKeys,
+        ...redditOptions,
       };
 
       await executeSharedEndpoint(dashboardEndpoints.saveServerLogs, {
@@ -499,13 +507,19 @@ export default function LogsPage() {
     const [showEnableForm, setShowEnableForm] = useState(false);
     const [pendingChannel, setPendingChannel] = useState(selectedChannel);
     const [pendingThread, setPendingThread] = useState(selectedThread);
+    const isReddit = logDef.keys[0] === "reddit_feed";
+    const [redditRole, setRedditRole] = useState(selectedLog?.reddit_role_id ?? "");
+    const [redditAccounts, setRedditAccounts] = useState((selectedLog?.reddit_accounts ?? []).join(", "));
+    const parsedAccounts = redditAccounts.split(",").map(value => value.trim().replace(/^u\//iu, "")).filter(Boolean);
+    const accountsValid = parsedAccounts.every(value => /^[a-z0-9_-]{1,30}$/iu.test(value)) && new Set(parsedAccounts.map(value => value.toLowerCase())).size === parsedAccounts.length;
+    const redditChanged = isReddit && (redditRole !== (selectedLog?.reddit_role_id ?? "") || JSON.stringify(parsedAccounts) !== JSON.stringify(selectedLog?.reddit_accounts ?? []));
     const isSaving = saving === logDef.keys[0];
 
     const channelExists = selectedChannel && channels.some(ch => ch.id === selectedChannel);
     const destinationValid = isDestinationValid(selectedChannel, selectedThread, channels, threads);
     const draftChannel = pendingChannel || selectedChannel;
     const draftThread = pendingThread;
-    const destinationChanged = !isConfigured || draftChannel !== selectedChannel || draftThread !== selectedThread;
+    const destinationChanged = !isConfigured || draftChannel !== selectedChannel || draftThread !== selectedThread || redditChanged;
     const draftNeedsThread = destinationNeedsThread(draftChannel, channels);
     const channelThreads = draftChannel
       ? threads.filter(t => t.parent_channel_id === draftChannel)
@@ -527,6 +541,7 @@ export default function LogsPage() {
         draftChannel,
         draftThread || null,
         serverScoped,
+        isReddit ? { reddit_role_id: redditRole || null, reddit_accounts: parsedAccounts } : undefined,
       );
       setShowEnableForm(false);
     };
@@ -714,11 +729,22 @@ export default function LogsPage() {
                   )}
                 </div>
               )}
+              {isReddit && <div className="space-y-3">
+                <div className="space-y-1.5">
+                  <Label>{t("redditOptions.role")}</Label>
+                  <RoleCombobox roles={roles} value={redditRole || "disabled"} onValueChange={value => setRedditRole(value === "disabled" ? "" : value)} disabled={isSaving || (isConfigured && !isEnabled)} />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="reddit-authors">{t("redditOptions.authors")}</Label>
+                  <Input id="reddit-authors" value={redditAccounts} onChange={event => setRedditAccounts(event.target.value)} disabled={isSaving || (isConfigured && !isEnabled)} aria-invalid={!accountsValid} placeholder="u/ClashKing, u/Recruiter" />
+                  <p className="text-xs text-muted-foreground">{t("redditOptions.help")}</p>
+                </div>
+              </div>}
               {destinationChanged && <Button
                 type="button"
                 size="sm"
                 onClick={saveDestination}
-                disabled={isSaving || !draftValid || (isConfigured && !isEnabled)}
+                disabled={isSaving || !draftValid || (isReddit && !accountsValid) || (isConfigured && !isEnabled)}
               >
                 {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {t('logCard.saveDestination')}

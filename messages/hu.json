@@ -2585,6 +2585,11 @@
           "description": "Show the time remaining in this clan's current war in a voice channel."
         }
       }
+    },
+    "redditOptions": {
+      "role": "Megemlítendő szerepkör (opcionális)",
+      "authors": "Figyelt bejegyzésszerzők",
+      "help": "Értesítés küldése ezen Reddit-fiókok bejegyzéseihez írt hozzászólásokról. A neveket vesszővel válaszd el."
     }
   },
   "GeneralPage": {

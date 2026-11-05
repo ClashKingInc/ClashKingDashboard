@@ -2585,6 +2585,11 @@
           "description": "Show the time remaining in this clan's current war in a voice channel."
         }
       }
+    },
+    "redditOptions": {
+      "role": "멘션할 역할 (선택 사항)",
+      "authors": "지켜볼 게시물 작성자",
+      "help": "이 Reddit 계정의 게시물에 달린 댓글 알림을 보냅니다. 이름은 쉼표로 구분하세요."
     }
   },
   "GeneralPage": {

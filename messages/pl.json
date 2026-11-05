@@ -2585,6 +2585,11 @@
           "description": "Show the time remaining in this clan's current war in a voice channel."
         }
       }
+    },
+    "redditOptions": {
+      "role": "Rola do oznaczenia (opcjonalnie)",
+      "authors": "Obserwowani autorzy postów",
+      "help": "Wysyłaj powiadomienia o komentarzach do postów tych kont Reddit. Oddziel nazwy przecinkami."
     }
   },
   "GeneralPage": {

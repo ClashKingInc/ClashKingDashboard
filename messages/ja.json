@@ -2585,6 +2585,11 @@
           "description": "Show the time remaining in this clan's current war in a voice channel."
         }
       }
+    },
+    "redditOptions": {
+      "role": "メンションするロール（任意）",
+      "authors": "フォローする投稿者",
+      "help": "これらのRedditアカウントの投稿へのコメントを通知します。名前はカンマで区切ってください。"
     }
   },
   "GeneralPage": {

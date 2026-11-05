@@ -2585,6 +2585,11 @@
           "description": "Toon de resterende tijd van de huidige clanoorlog in een spraakkanaal."
         }
       }
+    },
+    "redditOptions": {
+      "role": "Te vermelden rol (optioneel)",
+      "authors": "Berichtauteurs om te volgen",
+      "help": "Stuur meldingen voor reacties op berichten van deze Reddit-accounts. Scheid namen met komma’s."
     }
   },
   "GeneralPage": {

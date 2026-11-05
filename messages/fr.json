@@ -2585,6 +2585,11 @@
           "description": "Affiche le temps restant de la guerre actuelle de ce clan dans un salon vocal."
         }
       }
+    },
+    "redditOptions": {
+      "role": "Rôle à mentionner (facultatif)",
+      "authors": "Auteurs de publications à suivre",
+      "help": "Envoie des alertes pour les commentaires sur les publications de ces comptes Reddit. Sépare les noms par des virgules."
     }
   },
   "GeneralPage": {
