@@ -31,8 +31,8 @@ export function readBrowserRuntimeConfig(
 ): BrowserRuntimeConfig {
   const localBrowser = isLocalBrowser();
   const rawConfig = {
-    apiOrigin: serviceOrigin(env.VITE_CLASHKING_API_ORIGIN, env.DEV, localBrowser, "http://localhost:8000", "https://dev-api.clashk.ing", "https://api.clashk.ing"),
-    assistantOrigin: serviceOrigin(env.VITE_CLASHKING_AI_ORIGIN, env.DEV, localBrowser, "http://localhost:8788", "https://dev-ai.clashk.ing", "https://ai.clashk.ing"),
+    apiOrigin: serviceOrigin(env.VITE_CLASHKING_API_ORIGIN, env.DEV, localBrowser, "http://localhost:8787", "https://dev-api.clashk.ing", "https://api.clashk.ing"),
+    assistantOrigin: serviceOrigin(env.VITE_CLASHKING_AI_ORIGIN, env.DEV, localBrowser, "http://localhost:8789", "https://dev-ai.clashk.ing", "https://ai.clashk.ing"),
     discordClientId: env.VITE_DISCORD_CLIENT_ID || "",
   };
 

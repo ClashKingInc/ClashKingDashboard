@@ -24,7 +24,7 @@ export function prepareAssistantConfig(source, options = {}) {
     delete config.secrets_store_secrets;
     config.vars = {
       ...config.vars,
-      CLASHKING_API_ORIGIN: options.apiOrigin?.trim() || "http://127.0.0.1:8000",
+      CLASHKING_API_ORIGIN: options.apiOrigin?.trim() || "http://127.0.0.1:8787",
     };
   }
   return config;

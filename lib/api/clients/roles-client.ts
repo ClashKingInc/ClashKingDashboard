@@ -67,7 +67,7 @@ export class RolesClient extends BaseApiClient {
     return this.executeEndpoint(CreateServerRoleEndpoint, {
       path: { serverId },
       query: {},
-      body: { ...role, mode: role.mode ?? 'both' },
+      body: role,
     });
   }
 

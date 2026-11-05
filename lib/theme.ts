@@ -14,6 +14,8 @@
  * Source: /assets/logos/crown-red/ClashKing-crown.svg
  */
 export const clashKingColors = {
+  // Shared with the App's donationGreen/statColors.win and Bot verified emblem.
+  verifiedGreen: '#14A37F',
   // Main reds (from logo)
   primary: '#D90709',      // Main bright red
   primaryDark: '#BF0000',  // Dark red

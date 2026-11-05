@@ -1,15 +1,13 @@
 "use client";
 
-import { dashboardEndpoints, UpsertEmbedRequest as UpsertEmbedRequestSchema } from "@clashking/api-contracts";
+import { dashboardEndpoints, ServerChannelsEndpoint, DiscordRolesEndpoint, UpsertEmbedRequest as UpsertEmbedRequestSchema } from "@clashking/api-contracts";
 import { Schema } from "effect";
 import type { UpsertEmbedRequest } from "@/lib/api/types/tickets";
 import { executeSharedEndpoint } from "@/lib/api/shared-client";
 import { decompressFromEncodedURIComponent, decompressFromBase64 } from 'lz-string';
-import { useId, useRef, useState, type ComponentType, type MutableRefObject, useEffect } from "react";
-import { useLocale, useTranslations } from "use-intl";
-import Image from "@/components/app-image";
-import emojiDataset from "emoji-datasource-twitter/emoji.json";
-import { AtSign, Bike, CalendarDays, CheckCircle2, ChevronDown, ChevronRight, ChevronUp, Clock3, Copy, ExternalLink, Flag, Gamepad2, GlassWater, Hash, Heart, Keyboard, Leaf, Loader2, Plus, Smile, Trash2, Utensils, Link2, Upload } from "lucide-react";
+import { createContext, useCallback, useContext, useRef, useState, type ReactNode, useEffect } from "react";
+import { useTranslations } from "use-intl";
+import { CheckCircle2, ChevronDown, ChevronRight, ChevronUp, Copy, ExternalLink, Loader2, Plus, Trash2, Link2, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -21,13 +19,16 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import { DiscordMessageField } from "./discord-message-field";
+import { UploadedImageField, ImageUploadActivityContext } from "./uploaded-image-field";
+import { EmbedColorPicker } from "./embed-color-picker";
 import { cn } from "@/lib/utils";
 import {
   DiscordMessagePreview,
+  BUTTON_STYLE_CLASSES,
   extractEmbeds,
   extractMessageProfile,
   type PreviewDiscordChannel,
@@ -42,12 +43,24 @@ import {
 } from "./discord-embed-preview";
 
 // Shared compact class names used across V2 sub-editor components
-const COMPACT_INPUT_CN = "bg-background border-border/80 h-8 text-sm";
-const COMPACT_TEXTAREA_CN = "bg-background border-border/80 text-sm resize-none";
+const COMPACT_INPUT_CN = "h-9 rounded-xl border-0 bg-muted/55 text-sm shadow-sm shadow-black/5";
+const COMPACT_TEXTAREA_CN = "rounded-xl border-0 bg-muted/55 text-sm shadow-sm shadow-black/5 resize-none";
 
 // Translation key lookups to avoid nested ternaries in JSX
 const ACCESSORY_TYPE_KEYS = { none: "accessoryNone", thumbnail: "accessoryThumbnail", button: "accessoryButton" } as const;
-const BUTTON_STYLE_KEYS = { 1: "buttonStylePrimary", 2: "buttonStyleSecondary", 3: "buttonStyleSuccess", 4: "buttonStyleDanger", 5: "buttonStyleLink" } as const;
+const BUTTON_COLOR_KEYS = { 1: "buttonColorBlue", 2: "buttonColorGray", 3: "buttonColorGreen", 4: "buttonColorRed", 5: "buttonStyleLink" } as const;
+
+function ButtonColorPicker({ value, onChange, allowLink }: { readonly value: ButtonStyle; readonly onChange: (color: ButtonStyle) => void; readonly allowLink: boolean }) {
+  const t = useTranslations("EmbedEditor");
+  return <div className="flex flex-wrap gap-2" role="group" aria-label={t("buttonColor")}>
+    {([1, 2, 3, 4, 5] as const).filter(color => allowLink || color !== 5).map(color => (
+      <button key={color} type="button" aria-pressed={value === color} onClick={() => onChange(color)}
+        className={cn("rounded-xl px-3 py-2 text-xs font-medium shadow-sm transition-shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2", BUTTON_STYLE_CLASSES[color], value === color && "ring-2 ring-foreground/65 ring-offset-2 ring-offset-card")}>
+        {t(BUTTON_COLOR_KEYS[color])}
+      </button>
+    ))}
+  </div>;
+}
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -100,7 +113,7 @@ interface SectionState {
 /** Preserves unknown V2 component types (e.g. Action Rows with buttons) for round-trip import/export. */
 interface RawComponentState { id: string; type: "raw"; rawType: number; rawData: Record<string, unknown> }
 interface FileComponentState { id: string; type: "file"; url: string; spoiler: boolean }
-interface ButtonState { id: string; customId: string; label: string; style: ButtonStyle; url: string; disabled: boolean }
+interface ButtonState { id: string; customId: string; label: string; style: ButtonStyle; url: string; disabled: boolean; emoji?: { id?: string; name?: string; animated?: boolean } }
 interface SelectOptionState { id: string; label: string; value: string; description: string; isDefault: boolean }
 interface StringSelectState { id: string; type: "string_select"; customId: string; placeholder: string; minValues: number; maxValues: number; disabled: boolean; options: SelectOptionState[] }
 interface GenericSelectState { id: string; type: "user_select" | "role_select" | "mentionable_select" | "channel_select"; customId: string; placeholder: string; minValues: number; maxValues: number; disabled: boolean }
@@ -147,860 +160,41 @@ function createCollapsedSectionState(): Record<SectionKey, boolean> {
 }
 
 export interface EmbedEditorProps {
+  readonly variant?: "full" | "ticket-panel";
+  readonly previewActions?: ReactNode;
   readonly initialData?: Record<string, unknown> | null;
   readonly onSave: (data: UpsertEmbedRequest["data"]) => Promise<void>;
   readonly isSaving: boolean;
   readonly onCancel: () => void;
   readonly channels?: PreviewDiscordChannel[];
   readonly roles?: PreviewDiscordRole[];
+  readonly serverId?: string;
+  readonly placeholders?: readonly string[];
+  readonly ticketActions?: readonly { readonly customId: string; readonly label: string }[];
+  readonly onDirtyChange?: (dirty: boolean) => void;
+  readonly onFormatChosen?: () => void;
+}
+
+const TicketActionsContext = createContext<EmbedEditorProps["ticketActions"]>(undefined);
+function TicketActionPicker({ value, onChange }: { readonly value: string; readonly onChange: (value: string) => void }) {
+  const actions = useContext(TicketActionsContext), t = useTranslations("TicketsSettingsPage");
+  if (!actions) return null;
+  return <Field label={t("clickAction")}><Select value={actions.some(action => action.customId === value) ? value : ""} onValueChange={onChange}>
+    <SelectTrigger aria-label={t("clickAction")} className="h-9 rounded-xl border-0 bg-muted/55"><SelectValue placeholder={t("chooseTicketAction")} /></SelectTrigger>
+    <SelectContent>{actions.map(action => <SelectItem key={action.customId} value={action.customId}>{action.label}</SelectItem>)}</SelectContent>
+  </Select></Field>;
 }
 
 type MentionContext = {
   channels: PreviewDiscordChannel[];
   roles: PreviewDiscordRole[];
+  serverId?: string;
+  placeholders?: readonly string[];
 };
 
-type EmojiCategory = {
-  key: string;
-  icon: typeof Smile;
-  emojis: readonly string[];
-};
-
-const SPECIAL_FLAG_ORDER = ["🏳️", "🏴", "🏴‍☠️", "🏁", "🚩", "🏳️‍🌈", "🏳️‍⚧️", "🇺🇳"] as const;
-const SPECIAL_FLAG_SHORTCODES: Record<string, string> = {
-  "🏳️": "flag_white",
-  "🏴": "flag_black",
-  "🏴‍☠️": "pirate_flag",
-  "🏁": "checkered_flag",
-  "🚩": "triangular_flag_on_post",
-  "🏳️‍🌈": "rainbow_flag",
-  "🏳️‍⚧️": "transgender_flag",
-  "🇺🇳": "united_nations",
-};
-const SKIN_TONE_TO_UNIFIED_SUFFIX: Record<string, string> = {
-  "🏻": "1F3FB",
-  "🏼": "1F3FC",
-  "🏽": "1F3FD",
-  "🏾": "1F3FE",
-  "🏿": "1F3FF",
-};
-type EmojiDatasetEntry = {
-  emoji?: string;
-  unified: string;
-  short_name: string;
-  short_names?: string[];
-  name?: string;
-  category: string;
-  sort_order?: number;
-  skin_variations?: Record<string, { unified: string }>;
-};
-
-const EMOJI_DATA = (emojiDataset as EmojiDatasetEntry[]).map((entry) => ({
-  ...entry,
-  emoji: entry.emoji ?? unifiedToEmoji(entry.unified),
-}));
-const EMOJI_BY_CHAR = new Map(EMOJI_DATA.map((entry) => [entry.emoji, entry] as const));
-
-function unifiedToEmoji(unified: string): string {
-  return unified
-    .split("-")
-    .map((hex) => String.fromCodePoint(Number.parseInt(hex, 16)))
-    .join("");
-}
-
-const SKIN_TONE_VARIANTS = new Map<string, Record<string, string>>(
-  (emojiDataset as EmojiDatasetEntry[])
-    .filter((entry) => entry.skin_variations && Object.keys(entry.skin_variations).length > 0)
-    .map((entry) => {
-      const baseEmoji = unifiedToEmoji(entry.unified);
-      const variants: Record<string, string> = {};
-      for (const [suffix, variant] of Object.entries(entry.skin_variations ?? {})) {
-        variants[suffix] = unifiedToEmoji(variant.unified);
-      }
-      return [baseEmoji, variants] as const;
-    }),
-);
-
-const EMOJI_CATEGORIES: readonly EmojiCategory[] = [
-  { key: "people", icon: Smile, emojis: buildDiscordPeopleEmojis() },
-  { key: "nature", icon: Leaf, emojis: buildCategoryEmojis(["Animals & Nature"]) },
-  { key: "food", icon: Utensils, emojis: buildCategoryEmojis(["Food & Drink"]) },
-  { key: "activities", icon: Gamepad2, emojis: buildCategoryEmojis(["Activities"]) },
-  { key: "travel", icon: Bike, emojis: buildCategoryEmojis(["Travel & Places"]) },
-  { key: "objects", icon: GlassWater, emojis: buildCategoryEmojis(["Objects"]) },
-  { key: "symbols", icon: Heart, emojis: buildCategoryEmojis(["Symbols"]) },
-  { key: "flags", icon: Flag, emojis: buildSupportedFlagEmojis() },
-];
-
-const DISCORD_TIMESTAMP_STYLES = [
-  { style: "t", label: "09:47" },
-  { style: "T", label: "09:47:24" },
-  { style: "f", label: "18 May 2026 09:47" },
-  { style: "F", label: "Monday 18 May 2026 09:47" },
-  { style: "d", label: "2026-05-18" },
-  { style: "D", label: "18 May 2026" },
-  { style: "R", label: "0 seconds ago" },
-] as const;
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function hexToInt(hex: string): number {
-  return Number.parseInt(hex.replaceAll("#", ""), 16);
-}
-
-function intToHex(color: number): string {
-  return `#${color.toString(16).padStart(6, "0")}`;
-}
-
-function formatDateInputValue(date: Date): string {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
-
-function formatTimeInputValue(date: Date): string {
-  const hours = String(date.getHours()).padStart(2, "0");
-  const minutes = String(date.getMinutes()).padStart(2, "0");
-  const seconds = String(date.getSeconds()).padStart(2, "0");
-  return `${hours}:${minutes}:${seconds}`;
-}
-
-function createTimestampToken(dateValue: string, timeValue: string, style: string): string {
-  const [year, month, day] = dateValue.split("-").map((part) => Number.parseInt(part, 10));
-  const [hours, minutes, seconds] = timeValue.split(":").map((part) => Number.parseInt(part, 10));
-  const safeDate = new Date(
-    Number.isFinite(year) ? year : 1970,
-    Number.isFinite(month) ? month - 1 : 0,
-    Number.isFinite(day) ? day : 1,
-    Number.isFinite(hours) ? hours : 0,
-    Number.isFinite(minutes) ? minutes : 0,
-    Number.isFinite(seconds) ? seconds : 0,
-    0,
-  );
-  const unix = Math.floor(safeDate.getTime() / 1000);
-  const styleSuffix = style ? `:${style}` : "";
-  return `<t:${unix}${styleSuffix}>`;
-}
-
-function formatTimestampStylePreview(dateValue: string, timeValue: string, style: string, locale: string): string {
-  const token = createTimestampToken(dateValue, timeValue, style);
-  const match = /^<t:(\d+)(?::([tTdDfFR]))?>$/.exec(token);
-  if (!match) return token;
-  const unix = Number.parseInt(match[1], 10);
-  const date = new Date(unix * 1000);
-  if (Number.isNaN(date.getTime())) return token;
-
-  const pad = (value: number) => String(value).padStart(2, "0");
-  const shortDate = `${pad(date.getDate())} ${new Intl.DateTimeFormat(locale, { month: "short" }).format(date)} ${date.getFullYear()}`;
-  const longDate = `${new Intl.DateTimeFormat(locale, { weekday: "long" }).format(date)} ${shortDate}`;
-
-  switch (style) {
-    case "t":
-      return `${pad(date.getHours())}:${pad(date.getMinutes())}`;
-    case "T":
-      return `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
-    case "d":
-      return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
-    case "D":
-      return shortDate;
-    case "F":
-      return `${longDate} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
-    case "R":
-      return "relative time";
-    case "f":
-    default:
-      return `${shortDate} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
-  }
-}
-
-function emojiToTwemojiUrl(emoji: string): string {
-  const codePoints = Array.from(emoji)
-    .map((char) => char.codePointAt(0))
-    .filter((point): point is number => typeof point === "number")
-    .map((point) => point.toString(16).padStart(4, "0"));
-  return `https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/${codePoints.join("-")}.png`;
-}
-
-function isSkinToneVariant(emoji: string): boolean {
-  return /[\u{1F3FB}-\u{1F3FF}]/u.test(emoji);
-}
-
-function buildCategoryEmojis(categories: readonly string[]): string[] {
-  const allowed = new Set(categories);
-  const picked = EMOJI_DATA
-    .filter((entry) => allowed.has(entry.category))
-    .sort((a, b) => (a.sort_order ?? Number.MAX_SAFE_INTEGER) - (b.sort_order ?? Number.MAX_SAFE_INTEGER))
-    .map((entry) => entry.emoji)
-    .filter((emoji) => !isSkinToneVariant(emoji));
-  return [...new Set(picked)];
-}
-
-function buildDiscordPeopleEmojis(): string[] {
-  return buildCategoryEmojis(["Smileys & Emotion", "People & Body"]);
-}
-
-function emojiToTwemojiFallbackUrl(emoji: string): string {
-  const codePoints = Array.from(emoji)
-    .map((char) => char.codePointAt(0))
-    .filter((point): point is number => typeof point === "number")
-    .filter((point) => point !== 0xfe0f && point !== 0xfe0e)
-    .map((point) => point.toString(16).padStart(4, "0"));
-  return `https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/${codePoints.join("-")}.png`;
-}
-
-function flagEmojiToCountryCode(emoji: string): string | null {
-  const chars = Array.from(emoji);
-  if (chars.length !== 2) return null;
-  const points = chars.map((char) => char.codePointAt(0));
-  if (points.includes(undefined)) return null;
-  const normalizedPoints = points as [number, number];
-  const isRegional = normalizedPoints.every((point) => point >= 0x1f1e6 && point <= 0x1f1ff);
-  if (isRegional) {
-    return String.fromCodePoint(
-      65 + (normalizedPoints[0] - 0x1f1e6),
-      65 + (normalizedPoints[1] - 0x1f1e6),
-    ).toLowerCase();
-  }
-  return null;
-}
-
-function buildSupportedFlagEmojis(): string[] {
-  const base = [...SPECIAL_FLAG_ORDER];
-  const flagsFromSource = EMOJI_DATA
-    .filter((entry) => entry.category === "Flags")
-    .sort((a, b) => (a.sort_order ?? Number.MAX_SAFE_INTEGER) - (b.sort_order ?? Number.MAX_SAFE_INTEGER))
-    .map((entry) => entry.emoji)
-    .filter((emoji) => !base.includes(emoji as (typeof SPECIAL_FLAG_ORDER)[number]));
-  return [...new Set([...base, ...flagsFromSource])];
-}
-
-function getEmojiShortcodeName(emoji: string): string {
-  const specialFlagShortcode = SPECIAL_FLAG_SHORTCODES[emoji];
-  if (specialFlagShortcode) return specialFlagShortcode;
-  const countryCode = flagEmojiToCountryCode(emoji);
-  if (countryCode) return `flag_${countryCode}`;
-  const mapped = EMOJI_BY_CHAR.get(emoji)?.short_name;
-  if (mapped) return mapped;
-  return "";
-}
-
-function getEmojiSearchBlob(emoji: string): string {
-  const specialFlagShortcode = SPECIAL_FLAG_SHORTCODES[emoji];
-  if (specialFlagShortcode) return specialFlagShortcode;
-
-  const datasetEntry = EMOJI_BY_CHAR.get(emoji);
-  const names = datasetEntry?.short_names?.join(" ") ?? datasetEntry?.short_name ?? "";
-  const formalName = datasetEntry?.name ?? "";
-  const countryCode = flagEmojiToCountryCode(emoji);
-  const flagName = countryCode ? `flag_${countryCode}` : "";
-  return `${names} ${formalName} ${flagName}`.trim();
-}
-
-function sortCategoryEmojis(categoryKey: string, emojis: readonly string[]): string[] {
-  const sorted = [...emojis];
-  if (categoryKey === "flags") {
-    const specialOrder = new Map<string, number>(SPECIAL_FLAG_ORDER.map((emoji, index) => [emoji, index]));
-    sorted.sort((a, b) => {
-      const aSpecial = specialOrder.get(a);
-      const bSpecial = specialOrder.get(b);
-      if (aSpecial !== undefined && bSpecial !== undefined) return aSpecial - bSpecial;
-      if (aSpecial !== undefined) return -1;
-      if (bSpecial !== undefined) return 1;
-      // Keep non-special flags in existing source order.
-      return 0;
-    });
-    return sorted;
-  }
-  // Preserve source order for all non-flag categories (Discord-like ordering).
-  return sorted;
-}
-
-function matchesEmojiQuery(emoji: string, query: string): boolean {
-  if (query.length === 0) return true;
-  const normalized = query.toLowerCase();
-  const shortcode = getEmojiShortcodeName(emoji).toLowerCase();
-  const searchBlob = getEmojiSearchBlob(emoji).toLowerCase();
-  const normalizedShortcode = shortcode.replaceAll("_", "").replaceAll("-", "");
-  const normalizedSearchBlob = searchBlob.replaceAll("_", "").replaceAll("-", "");
-  const normalizedQuery = normalized.replaceAll(":", "").replaceAll("_", "").replaceAll("-", "");
-  const wrappedShortcode = shortcode.length > 0 ? `:${shortcode}:` : "";
-  return emoji.includes(query)
-    || shortcode.includes(normalized)
-    || searchBlob.includes(normalized)
-    || wrappedShortcode.includes(normalized)
-    || normalizedShortcode.includes(normalizedQuery)
-    || normalizedSearchBlob.includes(normalizedQuery);
-}
-
-function applySkinToneVariant(emoji: string, tone: string): string {
-  if (tone === "default") return emoji;
-  const suffix = SKIN_TONE_TO_UNIFIED_SUFFIX[tone];
-  if (suffix === undefined) return emoji;
-  const variants = SKIN_TONE_VARIANTS.get(emoji);
-  return variants?.[suffix] ?? emoji;
-}
-
-function EmojiGlyph({ emoji, className = "h-7 w-7" }: { readonly emoji: string; readonly className?: string }) {
-  const primarySrc = emojiToTwemojiUrl(emoji);
-  const fallbackSrc = emojiToTwemojiFallbackUrl(emoji);
-  return (
-    <Image
-      src={primarySrc}
-      alt={emoji}
-      width={28}
-      height={28}
-      unoptimized
-      draggable={false}
-      className={cn("pointer-events-none object-contain", className)}
-      onError={(event) => {
-        if (fallbackSrc !== primarySrc && event.currentTarget.src !== fallbackSrc) {
-          event.currentTarget.src = fallbackSrc;
-          return;
-        }
-        event.currentTarget.style.visibility = "hidden";
-      }}
-    />
-  );
-}
-
-function ServerGuideIcon({ className = "h-4 w-4" }: { readonly className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} aria-hidden="true" fill="currentColor" shapeRendering="geometricPrecision">
-      <path d="M11 3a1 1 0 1 1 2 0v2h5.75c.16 0 .3.07.4.2l2.63 3.5a.5.5 0 0 1 0 .6l-2.63 3.5a.5.5 0 0 1-.4.2H13v5h2a2 2 0 0 1 2 2v1a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1v-1c0-1.1.9-2 2-2h2v-5H2.8a.5.5 0 0 1-.44-.72L3.9 9.22a.5.5 0 0 0 0-.44L2.36 5.72A.5.5 0 0 1 2.81 5H11V3z" />
-    </svg>
-  );
-}
-
-function BrowseChannelsIcon({ className = "h-4 w-4" }: { readonly className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} aria-hidden="true" fill="currentColor" shapeRendering="geometricPrecision">
-      <path fillRule="evenodd" clipRule="evenodd" d="M18.5 23c.88 0 1.7-.25 2.4-.69l1.4 1.4a1 1 0 0 0 1.4-1.42l-1.39-1.4A4.5 4.5 0 1 0 18.5 23zm0-2a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" />
-      <path d="M3 3a1 1 0 0 0 0 2h18a1 1 0 1 0 0-2H3zM2 8a1 1 0 0 1 1-1h18a1 1 0 1 1 0 2H3a1 1 0 0 1-1-1zm1 3a1 1 0 1 0 0 2h11a1 1 0 1 0 0-2H3zm-1 5a1 1 0 0 1 1-1h8a1 1 0 1 1 0 2H3a1 1 0 0 1-1-1zm1 3a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H3z" />
-    </svg>
-  );
-}
-
-function insertTextAtCursor(
-  element: HTMLInputElement | HTMLTextAreaElement | null,
-  value: string,
-  nextText: string,
-  onValueChange: (value: string) => void,
-  maxLength?: number,
-) {
-  const clamp = (text: string) => {
-    if (typeof maxLength === "number" && maxLength >= 0) {
-      return text.slice(0, maxLength);
-    }
-    return text;
-  };
-
-  if (!element) {
-    onValueChange(clamp(`${value}${nextText}`));
-    return;
-  }
-
-  const start = element.selectionStart ?? value.length;
-  const end = element.selectionEnd ?? start;
-  const rawNextValue = `${value.slice(0, start)}${nextText}${value.slice(end)}`;
-  const nextValue = clamp(rawNextValue);
-  const insertedLength = nextValue.length - (value.length - (end - start));
-  const cursorPosition = Math.max(start, start + insertedLength);
-  onValueChange(nextValue);
-  globalThis.setTimeout(() => {
-    element.focus();
-    element.setSelectionRange(cursorPosition, cursorPosition);
-  }, 0);
-}
-
-function openNativePicker(input: HTMLInputElement | null) {
-  if (input === null) return;
-  if ("showPicker" in input && typeof input.showPicker === "function") {
-    input.showPicker();
-  }
-  input.focus();
-}
-
-type MentionTextFieldProps = {
-  readonly value: string;
-  readonly onValueChange: (value: string) => void;
-  readonly mentionContext: MentionContext;
-  readonly className?: string;
-  readonly placeholder?: string;
-  readonly maxLength?: number;
-  readonly rows?: number;
-  readonly multiline?: boolean;
-};
-
-function MentionTextField({
-  value,
-  onValueChange,
-  mentionContext,
-  className,
-  placeholder,
-  maxLength,
-  rows,
-  multiline = false,
-}: MentionTextFieldProps) {
-  const t = useTranslations("EmbedEditor");
-  const locale = useLocale();
-  const [open, setOpen] = useState(false);
-  const [pickerTab, setPickerTab] = useState<"mentions" | "time" | "emojis">("mentions");
-  const [emojiQuery, setEmojiQuery] = useState("");
-  const [skinTone, setSkinTone] = useState("default");
-  const [skinToneOpen, setSkinToneOpen] = useState(false);
-  const [emojiCategory, setEmojiCategory] = useState<string>(EMOJI_CATEGORIES[0]?.key ?? "people");
-  const [mentionSection, setMentionSection] = useState<"channels" | "roles">("channels");
-  const [specialOpen, setSpecialOpen] = useState(true);
-  const [channelsOpen, setChannelsOpen] = useState(true);
-  const [emojiOpen, setEmojiOpen] = useState<Record<string, boolean>>(() =>
-    Object.fromEntries(EMOJI_CATEGORIES.map((category) => [category.key, true])),
-  );
-  const [dateValue, setDateValue] = useState(() => formatDateInputValue(new Date()));
-  const [timeValue, setTimeValue] = useState(() => formatTimeInputValue(new Date()));
-  const inputId = useId();
-  const fieldRef = useRef<HTMLInputElement | HTMLTextAreaElement | null>(null);
-  const dateInputRef = useRef<HTMLInputElement | null>(null);
-  const timeInputRef = useRef<HTMLInputElement | null>(null);
-  const mentionsScrollerRef = useRef<HTMLDivElement | null>(null);
-  const channelsSectionRef = useRef<HTMLDivElement | null>(null);
-  const rolesSectionRef = useRef<HTMLDivElement | null>(null);
-  const emojisScrollerRef = useRef<HTMLDivElement | null>(null);
-  const emojiSectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
-  const emojiHeaderRefs = useRef<Record<string, HTMLButtonElement | null>>({});
-
-  const insertToken = (token: string) => {
-    insertTextAtCursor(fieldRef.current, value, token, onValueChange);
-    setOpen(false);
-  };
-
-  const filteredChannels = mentionContext.channels;
-  const filteredRoles = mentionContext.roles;
-  const normalizedEmojiQuery = emojiQuery.trim();
-  const filteredEmojiCategories = EMOJI_CATEGORIES
-    .map((category) => ({
-      ...category,
-      emojis: sortCategoryEmojis(
-        category.key,
-        category.emojis.filter((emoji) => matchesEmojiQuery(emoji, normalizedEmojiQuery)),
-      ),
-    }))
-    .filter((category) => category.emojis.length > 0);
-  let channelsList: React.ReactNode = null;
-  if (channelsOpen) {
-    if (filteredChannels.length > 0) {
-      channelsList = filteredChannels.map((channel) => (
-        <MentionInsertButton key={`channel-${channel.id}`} icon={Hash} label={channel.name} compact onSelect={() => insertToken(`<#${channel.id}>`)} />
-      ));
-    } else {
-      channelsList = <div className="rounded-md border border-dashed border-[#3f4147] px-3 py-2 text-xs text-[#949ba4]">{t("mentionsNoChannels")}</div>;
-    }
-  }
-
-  useScrollSpy(
-    mentionsScrollerRef,
-    [
-      { key: "channels", ref: channelsSectionRef },
-      { key: "roles", ref: rolesSectionRef },
-    ],
-    (nextKey) => setMentionSection(nextKey === "roles" ? "roles" : "channels"),
-  );
-
-  const syncEmojiCategoryOnScroll = () => {
-    const scroller = emojisScrollerRef.current;
-    if (!scroller || filteredEmojiCategories.length === 0) return;
-    const currentScroll = scroller.scrollTop;
-    const maxScroll = scroller.scrollHeight - scroller.clientHeight;
-    if (currentScroll >= maxScroll - 2) {
-      const lastKey = filteredEmojiCategories.at(-1)?.key;
-      if (lastKey) setEmojiCategory(lastKey);
-      return;
-    }
-
-    const scrollerTop = scroller.getBoundingClientRect().top;
-    let activeKey = filteredEmojiCategories[0]?.key ?? "";
-    for (const category of filteredEmojiCategories) {
-      const node = emojiHeaderRefs.current[category.key] ?? emojiSectionRefs.current[category.key];
-      if (!node) continue;
-      const relativeTop = node.getBoundingClientRect().top - scrollerTop;
-      if (relativeTop <= 0) {
-        activeKey = category.key;
-      }
-    }
-    if (activeKey) setEmojiCategory(activeKey);
-  };
-
-  useEffect(() => {
-    if (open && pickerTab === "emojis") {
-      syncEmojiCategoryOnScroll();
-    }
-  }, [open, pickerTab, emojiOpen]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  return (
-    <div className="relative">
-      {multiline ? (
-        <Textarea
-          ref={(node) => { fieldRef.current = node; }}
-          value={value}
-          onChange={(event) => onValueChange(event.target.value)}
-          maxLength={maxLength}
-          rows={rows}
-          placeholder={placeholder}
-          className={cn(className, "pr-12 pb-10")}
-        />
-      ) : (
-        <Input
-          ref={(node) => { fieldRef.current = node; }}
-          value={value}
-          onChange={(event) => onValueChange(event.target.value)}
-          maxLength={maxLength}
-          placeholder={placeholder}
-          className={cn(className, "pr-12")}
-        />
-      )}
-
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <button
-            type="button"
-            aria-label="Open mentions, time, and emojis"
-            className={cn(
-              "absolute rounded-md border border-border/70 bg-background/95 p-1.5 text-muted-foreground transition-colors hover:text-foreground",
-              multiline ? "bottom-2 right-2" : "right-2 top-1/2 -translate-y-1/2",
-            )}
-          >
-            <Keyboard className="h-3.5 w-3.5" />
-          </button>
-        </PopoverTrigger>
-        <PopoverContent
-          align="end"
-          side="bottom"
-          sideOffset={8}
-          sticky="always"
-          collisionPadding={{ top: 56, right: 12, bottom: 12, left: 12 }}
-          className="w-[min(92vw,400px)] max-h-[calc(100dvh-72px)] overflow-y-auto border-border bg-[#2b2d31] p-3 text-[#dbdee1]"
-        >
-          <Tabs value={pickerTab} onValueChange={(value) => setPickerTab(value as "mentions" | "time" | "emojis")}>
-            <TabsList className="mb-3 h-9 w-full justify-start gap-1 bg-[#1e1f22] p-1">
-              <TabsTrigger value="mentions" className="h-7 px-2.5 text-xs data-[state=active]:bg-[#4e5058] data-[state=active]:text-white">{t("tabMentions")}</TabsTrigger>
-              <TabsTrigger value="time" className="h-7 px-2.5 text-xs data-[state=active]:bg-[#4e5058] data-[state=active]:text-white">{t("tabTime")}</TabsTrigger>
-              <TabsTrigger value="emojis" className="h-7 px-2.5 text-xs data-[state=active]:bg-[#4e5058] data-[state=active]:text-white">{t("tabEmojis")}</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="mentions" className="mt-0">
-              <div className="flex max-h-[min(52vh,360px)] gap-2 overflow-hidden">
-                <div className="flex w-9 shrink-0 flex-col items-center gap-1 rounded-md bg-[#1e1f22] p-1">
-                  <button
-                    type="button"
-                    onClick={() => channelsSectionRef.current?.scrollIntoView({ block: "start", behavior: "smooth" })}
-                    className={cn("flex h-7 w-7 items-center justify-center rounded text-[#b5bac1] transition-colors hover:bg-[#3a3c43] hover:text-white", mentionSection === "channels" && "bg-[#3a3c43] text-white")}
-                    title={t("mentionsChannels")}
-                  >
-                    <Hash className="h-4 w-4" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => rolesSectionRef.current?.scrollIntoView({ block: "start", behavior: "smooth" })}
-                    className={cn("flex h-7 w-7 items-center justify-center rounded text-[#b5bac1] transition-colors hover:bg-[#3a3c43] hover:text-white", mentionSection === "roles" && "bg-[#3a3c43] text-white")}
-                    title={t("mentionsRoles")}
-                  >
-                    <AtSign className="h-4 w-4" />
-                  </button>
-                </div>
-                <div
-                  ref={mentionsScrollerRef}
-                  onWheelCapture={(event) => {
-                    event.stopPropagation();
-                  }}
-                  className="min-w-0 flex-1 space-y-3 overflow-y-auto overscroll-contain pr-1"
-                >
-                  <div ref={channelsSectionRef} className="space-y-1">
-                  <p className="text-[11px] font-semibold uppercase text-white">{t("mentionsChannels")}</p>
-                  <button type="button" onClick={() => setSpecialOpen((prev) => !prev)} className="flex w-full items-center justify-between rounded px-1 py-1 text-left text-[10px] font-semibold text-white/90 hover:bg-[#3a3c43]">
-                    <span>{t("mentionsSpecial")}</span>
-                    <ChevronDown className={cn("h-3.5 w-3.5 transition-transform", !specialOpen && "-rotate-90")} />
-                  </button>
-                  {specialOpen && (
-                    <>
-                      <MentionInsertButton icon={ServerGuideIcon} label={t("mentionsServerGuide")} compact onSelect={() => insertToken("<id:guide>")} />
-                      <MentionInsertButton icon={BrowseChannelsIcon} label={t("mentionsBrowseChannels")} compact onSelect={() => insertToken("<id:browse>")} />
-                      <MentionInsertButton icon={BrowseChannelsIcon} label={t("mentionsChannelsAndRoles")} compact onSelect={() => insertToken("<id:customize>")} />
-                    </>
-                  )}
-                  <button type="button" onClick={() => setChannelsOpen((prev) => !prev)} className="mt-1 flex w-full items-center justify-between rounded px-1 py-1 text-left text-[10px] font-semibold text-white/90 hover:bg-[#3a3c43]">
-                    <span>{t("mentionsChannelList")}</span>
-                    <ChevronDown className={cn("h-3.5 w-3.5 transition-transform", !channelsOpen && "-rotate-90")} />
-                  </button>
-                  {channelsList}
-                </div>
-
-                <div ref={rolesSectionRef} className="space-y-1">
-                  <p className="text-[11px] font-semibold uppercase text-white">{t("mentionsRoles")}</p>
-                  <MentionInsertButton icon={AtSign} label="@everyone" compact onSelect={() => insertToken("@everyone")} />
-                  <MentionInsertButton icon={AtSign} label="@here" compact onSelect={() => insertToken("@here")} />
-                  {filteredRoles.length > 0 ? filteredRoles.map((role) => (
-                    <MentionInsertButton
-                      key={`role-${role.id}`}
-                      icon={AtSign}
-                      label={role.name}
-                      compact
-                      onSelect={() => insertToken(`<@&${role.id}>`)}
-                    />
-                  )) : (
-                    <div className="rounded-md border border-dashed border-[#3f4147] px-3 py-2 text-xs text-[#949ba4]">
-                      {t("mentionsNoRoles")}
-                    </div>
-                  )}
-                  </div>
-                </div>
-              </div>
-            </TabsContent>
-
-            <TabsContent
-              value="time"
-              className="mt-0 max-h-[min(52vh,360px)] space-y-2 overflow-y-auto overscroll-contain pr-1"
-              onWheelCapture={(event) => {
-                event.stopPropagation();
-              }}
-            >
-              <div className="space-y-1">
-                <Label htmlFor={`${inputId}-date`} className="text-xs text-white">{t("dateLabel")}</Label>
-                <div className="relative">
-                  <Input
-                    ref={dateInputRef}
-                    id={`${inputId}-date`}
-                    type="date"
-                    value={dateValue}
-                    onChange={(event) => setDateValue(event.target.value)}
-                    className="h-8 appearance-none border-[#3f4147] bg-[#1e1f22] px-2.5 pr-8 text-sm text-white focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-red-500/80 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:pointer-events-none"
-                  />
-                  <button
-                    type="button"
-                    aria-label={t("dateLabel")}
-                    onClick={() => {
-                      const el = dateInputRef.current;
-                      openNativePicker(el);
-                    }}
-                    className="absolute right-1.5 top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded text-white hover:text-white"
-                  >
-                    <CalendarDays className="h-3.5 w-3.5" />
-                  </button>
-                </div>
-              </div>
-              <div className="space-y-1">
-                <Label htmlFor={`${inputId}-time`} className="text-xs text-white">{t("timeLabel")}</Label>
-                <div className="relative">
-                  <Input
-                    ref={timeInputRef}
-                    id={`${inputId}-time`}
-                    type="time"
-                    step={1}
-                    value={timeValue}
-                    onChange={(event) => setTimeValue(event.target.value)}
-                    className="h-8 appearance-none border-[#3f4147] bg-[#1e1f22] px-2.5 pr-8 text-sm text-white focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-red-500/80 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:pointer-events-none"
-                  />
-                  <button
-                    type="button"
-                    aria-label={t("timeLabel")}
-                    onClick={() => {
-                      const el = timeInputRef.current;
-                      openNativePicker(el);
-                    }}
-                    className="absolute right-1.5 top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded text-white hover:text-white"
-                  >
-                    <Clock3 className="h-3.5 w-3.5" />
-                  </button>
-                </div>
-              </div>
-              <div className="space-y-1">
-                <p className="text-[11px] font-semibold text-white">{t("styleLabel")}</p>
-                <div className="grid grid-cols-1 gap-1">
-                  {DISCORD_TIMESTAMP_STYLES.map((item) => (
-                    <TimeStyleInsertButton
-                      key={item.style}
-                      label={item.style === "R" ? t("timeRelativeNow") : formatTimestampStylePreview(dateValue, timeValue, item.style, locale)}
-                      onSelect={() => insertToken(createTimestampToken(dateValue, timeValue, item.style))}
-                    />
-                  ))}
-                </div>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="emojis" className="mt-0 space-y-3">
-              <div className="flex items-center gap-2">
-                <Input
-                  value={emojiQuery}
-                  onChange={(event) => setEmojiQuery(event.target.value)}
-                  placeholder={t("emojiSearchPlaceholder")}
-                  className="h-9 flex-1 border-[#3f4147] bg-[#1e1f22] text-sm text-white placeholder:text-[#949ba4]"
-                />
-                <Popover open={skinToneOpen} onOpenChange={setSkinToneOpen}>
-                  <PopoverTrigger asChild>
-                    <button type="button" aria-label={t("emojiToneLabel")} className="flex h-9 w-9 items-center justify-center rounded-md border border-[#3f4147] bg-[#1e1f22] text-lg text-white">
-                      {skinTone === "default" ? "👋" : `👋${skinTone}`}
-                    </button>
-                  </PopoverTrigger>
-                  <PopoverContent align="end" className="w-auto border-[#3f4147] bg-[#2b2d31] p-1">
-                    <div className="flex gap-1">
-                      {["default", "🏻", "🏼", "🏽", "🏾", "🏿"].map((tone) => (
-                        <button
-                          key={tone}
-                          type="button"
-                          onClick={() => {
-                            setSkinTone(tone);
-                            setSkinToneOpen(false);
-                          }}
-                          className="flex h-8 w-8 items-center justify-center rounded bg-[#1e1f22] text-base text-white hover:bg-[#3a3c43]"
-                        >
-                          {tone === "default" ? "👋" : `👋${tone}`}
-                        </button>
-                      ))}
-                    </div>
-                  </PopoverContent>
-                </Popover>
-              </div>
-              <div className="flex max-h-[calc(min(52vh,360px)-48px)] min-h-[212px] gap-2 overflow-hidden">
-                <div className="flex w-9 shrink-0 flex-col items-center gap-1 overflow-y-auto rounded-md bg-[#1e1f22] p-1">
-                  {filteredEmojiCategories.map((category) => (
-                    <button
-                      key={category.key}
-                      type="button"
-                      onClick={() => {
-                        setEmojiCategory(category.key);
-                        emojiSectionRefs.current[category.key]?.scrollIntoView({ block: "start", behavior: "smooth" });
-                      }}
-                      className={cn("flex h-7 w-7 items-center justify-center rounded text-[#b5bac1] transition-colors hover:bg-[#3a3c43] hover:text-white", emojiCategory === category.key && "bg-[#3a3c43] text-white")}
-                      title={t(`emojiCategory.${category.key}`)}
-                    >
-                      <category.icon className="h-4 w-4" />
-                    </button>
-                  ))}
-                </div>
-                <div
-                  ref={emojisScrollerRef}
-                  onScroll={syncEmojiCategoryOnScroll}
-                  onWheelCapture={(event) => {
-                    event.stopPropagation();
-                  }}
-                  className="min-w-0 flex-1 overflow-y-auto overscroll-contain pr-1"
-                >
-                  {filteredEmojiCategories.map((category) => (
-                    <div
-                      key={category.key}
-                      ref={(node) => { emojiSectionRefs.current[category.key] = node; }}
-                      className="mb-3 space-y-2"
-                    >
-                      <button
-                        ref={(node) => { emojiHeaderRefs.current[category.key] = node; }}
-                        type="button"
-                        onClick={() => setEmojiOpen((prev) => ({ ...prev, [category.key]: !prev[category.key] }))}
-                        className="flex w-full items-center justify-between rounded px-1 py-1 text-left text-[11px] font-semibold text-white hover:bg-[#3a3c43]"
-                      >
-                        <span>{t(`emojiCategory.${category.key}`)}</span>
-                        <ChevronDown className={cn("h-3.5 w-3.5 transition-transform", !emojiOpen[category.key] && "-rotate-90")} />
-                      </button>
-                      {emojiOpen[category.key] && (
-                        <div className="grid grid-cols-7 gap-1">
-                          {category.emojis.map((emoji) => (
-                            <button
-                              key={`${category.key}-${emoji}`}
-                              type="button"
-                              title={`:${getEmojiShortcodeName(emoji) || emoji}:`}
-                              className="flex h-10 w-10 items-center justify-center rounded-md bg-[#1e1f22] transition-colors hover:bg-[#3a3c43]"
-                              onClick={() => insertToken(applySkinToneVariant(emoji, skinTone))}
-                            >
-                              <EmojiGlyph emoji={applySkinToneVariant(emoji, skinTone)} />
-                            </button>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </TabsContent>
-          </Tabs>
-        </PopoverContent>
-      </Popover>
-    </div>
-  );
-}
-
-function MentionInsertButton({
-  icon: Icon,
-  label,
-  compact = false,
-  onSelect,
-}: {
-  readonly icon: ComponentType<{ className?: string }>;
-  readonly label: string;
-  readonly compact?: boolean;
-  readonly onSelect: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onSelect}
-      className={cn(
-        "flex w-full items-center gap-3 rounded-md text-left transition-colors hover:bg-[#3a3c43]",
-        compact ? "px-2.5 py-1.5" : "px-3 py-2",
-      )}
-    >
-      <span className={cn("flex items-center justify-center rounded-md bg-[#1e1f22] text-[#b5bac1]", compact ? "h-7 w-7" : "h-8 w-8")}>
-        <Icon className={cn(compact ? "h-3.5 w-3.5" : "h-4 w-4")} />
-      </span>
-      <span className="min-w-0 flex-1">
-        <span className={cn("block truncate font-medium text-white", compact ? "text-[13px]" : "text-sm")}>{label}</span>
-      </span>
-    </button>
-  );
-}
-
-function TimeStyleInsertButton({ label, onSelect }: { readonly label: string; readonly onSelect: () => void }) {
-  return (
-    <button
-      type="button"
-      onClick={onSelect}
-      className="flex h-8 w-full items-center gap-1.5 rounded-[5px] border border-[#454850] bg-[#262930] px-2 text-left transition-colors hover:bg-[#343842]"
-    >
-      <span className="flex h-4 w-4 items-center justify-center text-[#b5bac1]">
-        <Clock3 className="h-3 w-3" />
-      </span>
-      <span className="truncate text-[13px] font-medium leading-none text-white">{label}</span>
-    </button>
-  );
-}
-
-function useScrollSpy(
-  scrollerRef: MutableRefObject<HTMLDivElement | null>,
-  sections: Array<{ key: string; ref: MutableRefObject<HTMLDivElement | null> }>,
-  onChange: (key: string) => void,
-) {
-  useEffect(() => {
-    const scroller = scrollerRef.current;
-    if (!scroller || sections.length === 0) return;
-
-    const handleScroll = () => {
-      const scrollerTop = scroller.getBoundingClientRect().top;
-      let activeKey = sections[0]?.key;
-      let bestDistance = Number.POSITIVE_INFINITY;
-      for (const section of sections) {
-        const node = section.ref.current;
-        if (!node) continue;
-        const distance = Math.abs(node.getBoundingClientRect().top - scrollerTop - 8);
-        if (distance < bestDistance) {
-          bestDistance = distance;
-          activeKey = section.key;
-        }
-      }
-      if (activeKey) onChange(activeKey);
-    };
-
-    handleScroll();
-    scroller.addEventListener("scroll", handleScroll, { passive: true });
-    return () => scroller.removeEventListener("scroll", handleScroll);
-  }, [onChange, scrollerRef, sections]);
-}
+function hexToInt(hex: string): number { return Number.parseInt(hex.replaceAll("#", ""), 16); }
+function intToHex(color: number): string { return `#${color.toString(16).padStart(6, "0")}`; }
+const MentionTextField = DiscordMessageField;
 
 function defaultState(): EmbedFormState {
   return {
@@ -1083,6 +277,7 @@ export function serializeComponentState(s: TopLevelComponentState): TopLevelComp
           type: 2,
           style: btn.style,
           ...(btn.label ? { label: btn.label } : {}),
+          ...(btn.emoji ? { emoji: btn.emoji } : {}),
           ...(btn.style === 5 ? (btn.url ? { url: btn.url } : {}) : { custom_id: btn.customId }), // NOSONAR
           ...(btn.disabled ? { disabled: true } : {}),
         })),
@@ -1103,7 +298,7 @@ export function serializeComponentState(s: TopLevelComponentState): TopLevelComp
       const accent = hexToIntSafe(s.accentColor);
       return {
         type: 17,
-        accent_color: accent ?? undefined,
+        ...(accent === null ? {} : { accent_color: accent }),
         ...(s.spoiler ? { spoiler: true } : {}),
         components: s.children.map(child => serializeComponentState(child)).filter((c): c is ContainerChild => c !== null),
       };
@@ -1228,6 +423,7 @@ export function parseComponentState(c: TopLevelComponent): TopLevelComponentStat
             style: ([1, 2, 3, 4, 5].includes(b.style) ? b.style : 2) as 1 | 2 | 3 | 4 | 5,
             url: b.url ?? "",
             disabled: b.disabled ?? false,
+            ...(b.emoji ? { emoji: b.emoji } : {}),
           })),
       };
     }
@@ -1246,7 +442,7 @@ export function parseComponentState(c: TopLevelComponent): TopLevelComponentStat
 
 function createDefaultV2Component(type: TopLevelComponentState["type"]): TopLevelComponentState {
   switch (type) {
-    case "container": return { id: uid(), type: "container", accentColor: "", spoiler: false, children: [] };
+    case "container": return { id: uid(), type: "container", accentColor: "#5865f2", spoiler: false, children: [] };
     case "text_display": return { id: uid(), type: "text_display", content: "" };
     case "separator": return { id: uid(), type: "separator", divider: true, spacing: "small" };
     case "media_gallery": return { id: uid(), type: "media_gallery", items: [] };
@@ -1265,6 +461,29 @@ function createDefaultV2Component(type: TopLevelComponentState["type"]): TopLeve
     case "file": return { id: uid(), type: "file", url: "", spoiler: false };
     case "raw": return { id: uid(), type: "raw", rawType: 0, rawData: {} };
   }
+}
+
+function singleChoiceTicketMenu(component: TopLevelComponentState): TopLevelComponentState {
+  if (component.type === "container") return { ...component, children: component.children.map(child => singleChoiceTicketMenu(child) as ContainerChildState) };
+  if (component.type === "section") return { ...component, buttonDisabled: false };
+  if (component.type === "action_row") return { ...component, buttons: component.buttons.map(button => ({ ...button, disabled: false })), ...(component.selectMenu ? { selectMenu: { ...component.selectMenu, minValues: 1, maxValues: 1, disabled: false } } : {}) };
+  if (["string_select", "user_select", "role_select", "mentionable_select", "channel_select"].includes(component.type)) return { ...component, minValues: 1, maxValues: 1, disabled: false } as SelectMenuEditorState;
+  return component;
+}
+
+/** Ticket controls must point to a configured action, including nested v2 accessories. */
+export function hasUnassignedTicketActions(components: unknown, actions: readonly { readonly customId: string }[]): boolean {
+  const allowed = new Set(actions.map(action => action.customId));
+  const visit = (value: unknown): boolean => {
+    if (Array.isArray(value)) return value.some(visit);
+    if (!value || typeof value !== "object") return false;
+    const node = value as Record<string, unknown>;
+    if (node.type === 2 && (node.style === 5 || !allowed.has(String(node.custom_id)))) return true;
+    if (node.type === 3 && (!Array.isArray(node.options) || !node.options.length || node.options.some(option => !allowed.has(String((option as { value?: unknown })?.value))))) return true;
+    if ([5, 6, 7, 8].includes(Number(node.type))) return true;
+    return visit(node.components) || visit(node.accessory);
+  };
+  return visit(components);
 }
 
 export function payloadToMessages(data: Record<string, unknown>): { messages: MessageState[]; profile: MessageProfileState } {
@@ -1305,7 +524,7 @@ export function payloadToMessages(data: Record<string, unknown>): { messages: Me
           mode: "v1" as const,
           embeds: rawEmbeds.length > 0 ? rawEmbeds.map(embedToState) : [defaultState()],
           content: typeof rawContent === "string" ? rawContent.slice(0, MAX_DISCORD_MESSAGE_CONTENT_LENGTH) : "",
-          components: [],
+          components: Array.isArray(msgData.components) ? (msgData.components as TopLevelComponent[]).map(parseComponentState) : [],
         };
       }),
       profile: mappedProfile,
@@ -1337,7 +556,7 @@ export function payloadToMessages(data: Record<string, unknown>): { messages: Me
       mode: "v1" as const,
       embeds: rawEmbeds.length > 0 ? rawEmbeds.map(embedToState) : [defaultState()],
       content: typeof rawContent === "string" ? rawContent.slice(0, MAX_DISCORD_MESSAGE_CONTENT_LENGTH) : "",
-      components: [],
+      components: Array.isArray(data.components) ? (data.components as TopLevelComponent[]).map(parseComponentState) : [],
     }],
     profile: mappedProfile,
   };
@@ -1403,6 +622,8 @@ export function stateToPayload( // NOSONAR — sequential field assignments, no 
     const embeds = msg.embeds.map(stateToEmbed).filter(hasMeaningfulEmbedContent).slice(0, MAX_DISCORD_EMBEDS_PER_MESSAGE);
     const content = msg.content.slice(0, MAX_DISCORD_MESSAGE_CONTENT_LENGTH);
     const msgData: Record<string, unknown> = { content: content || null, embeds };
+    const components = msg.components.map(serializeComponentState).filter((component): component is TopLevelComponent => component !== null);
+    if (components.length) msgData.components = components;
     if (normalizedProfile.name) msgData.username = normalizedProfile.name;
     if (normalizedProfile.avatar_url) msgData.avatar_url = normalizedProfile.avatar_url;
     return { data: msgData };
@@ -1420,6 +641,7 @@ export function stateToPayload( // NOSONAR — sequential field assignments, no 
   } else {
     payload.content = firstData.content;
     payload.embeds = firstData.embeds;
+    if (firstData.components) payload.components = firstData.components;
     if (normalizedProfile.name) payload.username = normalizedProfile.name;
     if (normalizedProfile.avatar_url) payload.avatar_url = normalizedProfile.avatar_url;
   }
@@ -1510,7 +732,7 @@ function reorderFieldById(fields: FieldState[], id: string, dir: -1 | 1): FieldS
 
 function SectionLabel({ children }: { readonly children: React.ReactNode }) {
   return (
-    <p className="text-[11px] font-semibold uppercase text-muted-foreground mb-2">
+    <p className="mb-2 text-xs font-medium text-muted-foreground">
       {children}
     </p>
   );
@@ -1544,11 +766,12 @@ interface CollapsibleSectionProps {
 
 function CollapsibleSection({ title, open, onToggle, children }: CollapsibleSectionProps) {
   return (
-    <div className="border-b border-border/80">
+    <div className="rounded-xl">
       <button
         type="button"
         onClick={onToggle}
-        className="flex w-full items-center gap-2 px-3 py-2 text-left"
+        aria-expanded={open}
+        className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left hover:bg-muted/55 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
         {open ? <ChevronDown className="h-4 w-4 text-muted-foreground" /> : <ChevronRight className="h-4 w-4 text-muted-foreground" />}
         <span className="text-sm font-medium text-foreground">{title}</span>
@@ -1589,15 +812,16 @@ function SeparatorEditorFields({ comp, onChange }: {
   );
 }
 
-function MediaGalleryEditorFields({ comp, onChange }: {
+function MediaGalleryEditorFields({ comp, onChange, onImageChange }: {
   readonly comp: MediaGalleryState;
   readonly onChange: (updated: MediaGalleryState) => void;
+  readonly onImageChange: (itemId: string, url: string) => void;
 }) {
   const t = useTranslations("EmbedEditor");
   return (
     <div className="space-y-2">
       {comp.items.map((item, itemIdx) => (
-        <div key={item.id} className="rounded-md border border-border/80 bg-card p-3 space-y-2">
+        <div key={item.id} className="space-y-3 py-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-muted-foreground">Image {itemIdx + 1}</span>
             <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-destructive"
@@ -1605,10 +829,9 @@ function MediaGalleryEditorFields({ comp, onChange }: {
               <Trash2 className="h-3.5 w-3.5" />
             </Button>
           </div>
-          <Field label={t("imageUrl")}>
-            <Input value={item.url}
-              onChange={e => onChange({ ...comp, items: comp.items.map(it => it.id === item.id ? { ...it, url: e.target.value } : it) })}
-              placeholder="https://..." className={COMPACT_INPUT_CN} />
+          <Field label={t("imageUploadLabel")}>
+            <UploadedImageField value={item.url} label={`${t("imageUploadLabel")} ${itemIdx + 1}`}
+              onChange={url => onImageChange(item.id, url)} />
           </Field>
           <Field label={t("imageDescription")}>
             <Input value={item.description}
@@ -1637,6 +860,7 @@ function SectionEditorFields({ comp, onChange, mentionContext }: {
   readonly mentionContext: MentionContext;
 }) {
   const t = useTranslations("EmbedEditor");
+  const actions = useContext(TicketActionsContext);
   return (
     <div className="space-y-3">
       {comp.texts.map((text, textIdx) => (
@@ -1668,7 +892,8 @@ function SectionEditorFields({ comp, onChange, mentionContext }: {
         <div className="flex gap-2">
           {(["none", "thumbnail", "button"] as const).map(a => (
             <button key={a} type="button"
-              onClick={() => onChange({ ...comp, accessoryType: a })}
+              disabled={a === "button" && actions?.length === 0}
+              onClick={() => onChange({ ...comp, accessoryType: a, ...(a === "button" && actions?.[0] ? { buttonCustomId: actions[0].customId, buttonLabel: actions[0].label, buttonStyle: 2 } : {}) })}
               className={cn("text-xs px-2.5 py-1 rounded-md border transition-colors",
                 comp.accessoryType === a ? "border-primary/60 bg-primary/10 font-medium" : "border-border/80 text-muted-foreground hover:text-foreground")}>
               {t(ACCESSORY_TYPE_KEYS[a])}
@@ -1678,10 +903,8 @@ function SectionEditorFields({ comp, onChange, mentionContext }: {
       </Field>
       {comp.accessoryType === "thumbnail" && (
         <>
-          <Field label={t("thumbnailUrl")}>
-            <Input value={comp.thumbnailUrl}
-              onChange={e => onChange({ ...comp, thumbnailUrl: e.target.value })}
-              placeholder="https://..." className={COMPACT_INPUT_CN} />
+          <Field label={t("thumbnailUploadLabel")}>
+            <UploadedImageField value={comp.thumbnailUrl} label={t("thumbnailUploadLabel")} onChange={thumbnailUrl => onChange({ ...comp, thumbnailUrl })} />
           </Field>
           <Field label={t("thumbnailAlt")}>
             <Input value={comp.thumbnailDescription}
@@ -1697,17 +920,8 @@ function SectionEditorFields({ comp, onChange, mentionContext }: {
               onChange={e => onChange({ ...comp, buttonLabel: e.target.value })}
               className={COMPACT_INPUT_CN} />
           </Field>
-          <Field label={t("buttonStyle")}>
-            <div className="flex flex-wrap gap-1">
-              {([1, 2, 3, 4, 5] as const).map(style => (
-                <button key={style} type="button"
-                  onClick={() => onChange({ ...comp, buttonStyle: style })}
-                  className={cn("text-xs px-2 py-1 rounded border transition-colors",
-                    comp.buttonStyle === style ? "border-primary/60 bg-primary/10 font-medium" : "border-border/80 text-muted-foreground hover:text-foreground")}>
-                  {t(BUTTON_STYLE_KEYS[style])}
-                </button>
-              ))}
-            </div>
+          <Field label={t("buttonColor")}>
+            <ButtonColorPicker value={comp.buttonStyle} allowLink={actions === undefined} onChange={buttonStyle => onChange({ ...comp, buttonStyle })} />
           </Field>
           {comp.buttonStyle === 5 && (
             <Field label={t("buttonUrl")}>
@@ -1716,12 +930,13 @@ function SectionEditorFields({ comp, onChange, mentionContext }: {
                 placeholder="https://..." className={COMPACT_INPUT_CN} />
             </Field>
           )}
-          <label className="flex items-center gap-2 cursor-pointer">
+          {comp.buttonStyle !== 5 && <TicketActionPicker value={comp.buttonCustomId} onChange={buttonCustomId => onChange({ ...comp, buttonCustomId })} />}
+          {actions === undefined && <label className="flex items-center gap-2 cursor-pointer">
             <input type="checkbox" checked={comp.buttonDisabled}
               onChange={e => onChange({ ...comp, buttonDisabled: e.target.checked })}
               className="h-3.5 w-3.5 rounded border-input accent-primary" />
             <span className="text-xs text-muted-foreground">{t("buttonDisabled")}</span>
-          </label>
+          </label>}
         </>
       )}
     </div>
@@ -1733,6 +948,7 @@ function SelectMenuCommonFields({ comp, onChange }: {
   readonly onChange: (updated: SelectMenuEditorState) => void;
 }) {
   const t = useTranslations("EmbedEditor");
+  const ticketActions = useContext(TicketActionsContext);
   return (
     <div className="space-y-2">
       <Field label={t("selectPlaceholder")}>
@@ -1740,7 +956,7 @@ function SelectMenuCommonFields({ comp, onChange }: {
           onChange={e => onChange({ ...comp, placeholder: e.target.value })}
           className={COMPACT_INPUT_CN} />
       </Field>
-      <div className="flex gap-3">
+      {ticketActions === undefined && <><div className="flex gap-3">
         <Field label={t("selectMinValues")}>
           <Input type="number" value={comp.minValues} min={0} max={25}
             onChange={e => onChange({ ...comp, minValues: Math.max(0, Math.min(25, Number(e.target.value) || 1)) })}
@@ -1757,7 +973,7 @@ function SelectMenuCommonFields({ comp, onChange }: {
           onChange={e => onChange({ ...comp, disabled: e.target.checked })}
           className="h-3.5 w-3.5 rounded border-input accent-primary" />
         <span className="text-xs text-muted-foreground">{t("selectDisabled")}</span>
-      </label>
+      </label></>}
     </div>
   );
 }
@@ -1767,13 +983,14 @@ function StringSelectEditorFields({ comp, onChange }: {
   readonly onChange: (updated: StringSelectState) => void;
 }) {
   const t = useTranslations("EmbedEditor");
+  const actions = useContext(TicketActionsContext);
   return (
     <div className="space-y-3">
       <SelectMenuCommonFields comp={comp} onChange={updated => onChange(updated as StringSelectState)} />
       <div className="space-y-2 pt-1">
         <Label className="text-xs font-medium">{t("selectOptions")}</Label>
         {comp.options.map((opt, optIdx) => (
-          <div key={opt.id} className="rounded-md border border-border/80 bg-card p-3 space-y-2">
+          <div key={opt.id} className="space-y-3 pt-3">
             <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-muted-foreground">{t("selectOption")} {optIdx + 1}</span>
               <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-destructive"
@@ -1786,11 +1003,11 @@ function StringSelectEditorFields({ comp, onChange }: {
                 onChange={e => onChange({ ...comp, options: comp.options.map(o => o.id === opt.id ? { ...o, label: e.target.value } : o) })}
                 className={COMPACT_INPUT_CN} />
             </Field>
-            <Field label={t("selectOptionValue")}>
+            {actions ? <TicketActionPicker value={opt.value} onChange={value => onChange({ ...comp, options: comp.options.map(option => option.id === opt.id ? { ...option, value } : option) })} /> : <Field label={t("selectOptionValue")}>
               <Input value={opt.value}
                 onChange={e => onChange({ ...comp, options: comp.options.map(o => o.id === opt.id ? { ...o, value: e.target.value } : o) })}
                 className={COMPACT_INPUT_CN} />
-            </Field>
+            </Field>}
             <Field label={t("selectOptionDescription")}>
               <Input value={opt.description}
                 onChange={e => onChange({ ...comp, options: comp.options.map(o => o.id === opt.id ? { ...o, description: e.target.value } : o) })}
@@ -1804,8 +1021,9 @@ function StringSelectEditorFields({ comp, onChange }: {
             </label>
           </div>
         ))}
-        <Button size="sm" variant="outline" className="h-7 text-xs w-full"
-          onClick={() => onChange({ ...comp, options: [...comp.options, { id: uid(), label: "", value: "", description: "", isDefault: false }] })}>
+        <Button size="sm" variant="secondary" className="h-8 rounded-xl border-0 bg-muted/55 text-xs"
+          disabled={comp.options.length >= 25 || actions?.length === 0}
+          onClick={() => onChange({ ...comp, options: [...comp.options, { id: uid(), label: actions?.[0]?.label ?? "", value: actions?.[0]?.customId ?? "", description: "", isDefault: false }] })}>
           <Plus className="h-3.5 w-3.5 mr-1" />{t("addSelectOption")}
         </Button>
       </div>
@@ -1825,10 +1043,15 @@ function ActionRowEditorFields({ comp, onChange }: {
   readonly onChange: (updated: ActionRowState) => void;
 }) {
   const t = useTranslations("EmbedEditor");
+  const actions = useContext(TicketActionsContext);
   const hasSelectMenu = !!comp.selectMenu;
 
   const switchToSelect = (type: SelectMenuEditorState["type"]) => {
+    if (actions?.length === 0) return;
     const defaultSelect = createDefaultV2Component(type) as SelectMenuEditorState;
+    if (actions?.[0] && defaultSelect.type === "string_select") defaultSelect.options = [{ id: uid(), label: actions[0].label, value: actions[0].customId, description: "", isDefault: false }];
+    const panelId = actions?.[0]?.customId.split(":")[3];
+    if (panelId) defaultSelect.customId = `ck:ticket:menu:${panelId}:${defaultSelect.customId}`;
     onChange({ ...comp, selectMenu: defaultSelect, buttons: [] });
   };
   const switchToButtons = () => onChange({ ...comp, selectMenu: undefined });
@@ -1839,8 +1062,9 @@ function ActionRowEditorFields({ comp, onChange }: {
         <div className="flex gap-2 flex-wrap">
           <button type="button"
             onClick={switchToButtons}
-            className={cn("text-xs px-2.5 py-1 rounded-md border transition-colors",
-              hasSelectMenu ? "border-border/80 text-muted-foreground hover:text-foreground" : "border-primary/60 bg-primary/10 font-medium")}>
+            aria-pressed={!hasSelectMenu}
+            className={cn("rounded-xl px-3 py-2 text-xs transition-colors",
+              hasSelectMenu ? "text-muted-foreground hover:bg-muted/55" : "bg-muted font-semibold text-foreground shadow-sm")}>
             {t("actionRowModeButtons")}
           </button>
           {([
@@ -1849,11 +1073,13 @@ function ActionRowEditorFields({ comp, onChange }: {
             { type: "role_select" as const, label: t("roleSelectLabel") },
             { type: "mentionable_select" as const, label: t("mentionableSelectLabel") },
             { type: "channel_select" as const, label: t("channelSelectLabel") },
-          ]).map(({ type, label }) => (
+          ]).filter(item => !actions || item.type === "string_select").map(({ type, label }) => (
             <button key={type} type="button"
+              disabled={actions?.length === 0}
+              aria-pressed={comp.selectMenu?.type === type}
               onClick={() => switchToSelect(type)}
-              className={cn("text-xs px-2.5 py-1 rounded-md border transition-colors",
-                comp.selectMenu?.type === type ? "border-primary/60 bg-primary/10 font-medium" : "border-border/80 text-muted-foreground hover:text-foreground")}>
+              className={cn("rounded-xl px-3 py-2 text-xs transition-colors disabled:pointer-events-none disabled:opacity-45",
+                comp.selectMenu?.type === type ? "bg-muted font-semibold text-foreground shadow-sm" : "text-muted-foreground hover:bg-muted/55")}>
               {label}
             </button>
           ))}
@@ -1862,7 +1088,7 @@ function ActionRowEditorFields({ comp, onChange }: {
       {!hasSelectMenu && (
         <>
           {comp.buttons.map((btn, btnIdx) => (
-            <div key={btn.id} className="rounded-md border border-border/80 bg-card p-3 space-y-2">
+            <div key={btn.id} className="space-y-3 pt-3">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-medium text-muted-foreground">Button {btnIdx + 1}</span>
                 <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-destructive"
@@ -1875,23 +1101,8 @@ function ActionRowEditorFields({ comp, onChange }: {
                   onChange={e => onChange({ ...comp, buttons: comp.buttons.map(b => b.id === btn.id ? { ...b, label: e.target.value } : b) })}
                   className={COMPACT_INPUT_CN} />
               </Field>
-              <Field label={t("buttonStyle")}>
-                <div className="flex flex-wrap gap-1">
-                  {([
-                    { style: 1 as const, label: t("buttonStylePrimary") },
-                    { style: 2 as const, label: t("buttonStyleSecondary") },
-                    { style: 3 as const, label: t("buttonStyleSuccess") },
-                    { style: 4 as const, label: t("buttonStyleDanger") },
-                    { style: 5 as const, label: t("buttonStyleLink") },
-                  ]).map(({ style, label }) => (
-                    <button key={style} type="button"
-                      onClick={() => onChange({ ...comp, buttons: comp.buttons.map(b => b.id === btn.id ? { ...b, style } : b) })}
-                      className={cn("text-xs px-2.5 py-1 rounded-md border transition-colors",
-                        btn.style === style ? "border-primary/60 bg-primary/10 font-medium" : "border-border/80 text-muted-foreground hover:text-foreground")}>
-                      {label}
-                    </button>
-                  ))}
-                </div>
+              <Field label={t("buttonColor")}>
+                <ButtonColorPicker value={btn.style} allowLink={actions === undefined} onChange={style => onChange({ ...comp, buttons: comp.buttons.map(button => button.id === btn.id ? { ...button, style } : button) })} />
               </Field>
               {btn.style === 5 && (
                 <Field label={t("buttonUrl")}>
@@ -1900,16 +1111,18 @@ function ActionRowEditorFields({ comp, onChange }: {
                     placeholder="https://..." className={COMPACT_INPUT_CN} />
                 </Field>
               )}
-              <label className="flex items-center gap-2 cursor-pointer">
+              {btn.style !== 5 && <TicketActionPicker value={btn.customId} onChange={customId => onChange({ ...comp, buttons: comp.buttons.map(button => button.id === btn.id ? { ...button, customId } : button) })} />}
+              {actions === undefined && <label className="flex items-center gap-2 cursor-pointer">
                 <input type="checkbox" checked={btn.disabled}
                   onChange={e => onChange({ ...comp, buttons: comp.buttons.map(b => b.id === btn.id ? { ...b, disabled: e.target.checked } : b) })}
                   className="h-3.5 w-3.5 rounded border-input accent-primary" />
                 <span className="text-xs text-muted-foreground">{t("buttonDisabled")}</span>
-              </label>
+              </label>}
             </div>
           ))}
-          <Button size="sm" variant="outline" className="h-7 text-xs w-full"
-            onClick={() => onChange({ ...comp, buttons: [...comp.buttons, { id: uid(), customId: uid(), label: "", style: 2 as const, url: "", disabled: false }] })}>
+          <Button size="sm" variant="secondary" className="h-8 rounded-xl border-0 bg-muted/55 text-xs"
+            disabled={comp.buttons.length >= 5 || actions?.length === 0}
+            onClick={() => onChange({ ...comp, buttons: [...comp.buttons, { id: uid(), customId: actions?.[0]?.customId ?? uid(), label: actions?.[0]?.label ?? "", style: 2 as const, url: "", disabled: false }] })}>
             <Plus className="h-3.5 w-3.5 mr-1" />{t("addButton")}
           </Button>
         </>
@@ -2014,18 +1227,38 @@ function FileComponentEditorFields({
   );
 }
 
-export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels = [], roles = [] }: EmbedEditorProps) { // NOSONAR
+export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels = [], roles = [], serverId, placeholders = [], variant = "full", previewActions, ticketActions, onDirtyChange, onFormatChosen }: EmbedEditorProps) { // NOSONAR
+  const isTicketPanel = variant === "ticket-panel";
   const t = useTranslations("EmbedEditor");
   const tCommon = useTranslations("Common");
-  const mentionContext: MentionContext = { channels, roles };
+  const [loadedMentions, setLoadedMentions] = useState<{ serverId?: string; channels: PreviewDiscordChannel[]; roles: PreviewDiscordRole[] }>({ channels: [], roles: [] });
+  useEffect(() => {
+    if (!serverId || (channels.length && roles.length)) return;
+    const controller = new AbortController();
+    const input = { path: { serverId }, query: {}, body: {} };
+    void Promise.all([
+      channels.length ? Promise.resolve(channels) : executeSharedEndpoint(ServerChannelsEndpoint, input, { signal: controller.signal }).then(result => [...result]).catch(() => []),
+      roles.length ? Promise.resolve(roles) : executeSharedEndpoint(DiscordRolesEndpoint, input, { signal: controller.signal }).then(result => [...result.roles]).catch(() => []),
+    ]).then(([nextChannels, nextRoles]) => { if (!controller.signal.aborted) setLoadedMentions({ serverId, channels: nextChannels, roles: nextRoles }); });
+    return () => controller.abort();
+  }, [serverId, channels.length, roles.length]);
+  const loaded = loadedMentions.serverId === serverId ? loadedMentions : { channels: [], roles: [] };
+  const mentionContext: MentionContext = { channels: channels.length ? channels : loaded.channels, roles: roles.length ? roles : loaded.roles, serverId, placeholders };
+  const [activeUploads, setActiveUploads] = useState(0);
+  const updateUploadActivity = useCallback((delta: number) => setActiveUploads(count => Math.max(0, count + delta)), []);
   const parsedInitialData = initialData ? payloadToMessages(initialData) : null;
-  const inputClassName = "bg-background border-border/80";
+  const inputClassName = "rounded-xl border-0 bg-muted/55 shadow-sm shadow-black/5";
   const compactInputClassName = COMPACT_INPUT_CN;
   const compactTextareaClassName = COMPACT_TEXTAREA_CN;
 
   const [messages, setMessages] = useState<MessageState[]>(() =>
     parsedInitialData ? parsedInitialData.messages : [{ id: uid(), mode: "v1", embeds: [defaultState()], content: "", components: [] }]
   );
+  const [formatChosen, setFormatChosen] = useState(() => !isTicketPanel || !!parsedInitialData?.messages.some(message =>
+    message.content.trim().length > 0 || message.components.length > 0 || message.embeds.map(stateToEmbed).some(hasMeaningfulEmbedContent)
+  ));
+  const savedMessageState = useRef(JSON.stringify(messages));
+  useEffect(() => { onDirtyChange?.(JSON.stringify(messages) !== savedMessageState.current); }, [messages, onDirtyChange]);
   const [expandedEmbedId, setExpandedEmbedId] = useState<string | null>(() =>
     parsedInitialData?.messages[0]?.embeds[0]?.editorId ?? null
   );
@@ -2206,7 +1439,6 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
 
   // ── V2 Component management ──────────────────────────────────────────────────
 
-  const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [expandedV2Ids, setExpandedV2Ids] = useState<Set<string>>(new Set());
   const toggleV2Expanded = (id: string) =>
     setExpandedV2Ids(prev => { // NOSONAR
@@ -2221,9 +1453,21 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
       components: typeof updater === "function" ? updater(msg.components) : updater,
     } : msg));
 
+  const createBoundV2Component = (type: TopLevelComponentState["type"]): TopLevelComponentState => {
+    const component = createDefaultV2Component(type), action = ticketActions?.[0];
+    if (action && component.type === "action_row") component.buttons = [{ id: uid(), customId: action.customId, label: action.label, style: 2, url: "", disabled: false }];
+    if (action && component.type === "string_select") {
+      component.customId = `ck:ticket:menu:${action.customId.split(":")[3]}:${component.customId}`;
+      component.options = [{ id: uid(), label: action.label, value: action.customId, description: "", isDefault: false }];
+    }
+    return component;
+  };
+
   const addV2Component = (messageIndex: number, type: TopLevelComponentState["type"]) => {
-    const newComp = createDefaultV2Component(type);
+    if (ticketActions?.length === 0 && ["action_row", "string_select"].includes(type)) return;
+    const newComp = createBoundV2Component(type);
     setV2Components(messageIndex, prev => [...prev, newComp]);
+    setExpandedV2Ids(previous => new Set(previous).add(newComp.id));
   };
 
   const removeV2Component = (messageIndex: number, id: string) =>
@@ -2252,10 +1496,18 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
 
   const applyParsed = (parsed: Record<string, unknown>) => {
     const { messages: parsedMessages, profile: parsedProfile } = payloadToMessages(parsed);
+    if (isTicketPanel && (parsedMessages.length !== 1 || parsedMessages[0]?.mode !== messages[0]?.mode)) {
+      setImportError(true);
+      return;
+    }
+    if (ticketActions !== undefined && parsedMessages.some(message => hasUnassignedTicketActions(message.components.map(serializeComponentState), ticketActions))) {
+      setImportError(true);
+      return;
+    }
     setImportError(false);
     setImportUrl("");
     setMessages(parsedMessages);
-    setProfile(parsedProfile);
+    setProfile(isTicketPanel ? EMPTY_MESSAGE_PROFILE : parsedProfile);
     setExpandedEmbedId(parsedMessages[0]?.embeds[0]?.editorId ?? null); // NOSONAR
     setImportWarning(null);
     setImportExportOpen(false);
@@ -2300,21 +1552,32 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
 
   // ── Save ────────────────────────────────────────────────────────────────────
 
-  const handleSave = () => onSave(stateToPayload(messages, profile));
+  const outputMessages = ticketActions === undefined ? messages : messages.map(message => ({ ...message, components: message.components.map(singleChoiceTicketMenu) }));
 
-  const discohookPayload = stateToPayload(messages, profile);
+  const emptyContainers = outputMessages.flatMap(message => message.mode === "v2" ? message.components.flatMap((component, index) =>
+    component.type === "container" && component.children.length === 0 ? [{ id: component.id, number: index + 1 }] : []) : []);
+
+  const handleSave = async () => {
+    if (activeUploads > 0 || isSaving || emptyContainers.length > 0) return;
+    try { await onSave(stateToPayload(outputMessages, profile)); } catch { return; }
+    savedMessageState.current = JSON.stringify(messages);
+    onDirtyChange?.(false);
+  };
+
+  const discohookPayload = stateToPayload(outputMessages, profile);
+  const unassignedActions = ticketActions !== undefined && hasUnassignedTicketActions(discohookPayload.components ?? (discohookPayload.messages as { data: { components?: unknown } }[] | undefined)?.[0]?.data.components, ticketActions);
   const discohookUrl = buildDiscohookUrl(discohookPayload);
-  const previewMessages = messages.map((message) => ({
+  const previewMessages = outputMessages.map((message) => ({
     id: message.id,
     content: message.content,
     embeds: message.mode === "v1" ? message.embeds.map(stateToEmbed).filter(hasMeaningfulEmbedContent) : [],
     isV2: message.mode === "v2",
-    components: message.mode === "v2" ? message.components.map(serializeComponentState).filter((c): c is TopLevelComponent => c !== null) : [],
+    components: message.components.map(serializeComponentState).filter((c): c is TopLevelComponent => c !== null),
   }));
   const hasContent =
     messages.some(msg => {
       if (msg.mode === "v2") return msg.components.length > 0;
-      return msg.embeds.map(stateToEmbed).some(hasMeaningfulEmbedContent) || msg.content.trim().length > 0; // NOSONAR
+      return msg.components.length > 0 || msg.embeds.map(stateToEmbed).some(hasMeaningfulEmbedContent) || msg.content.trim().length > 0; // NOSONAR
     }) ||
     profile.name.trim().length > 0 || // NOSONAR
     profile.avatarUrl.trim().length > 0;
@@ -2325,35 +1588,46 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
     setTimeout(() => setCopiedDiscohook(false), 2000); // NOSONAR
   };
 
+  if (!formatChosen) return <section className="space-y-5 rounded-3xl bg-card p-5 sm:p-6" aria-label={t("messageFormat")}>
+    <h3 className="text-base font-semibold">{t("messageFormat")}</h3>
+    <div className="grid gap-3 sm:grid-cols-2">{(["v2", "v1"] as const).map(mode => <Button key={mode} variant="ghost"
+      className="h-auto justify-start whitespace-normal rounded-2xl bg-muted/55 p-5 text-left shadow-sm shadow-black/5 hover:bg-muted"
+      onClick={() => { setMessages(previous => previous.map(message => ({ ...message, mode }))); setFormatChosen(true); onFormatChosen?.(); }}>
+      <span className="space-y-1"><span className="flex items-center gap-2 text-sm font-semibold">{t(mode === "v1" ? "addMessageClassicTitle" : "addMessageV2Title")}{mode === "v2" && <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">{t("recommendedFormat")}</span>}</span>
+        <span className="block text-sm font-normal text-muted-foreground">{t(mode === "v1" ? "classicFormatHint" : "v2FormatHint")}</span></span>
+    </Button>)}</div>
+    <Button variant="ghost" onClick={onCancel}>{tCommon("cancel")}</Button>
+  </section>;
+
   return (
-    <div className="flex flex-col h-full min-h-0 bg-card text-card-foreground">
+    <TicketActionsContext.Provider value={ticketActions}><ImageUploadActivityContext.Provider value={updateUploadActivity}><div data-ticket-message-editor={isTicketPanel || undefined} className={cn("flex flex-col bg-card text-card-foreground", !isTicketPanel && "h-full min-h-0")}>
       {/* Two-column body */}
-      <div className="flex min-h-0 flex-1 flex-col overflow-hidden md:flex-row">
+      <div className={isTicketPanel ? "grid min-w-0 items-start md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]" : "flex min-h-0 flex-1 flex-col overflow-hidden md:flex-row"}>
 
         {/* ── Left: form ── */}
-        <div className="w-full overflow-y-auto border-b border-border bg-card px-4 py-5 space-y-5 md:w-[52%] md:border-b-0 md:border-r md:px-6">
+        <div className={cn("min-w-0 space-y-5 bg-card px-4 py-5 md:px-6", !isTicketPanel && "w-full overflow-y-auto border-b border-border md:w-[52%] md:border-b-0 md:border-r")}>
 
           <div className="flex items-center justify-between">
-            <Button size="sm" variant="secondary" className="h-8" onClick={() => setImportExportOpen(true)}>
+            <Button size="sm" variant="secondary" className="h-8 rounded-xl border-0 bg-muted/55" onClick={() => setImportExportOpen(true)}>
               <Link2 className="h-3.5 w-3.5 mr-1" />{t("importExport")}
             </Button>
-            <Button
+            {!isTicketPanel && <Button
               size="sm"
               className="h-8 bg-destructive text-destructive-foreground hover:bg-destructive/90"
               onClick={() => setAddMessageDialogOpen(true)}
             >
               <Plus className="h-3 w-3 mr-1" />{t("addMessage")}
-            </Button>
+            </Button>}
           </div>
 
-          <Separator />
+          {!isTicketPanel && <Separator />}
 
           {/* ── Message headers ── */}
           <div className="space-y-2">
             <div className="space-y-2">
               {messages.map((msg, i) => (
-                <div key={msg.id} className={cn("rounded-lg border bg-card", expandedMessageIds.has(msg.id) ? "border-primary/60" : "border-border/80")}>
-                  <div className="flex items-center gap-2 px-3 py-2">
+                <div key={msg.id} className={cn("rounded-lg bg-card", !isTicketPanel && "border", !isTicketPanel && (expandedMessageIds.has(msg.id) ? "border-primary/60" : "border-border/80"))}>
+                  {!isTicketPanel && <div className="flex items-center gap-2 px-3 py-2">
                     <button
                       type="button"
                       className="flex min-w-0 flex-1 items-center gap-2 text-left"
@@ -2372,7 +1646,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                     >
                       {expandedMessageIds.has(msg.id) ? <ChevronDown className="h-4 w-4 text-muted-foreground" /> : <ChevronRight className="h-4 w-4 text-muted-foreground" />}
                       <span className="truncate text-base font-semibold">{`Message ${i + 1}`}</span>
-                      <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-semibold uppercase text-muted-foreground">
+                      <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-semibold text-muted-foreground">
                         {msg.mode === "v2" ? "Components v2" : "Classic"}
                       </span>
                     </button>
@@ -2413,9 +1687,9 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
-                  </div>
-                  {expandedMessageIds.has(msg.id) && (
-                    <div className="border-t border-border/80 p-3 space-y-4">
+                  </div>}
+                  {(isTicketPanel || expandedMessageIds.has(msg.id)) && (
+                    <div className={cn("space-y-4", !isTicketPanel && "border-t border-border/80 p-3")}>
                       {msg.mode === "v1" ? (
             <>
               <div className="space-y-1">
@@ -2435,7 +1709,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                 />
               </div>
 
-              <CollapsibleSection title={t("profileSection")} open={profileOpen} onToggle={() => setProfileOpen((prev) => !prev)}>
+              {!isTicketPanel && <CollapsibleSection title={t("profileSection")} open={profileOpen} onToggle={() => setProfileOpen((prev) => !prev)}>
                 <div className="space-y-3">
                   <div className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-900 dark:text-amber-100">
                     {t("profileUnsupportedWarning")}
@@ -2453,23 +1727,18 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                     />
                   </Field>
                   <Field label={t("profileAvatarUrl")}>
-                    <Input
-                      value={profile.avatarUrl}
-                      onChange={(event) => setProfile((prev) => ({ ...prev, avatarUrl: event.target.value }))}
-                      placeholder="https://..."
-                      className={compactInputClassName}
-                    />
+                    <UploadedImageField value={profile.avatarUrl} label={t("profileAvatarUrl")} onChange={avatarUrl => setProfile(prev => ({ ...prev, avatarUrl }))} />
                   </Field>
                 </div>
-              </CollapsibleSection>
+              </CollapsibleSection>}
 
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-semibold text-foreground dark:text-white">{`Embeds (${msg.embeds.length}/${MAX_DISCORD_EMBEDS_PER_MESSAGE})`}</h3>
                   <Button
                     size="sm"
-                    variant="outline"
-                    className="h-7 text-xs"
+                    variant="secondary"
+                    className="h-8 rounded-xl border-0 bg-muted/55 text-xs"
                     onClick={() => addEmbed(i)}
                     disabled={msg.embeds.length >= MAX_DISCORD_EMBEDS_PER_MESSAGE}
                   >
@@ -2477,14 +1746,13 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                   </Button>
                 </div>
                 {msg.embeds.map((embed, index) => {
-                  const label = embed.title.trim() || embed.description.trim().slice(0, 40) || `Embed ${index + 1}`;
+                  const label = embed.title.trim() || embed.description.trim().slice(0, 40);
                   const isExpanded = expandedEmbedId === embed.editorId;
                   return (
                     <div
                       key={embed.editorId}
                       className={cn(
-                        "rounded-lg border bg-card",
-                        isExpanded ? "border-primary/60" : "border-border/80",
+                        "rounded-2xl bg-muted/25",
                       )}
                     >
                       <div className="flex items-center gap-2 px-3 py-2">
@@ -2494,7 +1762,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                           onClick={() => setExpandedEmbedId((prev) => (prev === embed.editorId ? null : embed.editorId))}
                         >
                           {isExpanded ? <ChevronDown className="h-4 w-4 text-muted-foreground" /> : <ChevronRight className="h-4 w-4 text-muted-foreground" />}
-                          <span className="truncate text-base font-semibold">{`Embed ${index + 1} - ${label}`}</span>
+                          <span className="truncate text-sm font-semibold">{`Embed ${index + 1}${label ? ` · ${label}` : ""}`}</span>
                         </button>
                         <div className="flex items-center gap-1">
                           <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => moveEmbed(i, embed.editorId, -1)} disabled={index === 0}>
@@ -2512,7 +1780,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                         </div>
                       </div>
                       {isExpanded && (
-                        <div className="border-t border-border/80">
+                        <div className="space-y-1 px-2 pb-2">
                           <CollapsibleSection title={t("authorSection")} open={embed.openSections.author} onToggle={() => toggleSection(i, embed.editorId, "author")}>
                             <div className="space-y-3">
                               <Field label="">
@@ -2525,8 +1793,8 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                               <Field label={t("authorUrl")}>
                                 <Input value={embed.authorUrl} onChange={e => setEmbedField(i, embed.editorId, "authorUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
                               </Field>
-                              <Field label={t("authorIconUrl")}>
-                                <Input value={embed.authorIconUrl} onChange={e => setEmbedField(i, embed.editorId, "authorIconUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
+                              <Field label={t("authorImageLabel")}>
+                                <UploadedImageField value={embed.authorIconUrl} label={t("authorImageLabel")} onChange={url => setEmbedField(i, embed.editorId, "authorIconUrl", url)} />
                               </Field>
                             </div>
                           </CollapsibleSection>
@@ -2544,23 +1812,8 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                                 <Input value={embed.titleUrl} onChange={e => setEmbedField(i, embed.editorId, "titleUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
                               </Field>
                               <Field label={t("sidebarColor")}>
-                                <div className="flex items-center gap-2">
-                                  <input
-                                    type="color"
-                                    value={embed.color || "#5865f2"}
-                                    onChange={e => setEmbedField(i, embed.editorId, "color", e.target.value)}
-                                    className="h-9 w-14 cursor-pointer rounded border border-input bg-background p-0.5"
-                                  />
-                                  <Input
-                                    value={embed.color}
-                                    onChange={e => {
-                                      const value = e.target.value;
-                                      if (/^#[0-9a-fA-F]{0,6}$/.test(value)) setEmbedField(i, embed.editorId, "color", value);
-                                    }}
-                                    className={cn(inputClassName, "font-mono text-sm w-28")}
-                                    maxLength={7}
-                                  />
-                                </div>
+                                <EmbedColorPicker compact value={hexToIntSafe(embed.color) ?? 0x5865f2} defaultValue={0x5865f2} unset={hexToIntSafe(embed.color) === null}
+                                  onChange={color => setEmbedField(i, embed.editorId, "color", intToHex(color))} />
                               </Field>
                               <Field label="">
                                 <div className="mb-1 flex items-center justify-between">
@@ -2589,7 +1842,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                                 </Button>
                               </div>
                               {embed.fields.map((field, fieldIndex) => (
-                                <div key={field.id} className="rounded-lg border border-border/80 bg-card p-3 space-y-2">
+                                <div key={field.id} className="space-y-3 pt-3">
                                   <div className="flex items-center justify-between gap-2">
                                     <span className="text-xs font-medium text-muted-foreground">{t("field")} {fieldIndex + 1}</span>
                                     <div className="flex items-center gap-1">
@@ -2634,11 +1887,11 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
 
                           <CollapsibleSection title={t("imagesSection")} open={embed.openSections.images} onToggle={() => toggleSection(i, embed.editorId, "images")}>
                             <div className="space-y-3">
-                              <Field label={t("thumbnailUrl")}>
-                                <Input value={embed.thumbnailUrl} onChange={e => setEmbedField(i, embed.editorId, "thumbnailUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
+                              <Field label={t("thumbnailUploadLabel")}>
+                                <UploadedImageField value={embed.thumbnailUrl} label={t("thumbnailUploadLabel")} onChange={url => setEmbedField(i, embed.editorId, "thumbnailUrl", url)} />
                               </Field>
-                              <Field label={t("imageUrl")}>
-                                <Input value={embed.imageUrl} onChange={e => setEmbedField(i, embed.editorId, "imageUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
+                              <Field label={t("imageUploadLabel")}>
+                                <UploadedImageField value={embed.imageUrl} label={t("imageUploadLabel")} onChange={url => setEmbedField(i, embed.editorId, "imageUrl", url)} />
                               </Field>
                             </div>
                           </CollapsibleSection>
@@ -2652,8 +1905,8 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                                 </div>
                                 <MentionTextField value={embed.footerText} onValueChange={(nextValue) => setEmbedField(i, embed.editorId, "footerText", nextValue)} maxLength={2048} className={compactInputClassName} mentionContext={mentionContext} />
                               </Field>
-                              <Field label={t("footerIconUrl")}>
-                                <Input value={embed.footerIconUrl} onChange={e => setEmbedField(i, embed.editorId, "footerIconUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
+                              <Field label={t("footerImageLabel")}>
+                                <UploadedImageField value={embed.footerIconUrl} label={t("footerImageLabel")} onChange={url => setEmbedField(i, embed.editorId, "footerIconUrl", url)} />
                               </Field>
                               <label className="flex items-center gap-2 cursor-pointer">
                                 <input
@@ -2672,21 +1925,25 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                   );
                 })}
               </div>
+              {isTicketPanel && <div className="space-y-3">
+                {msg.components.filter((component): component is ActionRowState => component.type === "action_row").map(component =>
+                  <div key={component.id} className="space-y-3">
+                    <div className="flex justify-end"><Button size="sm" variant="ghost" onClick={() => removeV2Component(i, component.id)}><Trash2 className="h-4 w-4" />{tCommon("delete")}</Button></div>
+                    <ActionRowEditorFields comp={component} onChange={updated => updateV2Component(i, component.id, () => updated)} />
+                  </div>)}
+                <Button size="sm" variant="secondary" className="rounded-xl border-0 bg-muted/55" disabled={msg.components.length >= 5 || ticketActions?.length === 0} onClick={() => addV2Component(i, "action_row")}><Plus className="h-4 w-4" />{t("actionRowLabel")}</Button>
+              </div>}
             </>
                       ) : (
             /* ── V2 Components editor ── */
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <SectionLabel>{t("componentsSection")}</SectionLabel>
-                <div className="relative">
-                  <Button size="sm" variant="outline" className="h-7 text-xs"
-                    onClick={() => setOpenDropdownId(prev => prev === `__top__:${msg.id}` ? null : `__top__:${msg.id}`)}>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild><Button size="sm" variant="secondary" className="h-8 text-xs">
                     <Plus className="h-3.5 w-3.5 mr-1" />{t("addComponent")}
-                  </Button>
-                  {openDropdownId === `__top__:${msg.id}` && (
-                    <>
-                      <button type="button" tabIndex={-1} aria-hidden="true" className="fixed inset-0 z-10 cursor-default" onClick={() => setOpenDropdownId(null)} />
-                      <div className="absolute right-0 top-8 z-20 rounded-md border border-border bg-card shadow-lg min-w-[160px]">
+                  </Button></DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" collisionPadding={12} className="max-h-[var(--radix-dropdown-menu-content-available-height)] min-w-48 rounded-xl">
                         {([
                           { type: "container" as const, label: t("containerLabel") },
                           { type: "text_display" as const, label: t("textDisplayLabel") },
@@ -2700,17 +1957,13 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                           { type: "mentionable_select" as const, label: t("mentionableSelectLabel") },
                           { type: "channel_select" as const, label: t("channelSelectLabel") },
                           { type: "file" as const, label: t("fileLabel") },
-                        ] as const).map(item => (
-                          <button key={item.type} type="button"
-                            className="w-full text-left px-3 py-1.5 text-sm hover:bg-accent transition-colors"
-                            onClick={() => { addV2Component(i, item.type); setOpenDropdownId(null); }}>
+                        ] as const).filter(item => (!isTicketPanel || item.type !== "file") && (ticketActions === undefined || !["user_select", "role_select", "mentionable_select", "channel_select"].includes(item.type))).map(item => (
+                          <DropdownMenuItem key={item.type} disabled={ticketActions?.length === 0 && ["action_row", "string_select"].includes(item.type)} onSelect={() => addV2Component(i, item.type)}>
                             {item.label}
-                          </button>
+                          </DropdownMenuItem>
                         ))}
-                      </div>
-                    </>
-                  )}
-                </div>
+                      </DropdownMenuContent>
+                </DropdownMenu>
               </div>
               {msg.components.map((comp, compIdx) => {
                 const compV2Labels: Record<string, string> = {
@@ -2732,7 +1985,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                   ? `${t("unknownComponent")} (type ${comp.rawType})`
                   : (compV2Labels[comp.type] ?? t("sectionLabel"));
                 return (
-                  <div key={comp.id} className={cn("rounded-lg border bg-card", isExpanded ? "border-primary/60" : "border-border/80")}>
+                  <div key={comp.id} className={cn(isTicketPanel ? "rounded-2xl bg-muted/35" : "rounded-lg border bg-card", !isTicketPanel && (isExpanded ? "border-primary/60" : "border-border/80"))}>
                     <div className="flex items-center gap-2 px-3 py-2">
                       <button type="button" className="flex min-w-0 flex-1 items-center gap-2 text-left"
                         onClick={() => toggleV2Expanded(comp.id)}>
@@ -2751,8 +2004,9 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                         </Button>
                       </div>
                     </div>
+                    {!isExpanded && comp.type === "container" && comp.children.length === 0 && <p role="alert" className="px-3 pb-3 text-sm text-destructive">{t("emptyContainerError", { number: compIdx + 1 })}</p>}
                     {isExpanded && (
-                      <div className="border-t border-border/80 px-3 py-3 space-y-3">
+                      <div className={cn("px-3 py-3 space-y-3", !isTicketPanel && "border-t border-border/80")}>
                         {comp.type === "action_row" && (
                           <ActionRowEditorFields
                             comp={comp}
@@ -2794,6 +2048,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                           <MediaGalleryEditorFields
                             comp={comp}
                             onChange={updated => updateV2Component(i, comp.id, () => updated)}
+                            onImageChange={(itemId, url) => updateV2Component(i, comp.id, current => current.type === "media_gallery" ? { ...current, items: current.items.map(item => item.id === itemId ? { ...item, url } : item) } : current)}
                           />
                         )}
                         {comp.type === "section" && (
@@ -2811,19 +2066,12 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                         )}
                         {comp.type === "container" && (
                           <div className="space-y-2">
-                            <Field label={t("accentColor")}>
-                              <div className="flex items-center gap-2">
-                                <input type="color" value={comp.accentColor || "#5865f2"}
-                                  onChange={e => updateV2Component(i, comp.id, c => c.type === "container" ? { ...c, accentColor: e.target.value } : c)}
-                                  className="h-9 w-14 cursor-pointer rounded border border-input bg-background p-0.5" />
-                                <Input value={comp.accentColor}
-                                  onChange={e => {
-                                    const val = e.target.value;
-                                    if (/^#[0-9a-fA-F]{0,6}$/.test(val)) updateV2Component(i, comp.id, c => c.type === "container" ? { ...c, accentColor: val } : c);
-                                  }}
-                                  className={cn(inputClassName, "font-mono text-sm w-28")} maxLength={7} />
-                              </div>
-                            </Field>
+                            <div className="flex items-center justify-between gap-3">
+                              <span className="text-sm text-muted-foreground">{t("accentColor")}</span>
+                              <EmbedColorPicker compact value={hexToIntSafe(comp.accentColor) ?? 0x5865f2} defaultValue={0x5865f2} unset={hexToIntSafe(comp.accentColor) === null}
+                                onChange={color => updateV2Component(i, comp.id, c => c.type === "container" ? { ...c, accentColor: intToHex(color) } : c)} />
+                            </div>
+                            {comp.children.length === 0 && <p role="alert" className="text-sm text-destructive">{t("emptyContainerError", { number: compIdx + 1 })}</p>}
                             <label className="flex items-center gap-2 cursor-pointer">
                               <input type="checkbox" checked={comp.spoiler ?? false}
                                 onChange={e => updateV2Component(i, comp.id, c => c.type === "container" ? { ...c, spoiler: e.target.checked } : c)}
@@ -2846,7 +2094,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                               };
                               const childLabel = childV2Labels[child.type] ?? t("sectionLabel");
                               return (
-                                <div key={child.id} className={cn("ml-3 rounded-md border", childIsExpanded ? "border-primary/40" : "border-border/60")}>
+                                <div key={child.id} className="space-y-1 pt-2">
                                   <div className="flex items-center gap-2 px-2 py-1.5">
                                     <button type="button" className="flex min-w-0 flex-1 items-center gap-1.5 text-left"
                                       onClick={() => toggleV2Expanded(child.id)}>
@@ -2871,7 +2119,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                                     </div>
                                   </div>
                                   {childIsExpanded && (
-                                    <div className="border-t border-border/60 px-3 py-2 space-y-2">
+                                    <div className="px-3 py-2 space-y-3">
                                       {child.type === "text_display" && (
                                         <MentionTextField
                                           value={child.content}
@@ -2892,6 +2140,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                                         <MediaGalleryEditorFields
                                           comp={child}
                                           onChange={updated => updateContainerChildren(i, comp.id, children => children.map(c => c.id === child.id ? updated : c))}
+                                          onImageChange={(itemId, url) => updateContainerChildren(i, comp.id, children => children.map(current => current.id === child.id && current.type === "media_gallery" ? { ...current, items: current.items.map(item => item.id === itemId ? { ...item, url } : item) } : current))}
                                         />
                                       )}
                                       {child.type === "section" && (
@@ -2930,15 +2179,11 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                                 </div>
                               );
                             })}
-                            <div className="relative">
-                              <Button size="sm" variant="outline" className="h-7 text-xs w-full"
-                                onClick={() => setOpenDropdownId(prev => prev === comp.id ? null : comp.id)}>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild><Button size="sm" variant="secondary" className="h-8 text-xs w-full">
                                 <Plus className="h-3.5 w-3.5 mr-1" />{t("addContainer")}
-                              </Button>
-                              {openDropdownId === comp.id && (
-                                <>
-                                <button type="button" tabIndex={-1} aria-hidden="true" className="fixed inset-0 z-10 cursor-default" onClick={() => setOpenDropdownId(null)} />
-                                  <div className="absolute left-0 top-8 z-20 rounded-md border border-border bg-card shadow-lg min-w-[160px]">
+                              </Button></DropdownMenuTrigger>
+                                  <DropdownMenuContent align="start" collisionPadding={12} className="max-h-[var(--radix-dropdown-menu-content-available-height)] min-w-48 rounded-xl">
                                     {([
                                       { type: "text_display" as const, label: t("textDisplayLabel") },
                                       { type: "separator" as const, label: t("separatorLabel") },
@@ -2951,17 +2196,17 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                                       { type: "mentionable_select" as const, label: t("mentionableSelectLabel") },
                                       { type: "channel_select" as const, label: t("channelSelectLabel") },
                                       { type: "file" as const, label: t("fileLabel") },
-                                    ] as const).map(item => (
-                                      <button key={item.type} type="button"
-                                        className="w-full text-left px-3 py-1.5 text-sm hover:bg-accent transition-colors"
-                                        onClick={() => { updateContainerChildren(i, comp.id, prev => [...prev, createDefaultV2Component(item.type) as ContainerChildState]); setOpenDropdownId(null); }}>
+                                    ] as const).filter(item => (!isTicketPanel || item.type !== "file") && (ticketActions === undefined || !["user_select", "role_select", "mentionable_select", "channel_select"].includes(item.type))).map(item => (
+                                      <DropdownMenuItem key={item.type} disabled={ticketActions?.length === 0 && ["action_row", "string_select"].includes(item.type)} onSelect={() => {
+                                        const child = createBoundV2Component(item.type) as ContainerChildState;
+                                        updateContainerChildren(i, comp.id, prev => [...prev, child]);
+                                        setExpandedV2Ids(previous => new Set(previous).add(child.id));
+                                      }}>
                                         {item.label}
-                                      </button>
+                                      </DropdownMenuItem>
                                     ))}
-                                  </div>
-                                </>
-                              )}
-                            </div>
+                                  </DropdownMenuContent>
+                            </DropdownMenu>
                           </div>
                         )}
                       </div>
@@ -2983,13 +2228,13 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
         </div>
 
         {/* ── Right: preview ── */}
-        <div className="flex flex-1 flex-col bg-card">
+        <div className="flex min-w-0 flex-1 flex-col bg-card">
           <button
             type="button"
             className="flex items-center justify-between border-b border-border px-4 py-3 text-left md:hidden"
             onClick={() => setIsMobilePreviewOpen(prev => !prev)}
           >
-            <span className="text-[11px] font-semibold uppercase text-muted-foreground">
+            <span className="text-xs font-medium text-muted-foreground">
               {t("preview")}
             </span>
             {isMobilePreviewOpen ? (
@@ -3014,9 +2259,10 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                       mentionContext={mentionContext}
                     />
                   ))}
+                  {previewActions}
                 </div>
               ) : (
-                <div className="flex h-40 items-center justify-center rounded-xl border border-dashed border-border text-sm text-muted-foreground">
+                <div className="flex h-40 items-center justify-center rounded-2xl bg-muted/25 px-4 text-sm text-muted-foreground">
                   {t("previewEmpty")}
                 </div>
               )}
@@ -3025,7 +2271,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
 
           <div className="hidden max-h-screen overflow-y-auto p-5 md:sticky md:top-0 md:block">
             <div className="flex items-center gap-2 mb-3">
-              <p className="text-[11px] font-semibold uppercase text-muted-foreground">
+              <p className="text-xs font-medium text-muted-foreground">
                 {t("preview")}
               </p>
             </div>
@@ -3042,9 +2288,10 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                     mentionContext={mentionContext}
                   />
                 ))}
+                {previewActions}
               </div>
             ) : (
-              <div className="flex items-center justify-center h-40 rounded-xl border border-dashed border-border text-muted-foreground text-sm">
+              <div className="flex items-center justify-center h-40 rounded-2xl bg-muted/25 px-4 text-muted-foreground text-sm">
                 {t("previewEmpty")}
               </div>
             )}
@@ -3053,9 +2300,10 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
       </div>
 
       {/* Footer actions */}
-      <div className="border-t border-border px-6 py-4 flex justify-end gap-2 shrink-0">
+      {unassignedActions && <p role="alert" className="px-6 pt-3 text-sm text-destructive">{t("assignTicketActions")}</p>}
+      <div className={cn("px-6 py-4 flex justify-end gap-2 shrink-0", !isTicketPanel && "border-t border-border")}>
         <Button variant="outline" onClick={onCancel}>{tCommon("cancel")}</Button>
-        <Button onClick={handleSave} disabled={isSaving || !hasContent}>
+        <Button onClick={handleSave} disabled={isSaving || activeUploads > 0 || !hasContent || unassignedActions || emptyContainers.length > 0}>
           {isSaving && <span className="mr-2 h-4 w-4 animate-spin border-2 border-current border-t-transparent rounded-full inline-block" />}
           {tCommon("save")}
         </Button>
@@ -3078,7 +2326,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
               <div className="min-w-0 text-left">
                 <p className="flex items-center gap-2 text-sm font-semibold">
                   <span>{t("addMessageV2Title")}</span>
-                  <span className="rounded bg-amber-500/20 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-amber-700 dark:text-amber-300">
+                  <span className="rounded bg-amber-500/20 px-1.5 py-0.5 text-[10px] font-semibold text-amber-700 dark:text-amber-300">
                     {t("betaTag")}
                   </span>
                 </p>
@@ -3132,7 +2380,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+    </div></ImageUploadActivityContext.Provider></TicketActionsContext.Provider>
   );
 }
 

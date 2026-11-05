@@ -47,11 +47,15 @@ export function MobileServerDropdown({
       return;
     }
     const icon = guild.icon?.startsWith("https") ? guild.icon : undefined;
-    sessionStorage.setItem("selected_guild", JSON.stringify({
-      id: guild.id,
-      name: guild.name,
-      icon,
-    }));
+    try {
+      sessionStorage.setItem("selected_guild", JSON.stringify({
+        id: guild.id,
+        name: guild.name,
+        icon,
+      }));
+    } catch {
+      // This optional cache must not block navigation if browser storage is full or disabled.
+    }
     setIsDropdownOpen(false);
     router.push(dashboardHref("", guild.id));
   };

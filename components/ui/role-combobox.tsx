@@ -27,6 +27,7 @@ interface Role {
 }
 
 interface RoleComboboxProps {
+  readonly id?: string
   readonly roles: Role[]
   readonly value?: string
   readonly onValueChange?: (value: string) => void
@@ -46,6 +47,7 @@ function intToHexColor(color: number): string {
 }
 
 export function RoleCombobox({
+  id,
   roles,
   value,
   onValueChange,
@@ -76,6 +78,7 @@ export function RoleCombobox({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
+          id={id}
           variant="outline"
           role="combobox"
           aria-expanded={open}

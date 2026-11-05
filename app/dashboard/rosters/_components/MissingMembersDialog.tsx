@@ -2,6 +2,9 @@
 
 import React, { useState } from "react";
 import { useTranslations } from "use-intl";
+import Image from "@/components/app-image";
+import { Input } from "@/components/ui/input";
+import { townHallImageUrl, clanBadgeUrl, playerLeagueImageUrl } from "@/lib/clash-asset-urls";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -39,6 +42,7 @@ export function MissingMembersDialog({
   const t = useTranslations("RostersPage");
   const [selectedMembers, setSelectedMembers] = useState<Set<string>>(new Set());
   const [adding, setAdding] = useState(false);
+  const [search, setSearch] = useState("");
   const [viewMode, setViewMode] = useState<'roster' | 'group'>('roster');
 
   // Load data when dialog opens or view mode changes
@@ -52,16 +56,22 @@ export function MissingMembersDialog({
   React.useEffect(() => {
     if (!open) {
       setSelectedMembers(new Set());
+      setSearch("");
       setViewMode('roster');
     }
   }, [open]);
 
   const handleViewModeChange = (mode: 'roster' | 'group') => {
+    setSelectedMembers(new Set());
     setViewMode(mode);
   };
 
   const validResults = data?.results?.filter(r => r.state === 'ok') ?? [];
-  const allMissingMembers = validResults.flatMap(r => r.missing_members ?? []);
+  const allMissingMembers = [...new Map(validResults.flatMap(r => r.missing_members ?? []).map(member => [member.tag, member])).values()];
+  const query = search.trim().toLocaleLowerCase();
+  const filteredResults = validResults.map(result => ({ ...result, missing_members: result.missing_members?.filter(member =>
+    [member.name, member.tag, member.clan_name, member.clan_tag].some(value => value?.toLocaleLowerCase().includes(query))) }));
+  const visibleMembers = [...new Map(filteredResults.flatMap(result => result.missing_members ?? []).map(member => [member.tag, member])).values()];
 
   const toggleMember = (tag: string) => {
     setSelectedMembers(prev => {
@@ -73,11 +83,12 @@ export function MissingMembersDialog({
   };
 
   const toggleAll = () => {
-    if (selectedMembers.size === allMissingMembers.length) {
-      setSelectedMembers(new Set());
-    } else {
-      setSelectedMembers(new Set(allMissingMembers.map(m => m.tag)));
-    }
+    const allSelected = visibleMembers.every(member => selectedMembers.has(member.tag));
+    setSelectedMembers(previous => {
+      const next = new Set(previous);
+      visibleMembers.forEach(member => allSelected ? next.delete(member.tag) : next.add(member.tag));
+      return next;
+    });
   };
 
   const handleAddSelected = async () => {
@@ -93,10 +104,10 @@ export function MissingMembersDialog({
   };
 
   const handleAddAll = async () => {
-    if (allMissingMembers.length === 0) return;
+    if (visibleMembers.length === 0) return;
     setAdding(true);
     try {
-      await onAddMembers(allMissingMembers.map(m => m.tag));
+      await onAddMembers(visibleMembers.map(m => m.tag));
       onLoad(viewMode === 'group' && groupId ? groupId : undefined);
     } finally {
       setAdding(false);
@@ -107,7 +118,7 @@ export function MissingMembersDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent variant="form" className="bg-card sm:max-w-2xl">
+      <DialogContent variant="form" className="flex max-h-[85dvh] flex-col overflow-hidden bg-card sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle className="text-foreground flex items-center gap-2">
             <UserMinus className="w-5 h-5" />
@@ -142,6 +153,9 @@ export function MissingMembersDialog({
           </div>
         )}
 
+        <Input aria-label={t("addMembersDialog.searchLabel")} placeholder={t("addMembersDialog.searchPlaceholder")} value={search}
+          onChange={event => setSearch(event.target.value)} className="h-10 shrink-0 rounded-xl border-0 bg-muted/55" />
+        <div className="scrollbar-custom min-h-0 flex-1 overflow-y-auto overscroll-contain pr-2">
         {loading ? (
           <div className="flex items-center justify-center py-12">
             <Loader2 className="w-8 h-8 animate-spin text-primary" />
@@ -152,18 +166,19 @@ export function MissingMembersDialog({
               {data?.results?.find(r => r.state === 'error')?.error_message || t("missingMembers.error")}
             </p>
           </div>
-        ) : allMissingMembers.length > 0 ? ( // NOSONAR — JSX nested ternary for multi-branch display state
+        ) : visibleMembers.length > 0 ? ( // NOSONAR — JSX nested ternary for multi-branch display state
           <div className="space-y-4">
             {/* Select all */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Checkbox
                   id="select-all"
-                  checked={selectedMembers.size === allMissingMembers.length && allMissingMembers.length > 0}
+                  checked={visibleMembers.length > 0 && visibleMembers.every(member => selectedMembers.has(member.tag))}
+                  disabled={visibleMembers.length === 0}
                   onCheckedChange={toggleAll}
                 />
                 <label htmlFor="select-all" className="text-sm text-foreground cursor-pointer">
-                  {t("missingMembers.selectAll")} ({allMissingMembers.length})
+                  {t("missingMembers.selectAll")} ({visibleMembers.length})
                 </label>
               </div>
               <Badge
@@ -178,11 +193,11 @@ export function MissingMembersDialog({
 
             {/* Results — one section per roster (errors silently skipped) */}
             <div className="space-y-3">
-              {validResults.map((result, i) => (
+              {filteredResults.map((result, i) => (
                 <RosterResultSection
-                  key={result.roster_info?.alias ?? i}
+                  key={`${result.roster_info?.roster_id}:${result.roster_info?.clan_tag}:${i}`}
                   result={result}
-                  showHeader={viewMode === 'group'}
+                  showHeader={viewMode === 'group' || validResults.length > 1}
                   selectedMembers={selectedMembers}
                   onToggle={toggleMember}
                 />
@@ -191,13 +206,20 @@ export function MissingMembersDialog({
           </div>
         ) : (
           <div className="text-center py-12">
-            <CheckCircle2 className="w-12 h-12 text-green-400 mx-auto mb-4" />
-            <p className="text-foreground font-medium">{t("missingMembers.allCaughtUp")}</p>
-            <p className="text-sm text-muted-foreground mt-1">{t("missingMembers.allCaughtUpDesc")}</p>
+            {allMissingMembers.length > 0 ? (
+              <p className="text-foreground font-medium">{t("memberAutocomplete.noResults")}</p>
+            ) : (
+              <>
+                <CheckCircle2 className="w-12 h-12 text-green-400 mx-auto mb-4" />
+                <p className="text-foreground font-medium">{t("missingMembers.allCaughtUp")}</p>
+                <p className="text-sm text-muted-foreground mt-1">{t("missingMembers.allCaughtUpDesc")}</p>
+              </>
+            )}
           </div>
         )}
 
-        <DialogFooter className="gap-2 sticky bottom-0 z-10 bg-card border-t border-border pt-3 -mx-6 px-6 pb-1">
+        </div>
+        <DialogFooter className="shrink-0 gap-2 bg-card pt-3">
           <Button
             variant="outline"
             onClick={() => onOpenChange(false)}
@@ -205,7 +227,7 @@ export function MissingMembersDialog({
           >
             {t("common.close")}
           </Button>
-          {allMissingMembers.length > 0 && (
+          {visibleMembers.length > 0 && (
             <>
               <Button
                 variant="outline"
@@ -242,13 +264,18 @@ function RosterResultSection({
   readonly selectedMembers: Set<string>;
   readonly onToggle: (tag: string) => void;
 }) {
+  const t = useTranslations("RostersPage");
+  const positions = useTranslations("RolesPage.familyPositions");
   if (result.state === 'error' || !result.missing_members?.length) return null;
 
   return (
     <div className="space-y-2">
       {showHeader && result.roster_info && (
         <div className="flex items-center justify-between px-1">
-          <span className="text-sm font-medium text-foreground">{result.roster_info.alias}</span>
+          <span className="flex items-center gap-2 text-sm font-medium text-foreground">
+            <Image src={clanBadgeUrl(result.roster_info.clan_tag)} alt="" width={24} height={24} />
+            {result.roster_info.clan_name} · {result.roster_info.alias}
+          </span>
           {result.summary && (
             <div className="flex items-center gap-3">
               <Progress value={result.summary.coverage_percentage} className="h-1.5 w-24" />
@@ -262,7 +289,7 @@ function RosterResultSection({
       {!showHeader && result.summary && (
         <div className="bg-secondary/30 rounded-lg p-3">
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-sm text-muted-foreground">Coverage</span>
+            <span className="text-sm text-muted-foreground">{t("missingMembers.coverage")}</span>
             <span className="text-sm font-medium">{result.summary.coverage_percentage.toFixed(1)}%</span>
           </div>
           <Progress value={result.summary.coverage_percentage} className="h-2" />
@@ -271,12 +298,13 @@ function RosterResultSection({
           </p>
         </div>
       )}
-      <div className="border border-border rounded-lg overflow-hidden">
+      <div className="space-y-2">
         {result.missing_members.map((member: MissingMember) => (
           <button
             key={member.tag}
             type="button"
-            className={`flex items-center justify-between p-3 border-b border-border last:border-0 cursor-pointer hover:bg-secondary/50 transition-colors w-full text-left ${
+            aria-pressed={selectedMembers.has(member.tag)}
+            className={`flex w-full items-center justify-between gap-3 rounded-2xl p-3 text-left transition-colors hover:bg-muted/65 ${
               selectedMembers.has(member.tag) ? "bg-primary/10" : ""
             }`}
             onClick={() => onToggle(member.tag)}
@@ -292,17 +320,21 @@ function RosterResultSection({
               >
                 {selectedMembers.has(member.tag) && <Check className="h-3 w-3" />}
               </span>
-              <div className="w-8 h-8 rounded bg-primary/10 flex items-center justify-center">
-                <span className="text-sm font-bold text-primary">{member.townhall}</span>
-              </div>
-              <div>
-                <p className="font-medium text-foreground">{member.name}</p>
+              <Image src={townHallImageUrl(member.townhall)} alt={`TH${member.townhall}`} width={40} height={40} className="shrink-0 object-contain" />
+              <div className="min-w-0">
+                <p className="truncate font-medium text-foreground">{member.name}</p>
                 <p className="text-xs text-muted-foreground">
-                  {member.tag} • TH{member.townhall} • {member.role}
+                  {member.tag} · {positions(member.role === "admin" ? "elder" : ["leader", "coLeader", "elder"].includes(member.role) ? member.role : "member")}
                 </p>
+                {member.clan_tag && <span className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
+                  <Image src={clanBadgeUrl(member.clan_tag)} alt="" width={16} height={16} />{member.clan_name}
+                </span>}
               </div>
             </div>
-            <p className="text-sm text-yellow-400">{member.trophies.toLocaleString()}</p>
+            <span className="flex shrink-0 items-center gap-2 text-sm tabular-nums">
+              {member.league_name && <Image src={playerLeagueImageUrl(member.league_name)} alt={member.league_name} width={28} height={28} />}
+              {member.trophies.toLocaleString()}
+            </span>
           </button>
         ))}
       </div>

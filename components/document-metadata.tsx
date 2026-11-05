@@ -90,6 +90,10 @@ export function DocumentMetadata() {
       : "ClashKing Dashboard";
     setMeta("description", "Configure your ClashKing bot settings");
     setMeta("robots", "noindex, nofollow");
+    if (pathname === "/transcript") {
+      document.title = "Ticket transcript | ClashKing";
+      setMeta("referrer", "no-referrer");
+    }
   }, [pathname]);
 
   return null;

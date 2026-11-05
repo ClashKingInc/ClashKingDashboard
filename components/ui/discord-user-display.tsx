@@ -71,7 +71,8 @@ export function DiscordUserDisplay({ // NOSONAR — complexity comes from multi-
   // Extract user ID from raw value if not provided directly
   const resolvedUserId = userId || extractUserId(rawDiscordValue);
 
-  const isOnServer = isOnServerOverride ?? !!username;
+  // A missing cached profile is not evidence that someone left the guild.
+  const isOnServer = isOnServerOverride ?? (username ? true : undefined);
 
   // If no user ID and no username, player has no Discord link
   if (!resolvedUserId && !username) {
@@ -115,12 +116,12 @@ export function DiscordUserDisplay({ // NOSONAR — complexity comes from multi-
         <AvatarFallback
           className={cn(
             textSize,
-            isOnServer
+            isOnServer !== false
               ? "bg-blue-500/20 text-blue-400"
               : "bg-orange-500/20 text-orange-400"
           )}
         >
-          {isOnServer ? (
+          {isOnServer !== false ? (
             <User className={size === "sm" ? "h-3 w-3" : "h-4 w-4"} />
           ) : (
             <UserX className={size === "sm" ? "h-3 w-3" : "h-4 w-4"} />
@@ -131,14 +132,14 @@ export function DiscordUserDisplay({ // NOSONAR — complexity comes from multi-
         className={cn(
           textSize,
           "truncate max-w-[120px]",
-          isOnServer ? "text-blue-400" : "text-orange-400 italic"
+          isOnServer === false ? "text-orange-400 italic" : "text-foreground"
         )}
         title={
           username ||
           (resolvedUserId ? t("idPrefix", { id: resolvedUserId }) : undefined)
         }
       >
-          {username || t("unknownUserShort")}
+          {username || t(isOnServer === false ? "unknownUserShort" : "unknownUser")}
       </span>
     </div>
   );
@@ -174,10 +175,10 @@ export function DiscordUserDisplay({ // NOSONAR — complexity comes from multi-
               <p className={cn("font-medium truncate", isOnServer ? "text-foreground" : "text-muted-foreground")}>
                 {username || t("unknownUser")}
               </p>
-              <p className={cn("text-xs flex items-center gap-1", isOnServer ? "text-green-500" : "text-orange-400")}>
+              {isOnServer !== undefined && <p className={cn("text-xs flex items-center gap-1", isOnServer ? "text-green-500" : "text-orange-400")}>
                 <span className={cn("h-2 w-2 rounded-full", isOnServer ? "bg-green-500" : "bg-orange-400")} />
                 {isOnServer ? t("status.onServer") : t("status.notOnServer")}
-              </p>
+              </p>}
             </div>
           </div>
 

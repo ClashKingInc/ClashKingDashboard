@@ -35,3 +35,11 @@ export function getStandaloneTenorUrl(message: string | undefined): string | nul
     return null;
   }
 }
+
+/** Match the API's duration normalization, including legacy minute values. */
+export function reminderTimeMinutes(value: string): number {
+  const match = /^\s*([+-]?(?:\d+(?:\.\d*)?|\.\d+))\s*(hr|h|min|m)?\s*$/iu.exec(value);
+  if (!match) return 0;
+  const minutes = Number(match[1]) * (match[2]?.toLowerCase().startsWith("h") ? 60 : 1);
+  return Number.isFinite(minutes) ? Math.trunc(minutes) : 0;
+}

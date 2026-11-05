@@ -7,14 +7,17 @@ import { Badge } from "@/components/ui/badge";
 import { DiscordUserDisplay } from "@/components/ui/discord-user-display";
 import { PlayerProfilePopover } from "@/components/ui/player-profile-popover";
 import { ClanProfilePopover } from "@/components/ui/clan-profile-popover";
-import { Trash2, AlertCircle, Clock, RefreshCw, AtSign, ChevronUp, ChevronDown, ChevronsUpDown, Copy } from "lucide-react";
+import { Trash2, AlertCircle, Clock, RefreshCw, ChevronUp, ChevronDown, ChevronsUpDown, Copy } from "lucide-react";
 import type { RosterMember, Clan } from "../_lib/types";
-import { townHallImageUrl } from "@/lib/theme";
+import { townHallImageUrl, clanBadgeUrl, playerLeagueImageUrl } from "@/lib/clash-asset-urls";
 import { RosterTownhallStatus } from "@/components/roster-townhall-status";
+import { heroGradient } from "../_lib/hero-gradient";
+import { useTranslations } from "use-intl";
 
 const STALE_THRESHOLD_SECONDS = 2 * 24 * 60 * 60; // 2 days
 
 interface MembersTableProps {
+  readonly heroAnchors?: readonly [number, number, number];
   readonly members: RosterMember[];
   readonly columns: string[];
   readonly rosterClanTag?: string | null;
@@ -30,9 +33,9 @@ interface MembersTableProps {
 }
 
 export function MembersTable({
+  heroAnchors = [50, 75, 90],
   members,
   columns,
-  rosterClanTag,
   minTownhall,
   maxTownhall,
   familyClans,
@@ -40,17 +43,15 @@ export function MembersTable({
   onRemoveMember,
   removingMember,
   onRefreshMember,
-  onRefreshDiscordIdentity,
   t,
 }: MembersTableProps) {
-  const familyClanTags = new Set(familyClans.map(c => c.tag));
+  const cwl = useTranslations("RostersPage.cwlBonuses");
   const getClanBadgeUrl = (clanTag?: string | null): string | null => {
     if (!clanTag) return null;
     const clan = familyClans.find((c) => c.tag === clanTag);
-    return clan?.badge_url || clan?.badge || null;
+    return clan?.badge_url || clan?.badge || clanBadgeUrl(clanTag);
   };
   const [refreshingMember, setRefreshingMember] = useState<string | null>(null);
-  const [refreshingDiscordMember, setRefreshingDiscordMember] = useState<string | null>(null);
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [currentTimeSeconds, setCurrentTimeSeconds] = useState(0);
@@ -84,7 +85,7 @@ export function MembersTable({
       case 'current_clan': return member.current_clan?.toLowerCase() ?? '';
       case 'current_clan_tag': return member.current_clan_tag?.toLowerCase() ?? '';
       case 'discord': return member.discord_username?.toLowerCase() ?? '';
-      case 'hero_lvs': return member.hero_lvs ?? '';
+      case 'hero_lvs': return member.hero_max_level_sum ? 100 * (member.hero_lvs ?? 0) / member.hero_max_level_sum : -1;
       case 'war_pref': return member.war_pref ? 1 : 0;
       default: return '';
     }
@@ -94,6 +95,10 @@ export function MembersTable({
     ? [...members].sort((a, b) => {
         const av = getSortValue(a, sortColumn);
         const bv = getSortValue(b, sortColumn);
+        if (sortColumn === 'trophies' && (a.league_id ?? 0) !== (b.league_id ?? 0)) {
+          const tier = (a.league_id ?? 0) - (b.league_id ?? 0);
+          return sortDirection === 'asc' ? tier : -tier;
+        }
         let cmp = 0;
         if (typeof av === 'number' && typeof bv === 'number') {
           cmp = av - bv;
@@ -114,15 +119,6 @@ export function MembersTable({
     }
   };
 
-  const handleDiscordRefresh = async (tag: string) => {
-	if (!onRefreshDiscordIdentity) return;
-	setRefreshingDiscordMember(tag);
-	try {
-		await onRefreshDiscordIdentity(tag);
-	} finally {
-		setRefreshingDiscordMember(null);
-	}
-  };
 
   const withPlayerPopover = (member: RosterMember, content: React.ReactNode) => (
     <PlayerProfilePopover
@@ -142,10 +138,7 @@ export function MembersTable({
   );
 
   const getClanColorClass = (clanTag?: string | null): string => {
-    if (!clanTag || clanTag === '#') return 'text-red-400';
-    if (rosterClanTag && clanTag === rosterClanTag) return 'text-green-400';
-    if (familyClanTags.has(clanTag)) return 'text-yellow-400';
-    return 'text-red-400';
+    return clanTag ? 'text-foreground' : 'text-muted-foreground';
   };
 
   const renderClanCell = (
@@ -184,7 +177,6 @@ export function MembersTable({
                 unoptimized
                 className="w-7 h-7 object-contain"
               />
-              <span className="text-orange-400 font-medium">TH{member.townhall}</span>
             </div>
         );
 
@@ -224,10 +216,9 @@ export function MembersTable({
 
       case 'hitrate':
         if (member.hitrate !== null && member.hitrate !== undefined) {
-          const hitColor = member.hitrate >= 80 ? 'text-green-400' : member.hitrate >= 60 ? 'text-yellow-400' : 'text-red-400'; // NOSONAR — JSX nested ternary for multi-branch display state
           return withPlayerPopover(
             member,
-            <span className={`${hitColor} font-medium`}>{member.hitrate}%</span>
+            <span className="flex flex-col"><span style={{ color: heroGradient(member.hitrate) }} className="font-medium">{member.hitrate.toFixed(1)}%</span><small className="text-[10px] leading-4 whitespace-nowrap text-muted-foreground">{cwl("attacks", { count: member.hitrate_attacks ?? 0 })}</small></span>
           );
         }
         return <span className="text-muted-foreground">-</span>;
@@ -236,7 +227,7 @@ export function MembersTable({
         return renderClanCell(
           member,
           (colorClass) => (
-            <span className={`${colorClass} font-medium truncate`}>{member.current_clan || member.current_clan_tag}</span>
+            <span className={`${colorClass} flex items-center gap-2 font-medium`}><Image src={clanBadgeUrl(member.current_clan_tag!)} alt="" width={24} height={24} /><span className="whitespace-nowrap">{member.current_clan || member.current_clan_tag}</span></span>
           )
         );
 
@@ -247,6 +238,7 @@ export function MembersTable({
         );
 
       case 'discord':
+        if (member.discord_cache_ready === false) return <span className="text-muted-foreground">—</span>;
         return (
           <DiscordUserDisplay
             username={member.discord_username}
@@ -259,22 +251,24 @@ export function MembersTable({
       case 'hero_lvs':
         return withPlayerPopover(
           member,
-          <span className="text-purple-400">{member.hero_lvs || '-'}</span>
+          <span style={member.hero_max_level_sum ? { color: heroGradient(100 * (member.hero_lvs ?? 0) / member.hero_max_level_sum, heroAnchors) } : undefined}>
+            {member.hero_lvs ?? "—"}{!!member.hero_max_level_sum && <small className="block text-[10px] leading-4">({(100 * (member.hero_lvs ?? 0) / member.hero_max_level_sum).toFixed(1)}%)</small>}
+          </span>
         );
 
       case 'trophies':
         return withPlayerPopover(
           member,
-          <span className="text-yellow-400">{member.trophies?.toLocaleString() || '-'}</span>
+          <span className="flex items-center gap-1.5 text-foreground">{member.current_league && <Image src={playerLeagueImageUrl(member.current_league)} alt={member.current_league} width={28} height={28} />}{member.trophies?.toLocaleString() ?? "—"}</span>
         );
 
       case 'war_pref':
         return withPlayerPopover(
           member,
-          member.war_pref ? (
-            <Badge variant="default" className="bg-green-600 text-xs">In</Badge>
+          member.war_pref === undefined ? <span className="text-muted-foreground">—</span> : member.war_pref ? (
+            <Badge variant="secondary" className="border-0 bg-green-600 text-white dark:text-white hover:bg-green-600 text-xs">In</Badge>
           ) : (
-            <Badge variant="secondary" className="text-xs">Out</Badge>
+            <Badge variant="secondary" className="border-0 bg-red-600 text-white dark:text-white hover:bg-red-600 text-xs">Out</Badge>
           )
         );
 
@@ -315,11 +309,7 @@ export function MembersTable({
                 <RefreshCw className={`h-4 w-4 ${refreshingMember === member.tag ? 'animate-spin' : ''}`} />
               </Button>
             )}
-            {onRefreshDiscordIdentity && member.discord && (
-              <Button variant="ghost" size="touch-icon" onClick={() => handleDiscordRefresh(member.tag)} disabled={refreshingDiscordMember === member.tag} aria-label="Refresh Discord username and avatar">
-                <AtSign className={`h-4 w-4 ${refreshingDiscordMember === member.tag ? "animate-pulse" : ""}`} />
-              </Button>
-            )}
+
             <Button variant="ghost" size="touch-icon" onClick={() => onRemoveMember(member.tag)} disabled={removingMember === member.tag} className="text-destructive hover:bg-destructive/10 hover:text-destructive" aria-label={t("members.actions")}>
               <Trash2 className="h-4 w-4" />
             </Button>
@@ -368,9 +358,11 @@ export function MembersTable({
             >
               <td className="py-3 px-4 text-muted-foreground text-sm">{index + 1}{columns.length === 0 && townhallStatus(member)}</td>
               {columns.map((col, columnIndex) => (
-                <td key={col} className="py-3 px-4">
+                <td key={col} className="py-3 px-4 align-middle">
+                  <div className="flex flex-col items-start justify-center">
                   {renderCell(member, col)}
                   {columnIndex === 0 && <div>{townhallStatus(member)}</div>}
+                  </div>
                 </td>
               ))}
               <td className="py-3 px-4">
@@ -387,18 +379,7 @@ export function MembersTable({
                       <RefreshCw className={`w-4 h-4 ${refreshingMember === member.tag ? 'animate-spin' : ''}`} />
                     </Button>
                   )}
-				  {onRefreshDiscordIdentity && member.discord && (
-					<Button
-					  variant="ghost"
-					  size="sm"
-					  onClick={() => handleDiscordRefresh(member.tag)}
-					  disabled={refreshingDiscordMember === member.tag}
-					  className="text-muted-foreground hover:text-foreground"
-					  title="Refresh Discord username and avatar"
-					>
-					  <AtSign className={`w-4 h-4 ${refreshingDiscordMember === member.tag ? "animate-pulse" : ""}`} />
-					</Button>
-				  )}
+
                   <Button
                     variant="ghost"
                     size="sm"

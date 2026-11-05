@@ -2,12 +2,11 @@ import {
   CreateServerRoleEndpoint,
   DeleteServerRoleEndpoint,
   ServerRolesEndpoint,
-  UpdateServerRoleEndpoint,
 } from "@clashking/api-contracts";
 
 import { BaseApiClient } from '../core/base-client';
 import type { ApiResponse } from '../types/common';
-import type { ServerRole, ServerRoleResponse, RoleMode, RoleType } from '../types/roles';
+import type { ServerRole, RoleType } from '../types/roles';
 import type {
   FamilyRoleAdd,
   FamilyRoleOperationResponse,
@@ -26,7 +25,7 @@ const ruleForFamilyType: Record<FamilyRoleType, { type: RoleType; option: string
 function matchingRoles(roles: readonly ServerRole[], type: RoleType, option: string) {
   return roles
     .filter((role) => !role.clan_tag && role.type === type && role.option === option)
-    .map((role) => ({ id: role.id, role_id: role.role_id, mode: role.mode }));
+    .map((role) => ({ id: role.id, role_id: role.role_id }));
 }
 
 function familyResponse(serverId: string, roles: readonly ServerRole[]): FamilyRolesResponse {
@@ -56,7 +55,7 @@ export class FamilyRolesClient extends BaseApiClient {
     const response = await this.executeEndpoint(CreateServerRoleEndpoint, {
       path: { serverId },
       query: {},
-      body: { ...mapped, role_id: data.role, mode: data.mode ?? 'both' },
+      body: { ...mapped, role_id: data.role },
     });
     if (!response.data) return { error: response.error, status: response.status };
     return {
@@ -68,14 +67,6 @@ export class FamilyRolesClient extends BaseApiClient {
       },
       status: response.status,
     };
-  }
-
-  async updateFamilyRoleMode(serverId: string, id: string, mode: RoleMode): Promise<ApiResponse<ServerRoleResponse>> {
-    return this.executeEndpoint(UpdateServerRoleEndpoint, {
-      path: { serverId, roleId: id },
-      query: {},
-      body: { mode },
-    });
   }
 
   async removeFamilyRole(serverId: string, roleType: FamilyRoleType, id: string, roleId: string): Promise<ApiResponse<FamilyRoleOperationResponse>> {

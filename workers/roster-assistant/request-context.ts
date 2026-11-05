@@ -8,7 +8,7 @@ import { buildTrustedUserTranscript } from "./request-guard";
 
 const BrowserRequest = z.object({
   serverId: z.string().min(1),
-  rosterIds: z.array(z.string()).min(1).max(25),
+  rosterIds: z.array(z.string()).max(25),
   viewId: z.string().optional(),
   currentView: z.json().optional(),
   mode: z.enum(["chat", "replay"]).optional(),

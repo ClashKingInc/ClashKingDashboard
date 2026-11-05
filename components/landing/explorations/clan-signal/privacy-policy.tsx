@@ -15,7 +15,7 @@ export function PrivacyPolicy({
           <section>
             <h2 className="text-2xl font-bold mb-4 text-foreground">1. Introduction</h2>
             <p>
-              This policy explains how ClashKing collects, uses, stores, and protects information across the mobile app, web dashboard, Discord bot, admin tooling, and backend services. ClashKing helps players and clans view Clash of Clans statistics, manage server workflows, receive optional notifications, and coordinate rosters, reminders, tickets, and clan activity.
+              Last updated: October 28, 2026. This policy explains how ClashKing collects, uses, stores, and protects information across the mobile app, web dashboard, Discord bot, admin tooling, and backend services. ClashKing helps players and clans view Clash of Clans statistics, manage server workflows, receive optional notifications, and coordinate rosters, reminders, tickets, and clan activity.
             </p>
           </section>
 
@@ -33,7 +33,7 @@ export function PrivacyPolicy({
                 <h3 className="text-xl font-semibold mb-2 text-primary/80">b. Authentication Data</h3>
                 <ul className="list-disc pl-6 space-y-1">
                   <li>Discord user ID, username/display name, avatar URL, guild membership context, OAuth metadata, and dashboard/admin sessions.</li>
-                  <li>Short-lived access tokens and rotating session credentials needed to keep you signed in. We do not store Discord passwords.</li>
+                  <li>Short-lived access tokens and rotating session credentials needed to keep you signed in. We do not store Discord passwords. If you use email sign-in, we also process your email address, account identifiers and the credentials or verification information required for that sign-in method.</li>
                 </ul>
               </div>
               <div>
@@ -41,7 +41,7 @@ export function PrivacyPolicy({
                 <ul className="list-disc pl-6 space-y-1">
                   <li>Preferences such as language, theme, selected player tags, dashboard column choices, notification settings, and bookmarked players or clans.</li>
                   <li>Device and app details such as platform, app version, build number, operating system, and optional push notification tokens.</li>
-                  <li>Error logs and diagnostics used to fix bugs and protect the service. Sentry scope is limited to the minimum account identifier needed to debug authenticated errors.</li>
+                  <li>Error logs and diagnostics used to fix bugs and protect the service. These may include technical request details and account identifiers needed to investigate an issue. We aim to avoid including credentials and unnecessary message content in diagnostics.</li>
                 </ul>
               </div>
               <div>
@@ -77,8 +77,8 @@ export function PrivacyPolicy({
                 <ul className="list-disc pl-6 space-y-1">
                   <li>Native mobile authentication tokens are stored in secure device storage where available. Browser access tokens remain in memory, browser refresh credentials use Secure HttpOnly cookies, and short-lived PKCE state uses session storage.</li>
                   <li>Preferences, selected players, widget support data, cached images, and push settings may be stored locally on your device.</li>
-                  <li>Server-side records are stored in ClashKing databases and only kept while needed for the feature, security, audit, or legal obligations.</li>
-                  <li>Push tokens are removed when you opt out, log out, delete your account, or when the push provider reports them invalid.</li>
+                  <li>Server-side records are kept to operate features, maintain historical statistics, handle support and disputes, protect the service and meet applicable legal obligations. Retention depends on the record and purpose; deletion may be delayed in backups or where retention is necessary.</li>
+                  <li>We use opt-out, logout, account-deletion and invalid-token signals to disable or remove push registrations as those requests are processed. Device and provider delivery state may take time to update.</li>
                 </ul>
               </div>
               <div>
@@ -86,7 +86,7 @@ export function PrivacyPolicy({
                 <ul className="list-disc pl-6 space-y-1">
                   <li>Data is encrypted in transit with HTTPS.</li>
                   <li>Secrets are kept server-side and never intentionally exposed through public app or dashboard builds.</li>
-                  <li>Admin actions are access-restricted, confirmed for production-sensitive actions, and written to audit logs.</li>
+                  <li>We restrict access to administrative functions and record relevant operational and security events. No service or security measure can guarantee that unauthorized access, errors or data loss will never occur.</li>
                   <li>We minimize crash-reporting context and avoid selling or sharing personal data for advertising.</li>
                 </ul>
               </div>
@@ -105,14 +105,15 @@ export function PrivacyPolicy({
                   <li>Supercell/Clash of Clans API: Game data retrieval and account ownership verification.</li>
                   <li>Firebase/APNs: Optional push notification delivery.</li>
                   <li>Sentry: Error tracking with minimized user context.</li>
-                  <li>Bunny/CDN providers: Media hosting for configured assets, ticket transcripts, and generated images where features require it.</li>
+                  <li>Cloudflare and other hosting/CDN providers, including Bunny where used: Running services, processing requests and hosting media, transcripts and generated images.</li>
+                  <li>OpenAI: Processing AI-assistant requests and relevant context to generate responses, as described below. If the provider changes, we update the applicable notice before sending AI requests under the new notice.</li>
                 </ul>
 
               </div>
               <div>
                 <h3 className="text-xl font-semibold mb-2 text-primary/80">b. Creator Code Revenue</h3>
                 <ul className="list-disc pl-6 space-y-1">
-                  <li>When you use our creator code ClashKing, we receive 5% of your in-game purchases from Supercell</li>
+                  <li>When you use the ClashKing creator code, Supercell may pay us a share under its creator program. Supercell controls the applicable program terms and payment rates.</li>
                   <li>This revenue sharing is handled entirely by Supercell and does not involve sharing your personal information with us</li>
                   <li>Using our creator code costs you nothing extra</li>
                 </ul>
@@ -120,6 +121,17 @@ export function PrivacyPolicy({
 
             </div>
           </section>
+          <section>
+            <h2 className="text-2xl font-bold mb-4 text-foreground">AI assistant</h2>
+            <div className="space-y-3">
+              <p>The optional roster assistant sends your messages and relevant selected or authorized server, roster, player, linked-account and saved-view context to OpenAI to answer questions, analyze rosters and propose changes. Do not submit passwords, API keys or sensitive personal information. AI output may be incomplete or inaccurate; review it before relying on it or approving changes.</p>
+              <p>We ask each person to acknowledge the AI notice before use. Declining leaves other available dashboard features usable. We store the notice version and acknowledgement time with your account settings.</p>
+              <p>Conversation history and unsaved workspace state may be saved in your browser to restore the assistant session. The current implementation expires inactive browser chat records after 24 hours when they are next read; this is not a promise that bytes are erased from every device at that time. Clearing chat or browser data removes that local history. Saved roster views, approved changes, associated audit events and usage/cost records are stored separately to provide the service.</p>
+              <p>Our AI integration disables storage for later retrieval of model responses. That does not guarantee zero retention by the provider: OpenAI may process and retain data for security, abuse prevention and legal obligations under its applicable terms. Its API documentation states that API data is not used for model training by default unless the customer opts in. See <a href="https://developers.openai.com/api/docs/guides/your-data" target="_blank" rel="noreferrer" className="underline">OpenAI data controls</a> for current details.</p>
+              <p>We do not operate the assistant as a permanent server-side chat archive. Technical processing, diagnostic records, security logs, saved work and provider retention remain separate from browser chat history.</p>
+            </div>
+          </section>
+
           <section>
             <h2 className="text-2xl font-bold mb-4 text-foreground">6. Your Choices and Rights</h2>
             <p className="mb-4 text-muted-foreground">
@@ -150,8 +162,8 @@ export function PrivacyPolicy({
           <section>
             <h2 className="text-2xl font-bold mb-4 text-foreground">9. Retention</h2>
             <ul className="list-disc pl-6 space-y-1">
-              <li>Account/session data is kept while your account or session remains active, then deleted or anonymized unless needed for security, audit, or legal obligations.</li>
-              <li>Push tokens are deleted immediately on opt-out, logout, account deletion, or invalid-token feedback.</li>
+              <li>Account and session data is retained as needed to operate the account and service. Deletion requests are subject to identity verification, applicable requirements, legitimate security and recordkeeping needs, and backup cycles.</li>
+              <li>Push registrations are disabled or removed as opt-out, logout, deletion and invalid-token signals are processed; provider queues and device state may not update immediately.</li>
               <li>Admin audit logs are retained for accountability and security for the necessary limitation period.</li>
               <li>Public Clash of Clans history may be retained for leaderboards, analytics, and historical game features, but user-account links are deleted or anonymized when no longer needed.</li>
             </ul>

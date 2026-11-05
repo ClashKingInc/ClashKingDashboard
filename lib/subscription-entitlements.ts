@@ -1,3 +1,0 @@
-export const AUTOBOARD_FREE_LIMIT = 10;
-export const AUTOBOARD_SUBSCRIBER_LIMIT = 30;
-

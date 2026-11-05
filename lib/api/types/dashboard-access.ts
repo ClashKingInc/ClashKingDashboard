@@ -14,7 +14,6 @@ import {
 // accepts section identifiers as strings so the API can add sections safely.
 export type DashboardSection =
   | "settings"
-  | "family_settings"
   | "logs"
   | "clans"
   | "rosters"

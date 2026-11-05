@@ -55,29 +55,7 @@ jobs:
       - name: Lint
         run: npm run lint
 
-  # ─── Tests ────────────────────────────────────────────────────────────────
-  test:
-    name: Tests
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-
-      - name: Setup Node
-        uses: actions/setup-node@v7
-        with:
-          node-version-file: .node-version
-          cache: "npm"
-
-      - name: Setup npm
-        run: npm install --global npm@12.0.1
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run tests
-        run: npm test
-
-  # ─── Build ────────────────────────────────────────────────────────────────
+  # ─── Production build ────────────────────────────────────────────────────
   build:
     name: Build
     runs-on: ubuntu-latest

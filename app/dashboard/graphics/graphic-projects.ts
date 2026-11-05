@@ -59,10 +59,11 @@ function createClanDocument(): GraphicDocument {
 
 function createWarDocument(warSize: number): GraphicDocument {
   const safeSize = normalizeGraphicWarSize(warSize);
+  const maxStars = safeSize * 3;
   const height = Math.max(900, 350 + safeSize * 58);
   const elements: GraphicDocument["elements"] = [
     textElement({ name: "War title", content: "{war_clan_name} vs {war_opponent_name}", x: 100, y: 60, width: 1400, height: 90, align: "center", fontSize: 60, fontWeight: 800, fallbacks: { war_clan_name: "ClashKing", war_opponent_name: "Opponent" } }),
-    textElement({ name: "War score", content: "{war_clan_stars} ★  —  ★ {war_opponent_stars}", x: 100, y: 150, width: 1400, height: 72, align: "center", fontSize: 42, fallbacks: { war_clan_stars: "36", war_opponent_stars: "34" } }),
+    textElement({ name: "War score", content: "{war_clan_stars} ★  —  ★ {war_opponent_stars}", x: 100, y: 150, width: 1400, height: 72, align: "center", fontSize: 42, fallbacks: { war_clan_stars: String(maxStars), war_opponent_stars: String(Math.max(0, maxStars - 1)) } }),
     { id: createElementId(), type: "dynamic-image", name: "War clan badge", x: 110, y: 48, width: 150, height: 150, rotation: 0, opacity: 1, binding: "war_clan_badge", placeholder: "https://assets.clashk.ing/icons/Icon_HV_Shield.png", fit: "contain", fallback: { behavior: "placeholder" } },
     { id: createElementId(), type: "dynamic-image", name: "Opponent badge", x: 1340, y: 48, width: 150, height: 150, rotation: 0, opacity: 1, binding: "war_opponent_badge", placeholder: "https://assets.clashk.ing/icons/Icon_HV_Shield_Arrow.png", fit: "contain", fallback: { behavior: "placeholder" } },
   ];

@@ -2,6 +2,7 @@
 
 import { createContext, createElement, useContext, useEffect, useState, type ReactNode } from "react";
 import { useSearchParams } from "@/lib/navigation";
+import { embeddedServerId } from './auth/embedded';
 
 const DashboardRouteContext = createContext<{ guildId?: string }>({});
 
@@ -10,17 +11,9 @@ export function DashboardRouteProvider({ guildId, children }: { readonly guildId
 }
 
 function useDashboardParam(name: string): string {
-  const frameworkParams = useSearchParams();
-  const frameworkValue = frameworkParams.get(name) ?? "";
-  const [value, setValue] = useState("");
-
-  useEffect(() => {
-    // Read the browser URL after mount so route state and restored session
-    // state settle in the same phase.
-    setValue(new URLSearchParams(globalThis.location.search).get(name) ?? frameworkValue);
-  }, [frameworkValue, name]);
-
-  return value;
+  // Use the router's search value in the same render as the destination page.
+  // Deferring this to an effect lets /dashboard redirect with the previous guild.
+  return useSearchParams().get(name) ?? "";
 }
 
 export function useGuildId(): string {
@@ -38,7 +31,7 @@ export function useGuildId(): string {
     }
   }, [context.guildId, routeGuildId]);
 
-  return context.guildId ?? (routeGuildId || storedGuildId);
+  return embeddedServerId() ?? context.guildId ?? (routeGuildId || storedGuildId);
 }
 
 export function useRosterId(): string {

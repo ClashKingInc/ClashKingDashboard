@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import type { UserInfo } from "@/lib/api/types/auth";
+import { embeddedServerId, notifyNativeSessionExpired } from '@/lib/auth/embedded';
 import { apiClient, getDefaultBaseUrl } from "@/lib/api/client";
 import {
   cacheUser,
@@ -45,11 +46,12 @@ export function AuthSessionProvider({ children }: { children: React.ReactNode })
     let retryDelay = 5_000;
 
     const restore = async () => {
+      const restoringScope = embeddedServerId();
       setUser((current) => current ?? getCachedUser());
       const result = getAccessToken()
         ? "restored"
         : await restoreAccessToken(getDefaultBaseUrl());
-      if (!active) return;
+      if (!active || restoringScope !== embeddedServerId()) return;
       if (result === "unavailable") {
         setStatus("restoring");
         retryTimer = setTimeout(() => void restore(), retryDelay);
@@ -60,10 +62,11 @@ export function AuthSessionProvider({ children }: { children: React.ReactNode })
       if (result === "anonymous") {
         setStatus("anonymous");
         setUser(undefined);
+        notifyNativeSessionExpired();
         return;
       }
-      const current = await apiClient.auth.getCurrentUser();
-      if (!active) return;
+      const current = embeddedServerId() ? {data:undefined} : await apiClient.auth.getCurrentUser();
+      if (!active || restoringScope !== embeddedServerId()) return;
       if (current.data) {
         cacheUser(current.data);
         setUser(current.data);

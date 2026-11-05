@@ -78,7 +78,7 @@ export function RosterCard({
           </div>
           <div>
             <p className="text-2xl font-bold text-green-400">
-              {stats.avgHitrate ? `${stats.avgHitrate}%` : "-"}
+              {stats.avgHitrate !== null ? `${stats.avgHitrate}%` : "-"}
             </p>
             <p className="text-xs text-muted-foreground">{t("rosterCard.avgHitrate")}</p>
           </div>

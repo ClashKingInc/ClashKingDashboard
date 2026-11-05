@@ -84,6 +84,7 @@ function toRosterAutomation(rule: ContractRosterAutomation): RosterAutomation {
     group_id: rule.group_id,
     action_type: parseAutomationActionType(rule.action_type),
     scheduled_at: rule.scheduled_at,
+    event_offset_days: rule.event_offset_days,
     discord_channel_id: rule.discord_channel_id,
     options: rule.options,
     active: rule.active,
@@ -137,6 +138,15 @@ export async function fetchRoster(rosterId: string, serverId: string): Promise<R
     path: { rosterId }, query: { server_id: serverId }, body: {},
   });
   return toRoster(response.roster);
+}
+
+export async function fetchRosterHitRates(rosterId: string, serverId: string): Promise<Map<string, { rate: number | null; attacks: number }>> {
+  const result = await executeSharedEndpoint(dashboardEndpoints.dashboardQueryRosterMetric, {
+    path: {}, query: { server_id: serverId },
+    body: { rosterIds: [rosterId], metricId: "war.hit_rate", parameters: { windowDays: 35 }, force: false },
+  });
+  return new Map(result.rows.filter(row => row.rosterId === rosterId).map(row => [row.playerTag,
+    { rate: typeof row.value === "number" && Number.isFinite(row.value) ? row.value : null, attacks: row.attackCount ?? 0 }]));
 }
 
 export async function createRoster(serverId: string, data: CreateRosterFormData): Promise<Roster> {
@@ -333,6 +343,7 @@ export async function createAutomation(
     body: {
       action_type: payload.action_type,
       scheduled_at: payload.scheduled_at,
+      ...(payload.event_offset_days != null ? { event_offset_days: payload.event_offset_days } : {}),
       ...(payload.roster_id !== undefined ? { roster_id: payload.roster_id } : {}),
       ...(payload.group_id !== undefined ? { group_id: payload.group_id } : {}),
       ...(payload.discord_channel_id !== undefined ? { discord_channel_id: payload.discord_channel_id } : {}),
@@ -356,6 +367,7 @@ export async function updateAutomation(
       ...(data.group_id !== undefined ? { group_id: data.group_id } : {}),
       ...(data.action_type !== undefined ? { action_type: data.action_type } : {}),
       ...(data.scheduled_at !== undefined ? { scheduled_at: data.scheduled_at } : {}),
+      ...(data.event_offset_days != null ? { event_offset_days: data.event_offset_days } : {}),
       ...(data.discord_channel_id !== undefined ? { discord_channel_id: data.discord_channel_id } : {}),
       ...(data.options !== undefined ? { options: data.options } : {}),
       ...(data.active !== undefined ? { active: data.active } : {}),

@@ -392,107 +392,6 @@
       ]
     },
     {
-      "clientMethod": "BillingClient.getSubscription",
-      "operationId": "dashboardBillingSubscription",
-      "method": "GET",
-      "path": "/v2/billing/subscription",
-      "contract": "DashboardBillingSubscriptionEndpoint",
-      "validatedBySharedClient": true,
-      "responseType": "Promise<ApiResponse<BillingSubscription>>",
-      "parameters": "",
-      "source": "lib/api/clients/billing-client.ts:14",
-      "localTypeLocations": [
-        {
-          "name": "ApiResponse",
-          "path": "lib/api/types/common.ts"
-        },
-        {
-          "name": "BillingSubscription",
-          "path": "lib/api/types/billing.ts"
-        }
-      ]
-    },
-    {
-      "clientMethod": "BillingClient.createCheckout",
-      "operationId": "dashboardBillingCheckout",
-      "method": "POST",
-      "path": "/v2/billing/stripe/checkout",
-      "contract": "DashboardBillingCheckoutEndpoint",
-      "validatedBySharedClient": true,
-      "responseType": "Promise<ApiResponse<BillingSession>>",
-      "parameters": "serverId: string",
-      "source": "lib/api/clients/billing-client.ts:22",
-      "localTypeLocations": [
-        {
-          "name": "ApiResponse",
-          "path": "lib/api/types/common.ts"
-        },
-        {
-          "name": "BillingSession",
-          "path": "lib/api/types/billing.ts"
-        }
-      ]
-    },
-    {
-      "clientMethod": "BillingClient.createPortal",
-      "operationId": "dashboardBillingPortal",
-      "method": "POST",
-      "path": "/v2/billing/stripe/portal",
-      "contract": "DashboardBillingPortalEndpoint",
-      "validatedBySharedClient": true,
-      "responseType": "Promise<ApiResponse<BillingSession>>",
-      "parameters": "",
-      "source": "lib/api/clients/billing-client.ts:30",
-      "localTypeLocations": [
-        {
-          "name": "ApiResponse",
-          "path": "lib/api/types/common.ts"
-        },
-        {
-          "name": "BillingSession",
-          "path": "lib/api/types/billing.ts"
-        }
-      ]
-    },
-    {
-      "clientMethod": "BillingClient.getUsage",
-      "operationId": "dashboardBillingUsage",
-      "method": "GET",
-      "path": "/v2/billing/usage",
-      "contract": "DashboardBillingUsageEndpoint",
-      "validatedBySharedClient": true,
-      "responseType": "Promise<ApiResponse<BillingUsage>>",
-      "parameters": "serverId: string",
-      "source": "lib/api/clients/billing-client.ts:38",
-      "localTypeLocations": [
-        {
-          "name": "ApiResponse",
-          "path": "lib/api/types/common.ts"
-        },
-        {
-          "name": "BillingUsage",
-          "path": "lib/api/types/billing.ts"
-        }
-      ]
-    },
-    {
-      "clientMethod": "BillingClient.updateAssignment",
-      "operationId": "dashboardBillingAssignment",
-      "method": "PUT",
-      "path": "/v2/billing/subscription/assignment",
-      "contract": "DashboardBillingAssignmentEndpoint",
-      "validatedBySharedClient": true,
-      "responseType": "Promise<ApiResponse<null>>",
-      "parameters": "serverId: string | null",
-      "source": "lib/api/clients/billing-client.ts:46",
-      "localTypeLocations": [
-        {
-          "name": "ApiResponse",
-          "path": "lib/api/types/common.ts"
-        }
-      ]
-    },
-    {
       "clientMethod": "ClanCategoriesClient.list",
       "operationId": "clanCategories",
       "method": "GET",
@@ -685,7 +584,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<FamilyRolesResponse>>",
       "parameters": "serverId: string",
-      "source": "lib/api/clients/family-roles-client.ts:44",
+      "source": "lib/api/clients/family-roles-client.ts:43",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -706,7 +605,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<FamilyRoleOperationResponse>>",
       "parameters": "serverId: string, data: FamilyRoleAdd",
-      "source": "lib/api/clients/family-roles-client.ts:54",
+      "source": "lib/api/clients/family-roles-client.ts:53",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -723,31 +622,6 @@
       ]
     },
     {
-      "clientMethod": "FamilyRolesClient.updateFamilyRoleMode",
-      "operationId": "updateServerRole",
-      "method": "PATCH",
-      "path": "/v2/server/:serverId/server-roles/:roleId",
-      "contract": "UpdateServerRoleEndpoint",
-      "validatedBySharedClient": true,
-      "responseType": "Promise<ApiResponse<ServerRoleResponse>>",
-      "parameters": "serverId: string, id: string, mode: RoleMode",
-      "source": "lib/api/clients/family-roles-client.ts:73",
-      "localTypeLocations": [
-        {
-          "name": "ApiResponse",
-          "path": "lib/api/types/common.ts"
-        },
-        {
-          "name": "ServerRoleResponse",
-          "path": "lib/api/types/roles.ts"
-        },
-        {
-          "name": "RoleMode",
-          "path": "lib/api/types/roles.ts"
-        }
-      ]
-    },
-    {
       "clientMethod": "FamilyRolesClient.removeFamilyRole",
       "operationId": "deleteServerRole",
       "method": "DELETE",
@@ -756,7 +630,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<FamilyRoleOperationResponse>>",
       "parameters": "serverId: string, roleType: FamilyRoleType, id: string, roleId: string",
-      "source": "lib/api/clients/family-roles-client.ts:81",
+      "source": "lib/api/clients/family-roles-client.ts:72",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1086,7 +960,7 @@
       "contract": "DashboardCreateRosterEndpoint",
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<{ message: string; roster_id: string }>>",
-      "parameters": "serverId: string, data: CreateRosterModel",
+      "parameters": "serverId: string, data: CreateRosterModel, unassignedOnly = false",
       "source": "lib/api/clients/roster-client.ts:68",
       "localTypeLocations": [
         {
@@ -1108,7 +982,7 @@
       "validatedBySharedClient": true,
       "responseType": "inferred from shared descriptor",
       "parameters": "rosterId: string, serverId: string, data: RosterUpdateModel, groupId?: string",
-      "source": "lib/api/clients/roster-client.ts:78",
+      "source": "lib/api/clients/roster-client.ts:79",
       "localTypeLocations": [
         {
           "name": "RosterUpdateModel",
@@ -1125,7 +999,7 @@
       "validatedBySharedClient": true,
       "responseType": "inferred from shared descriptor",
       "parameters": "rosterId: string, serverId: string",
-      "source": "lib/api/clients/roster-client.ts:92",
+      "source": "lib/api/clients/roster-client.ts:93",
       "localTypeLocations": []
     },
     {
@@ -1137,7 +1011,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<{ message: string }>>",
       "parameters": "rosterId: string, serverId: string, membersOnly?: boolean",
-      "source": "lib/api/clients/roster-client.ts:102",
+      "source": "lib/api/clients/roster-client.ts:103",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1154,7 +1028,7 @@
       "validatedBySharedClient": true,
       "responseType": "inferred from shared descriptor",
       "parameters": "serverId: string, groupId?: string, clanTag?: string",
-      "source": "lib/api/clients/roster-client.ts:117",
+      "source": "lib/api/clients/roster-client.ts:118",
       "localTypeLocations": []
     },
     {
@@ -1166,7 +1040,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<{ message: string; new_roster_id: string }>>",
       "parameters": "rosterId: string, serverId: string, data: RosterCloneModel",
-      "source": "lib/api/clients/roster-client.ts:133",
+      "source": "lib/api/clients/roster-client.ts:134",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1187,7 +1061,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<EndpointResponse<typeof DashboardRefreshRostersEndpoint>>>",
       "parameters": "serverId?: string, groupId?: string, rosterId?: string",
-      "source": "lib/api/clients/roster-client.ts:144",
+      "source": "lib/api/clients/roster-client.ts:145",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1204,7 +1078,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<{ message: string; added: number; removed: number }>>",
       "parameters": "rosterId: string, serverId: string, data: RosterMemberBulkOperationModel",
-      "source": "lib/api/clients/roster-client.ts:167",
+      "source": "lib/api/clients/roster-client.ts:168",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1225,7 +1099,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<{ message: string }>>",
       "parameters": "rosterId: string, memberTag: string, serverId: string, data: UpdateMemberModel",
-      "source": "lib/api/clients/roster-client.ts:182",
+      "source": "lib/api/clients/roster-client.ts:183",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1246,7 +1120,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<{ message: string }>>",
       "parameters": "rosterId: string, playerTag: string, serverId: string",
-      "source": "lib/api/clients/roster-client.ts:194",
+      "source": "lib/api/clients/roster-client.ts:195",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1263,7 +1137,7 @@
       "validatedBySharedClient": true,
       "responseType": "inferred from shared descriptor",
       "parameters": "serverId: string, rosterId?: string, groupId?: string",
-      "source": "lib/api/clients/roster-client.ts:205",
+      "source": "lib/api/clients/roster-client.ts:206",
       "localTypeLocations": []
     },
     {
@@ -1275,7 +1149,7 @@
       "validatedBySharedClient": true,
       "responseType": "inferred from shared descriptor",
       "parameters": "serverId: string",
-      "source": "lib/api/clients/roster-client.ts:221",
+      "source": "lib/api/clients/roster-client.ts:222",
       "localTypeLocations": []
     },
     {
@@ -1287,7 +1161,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<{ message: string; group_id: string }>>",
       "parameters": "serverId: string, data: CreateRosterGroupModel",
-      "source": "lib/api/clients/roster-client.ts:230",
+      "source": "lib/api/clients/roster-client.ts:231",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1308,7 +1182,7 @@
       "validatedBySharedClient": true,
       "responseType": "inferred from shared descriptor",
       "parameters": "groupId: string, serverId: string",
-      "source": "lib/api/clients/roster-client.ts:240",
+      "source": "lib/api/clients/roster-client.ts:241",
       "localTypeLocations": []
     },
     {
@@ -1320,7 +1194,7 @@
       "validatedBySharedClient": true,
       "responseType": "inferred from shared descriptor",
       "parameters": "groupId: string, serverId: string, data: UpdateRosterGroupModel",
-      "source": "lib/api/clients/roster-client.ts:250",
+      "source": "lib/api/clients/roster-client.ts:251",
       "localTypeLocations": [
         {
           "name": "UpdateRosterGroupModel",
@@ -1337,7 +1211,7 @@
       "validatedBySharedClient": true,
       "responseType": "inferred from shared descriptor",
       "parameters": "serverId: string",
-      "source": "lib/api/clients/roster-client.ts:261",
+      "source": "lib/api/clients/roster-client.ts:262",
       "localTypeLocations": []
     },
     {
@@ -1349,7 +1223,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<{ message: string; affected_rosters: number }>>",
       "parameters": "groupId: string, serverId: string",
-      "source": "lib/api/clients/roster-client.ts:268",
+      "source": "lib/api/clients/roster-client.ts:269",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1366,7 +1240,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<{ message: string; automation_id: string }>>",
       "parameters": "data: CreateRosterAutomationModel",
-      "source": "lib/api/clients/roster-client.ts:277",
+      "source": "lib/api/clients/roster-client.ts:278",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1387,7 +1261,7 @@
       "validatedBySharedClient": true,
       "responseType": "inferred from shared descriptor",
       "parameters": "serverId: string, rosterId?: string, groupId?: string, activeOnly?: boolean",
-      "source": "lib/api/clients/roster-client.ts:287",
+      "source": "lib/api/clients/roster-client.ts:288",
       "localTypeLocations": []
     },
     {
@@ -1399,7 +1273,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<{ message: string }>>",
       "parameters": "automationId: string, serverId: string, data: UpdateRosterAutomationModel",
-      "source": "lib/api/clients/roster-client.ts:306",
+      "source": "lib/api/clients/roster-client.ts:307",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1420,7 +1294,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<{ message: string }>>",
       "parameters": "automationId: string, serverId: string",
-      "source": "lib/api/clients/roster-client.ts:317",
+      "source": "lib/api/clients/roster-client.ts:318",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1437,7 +1311,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<RosterView[]>>",
       "parameters": "serverId: string",
-      "source": "lib/api/clients/roster-client.ts:327",
+      "source": "lib/api/clients/roster-client.ts:328",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1458,7 +1332,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<RosterMetricQueryResult>>",
       "parameters": "serverId: string, data: RosterMetricQuery",
-      "source": "lib/api/clients/roster-client.ts:334",
+      "source": "lib/api/clients/roster-client.ts:335",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1483,7 +1357,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<RosterView>>",
       "parameters": "viewId: string, serverId: string",
-      "source": "lib/api/clients/roster-client.ts:343",
+      "source": "lib/api/clients/roster-client.ts:344",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1504,7 +1378,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<RosterView>>",
       "parameters": "viewId: string",
-      "source": "lib/api/clients/roster-client.ts:349",
+      "source": "lib/api/clients/roster-client.ts:350",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1525,7 +1399,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<RosterView>>",
       "parameters": "serverId: string, data: CreateRosterViewModel",
-      "source": "lib/api/clients/roster-client.ts:355",
+      "source": "lib/api/clients/roster-client.ts:356",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1550,7 +1424,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<RosterView>>",
       "parameters": "viewId: string, serverId: string, data: UpdateRosterViewModel",
-      "source": "lib/api/clients/roster-client.ts:364",
+      "source": "lib/api/clients/roster-client.ts:365",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1575,7 +1449,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<{ message: string }>>",
       "parameters": "viewId: string, serverId: string",
-      "source": "lib/api/clients/roster-client.ts:374",
+      "source": "lib/api/clients/roster-client.ts:375",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1592,7 +1466,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<{ view: RosterView; result: RosterViewResult }>>",
       "parameters": "serverId: string, view: MaterializedRosterView, rosterIds: string[]",
-      "source": "lib/api/clients/roster-client.ts:387",
+      "source": "lib/api/clients/roster-client.ts:388",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1621,7 +1495,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<EndpointResponse<typeof DashboardApplyRosterMembershipChangesEndpoint>>>",
       "parameters": "serverId: string, data: ApplyRosterMembershipChangesModel",
-      "source": "lib/api/clients/roster-client.ts:411",
+      "source": "lib/api/clients/roster-client.ts:412",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1634,6 +1508,18 @@
       ]
     },
     {
+      "clientMethod": "ServerClient.getResourceLimits",
+      "operationId": "serverLimits",
+      "method": "GET",
+      "path": "/v2/server/:serverId/limits",
+      "contract": "ServerLimitsEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "inferred from shared descriptor",
+      "parameters": "serverId:string",
+      "source": "lib/api/clients/server-client.ts:89",
+      "localTypeLocations": []
+    },
+    {
       "clientMethod": "ServerClient.getDashboardCapabilities",
       "operationId": "dashboardCapabilities",
       "method": "GET",
@@ -1642,7 +1528,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<DashboardCapabilities>>",
       "parameters": "serverId: string, signal?: AbortSignal",
-      "source": "lib/api/clients/server-client.ts:88",
+      "source": "lib/api/clients/server-client.ts:93",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1663,7 +1549,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<DashboardAccessConfig>>",
       "parameters": "serverId: string",
-      "source": "lib/api/clients/server-client.ts:99",
+      "source": "lib/api/clients/server-client.ts:104",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1684,7 +1570,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<DashboardAccessConfig>>",
       "parameters": "serverId: string, grants: DashboardAccessGrant[]",
-      "source": "lib/api/clients/server-client.ts:107",
+      "source": "lib/api/clients/server-client.ts:112",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1709,7 +1595,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<BotGuildProfile>>",
       "parameters": "serverId: string",
-      "source": "lib/api/clients/server-client.ts:118",
+      "source": "lib/api/clients/server-client.ts:123",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1730,7 +1616,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<BotGuildProfile>>",
       "parameters": "serverId: string, profile: BotGuildProfileUpdate",
-      "source": "lib/api/clients/server-client.ts:126",
+      "source": "lib/api/clients/server-client.ts:131",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1755,7 +1641,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<GuildInfo[]>>",
       "parameters": "signal?: AbortSignal",
-      "source": "lib/api/clients/server-client.ts:137",
+      "source": "lib/api/clients/server-client.ts:142",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1776,7 +1662,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<GuildDetails>>",
       "parameters": "guildId: string, signal?: AbortSignal",
-      "source": "lib/api/clients/server-client.ts:147",
+      "source": "lib/api/clients/server-client.ts:152",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1797,7 +1683,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<{ message: string }>>",
       "parameters": "serverId: string",
-      "source": "lib/api/clients/server-client.ts:155",
+      "source": "lib/api/clients/server-client.ts:160",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1814,7 +1700,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<ServerSettings>>",
       "parameters": "serverId: string, clanSettings = false, signal?: AbortSignal",
-      "source": "lib/api/clients/server-client.ts:163",
+      "source": "lib/api/clients/server-client.ts:168",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1835,7 +1721,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<ServerSettingsResponse>>",
       "parameters": "serverId: string, settings: ServerSettingsUpdate",
-      "source": "lib/api/clients/server-client.ts:175",
+      "source": "lib/api/clients/server-client.ts:180",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1860,7 +1746,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<ClanSettings>>",
       "parameters": "serverId: string, clanTag: string",
-      "source": "lib/api/clients/server-client.ts:186",
+      "source": "lib/api/clients/server-client.ts:191",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1881,7 +1767,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<ClanSettingsResponse>>",
       "parameters": "serverId: string, clanTag: string, settings: ClanSettingsUpdate",
-      "source": "lib/api/clients/server-client.ts:194",
+      "source": "lib/api/clients/server-client.ts:199",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1906,7 +1792,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<ServerClanListItem[]>>",
       "parameters": "serverId: string, signal?: AbortSignal",
-      "source": "lib/api/clients/server-client.ts:206",
+      "source": "lib/api/clients/server-client.ts:211",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1927,7 +1813,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<{ message: string }>>",
       "parameters": "serverId: string, hexCode: string",
-      "source": "lib/api/clients/server-client.ts:219",
+      "source": "lib/api/clients/server-client.ts:224",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1944,7 +1830,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<PaginatedResponse<BannedPlayer>>>",
       "parameters": "serverId: string, userId?: string",
-      "source": "lib/api/clients/server-client.ts:230",
+      "source": "lib/api/clients/server-client.ts:235",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1969,7 +1855,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<BanResponse>>",
       "parameters": "serverId: string, playerTag: string, data: BanRequest, userId?: string",
-      "source": "lib/api/clients/server-client.ts:246",
+      "source": "lib/api/clients/server-client.ts:251",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -1994,7 +1880,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<BanResponse>>",
       "parameters": "serverId: string, playerTag: string, userId?: string",
-      "source": "lib/api/clients/server-client.ts:259",
+      "source": "lib/api/clients/server-client.ts:264",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -2015,7 +1901,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<SearchBannedPlayersResponse>>",
       "parameters": "guildId: string, query: string",
-      "source": "lib/api/clients/server-client.ts:271",
+      "source": "lib/api/clients/server-client.ts:276",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -2036,7 +1922,7 @@
       "validatedBySharedClient": true,
       "responseType": "inferred from shared descriptor",
       "parameters": "serverId: string",
-      "source": "lib/api/clients/server-client.ts:282",
+      "source": "lib/api/clients/server-client.ts:287",
       "localTypeLocations": []
     },
     {
@@ -2048,7 +1934,7 @@
       "validatedBySharedClient": true,
       "responseType": "inferred from shared descriptor",
       "parameters": "serverId: string, logsConfig: EndpointRequest<typeof SaveServerLogsEndpoint>[\"body\"]",
-      "source": "lib/api/clients/server-client.ts:290",
+      "source": "lib/api/clients/server-client.ts:295",
       "localTypeLocations": []
     },
     {
@@ -2060,7 +1946,7 @@
       "validatedBySharedClient": true,
       "responseType": "inferred from shared descriptor",
       "parameters": "serverId: string, signal?: AbortSignal",
-      "source": "lib/api/clients/server-client.ts:298",
+      "source": "lib/api/clients/server-client.ts:303",
       "localTypeLocations": []
     },
     {
@@ -2072,7 +1958,7 @@
       "validatedBySharedClient": true,
       "responseType": "inferred from shared descriptor",
       "parameters": "serverId: string, signal?: AbortSignal",
-      "source": "lib/api/clients/server-client.ts:306",
+      "source": "lib/api/clients/server-client.ts:311",
       "localTypeLocations": []
     },
     {
@@ -2084,7 +1970,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<ServerLinksResponse>>",
       "parameters": "serverId: string, params?: { limit?: number; offset?: number; query?: string; account_filter?: \"none\" }",
-      "source": "lib/api/clients/server-client.ts:314",
+      "source": "lib/api/clients/server-client.ts:319",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -2105,7 +1991,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<PaginatedResponse<Strike>>>",
       "parameters": "serverId: string, playerTag?: string, viewExpired = false",
-      "source": "lib/api/clients/server-client.ts:325",
+      "source": "lib/api/clients/server-client.ts:330",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -2130,7 +2016,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<StrikeAddResponse>>",
       "parameters": "serverId: string, playerTag: string, data: StrikeRequest",
-      "source": "lib/api/clients/server-client.ts:345",
+      "source": "lib/api/clients/server-client.ts:350",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -2155,7 +2041,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<StrikeDeleteResponse>>",
       "parameters": "serverId: string, strikeId: string",
-      "source": "lib/api/clients/server-client.ts:357",
+      "source": "lib/api/clients/server-client.ts:362",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -2176,7 +2062,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<StrikeSummary>>",
       "parameters": "serverId: string, playerTag: string",
-      "source": "lib/api/clients/server-client.ts:368",
+      "source": "lib/api/clients/server-client.ts:373",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -2197,7 +2083,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<{ roles: DiscordRole[] }>>",
       "parameters": "serverId: string",
-      "source": "lib/api/clients/server-client.ts:379",
+      "source": "lib/api/clients/server-client.ts:384",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -2218,7 +2104,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<GiveawaysResponse>>",
       "parameters": "serverId: string",
-      "source": "lib/api/clients/server-client.ts:389",
+      "source": "lib/api/clients/server-client.ts:394",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -2239,7 +2125,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<GiveawayMutationResponse>>",
       "parameters": "serverId: string, body: FormData",
-      "source": "lib/api/clients/server-client.ts:397",
+      "source": "lib/api/clients/server-client.ts:402",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -2260,7 +2146,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<GiveawayMutationResponse>>",
       "parameters": "serverId: string, giveawayId: string, body: FormData",
-      "source": "lib/api/clients/server-client.ts:408",
+      "source": "lib/api/clients/server-client.ts:413",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -2281,7 +2167,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<GiveawayMutationResponse>>",
       "parameters": "serverId: string, giveawayId: string",
-      "source": "lib/api/clients/server-client.ts:420",
+      "source": "lib/api/clients/server-client.ts:425",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -2302,7 +2188,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<GiveawayEntriesResponse>>",
       "parameters": "serverId: string, giveawayId: string",
-      "source": "lib/api/clients/server-client.ts:431",
+      "source": "lib/api/clients/server-client.ts:436",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -2323,7 +2209,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<GiveawayRerollResponse>>",
       "parameters": "serverId: string, giveawayId: string, userIdsToReplace: string[]",
-      "source": "lib/api/clients/server-client.ts:442",
+      "source": "lib/api/clients/server-client.ts:447",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -2336,6 +2222,66 @@
       ]
     },
     {
+      "clientMethod": "TicketsClient.runAction",
+      "operationId": "ticketDashboardAction",
+      "method": "POST",
+      "path": "/v2/server/:serverId/tickets/records/:ticketId/actions",
+      "contract": "TicketDashboardActionEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "inferred from shared descriptor",
+      "parameters": "serverId: string, ticketId: string, data: EndpointRequest<typeof TicketDashboardActionEndpoint>[\"body\"]",
+      "source": "lib/api/clients/tickets-client.ts:38",
+      "localTypeLocations": []
+    },
+    {
+      "clientMethod": "TicketsClient.getAction",
+      "operationId": "ticketDashboardJob",
+      "method": "GET",
+      "path": "/v2/server/:serverId/tickets/records/:ticketId/actions/:jobId",
+      "contract": "TicketDashboardJobEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "inferred from shared descriptor",
+      "parameters": "serverId: string, ticketId: string, jobId: string",
+      "source": "lib/api/clients/tickets-client.ts:41",
+      "localTypeLocations": []
+    },
+    {
+      "clientMethod": "TicketsClient.getMessageLibrary",
+      "operationId": "ticketMessageLibrary",
+      "method": "GET",
+      "path": "/v2/server/:serverId/tickets/message-library/templates",
+      "contract": "TicketMessageLibraryEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "inferred from shared descriptor",
+      "parameters": "serverId: string",
+      "source": "lib/api/clients/tickets-client.ts:44",
+      "localTypeLocations": []
+    },
+    {
+      "clientMethod": "TicketsClient.saveMessageLibrary",
+      "operationId": "updateTicketMessageLibrary",
+      "method": "PUT",
+      "path": "/v2/server/:serverId/tickets/message-library/templates",
+      "contract": "UpdateTicketMessageLibraryEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "inferred from shared descriptor",
+      "parameters": "serverId: string, data: EndpointRequest<typeof UpdateTicketMessageLibraryEndpoint>[\"body\"]",
+      "source": "lib/api/clients/tickets-client.ts:47",
+      "localTypeLocations": []
+    },
+    {
+      "clientMethod": "TicketsClient.publishPanel",
+      "operationId": "publishTicketPanel",
+      "method": "POST",
+      "path": "/v2/server/:serverId/tickets/:panelName/publish",
+      "contract": "PublishTicketPanelEndpoint",
+      "validatedBySharedClient": true,
+      "responseType": "inferred from shared descriptor",
+      "parameters": "serverId: string, panelName: string, data: EndpointRequest<typeof PublishTicketPanelEndpoint>[\"body\"]",
+      "source": "lib/api/clients/tickets-client.ts:50",
+      "localTypeLocations": []
+    },
+    {
       "clientMethod": "TicketsClient.getPanels",
       "operationId": "ticketPanels",
       "method": "GET",
@@ -2344,7 +2290,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<TicketPanelsResponse>>",
       "parameters": "serverId: string",
-      "source": "lib/api/clients/tickets-client.ts:32",
+      "source": "lib/api/clients/tickets-client.ts:53",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -2365,7 +2311,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<{ message: string }>>",
       "parameters": "serverId: string, data: CreatePanelRequest",
-      "source": "lib/api/clients/tickets-client.ts:40",
+      "source": "lib/api/clients/tickets-client.ts:61",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -2386,7 +2332,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<{ message: string }>>",
       "parameters": "serverId: string, panelName: string",
-      "source": "lib/api/clients/tickets-client.ts:51",
+      "source": "lib/api/clients/tickets-client.ts:72",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -2403,7 +2349,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<{ message: string }>>",
       "parameters": "serverId: string, panelName: string, data: CreateButtonRequest",
-      "source": "lib/api/clients/tickets-client.ts:62",
+      "source": "lib/api/clients/tickets-client.ts:83",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -2424,7 +2370,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<{ message: string }>>",
       "parameters": "serverId: string, panelName: string, customId: string",
-      "source": "lib/api/clients/tickets-client.ts:74",
+      "source": "lib/api/clients/tickets-client.ts:95",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -2441,7 +2387,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<{ message: string }>>",
       "parameters": "serverId: string, panelName: string, customId: string, data: UpdateButtonAppearanceRequest",
-      "source": "lib/api/clients/tickets-client.ts:86",
+      "source": "lib/api/clients/tickets-client.ts:107",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -2462,7 +2408,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<{ message: string }>>",
       "parameters": "serverId: string, panelName: string, data: UpdateTicketPanelRequest",
-      "source": "lib/api/clients/tickets-client.ts:99",
+      "source": "lib/api/clients/tickets-client.ts:120",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -2483,7 +2429,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<{ message: string }>>",
       "parameters": "serverId: string, panelName: string, customId: string, data: UpdateButtonSettingsRequest",
-      "source": "lib/api/clients/tickets-client.ts:111",
+      "source": "lib/api/clients/tickets-client.ts:132",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -2504,7 +2450,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<{ message: string }>>",
       "parameters": "serverId: string, panelName: string, data: UpdateApproveMessagesRequest",
-      "source": "lib/api/clients/tickets-client.ts:124",
+      "source": "lib/api/clients/tickets-client.ts:145",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -2525,7 +2471,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<ServerEmbedsResponse>>",
       "parameters": "serverId: string",
-      "source": "lib/api/clients/tickets-client.ts:136",
+      "source": "lib/api/clients/tickets-client.ts:157",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -2546,7 +2492,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<{ message: string }>>",
       "parameters": "serverId: string, data: UpsertEmbedRequest",
-      "source": "lib/api/clients/tickets-client.ts:144",
+      "source": "lib/api/clients/tickets-client.ts:165",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -2567,7 +2513,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<{ message: string }>>",
       "parameters": "serverId: string, embedName: string, data: UpsertEmbedRequest",
-      "source": "lib/api/clients/tickets-client.ts:155",
+      "source": "lib/api/clients/tickets-client.ts:176",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -2588,7 +2534,7 @@
       "validatedBySharedClient": true,
       "responseType": "Promise<ApiResponse<{ message: string }>>",
       "parameters": "serverId: string, embedName: string",
-      "source": "lib/api/clients/tickets-client.ts:167",
+      "source": "lib/api/clients/tickets-client.ts:188",
       "localTypeLocations": [
         {
           "name": "ApiResponse",
@@ -2796,94 +2742,47 @@
   ],
   "directCallers": [
     {
-      "helper": "executeSharedEndpoint",
-      "operationId": "serverAutoboards",
-      "method": "GET",
-      "path": "/v2/server/:serverId/autoboards",
-      "contract": "ServerAutoboardsEndpoint",
-      "validatedBySharedClient": true,
-      "source": "app/dashboard/autoboards/page.tsx:167"
-    },
-    {
-      "helper": "executeSharedEndpoint",
-      "operationId": "autoboardCapabilities",
-      "method": "GET",
-      "path": "/v2/server/:serverId/autoboards/capabilities",
-      "contract": "AutoboardCapabilitiesEndpoint",
-      "validatedBySharedClient": true,
-      "source": "app/dashboard/autoboards/page.tsx:168"
-    },
-    {
-      "helper": "executeSharedEndpoint",
-      "operationId": "replaceAutoboard",
-      "method": "PUT",
-      "path": "/v2/server/:serverId/autoboards/:autoboardId",
-      "contract": "ReplaceAutoboardEndpoint",
-      "validatedBySharedClient": true,
-      "source": "app/dashboard/autoboards/page.tsx:303"
-    },
-    {
-      "helper": "executeSharedEndpoint",
-      "operationId": "createAutoboard",
+      "helper": "fetch",
       "method": "POST",
-      "path": "/v2/server/:serverId/autoboards",
-      "contract": "CreateAutoboardEndpoint",
-      "validatedBySharedClient": true,
-      "source": "app/dashboard/autoboards/page.tsx:307"
+      "path": "{getDefaultBaseUrl()}/v2/auth/server-dashboard/exchange",
+      "validatedBySharedClient": false,
+      "source": "app/access/page.tsx:26"
     },
     {
       "helper": "executeSharedEndpoint",
-      "operationId": "deleteAutoboard",
-      "method": "DELETE",
-      "path": "/v2/server/:serverId/autoboards/:autoboardId",
-      "contract": "DeleteAutoboardEndpoint",
-      "validatedBySharedClient": true,
-      "source": "app/dashboard/autoboards/page.tsx:327"
-    },
-    {
-      "helper": "executeSharedEndpoint",
-      "operationId": "addServerClan",
-      "method": "POST",
-      "path": "/v2/server/:serverId/clans",
-      "contract": "dashboardEndpoints.addServerClan",
-      "validatedBySharedClient": true,
-      "source": "app/dashboard/clans/page.tsx:247"
-    },
-    {
-      "helper": "executeSharedEndpoint",
-      "operationId": "removeServerClan",
-      "method": "DELETE",
-      "path": "/v2/server/:serverId/clans/:clanTag",
-      "contract": "dashboardEndpoints.removeServerClan",
-      "validatedBySharedClient": true,
-      "source": "app/dashboard/clans/page.tsx:279"
-    },
-    {
-      "helper": "executeSharedEndpoint",
-      "operationId": "createServerLink",
-      "method": "POST",
-      "path": "/v2/links/server/:serverId",
-      "contract": "CreateServerLinkEndpoint",
-      "validatedBySharedClient": true,
-      "source": "app/dashboard/links/page.tsx:237"
-    },
-    {
-      "helper": "executeSharedEndpoint",
-      "operationId": "getExpoProxyPlayer",
+      "operationId": "dashboardGuild",
       "method": "GET",
-      "path": "/proxy/v1/players/:playerTag",
-      "contract": "ProxyPlayerEndpoint",
+      "path": "/v2/guild/:guildId",
+      "contract": "dashboardEndpoints.dashboardGuild",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/links/page.tsx:303"
+      "source": "app/dashboard/analytics/page.tsx:47"
     },
     {
       "helper": "executeSharedEndpoint",
-      "operationId": "deleteServerLink",
-      "method": "DELETE",
-      "path": "/v2/links/server/:serverId",
-      "contract": "DeleteServerLinkEndpoint",
+      "operationId": "serverAnalytics",
+      "method": "GET",
+      "path": "/v2/server/:serverId/analytics",
+      "contract": "ServerAnalyticsEndpoint",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/links/page.tsx:312"
+      "source": "app/dashboard/analytics/page.tsx:49"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "serverAnalytics",
+      "method": "GET",
+      "path": "/v2/server/:serverId/analytics",
+      "contract": "ServerAnalyticsEndpoint",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/analytics/page.tsx:51"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "serverAnalytics",
+      "method": "GET",
+      "path": "/v2/server/:serverId/analytics",
+      "contract": "ServerAnalyticsEndpoint",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/analytics/page.tsx:53"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2892,7 +2791,196 @@
       "path": "/v2/links/server/:serverId",
       "contract": "dashboardEndpoints.serverLinks",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/links/page.tsx:94"
+      "source": "app/dashboard/analytics/page.tsx:55"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "serverAutoboards",
+      "method": "GET",
+      "path": "/v2/server/:serverId/autoboards",
+      "contract": "ServerAutoboardsEndpoint",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/autoboards/page.tsx:170"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "autoboardCapabilities",
+      "method": "GET",
+      "path": "/v2/server/:serverId/autoboards/capabilities",
+      "contract": "AutoboardCapabilitiesEndpoint",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/autoboards/page.tsx:171"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "serverLimits",
+      "method": "GET",
+      "path": "/v2/server/:serverId/limits",
+      "contract": "ServerLimitsEndpoint",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/autoboards/page.tsx:172"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "replaceAutoboard",
+      "method": "PUT",
+      "path": "/v2/server/:serverId/autoboards/:autoboardId",
+      "contract": "ReplaceAutoboardEndpoint",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/autoboards/page.tsx:310"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "createAutoboard",
+      "method": "POST",
+      "path": "/v2/server/:serverId/autoboards",
+      "contract": "CreateAutoboardEndpoint",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/autoboards/page.tsx:314"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "deleteAutoboard",
+      "method": "DELETE",
+      "path": "/v2/server/:serverId/autoboards/:autoboardId",
+      "contract": "DeleteAutoboardEndpoint",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/autoboards/page.tsx:334"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "clanVerification",
+      "method": "GET",
+      "path": "/v2/server/:serverId/clan/:clanTag/verification",
+      "contract": "ClanVerificationEndpoint",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/clans/clan-verification.tsx:17"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "clanVerification",
+      "method": "GET",
+      "path": "/v2/server/:serverId/clan/:clanTag/verification",
+      "contract": "ClanVerificationEndpoint",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/clans/clan-verification.tsx:39"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "checkClanVerification",
+      "method": "POST",
+      "path": "/v2/server/:serverId/clan/:clanTag/verification/check",
+      "contract": "CheckClanVerificationEndpoint",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/clans/clan-verification.tsx:41"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "startClanVerification",
+      "method": "POST",
+      "path": "/v2/server/:serverId/clan/:clanTag/verification",
+      "contract": "StartClanVerificationEndpoint",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/clans/clan-verification.tsx:47"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "addServerClan",
+      "method": "POST",
+      "path": "/v2/server/:serverId/clans",
+      "contract": "dashboardEndpoints.addServerClan",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/clans/page.tsx:230"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "removeServerClan",
+      "method": "DELETE",
+      "path": "/v2/server/:serverId/clans/:clanTag",
+      "contract": "dashboardEndpoints.removeServerClan",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/clans/page.tsx:263"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "clanWarEventsGet",
+      "method": "GET",
+      "path": "/v2/server/:serverId/clan/:clanTag/war-events",
+      "contract": "ClanWarEventsGet",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/clans/war-event-settings.tsx:16"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "clanWarEventsPut",
+      "method": "PUT",
+      "path": "/v2/server/:serverId/clan/:clanTag/war-events",
+      "contract": "ClanWarEventsPut",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/clans/war-event-settings.tsx:24"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "serverClanLinks",
+      "method": "GET",
+      "path": "/v2/links/server/:serverId/clans",
+      "contract": "ServerClanLinksEndpoint",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/links/clan-links.tsx:23"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "serverLinks",
+      "method": "GET",
+      "path": "/v2/links/server/:serverId",
+      "contract": "dashboardEndpoints.serverLinks",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/links/clan-links.tsx:28"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "createClanRosterLink",
+      "method": "POST",
+      "path": "/v2/links/server/:serverId/clans/:clanTag/:playerTag",
+      "contract": "CreateClanRosterLinkEndpoint",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/links/clan-links.tsx:34"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "createServerLink",
+      "method": "POST",
+      "path": "/v2/links/server/:serverId",
+      "contract": "CreateServerLinkEndpoint",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/links/page.tsx:239"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "getExpoProxyPlayer",
+      "method": "GET",
+      "path": "/proxy/v1/players/:playerTag",
+      "contract": "ProxyPlayerEndpoint",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/links/page.tsx:305"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "deleteServerLink",
+      "method": "DELETE",
+      "path": "/v2/links/server/:serverId",
+      "contract": "DeleteServerLinkEndpoint",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/links/page.tsx:314"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "serverLinks",
+      "method": "GET",
+      "path": "/v2/links/server/:serverId",
+      "contract": "dashboardEndpoints.serverLinks",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/links/page.tsx:96"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2901,7 +2989,7 @@
       "path": "/v2/server/:serverId/clan/:clanTag/countdowns",
       "contract": "dashboardEndpoints.clanCountdowns",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/logs/page.tsx:133"
+      "source": "app/dashboard/logs/page.tsx:132"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2910,7 +2998,7 @@
       "path": "/v2/server/:serverId/countdowns",
       "contract": "dashboardEndpoints.serverCountdowns",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/logs/page.tsx:138"
+      "source": "app/dashboard/logs/page.tsx:137"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2919,7 +3007,7 @@
       "path": "/v2/server/:serverId/countdowns",
       "contract": "dashboardEndpoints.enableCountdown",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/logs/page.tsx:162"
+      "source": "app/dashboard/logs/page.tsx:161"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2928,7 +3016,7 @@
       "path": "/v2/server/:serverId/countdowns",
       "contract": "dashboardEndpoints.disableCountdown",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/logs/page.tsx:174"
+      "source": "app/dashboard/logs/page.tsx:173"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2937,7 +3025,7 @@
       "path": "/v2/server/:serverId/logs",
       "contract": "dashboardEndpoints.serverLogs",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/logs/page.tsx:317"
+      "source": "app/dashboard/logs/page.tsx:316"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2946,7 +3034,7 @@
       "path": "/v2/server/:serverId/logs",
       "contract": "dashboardEndpoints.saveServerLogs",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/logs/page.tsx:399"
+      "source": "app/dashboard/logs/page.tsx:398"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2955,7 +3043,7 @@
       "path": "/v2/server/:serverId/logs",
       "contract": "dashboardEndpoints.serverLogs",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/logs/page.tsx:405"
+      "source": "app/dashboard/logs/page.tsx:404"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2964,7 +3052,7 @@
       "path": "/v2/server/:serverId/logs",
       "contract": "dashboardEndpoints.updateServerLogsState",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/logs/page.tsx:424"
+      "source": "app/dashboard/logs/page.tsx:423"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2973,7 +3061,7 @@
       "path": "/v2/server/:serverId/logs",
       "contract": "dashboardEndpoints.serverLogs",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/logs/page.tsx:434"
+      "source": "app/dashboard/logs/page.tsx:433"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2982,7 +3070,7 @@
       "path": "/v2/server/:serverId/reminders",
       "contract": "dashboardEndpoints.serverReminders",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/reminders/page.tsx:251"
+      "source": "app/dashboard/reminders/page.tsx:243"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -2991,7 +3079,7 @@
       "path": "/v2/server/:serverId/reminders",
       "contract": "dashboardEndpoints.serverReminders",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/reminders/page.tsx:439"
+      "source": "app/dashboard/reminders/page.tsx:400"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -3000,7 +3088,16 @@
       "path": "/v2/server/:serverId/reminders",
       "contract": "dashboardEndpoints.createServerReminder",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/reminders/page.tsx:478"
+      "source": "app/dashboard/reminders/page.tsx:438"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "sendServerReminder",
+      "method": "POST",
+      "path": "/v2/server/:serverId/reminders/:reminderId/send",
+      "contract": "dashboardEndpoints.sendServerReminder",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/reminders/page.tsx:469"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -3009,7 +3106,7 @@
       "path": "/v2/server/:serverId/reminders/:reminderId",
       "contract": "dashboardEndpoints.deleteServerReminder",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/reminders/page.tsx:594"
+      "source": "app/dashboard/reminders/page.tsx:567"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -3018,7 +3115,7 @@
       "path": "/v2/server/:serverId/reminders",
       "contract": "dashboardEndpoints.createServerReminder",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/reminders/page.tsx:723"
+      "source": "app/dashboard/reminders/page.tsx:696"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -3027,7 +3124,7 @@
       "path": "/v2/server/:serverId/reminders/:reminderId",
       "contract": "dashboardEndpoints.updateServerReminder",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/reminders/page.tsx:748"
+      "source": "app/dashboard/reminders/page.tsx:721"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -3036,7 +3133,7 @@
       "path": "/v2/static/:category/:itemIdOrName/max-level",
       "contract": "dashboardEndpoints.dashboardStaticMaxLevel",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/roles/page.tsx:186"
+      "source": "app/dashboard/roles/page.tsx:192"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -3045,7 +3142,25 @@
       "path": "/v2/static/:category/names",
       "contract": "dashboardEndpoints.dashboardStaticCategoryNames",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/roles/page.tsx:231"
+      "source": "app/dashboard/roles/page.tsx:237"
+    },
+    {
+      "helper": "executeSharedApiResult",
+      "operationId": "dashboardPostRoster",
+      "method": "POST",
+      "path": "/v2/server/:serverId/rosters/:rosterId/post",
+      "contract": "dashboardEndpoints.dashboardPostRoster",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/rosters/_components/PostRosterDialog.tsx:32"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "dashboardUpdateRosterMember",
+      "method": "PATCH",
+      "path": "/v2/roster/:rosterId/members/:memberTag",
+      "contract": "dashboardEndpoints.dashboardUpdateRosterMember",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/rosters/_components/RosterAnswers.tsx:25"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -3063,7 +3178,7 @@
       "path": "/v2/roster/:serverId/list",
       "contract": "dashboardEndpoints.dashboardListRosters",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/rosters/_lib/api.ts:127"
+      "source": "app/dashboard/rosters/_lib/api.ts:128"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -3072,7 +3187,16 @@
       "path": "/v2/roster/:rosterId",
       "contract": "dashboardEndpoints.dashboardGetRoster",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/rosters/_lib/api.ts:136"
+      "source": "app/dashboard/rosters/_lib/api.ts:137"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "dashboardQueryRosterMetric",
+      "method": "POST",
+      "path": "/v2/roster/metrics/query",
+      "contract": "dashboardEndpoints.dashboardQueryRosterMetric",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/rosters/_lib/api.ts:144"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -3081,7 +3205,7 @@
       "path": "/v2/roster",
       "contract": "dashboardEndpoints.dashboardCreateRoster",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/rosters/_lib/api.ts:143"
+      "source": "app/dashboard/rosters/_lib/api.ts:153"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -3090,7 +3214,7 @@
       "path": "/v2/roster/:rosterId",
       "contract": "dashboardEndpoints.dashboardUpdateRoster",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/rosters/_lib/api.ts:154"
+      "source": "app/dashboard/rosters/_lib/api.ts:164"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -3099,7 +3223,7 @@
       "path": "/v2/roster/:rosterId",
       "contract": "dashboardEndpoints.dashboardDeleteRoster",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/rosters/_lib/api.ts:161"
+      "source": "app/dashboard/rosters/_lib/api.ts:171"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -3108,7 +3232,7 @@
       "path": "/v2/roster/:rosterId",
       "contract": "dashboardEndpoints.dashboardDeleteRoster",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/rosters/_lib/api.ts:169"
+      "source": "app/dashboard/rosters/_lib/api.ts:179"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -3117,7 +3241,7 @@
       "path": "/v2/roster/:rosterId/clone",
       "contract": "dashboardEndpoints.dashboardCloneRoster",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/rosters/_lib/api.ts:181"
+      "source": "app/dashboard/rosters/_lib/api.ts:191"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -3126,7 +3250,7 @@
       "path": "/v2/roster/refresh",
       "contract": "dashboardEndpoints.dashboardRefreshRosters",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/rosters/_lib/api.ts:188"
+      "source": "app/dashboard/rosters/_lib/api.ts:198"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -3135,7 +3259,7 @@
       "path": "/v2/roster/:rosterId/members",
       "contract": "dashboardEndpoints.dashboardManageRosterMembers",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/rosters/_lib/api.ts:207"
+      "source": "app/dashboard/rosters/_lib/api.ts:217"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -3144,7 +3268,7 @@
       "path": "/v2/roster/:rosterId/members/:memberTag",
       "contract": "dashboardEndpoints.dashboardRemoveRosterMember",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/rosters/_lib/api.ts:219"
+      "source": "app/dashboard/rosters/_lib/api.ts:229"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -3153,7 +3277,7 @@
       "path": "/v2/roster/:rosterId/members/:memberTag/refresh",
       "contract": "dashboardEndpoints.dashboardRefreshRosterMember",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/rosters/_lib/api.ts:231"
+      "source": "app/dashboard/rosters/_lib/api.ts:241"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -3162,7 +3286,7 @@
       "path": "/v2/server/:serverId/rosters/:rosterId/discord-identity/refresh",
       "contract": "dashboardEndpoints.dashboardRefreshRosterDiscordIdentity",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/rosters/_lib/api.ts:242"
+      "source": "app/dashboard/rosters/_lib/api.ts:252"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -3171,7 +3295,7 @@
       "path": "/v2/roster/missing-members",
       "contract": "dashboardEndpoints.dashboardMissingRosterMembers",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/rosters/_lib/api.ts:259"
+      "source": "app/dashboard/rosters/_lib/api.ts:269"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -3180,7 +3304,7 @@
       "path": "/v2/roster/server/:serverId/members",
       "contract": "dashboardEndpoints.dashboardServerClanMembers",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/rosters/_lib/api.ts:272"
+      "source": "app/dashboard/rosters/_lib/api.ts:282"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -3189,7 +3313,7 @@
       "path": "/proxy/v1/clans/:clanTag",
       "contract": "ProxyClanEndpoint",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/rosters/_lib/api.ts:279"
+      "source": "app/dashboard/rosters/_lib/api.ts:289"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -3198,7 +3322,7 @@
       "path": "/v2/server/:serverId/clans",
       "contract": "dashboardEndpoints.serverClans",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/rosters/_lib/api.ts:293"
+      "source": "app/dashboard/rosters/_lib/api.ts:303"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -3207,7 +3331,7 @@
       "path": "/v2/roster-automation/list",
       "contract": "dashboardEndpoints.dashboardListRosterAutomations",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/rosters/_lib/api.ts:314"
+      "source": "app/dashboard/rosters/_lib/api.ts:324"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -3216,7 +3340,7 @@
       "path": "/v2/roster-automation",
       "contract": "dashboardEndpoints.dashboardCreateRosterAutomation",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/rosters/_lib/api.ts:330"
+      "source": "app/dashboard/rosters/_lib/api.ts:340"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -3225,7 +3349,7 @@
       "path": "/v2/roster-automation/:automationId",
       "contract": "dashboardEndpoints.dashboardUpdateRosterAutomation",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/rosters/_lib/api.ts:351"
+      "source": "app/dashboard/rosters/_lib/api.ts:362"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -3234,7 +3358,7 @@
       "path": "/v2/roster-automation/:automationId",
       "contract": "dashboardEndpoints.dashboardDeleteRosterAutomation",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/rosters/_lib/api.ts:369"
+      "source": "app/dashboard/rosters/_lib/api.ts:381"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -3243,7 +3367,7 @@
       "path": "/v2/roster-group/list",
       "contract": "dashboardEndpoints.dashboardListRosterGroups",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/rosters/_lib/api.ts:381"
+      "source": "app/dashboard/rosters/_lib/api.ts:393"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -3252,7 +3376,7 @@
       "path": "/v2/roster-group",
       "contract": "dashboardEndpoints.dashboardCreateRosterGroup",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/rosters/_lib/api.ts:393"
+      "source": "app/dashboard/rosters/_lib/api.ts:405"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -3261,7 +3385,7 @@
       "path": "/v2/roster-group/:groupId",
       "contract": "dashboardEndpoints.dashboardUpdateRosterGroup",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/rosters/_lib/api.ts:409"
+      "source": "app/dashboard/rosters/_lib/api.ts:421"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -3270,7 +3394,7 @@
       "path": "/v2/roster-group/:groupId",
       "contract": "dashboardEndpoints.dashboardDeleteRosterGroup",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/rosters/_lib/api.ts:418"
+      "source": "app/dashboard/rosters/_lib/api.ts:430"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -3279,7 +3403,34 @@
       "path": "/v2/server/:serverId/channels",
       "contract": "dashboardEndpoints.serverChannels",
       "validatedBySharedClient": true,
-      "source": "app/dashboard/rosters/_lib/api.ts:430"
+      "source": "app/dashboard/rosters/_lib/api.ts:442"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "getAiNotice",
+      "method": "GET",
+      "path": "/v2/users/me/ai-notice",
+      "contract": "AiNoticeGetEndpoint",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/rosters/builder/ai-notice.tsx:21"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "acceptAiNotice",
+      "method": "POST",
+      "path": "/v2/users/me/ai-notice",
+      "contract": "AiNoticeAcceptEndpoint",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/rosters/builder/ai-notice.tsx:31"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "dashboardRosterImage",
+      "method": "POST",
+      "path": "/v2/server/:serverId/rosters/:rosterId/image",
+      "contract": "dashboardEndpoints.dashboardRosterImage",
+      "validatedBySharedClient": true,
+      "source": "app/dashboard/rosters/detail/page.tsx:1100"
     },
     {
       "helper": "executeSharedApiResult",
@@ -3292,12 +3443,39 @@
     },
     {
       "helper": "executeSharedEndpoint",
+      "operationId": "serverLinks",
+      "method": "GET",
+      "path": "/v2/links/server/:serverId",
+      "contract": "ServerLinksEndpoint",
+      "validatedBySharedClient": true,
+      "source": "components/dashboard/discord-message-field.tsx:50"
+    },
+    {
+      "helper": "executeSharedEndpoint",
       "operationId": "dashboardCdnUpload",
       "method": "POST",
       "path": "/v2/cdn/upload",
       "contract": "dashboardEndpoints.dashboardCdnUpload",
       "validatedBySharedClient": true,
-      "source": "components/dashboard/embed-editor.tsx:1953"
+      "source": "components/dashboard/embed-editor.tsx:1166"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "serverChannels",
+      "method": "GET",
+      "path": "/v2/server/:serverId/channels",
+      "contract": "ServerChannelsEndpoint",
+      "validatedBySharedClient": true,
+      "source": "components/dashboard/embed-editor.tsx:1240"
+    },
+    {
+      "helper": "executeSharedEndpoint",
+      "operationId": "discordRoles",
+      "method": "GET",
+      "path": "/v2/server/:serverId/discord-roles",
+      "contract": "DiscordRolesEndpoint",
+      "validatedBySharedClient": true,
+      "source": "components/dashboard/embed-editor.tsx:1241"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -3306,7 +3484,7 @@
       "path": "/v2/app/discohook-resolve",
       "contract": "dashboardEndpoints.dashboardDiscohookResolve",
       "validatedBySharedClient": true,
-      "source": "components/dashboard/embed-editor.tsx:2273"
+      "source": "components/dashboard/embed-editor.tsx:1525"
     },
     {
       "helper": "executeSharedEndpoint",
@@ -3318,11 +3496,27 @@
       "source": "components/dashboard/player-search-combobox.tsx:56"
     },
     {
+      "helper": "executeSharedEndpoint",
+      "operationId": "dashboardCdnUpload",
+      "method": "POST",
+      "path": "/v2/cdn/upload",
+      "contract": "dashboardEndpoints.dashboardCdnUpload",
+      "validatedBySharedClient": true,
+      "source": "components/dashboard/uploaded-image-field.tsx:26"
+    },
+    {
       "helper": "fetch",
       "method": "POST",
-      "path": "{baseUrl}/v2/auth/web/refresh",
+      "path": "{getDefaultBaseUrl()}/v2/auth/server-dashboard/logout",
       "validatedBySharedClient": false,
-      "source": "lib/auth/session.ts:188"
+      "source": "lib/auth/logout.ts:14"
+    },
+    {
+      "helper": "fetch",
+      "method": "POST",
+      "path": "{baseUrl}/v2/auth/{embeddedServerId()?'server-dashboard':'web'}/refresh",
+      "validatedBySharedClient": false,
+      "source": "lib/auth/session.ts:215"
     },
     {
       "helper": "executeAssistantEndpoint",
@@ -3335,12 +3529,66 @@
     },
     {
       "helper": "executeAssistantEndpoint",
+      "operationId": "serverClansBasic",
+      "method": "GET",
+      "path": "/v2/server/:serverId/clans-basic",
+      "contract": "ServerClansBasicEndpoint",
+      "validatedBySharedClient": true,
+      "source": "workers/roster-assistant/family-context.ts:13"
+    },
+    {
+      "helper": "executeAssistantEndpoint",
+      "operationId": "dashboardListRosters",
+      "method": "GET",
+      "path": "/v2/roster/:serverId/list",
+      "contract": "DashboardListRostersEndpoint",
+      "validatedBySharedClient": true,
+      "source": "workers/roster-assistant/family-context.ts:14"
+    },
+    {
+      "helper": "executeAssistantEndpoint",
+      "operationId": "getExpoProxyClan",
+      "method": "GET",
+      "path": "/proxy/v1/clans/:clanTag",
+      "contract": "ProxyClanEndpoint",
+      "validatedBySharedClient": true,
+      "source": "workers/roster-assistant/family-context.ts:19"
+    },
+    {
+      "helper": "executeAssistantEndpoint",
+      "operationId": "dashboardQueryFamilyWarMetric",
+      "method": "POST",
+      "path": "/v2/roster/family/war-metrics/query",
+      "contract": "DashboardQueryFamilyWarMetricEndpoint",
+      "validatedBySharedClient": true,
+      "source": "workers/roster-assistant/family-context.ts:6"
+    },
+    {
+      "helper": "executeAssistantEndpoint",
+      "operationId": "reserveAIStep",
+      "method": "POST",
+      "path": "/v2/runtime/roster-ai/reserve",
+      "contract": "ReserveAIStepEndpoint",
+      "validatedBySharedClient": true,
+      "source": "workers/roster-assistant/hard-budget.ts:33"
+    },
+    {
+      "helper": "executeAssistantEndpoint",
+      "operationId": "settleAIStep",
+      "method": "POST",
+      "path": "/v2/runtime/roster-ai/settle",
+      "contract": "SettleAIStepEndpoint",
+      "validatedBySharedClient": true,
+      "source": "workers/roster-assistant/hard-budget.ts:46"
+    },
+    {
+      "helper": "executeAssistantEndpoint",
       "operationId": "dashboardRosterMembersQuery",
       "method": "POST",
       "path": "/v2/roster/members/query",
       "contract": "DashboardRosterMembersQueryEndpoint",
       "validatedBySharedClient": true,
-      "source": "workers/roster-assistant/index.ts:355"
+      "source": "workers/roster-assistant/index.ts:402"
     },
     {
       "helper": "executeAssistantEndpoint",
@@ -3349,7 +3597,7 @@
       "path": "/v2/roster/account-groups/query",
       "contract": "DashboardRosterAccountGroupsQueryEndpoint",
       "validatedBySharedClient": true,
-      "source": "workers/roster-assistant/index.ts:362"
+      "source": "workers/roster-assistant/index.ts:409"
     },
     {
       "helper": "executeAssistantEndpoint",
@@ -3358,7 +3606,7 @@
       "path": "/v2/roster/metrics/query",
       "contract": "DashboardQueryRosterMetricEndpoint",
       "validatedBySharedClient": true,
-      "source": "workers/roster-assistant/index.ts:369"
+      "source": "workers/roster-assistant/index.ts:416"
     },
     {
       "helper": "executeAssistantEndpoint",
@@ -3367,7 +3615,7 @@
       "path": "/v2/roster/views/preview",
       "contract": "DashboardPreviewRosterViewEndpoint",
       "validatedBySharedClient": true,
-      "source": "workers/roster-assistant/index.ts:377"
+      "source": "workers/roster-assistant/index.ts:424"
     },
     {
       "helper": "executeAssistantEndpoint",
@@ -3376,7 +3624,7 @@
       "path": "/v2/roster/views/preview",
       "contract": "DashboardPreviewRosterViewEndpoint",
       "validatedBySharedClient": true,
-      "source": "workers/roster-assistant/index.ts:406"
+      "source": "workers/roster-assistant/index.ts:453"
     },
     {
       "helper": "executeAssistantEndpoint",
@@ -3385,7 +3633,7 @@
       "path": "/v2/roster/refresh-batch",
       "contract": "DashboardRosterRefreshBatchEndpoint",
       "validatedBySharedClient": true,
-      "source": "workers/roster-assistant/index.ts:422"
+      "source": "workers/roster-assistant/index.ts:477"
     },
     {
       "helper": "executeAssistantEndpoint",
@@ -3394,7 +3642,7 @@
       "path": "/v2/server/:serverId/rosters/:rosterId/discord-identity/refresh",
       "contract": "DashboardRefreshRosterDiscordIdentityEndpoint",
       "validatedBySharedClient": true,
-      "source": "workers/roster-assistant/index.ts:434"
+      "source": "workers/roster-assistant/index.ts:489"
     },
     {
       "helper": "executeAssistantEndpoint",
@@ -3403,7 +3651,7 @@
       "path": "/v2/roster/members/query",
       "contract": "DashboardRosterMembersQueryEndpoint",
       "validatedBySharedClient": true,
-      "source": "workers/roster-assistant/index.ts:443"
+      "source": "workers/roster-assistant/index.ts:498"
     },
     {
       "helper": "executeAssistantEndpoint",
@@ -3412,7 +3660,16 @@
       "path": "/v2/roster/account-groups/query",
       "contract": "DashboardRosterAccountGroupsQueryEndpoint",
       "validatedBySharedClient": true,
-      "source": "workers/roster-assistant/index.ts:452"
+      "source": "workers/roster-assistant/index.ts:507"
+    },
+    {
+      "helper": "executeAssistantEndpoint",
+      "operationId": "statsWar",
+      "method": "GET",
+      "path": "/v2/stats/war",
+      "contract": "StatsWarEndpoint",
+      "validatedBySharedClient": true,
+      "source": "workers/roster-assistant/index.ts:520"
     },
     {
       "helper": "executeAssistantEndpoint",
@@ -3421,7 +3678,7 @@
       "path": "/v2/roster/metrics/query",
       "contract": "DashboardQueryRosterMetricEndpoint",
       "validatedBySharedClient": true,
-      "source": "workers/roster-assistant/index.ts:463"
+      "source": "workers/roster-assistant/index.ts:542"
     },
     {
       "helper": "executeAssistantEndpoint",
@@ -3430,7 +3687,7 @@
       "path": "/v2/roster/membership-changes/validate",
       "contract": "DashboardRosterMembershipValidateEndpoint",
       "validatedBySharedClient": true,
-      "source": "workers/roster-assistant/index.ts:495"
+      "source": "workers/roster-assistant/index.ts:626"
     },
     {
       "helper": "executeAssistantEndpoint",
@@ -3439,7 +3696,7 @@
       "path": "/v2/roster/account-groups/query",
       "contract": "DashboardRosterAccountGroupsQueryEndpoint",
       "validatedBySharedClient": true,
-      "source": "workers/roster-assistant/index.ts:607"
+      "source": "workers/roster-assistant/index.ts:711"
     },
     {
       "helper": "executeAssistantEndpoint",

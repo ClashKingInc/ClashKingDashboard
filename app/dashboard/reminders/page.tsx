@@ -3,7 +3,7 @@
 import { useGuildId } from "@/lib/dashboard-route";
 import { dashboardEndpoints, type EndpointRequest, type EndpointResponse } from "@clashking/api-contracts";
 import { executeSharedEndpoint } from "@/lib/api/shared-client";
-import { ApiResponseError } from "@clashking/api-client";
+import { ApiResponseError, ResponseDecodeError } from "@clashking/api-client";
 
 
 import Image from "@/components/app-image";
@@ -56,21 +56,22 @@ import {
   Save,
   AlertCircle,
   Loader2,
-  UserX,
   Edit2,
   Copy,
   ChevronDown,
   Ellipsis,
+  Send,
 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
-import { getStandaloneImageUrl, getStandaloneTenorUrl } from "./reminder-utils";
+import { useDashboardAccess } from "@/components/dashboard/dashboard-access-provider";
+import { getStandaloneImageUrl, getStandaloneTenorUrl, reminderTimeMinutes } from "./reminder-utils";
 import { TenorMedia } from "@/components/tenor-media";
 
 // API types based on ClashKingAPI reminders endpoints
-type ReminderType = "War" | "Clan Capital" | "Clan Games" | "Inactivity";
+type ReminderType = "War" | "Clan Capital" | "Clan Games";
 interface ReminderConfig {
   id: string;
-  type: string;
+  type: ReminderType | "roster";
   clan_tag?: string;
   channel_id?: string;
   thread_id?: string | null;
@@ -91,7 +92,6 @@ interface ServerRemindersResponse {
   war_reminders: ReminderConfig[];
   capital_reminders: ReminderConfig[];
   clan_games_reminders: ReminderConfig[];
-  inactivity_reminders: ReminderConfig[];
   roster_reminders: ReminderConfig[];
 }
 
@@ -136,14 +136,12 @@ const TAB_TO_REMINDER_KEY: Record<string, keyof ServerRemindersResponse> = {
   war: "war_reminders",
   capital: "capital_reminders",
   games: "clan_games_reminders",
-  inactivity: "inactivity_reminders",
 };
 
 const REMINDER_TYPE_TO_TAB: Record<ReminderType, string> = {
   War: "war",
   "Clan Capital": "capital",
   "Clan Games": "games",
-  Inactivity: "inactivity",
 };
 
 function tabForReminderType(type: string): string {
@@ -151,7 +149,6 @@ function tabForReminderType(type: string): string {
     case "War": return REMINDER_TYPE_TO_TAB.War;
     case "Clan Capital": return REMINDER_TYPE_TO_TAB["Clan Capital"];
     case "Clan Games": return REMINDER_TYPE_TO_TAB["Clan Games"];
-    case "Inactivity": return REMINDER_TYPE_TO_TAB.Inactivity;
     default: return "war";
   }
 }
@@ -184,6 +181,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
   const guildId = useGuildId();
   const locale = useLocale();
   const { toast } = useToast();
+  const { canManage } = useDashboardAccess();
   const t = useTranslations("RemindersPage");
   const tCommon = useTranslations("Common");
   const queryClient = useQueryClient();
@@ -203,14 +201,12 @@ export default function RemindersPage() { // NOSONAR — React page component: c
     { value: "War", label: t('types.war') },
     { value: "Clan Capital", label: t('types.capital') },
     { value: "Clan Games", label: t('types.clanGames') },
-    { value: "Inactivity", label: t('types.inactivity') },
   ];
 
   const [reminders, setReminders] = useState<ServerRemindersResponse>({
     war_reminders: [],
     capital_reminders: [],
     clan_games_reminders: [],
-    inactivity_reminders: [],
     roster_reminders: [],
   });
   const [clans, setClans] = useState<Clan[]>([]);
@@ -220,6 +216,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
   const [selectedClan, setSelectedClan] = useState<string>("all");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [sendingReminderId, setSendingReminderId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<string>("war");
   const newReminderRef = useRef<HTMLDivElement>(null);
@@ -232,100 +229,72 @@ export default function RemindersPage() { // NOSONAR — React page component: c
   const [attackThresholdTouched, setAttackThresholdTouched] = useState(false);
   const [cloningReminder, setCloningReminder] = useState<ReminderConfig | null>(null);
   const [cloneClanTag, setCloneClanTag] = useState("");
+  const [cloneTime, setCloneTime] = useState("");
 
-  // Fetch clans and reminders from API
+  // Load records independently from optional editor metadata.
   useEffect(() => {
-    const fetchReminders = async () => {
+    let active = true;
+    const loadReminders = async () => {
+      setError(null);
+      setLoading(true);
       try {
-        setError(null);
-        // Clan and Discord destination metadata improve the editor, but they do
-        // not determine whether an existing reminder may be displayed. Load
-        // each resource independently so a Discord provider failure cannot
-        // replace the whole page with an authorization error.
-        const [clansResult, channelsResult, threadsResult, remindersResult] = await Promise.allSettled([
-          queryClient.fetchQuery(dashboardQueryOptions.clans(guildId)),
-          queryClient.fetchQuery(dashboardQueryOptions.channels(guildId)),
-          queryClient.fetchQuery(dashboardQueryOptions.threads(guildId)),
-          queryClient.fetchQuery({
-            queryKey: dashboardQueryKeys.route("reminders", guildId),
-            queryFn: ({ signal }) => executeSharedEndpoint(
-              dashboardEndpoints.serverReminders,
-              { path: { serverId: guildId }, query: {}, body: {} },
-              { signal },
-            ),
-          }),
-        ]);
-
-        const clansRes = clansResult.status === "fulfilled"
-          ? clansResult.value
-          : queryClient.getQueryData<Clan[]>(dashboardQueryKeys.clans(guildId)) ?? [];
-        const cachedChannels = queryClient.getQueryData(dashboardQueryKeys.channels(guildId));
-        const cachedThreads = queryClient.getQueryData(dashboardQueryKeys.threads(guildId));
-        const channelsRes = channelsResult.status === "fulfilled"
-          ? channelsResult.value
-          : cachedChannels ?? [];
-        const threadsRes = threadsResult.status === "fulfilled"
-          ? threadsResult.value
-          : cachedThreads ?? [];
-        setDestinationMetadataAvailable(
-          (channelsResult.status === "fulfilled" || cachedChannels !== undefined)
-          && (threadsResult.status === "fulfilled" || cachedThreads !== undefined),
-        );
-
-        for (const [label, result] of [
-          ["clans", clansResult],
-          ["Discord channels", channelsResult],
-          ["Discord threads", threadsResult],
-        ] as const) {
-          if (result.status === "rejected") {
-            console.warn(`Failed to fetch ${label} for reminders page:`, result.reason);
-          }
-        }
-
-        let remindersRes: EndpointResponse<typeof dashboardEndpoints.serverReminders>;
-        if (remindersResult.status === "fulfilled") {
-          remindersRes = remindersResult.value;
-        } else {
-          const cachedReminders = queryClient.getQueryData<EndpointResponse<typeof dashboardEndpoints.serverReminders>>(
-            dashboardQueryKeys.route("reminders", guildId),
-          );
-          if (cachedReminders === undefined) throw remindersResult.reason;
-          console.warn("Failed to refresh reminders; showing the last loaded copy:", remindersResult.reason);
-          remindersRes = cachedReminders;
-        }
-
-        // Parse clans
-        setClans(clansRes || []);
-
-        // Parse channels
-        setChannels(normalizeDestinationChannels(channelsRes));
-        setThreads(normalizeDestinationThreads(threadsRes));
-
-        // Parse reminders
-        const remindersData = remindersRes;
+        const response = await queryClient.fetchQuery({
+          queryKey: dashboardQueryKeys.route("reminders", guildId),
+          queryFn: ({ signal }) => executeSharedEndpoint(
+            dashboardEndpoints.serverReminders,
+            { path: { serverId: guildId }, query: {}, body: {} },
+            { signal },
+          ),
+        });
+        if (!active) return;
         setReminders({
-          war_reminders: remindersData.war_reminders.map(mutableReminder),
-          capital_reminders: remindersData.capital_reminders.map(mutableReminder),
-          clan_games_reminders: remindersData.clan_games_reminders.map(mutableReminder),
-          inactivity_reminders: remindersData.inactivity_reminders.map(mutableReminder),
-          roster_reminders: remindersData.roster_reminders.map(mutableReminder),
+          war_reminders: response.war_reminders.map(mutableReminder),
+          capital_reminders: response.capital_reminders.map(mutableReminder),
+          clan_games_reminders: response.clan_games_reminders.map(mutableReminder),
+          roster_reminders: response.roster_reminders.map(mutableReminder),
         });
       } catch (err) {
-        console.error("Error fetching data:", err);
-        setError(authorizedReminderError(err) ?? t('toast.errorLoadingReminders'));
-        toast({
-          title: t('toast.errorTitle'),
-          description: t('toast.errorLoadingReminders'),
-          variant: "destructive",
-        });
+        if (!active) return;
+        const cached = queryClient.getQueryData<ServerRemindersResponse>(dashboardQueryKeys.route("reminders", guildId));
+        if (cached) setReminders(cached);
+        else {
+          console.error("Reminder request failed:", err);
+          // Report validation paths, never reminder payloads or credentials.
+          if (err instanceof ResponseDecodeError) console.error("Reminder validation fields:", JSON.stringify(err.cause, ["_tag", "issue", "issues", "path", "key"]));
+          setError(authorizedReminderError(err) ?? t('toast.errorLoadingReminders'));
+          toast({ title: t('toast.errorTitle'), description: t('toast.errorLoadingReminders'), variant: "destructive" });
+        }
       } finally {
-        setLoading(false);
+        if (active) setLoading(false);
       }
     };
-
+    const loadMetadata = async () => {
+      const [clansResult, channelsResult, threadsResult] = await Promise.allSettled([
+        queryClient.fetchQuery(dashboardQueryOptions.clans(guildId)),
+        queryClient.fetchQuery(dashboardQueryOptions.channels(guildId)),
+        queryClient.fetchQuery(dashboardQueryOptions.threads(guildId)),
+      ]);
+      if (!active) return;
+      const clanData = clansResult.status === "fulfilled" ? clansResult.value : queryClient.getQueryData<Clan[]>(dashboardQueryKeys.clans(guildId));
+      setClans(clanData ?? []);
+      const channelData = channelsResult.status === "fulfilled" ? channelsResult.value : queryClient.getQueryData(dashboardQueryKeys.channels(guildId));
+      const threadData = threadsResult.status === "fulfilled" ? threadsResult.value : queryClient.getQueryData(dashboardQueryKeys.threads(guildId));
+      let channelsAvailable = false, threadsAvailable = false;
+      // Invalid optional metadata must never hide valid reminder records.
+      try {
+        if (channelData !== undefined) { setChannels(normalizeDestinationChannels(channelData)); channelsAvailable = true; }
+      } catch { setChannels([]); }
+      try {
+        if (threadData !== undefined) { setThreads(normalizeDestinationThreads(threadData)); threadsAvailable = true; }
+      } catch { setThreads([]); }
+      setDestinationMetadataAvailable(channelsAvailable && threadsAvailable);
+    };
     if (guildId) {
-      fetchReminders();
+      void loadReminders();
+      void loadMetadata();
     }
+    // Old navigation/session requests must not overwrite the active page.
+    return () => { active = false; };
   }, [guildId, locale, queryClient, t, toast]);
 
   // Get reminders for current tab
@@ -341,9 +310,6 @@ export default function RemindersPage() { // NOSONAR — React page component: c
       case "games":
         currentReminders = reminders.clan_games_reminders;
         break;
-      case "inactivity":
-        currentReminders = reminders.inactivity_reminders;
-        break;
     }
 
     // Filter by selected clan if needed
@@ -356,13 +322,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
       const hoursA = Number.parseFloat(extractHours(a.time));
       const hoursB = Number.parseFloat(extractHours(b.time));
 
-      // For inactivity: ascending order (soonest first)
-      // For others: descending order (furthest first)
-      if (activeTab === "inactivity") {
-        return hoursA - hoursB;
-      } else {
-        return hoursB - hoursA;
-      }
+      return hoursB - hoursA;
     });
 
     return sorted;
@@ -372,16 +332,15 @@ export default function RemindersPage() { // NOSONAR — React page component: c
     if (tab === "war") return t('empty.noWarReminders');
     if (tab === "capital") return t('empty.noCapitalReminders');
     if (tab === "games") return t('empty.noClanGamesReminders');
-    return t('empty.noInactivityReminders');
+    return t('empty.noClanGamesReminders');
   };
 
   // Add a new reminder
   const addReminder = () => {
-    const typeMap: { [key: string]: "War" | "Clan Capital" | "Clan Games" | "Inactivity" } = {
+    const typeMap: { [key: string]: "War" | "Clan Capital" | "Clan Games" } = {
       war: "War",
       capital: "Clan Capital",
       games: "Clan Games",
-      inactivity: "Inactivity",
     };
 
     const newReminder: Partial<ReminderConfig> = {
@@ -425,13 +384,15 @@ export default function RemindersPage() { // NOSONAR — React page component: c
   const openCloneDialog = (reminder: ReminderConfig) => {
     const firstDifferentClan = clans.find((clan) => clan.tag !== reminder.clan_tag);
     setCloningReminder(reminder);
-    setCloneClanTag(firstDifferentClan?.tag ?? "");
+    setCloneClanTag(firstDifferentClan?.tag ?? reminder.clan_tag ?? "");
+    setCloneTime(reminder.time.endsWith("hr") ? extractHours(reminder.time) : String(reminderTimeMinutes(reminder.time) / 60));
   };
 
   const closeCloneDialog = () => {
     if (saving) return;
     setCloningReminder(null);
     setCloneClanTag("");
+    setCloneTime("");
   };
 
   const refreshRemindersAfterMutation = async () => {
@@ -444,7 +405,6 @@ export default function RemindersPage() { // NOSONAR — React page component: c
         war_reminders: data.war_reminders.map(mutableReminder),
         capital_reminders: data.capital_reminders.map(mutableReminder),
         clan_games_reminders: data.clan_games_reminders.map(mutableReminder),
-        inactivity_reminders: data.inactivity_reminders.map(mutableReminder),
         roster_reminders: data.roster_reminders.map(mutableReminder),
       });
     } catch (refreshError) {
@@ -455,7 +415,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
   };
 
   const cloneReminder = async () => {
-    if (!cloningReminder || !cloneClanTag || cloneClanTag === cloningReminder.clan_tag) return;
+    if (!cloningReminder || !cloneClanTag || !isTimeValid(cloneTime, cloningReminder.type) || cloneHasDuplicate) return;
 
     try {
       setSaving(true);
@@ -464,7 +424,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
         clan_tag: cloneClanTag,
         channel_id: cloningReminder.channel_id || "",
         thread_id: cloningReminder.thread_id || null,
-        time: cloningReminder.time,
+        time: `${cloneTime} hr`,
         ...(cloningReminder.custom_text !== undefined ? { custom_text: cloningReminder.custom_text } : {}),
         ...(cloningReminder.townhall_filter !== undefined ? { townhall_filter: cloningReminder.townhall_filter } : {}),
         ...(cloningReminder.roles !== undefined ? { roles: cloningReminder.roles } : {}),
@@ -489,15 +449,31 @@ export default function RemindersPage() { // NOSONAR — React page component: c
       });
       setCloningReminder(null);
       setCloneClanTag("");
+      setCloneTime("");
     } catch (err) {
       console.error("Error cloning reminder:", err);
       toast({
         title: t('toast.errorTitle'),
-        description: t('toast.failedToClone'),
+        description: err instanceof Error ? err.message : t('toast.failedToClone'),
         variant: "destructive",
       });
     } finally {
       setSaving(false);
+    }
+  };
+
+  const sendReminderNow = async (reminder: ReminderConfig) => {
+    if (!canManage("reminders") || reminder.disabled || sendingReminderId || saving) return;
+    setSendingReminderId(reminder.id);
+    try {
+      await executeSharedEndpoint(dashboardEndpoints.sendServerReminder, {
+        path: { serverId: guildId, reminderId: reminder.id }, query: {}, body: {},
+      });
+      toast({ title: t('toast.successTitle'), description: t('toast.sendAccepted') });
+    } catch (error) {
+      toast({ title: t('toast.errorTitle'), description: error instanceof Error ? error.message : t('toast.failedToSend'), variant: "destructive" });
+    } finally {
+      setSendingReminderId(null);
     }
   };
 
@@ -539,7 +515,6 @@ export default function RemindersPage() { // NOSONAR — React page component: c
     const hours = Number.parseFloat(time);
     if (Number.isNaN(hours) || hours <= 0) return false;
     const max = getMaxHours(type);
-    if (max === 0) return true; // Inactivity
     return hours <= max;
   };
 
@@ -573,8 +548,6 @@ export default function RemindersPage() { // NOSONAR — React page component: c
       case "Clan Capital":
         maxHours = 168; // 7 days
         break;
-      case "Inactivity":
-        return true; // No limit
       default:
         maxHours = 48;
     }
@@ -800,7 +773,6 @@ export default function RemindersPage() { // NOSONAR — React page component: c
   const warReminderCount = getVisibleCount(reminders.war_reminders);
   const capitalReminderCount = getVisibleCount(reminders.capital_reminders);
   const gamesReminderCount = getVisibleCount(reminders.clan_games_reminders);
-  const inactivityReminderCount = getVisibleCount(reminders.inactivity_reminders);
   const dialogChannelThreads = threads.filter(
     (thread) => thread.parent_channel_id === dialogReminder.channel_id,
   );
@@ -815,8 +787,12 @@ export default function RemindersPage() { // NOSONAR — React page component: c
     ...reminders.war_reminders,
     ...reminders.capital_reminders,
     ...reminders.clan_games_reminders,
-    ...reminders.inactivity_reminders,
   ];
+  const cloneHasDuplicate = Boolean(cloningReminder && allReminders.some((reminder) =>
+    reminder.type === cloningReminder.type &&
+    reminder.clan_tag === cloneClanTag &&
+    reminderTimeMinutes(reminder.time) === reminderTimeMinutes(`${cloneTime} hr`),
+  ));
   const remindersWithIssues = allReminders.filter((reminder) => reminder.disabled || (
     destinationMetadataAvailable && !isDestinationValid(
       reminder.channel_id,
@@ -848,12 +824,6 @@ export default function RemindersPage() { // NOSONAR — React page component: c
       label: t('tabs.clanGames'),
       count: gamesReminderCount,
       artwork: <Image src={clashKingAssets.icons.hv.clanGames} alt="" width={22} height={22} unoptimized />,
-    },
-    {
-      value: "inactivity",
-      label: t('tabs.inactivity'),
-      count: inactivityReminderCount,
-      artwork: <UserX />,
     },
   ];
 
@@ -973,7 +943,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
               ))}
             </DashboardTabsList>
 
-            {["war", "capital", "games", "inactivity"].map((tab) => (
+            {["war", "capital", "games"].map((tab) => (
               <TabsContent key={tab} value={tab} className="mt-0">
                 {loading ? (
                   <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -1055,6 +1025,10 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                                     </Button>
                                   </DropdownMenuTrigger>
                                   <DropdownMenuContent align="end" className="w-44 rounded-xl">
+                                    {canManage("reminders") && <DropdownMenuItem className="gap-2 rounded-lg" disabled={saving || reminder.disabled || sendingReminderId !== null} onSelect={() => void sendReminderNow(reminder)}>
+                                      {sendingReminderId === reminder.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                                      {sendingReminderId === reminder.id ? t('actions.sending') : t('actions.sendNow')}
+                                    </DropdownMenuItem>}
                                     <DropdownMenuItem className="gap-2 rounded-lg" onSelect={() => openCloneDialog(reminder)}>
                                       <Copy className="h-4 w-4" />
                                       {t('actions.clone')}
@@ -1185,15 +1159,26 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                     <Label htmlFor="clone-clan">{t('clone.targetClan')}</Label>
                     <ClanCombobox
                       id="clone-clan"
-                      clans={clans.filter((clan) => clan.tag !== cloningReminder.clan_tag)}
+                      clans={clans}
                       value={cloneClanTag}
                       onValueChange={setCloneClanTag}
                       placeholder={t('clone.selectClan')}
                       className="border-0 bg-muted/55 shadow-sm shadow-black/5 focus-visible:ring-ring/35"
                     />
-                    {clans.every((clan) => clan.tag === cloningReminder.clan_tag) && (
-                      <p className="text-xs text-muted-foreground">{t('clone.noOtherClans')}</p>
-                    )}
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="clone-time">{t('card.timeBefore')}</Label>
+                    <div className="flex items-center gap-2">
+                      <Input id="clone-time" type="number" step="0.01" min="0" value={cloneTime} onChange={(event) => setCloneTime(event.target.value)} aria-invalid={cloneHasDuplicate || !isTimeValid(cloneTime, cloningReminder.type)} aria-describedby="clone-time-error" />
+                      <span className="text-sm text-muted-foreground whitespace-nowrap">{t('card.timeUnit')}</span>
+                    </div>
+                    <div id="clone-time-error" aria-live="polite">
+                      {cloneHasDuplicate ? (
+                        <p className="text-xs text-destructive">{t('clone.duplicate')}</p>
+                      ) : cloneTime && !isTimeValid(cloneTime, cloningReminder.type) ? (
+                        <p className="text-xs text-destructive">{t('toast.timeExceedsLimit', { min: 0, max: getMaxHours(cloningReminder.type) || 9999 })}</p>
+                      ) : null}
+                    </div>
                   </div>
                 </div>
               )}
@@ -1201,7 +1186,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                 <Button type="button" variant="secondary" className="border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted" onClick={closeCloneDialog} disabled={saving}>
                   {t('dialog.cancel')}
                 </Button>
-                <Button type="button" onClick={cloneReminder} disabled={saving || !cloneClanTag}>
+                <Button type="button" onClick={cloneReminder} disabled={saving || !cloneClanTag || !cloningReminder || !isTimeValid(cloneTime, cloningReminder.type) || cloneHasDuplicate}>
                   {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Copy className="mr-2 h-4 w-4" />}
                   {saving ? t('clone.cloning') : t('clone.action')}
                 </Button>
@@ -1226,7 +1211,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                   <Label htmlFor="dialog-type">{t('dialog.type')}  <span className="text-destructive">*</span></Label>
                   <Select
                       value={dialogReminder.type || ""}
-                      onValueChange={(value) => updateDialogField("type", value as "War" | "Clan Capital" | "Clan Games" | "Inactivity")}
+                      onValueChange={(value) => updateDialogField("type", value as "War" | "Clan Capital" | "Clan Games")}
                       disabled={!!editingReminder}
                   >
                     <SelectTrigger id="dialog-type">
@@ -1246,7 +1231,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                   <div className="space-y-2">
                     <Label htmlFor="dialog-time">
                       <Clock className="h-4 w-4 inline mr-1" />
-                      {dialogReminder.type === "Inactivity" ? t('card.timeInactive') : t('card.timeBefore')}
+                      {t('card.timeBefore')}
                       <span className="text-destructive ml-1">*</span>
                     </Label>
                     <div className="flex items-center gap-2">
@@ -1256,9 +1241,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                           step="0.01"
                           min="0"
                           placeholder={
-                            dialogReminder.type === "Inactivity"
-                                ? t('card.timeInactivePlaceholder')
-                                : t('card.timeBeforePlaceholder')
+                            t('card.timeBeforePlaceholder')
                           }
                           value={dialogReminder.time || ""}
                           onChange={(e) => updateDialogField("time", e.target.value)}
@@ -1349,9 +1332,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                       placeholder={
                         dialogReminder.type === "Clan Games"
                             ? t('card.customMessagePlaceholderClanGames')
-                            : dialogReminder.type === "Inactivity" // NOSONAR — JSX nested ternary for multi-branch display state
-                                ? t('card.customMessagePlaceholderInactivity')
-                                : t('card.customMessagePlaceholder')
+                            : t('card.customMessagePlaceholder')
                       }
                       value={dialogReminder.custom_text || ""}
                       onChange={(e) => updateDialogField("custom_text", e.target.value)}

@@ -8,6 +8,15 @@ import { cn } from "@/lib/utils";
 import { clashKingAssets } from "@/lib/theme";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
+/** Untrusted messages may link to the web, never executable or credentialed URLs. */
+export function safeDiscordPreviewUrl(value: string | undefined): string | undefined {
+  if (!value) return undefined;
+  try {
+    const url = new URL(value);
+    return ["https:", "http:"].includes(url.protocol) && !url.username && !url.password ? url.href : undefined;
+  } catch { return undefined; }
+}
+
 // ─── Types ─────────────────────────────────────────────────────────────────────
 
 interface EmbedField {
@@ -48,6 +57,7 @@ export interface PreviewDiscordRole {
 export interface DiscordPreviewMentionContext {
   channels?: PreviewDiscordChannel[];
   roles?: PreviewDiscordRole[];
+  users?: { id: string; name: string }[];
 }
 
 export interface DiscordEmbed {
@@ -434,7 +444,7 @@ const parseLink: MarkdownParser = (text, start, key) => {
   const url = text.slice(labelEnd + 2, urlEnd);
   return {
     node: (
-      <a key={key} href={url} target="_blank" rel="noreferrer" className="text-[#00a8fc] hover:underline">
+      <a key={key} href={safeDiscordPreviewUrl(url)} target="_blank" rel="noopener noreferrer" className="text-[#00a8fc] hover:underline">
         {label}
       </a>
     ),
@@ -561,7 +571,7 @@ function createRoleMentionParser(mentionContext?: DiscordPreviewMentionContext):
     const userMatch = /^<@!?(\d+)>/.exec(text.slice(start));
     if (!userMatch) return null;
     return {
-      node: <span key={key} className={roleMentionClassName()}>{`@user-${userMatch[1].slice(-4)}`}</span>,
+      node: <span key={key} className={roleMentionClassName()}>{`@${mentionContext?.users?.find(user => user.id === userMatch[1])?.name ?? `user-${userMatch[1].slice(-4)}`}`}</span>,
       nextIndex: start + userMatch[0].length,
     };
   };
@@ -716,11 +726,11 @@ export function DiscordEmbedPreview({ embed, className, mentionContext }: Props)
         {embed.author?.name && (
           <div className="flex items-center gap-1.5">
             {embed.author.icon_url && (
-              <img src={embed.author.icon_url} alt="" className="w-5 h-5 rounded-full object-cover" />
+              <img src={safeDiscordPreviewUrl(embed.author.icon_url)} referrerPolicy="no-referrer" alt="" className="w-5 h-5 rounded-full object-cover" />
             )}
             <span className="text-xs font-semibold text-[#dbdee1]">
               {embed.author.url
-                ? <a href={embed.author.url} target="_blank" rel="noreferrer" className="hover:underline">{renderLines(embed.author.name, mentionContext, locale, { allowLinks: false, allowSpecialMentions: false })}</a>
+                ? <a href={safeDiscordPreviewUrl(embed.author.url)} target="_blank" rel="noopener noreferrer" className="hover:underline">{renderLines(embed.author.name, mentionContext, locale, { allowLinks: false, allowSpecialMentions: false })}</a>
                 : renderLines(embed.author.name, mentionContext, locale)}
             </span>
           </div>
@@ -730,7 +740,7 @@ export function DiscordEmbedPreview({ embed, className, mentionContext }: Props)
         {embed.title && (
           <div className="font-semibold text-white text-sm">
             {embed.url
-              ? <a href={embed.url} target="_blank" rel="noreferrer" className="hover:underline" style={{ color: "#00a8fc" }}>{renderLines(embed.title, mentionContext, locale, { allowLinks: false, allowSpecialMentions: false })}</a>
+              ? <a href={safeDiscordPreviewUrl(embed.url)} target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "#00a8fc" }}>{renderLines(embed.title, mentionContext, locale, { allowLinks: false, allowSpecialMentions: false })}</a>
               : renderLines(embed.title, mentionContext, locale)}
           </div>
         )}
@@ -766,7 +776,7 @@ export function DiscordEmbedPreview({ embed, className, mentionContext }: Props)
           {/* Thumbnail */}
           {embed.thumbnail?.url && (
             <img
-              src={embed.thumbnail.url}
+              src={safeDiscordPreviewUrl(embed.thumbnail.url)} referrerPolicy="no-referrer"
               alt=""
               className="w-16 h-16 rounded object-cover shrink-0 self-start"
             />
@@ -775,14 +785,14 @@ export function DiscordEmbedPreview({ embed, className, mentionContext }: Props)
 
         {/* Image */}
         {embed.image?.url && (
-          <img src={embed.image.url} alt="" className="rounded max-w-full mt-1" />
+          <img src={safeDiscordPreviewUrl(embed.image.url)} referrerPolicy="no-referrer" alt="" className="rounded max-w-full mt-1" />
         )}
 
         {/* Footer */}
         {(embed.footer?.text || embed.timestamp) && (
           <div className="flex items-center gap-1.5 mt-0.5">
             {embed.footer?.icon_url && (
-              <img src={embed.footer.icon_url} alt="" className="w-4 h-4 rounded-full object-cover" />
+              <img src={safeDiscordPreviewUrl(embed.footer.icon_url)} referrerPolicy="no-referrer" alt="" className="w-4 h-4 rounded-full object-cover" />
             )}
             <span className="text-[0.7rem] text-[#949ba4]">
               {embed.footer?.text ? renderLines(embed.footer.text, mentionContext, locale) : null}
@@ -797,6 +807,8 @@ export function DiscordEmbedPreview({ embed, className, mentionContext }: Props)
 }
 
 interface DiscordMessagePreviewProps {
+  readonly bot?: boolean;
+  readonly timestamp?: string;
   readonly profile?: DiscordMessageProfile | null;
   readonly content?: string | null;
   readonly embeds: DiscordEmbed[];
@@ -806,7 +818,7 @@ interface DiscordMessagePreviewProps {
   readonly mentionContext?: DiscordPreviewMentionContext;
 }
 
-export function DiscordMessagePreview({ profile, content, embeds, components, isV2, className, mentionContext }: DiscordMessagePreviewProps) {
+export function DiscordMessagePreview({ profile, content, embeds, components, isV2, className, mentionContext, bot = true, timestamp }: DiscordMessagePreviewProps) {
   const locale = useLocale();
   const displayName = profile?.name?.trim() || "ClashKing";
   const avatarUrl = profile?.avatar_url?.trim() || clashKingAssets.logos.botApp;
@@ -817,11 +829,12 @@ export function DiscordMessagePreview({ profile, content, embeds, components, is
   return (
     <div className={cn("max-w-[520px]", messageContent ? "space-y-2" : "space-y-0", className)}>
       <div className="flex items-start gap-2">
-        <img src={avatarUrl} alt="" className="mt-0.5 h-10 w-10 rounded-full object-cover" />
+        <img src={safeDiscordPreviewUrl(avatarUrl)} referrerPolicy="no-referrer" alt="" className="mt-0.5 h-10 w-10 rounded-full object-cover" />
         <div className="min-w-0">
           <div className="flex items-center gap-1.5">
             <span className="truncate text-sm font-semibold text-foreground">{displayName}</span>
-            <span className="rounded bg-[#5865F2] px-1 py-0.5 text-[10px] font-semibold text-white">APP</span>
+            {bot && <span className="rounded bg-[#5865F2] px-1 py-0.5 text-[10px] font-semibold text-white">APP</span>}
+            {timestamp && <time dateTime={timestamp} className="text-xs text-muted-foreground">{new Date(timestamp).toLocaleString(locale)}</time>}
           </div>
           {messageContent && (
             <p className="mt-1 whitespace-pre-wrap break-words text-sm text-foreground">
@@ -842,6 +855,9 @@ export function DiscordMessagePreview({ profile, content, embeds, components, is
                 mentionContext={mentionContext}
               />
             ))}
+        {!isV2 && components?.filter(component => component.type === 1).map((component, index) => (
+          <ActionRowPreview key={`classic-row-${index}`} component={component as ActionRowComponent} />
+        ))}
       </div>
     </div>
   );
@@ -924,7 +940,7 @@ export function extractComponents(data: Record<string, unknown>): TopLevelCompon
   return [];
 }
 
-const BUTTON_STYLE_CLASSES: Record<number, string> = {
+export const BUTTON_STYLE_CLASSES: Record<number, string> = {
   1: "bg-[#5865f2] text-white",
   2: "bg-[#4e5058] text-white",
   3: "bg-[#248046] text-white",
@@ -1028,7 +1044,7 @@ function V2MediaGalleryPreview({ component }: { readonly component: MediaGallery
             items.length === 3 && i === 0 ? "col-span-2" : "",
           )}
         >
-          <img src={item.media.url} alt={item.description ?? ""} className="w-full h-full object-cover" />
+          <img src={safeDiscordPreviewUrl(item.media.url)} referrerPolicy="no-referrer" alt={item.description ?? ""} className="w-full h-full object-cover" />
         </div>
       ))}
     </div>
@@ -1051,7 +1067,7 @@ function V2SectionPreview({ component, mentionContext, locale }: { readonly comp
       {isThumbnail && (accessory as ThumbnailComponent).media.url && ( // NOSONAR
         <div className="w-[85px] h-[85px] shrink-0 overflow-hidden rounded-lg">
           <img
-            src={(accessory as ThumbnailComponent).media.url} // NOSONAR
+            src={safeDiscordPreviewUrl((accessory as ThumbnailComponent).media.url)} referrerPolicy="no-referrer" // NOSONAR
             alt={(accessory as ThumbnailComponent).description ?? ""} // NOSONAR
             className="w-full h-full object-cover"
           />

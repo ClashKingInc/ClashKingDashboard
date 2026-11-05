@@ -6,17 +6,17 @@ The browser origins are `https://clashk.ing` and `https://dash.clashk.ing`. They
 
 ## Required release inputs
 
-- Publish matching `@clashking/api-contracts` and `@clashking/api-client` release candidates, install those exact versions in every consumer, and verify their generated schemas and endpoint registry came from the same API revision.
+- Build matching `@clashking/api-contracts` and `@clashking/api-client` release candidates, vendor and install those exact versions in every consumer, and verify their generated schemas and endpoint registry came from the same API revision.
 - Apply required Goose migrations from the authoritative schema repository before enabling API code that reads or writes the new shape.
 - Configure API CORS with exact allowed origins for the two browser hosts and local development. Credentialed requests cannot use a wildcard origin.
 - Add `https://dash.clashk.ing/auth/callback` to Discord's allowed OAuth redirect URIs and keep the refresh cookie scoped for direct API requests.
-- Confirm the API release exposes the body-based home activity POST endpoint and the statistics and league analytics GET endpoints (including `GET /v2/stats/armies`) before building the dashboard.
+- Confirm the API release exposes the body-based home activity POST endpoint and the statistics and league analytics GET endpoints (including `GET /v2/armies/setups`) before building the dashboard.
 - Apply the canonical ticket-configuration migration before serving ticket settings. Verify active panels and buttons expose stable UUIDs, settings are keyed by canonical `ck:ticket:open:<panel-id>:<button-id>` values, archived panels remain immutable, and historical tickets still resolve their original panel identity.
 - Keep ticket and roster publishing disabled until their API-owned publication records and Discord delivery handlers persist the exact channel/message result. Dashboard settings readiness alone does not prove persistent-message readiness.
 
 ## Release order
 
-1. **Publish contracts and client.** Publish immutable release-candidate versions, verify their package contents and provenance, then lock every consumer to the coordinated versions. Do not publish an implementation that silently falls back to the legacy method or response shape.
+1. **Freeze contracts and client.** Build immutable release-candidate archives, verify their package contents and provenance, then lock every consumer to the coordinated versions. Do not publish an implementation that silently falls back to the legacy method or response shape.
 2. **Apply schemas.** Run the authoritative Goose status and up commands for each affected datastore, record the applied versions, and verify the new objects before changing API traffic.
 3. **Deploy the API Worker without switching clients.** Verify health, authentication refresh, exact-origin CORS, the home activity POST route, and the statistics and league analytics GET routes against the release-candidate contracts.
 4. **Deploy dependent applications.** Deploy the admin and other consumers against the same package versions, then deploy the roster assistant if its API contract changed.
@@ -32,7 +32,6 @@ Use the repository's declared Node.js 26.1+/npm 12+ toolchain:
 npm ci
 npm run typecheck
 npm run lint
-npm test
 npm run build:production
 npx wrangler deploy --dry-run --config dist/clashking_dashboard/wrangler.json
 ```

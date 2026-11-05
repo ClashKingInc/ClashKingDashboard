@@ -1,4 +1,5 @@
 "use client";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
 import { useEffect, useEffectEvent, useMemo, useRef, useState, type ReactNode } from "react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -535,7 +536,7 @@ function DataPill({ label, value, accent = false }: Readonly<{ label: string; va
 
 function EvidenceLink({ image, label }: Readonly<{ image?: string | null; label: string }>) {
   if (!image || !optionalImageUrlIsValid(image)) return null;
-  return <a href={image} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><ImageIcon className="h-3.5 w-3.5" />{label}<ExternalLink className="h-3 w-3" /></a>;
+  return <HoverCard openDelay={150}><HoverCardTrigger asChild><a href={image} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><ImageIcon className="h-3.5 w-3.5" />{label}<ExternalLink className="h-3 w-3" /></a></HoverCardTrigger><HoverCardContent className="w-80 p-2" side="top"><img src={image} alt={label} className="max-h-80 w-full rounded-lg object-contain" /></HoverCardContent></HoverCard>;
 }
 
 function BanRow({ ban, locale, clanName, onRemove, t, tCommon }: Readonly<{ ban: BannedPlayer; locale: string; clanName: string | null; onRemove: () => void; t: Translator; tCommon: CommonTranslator }>) {

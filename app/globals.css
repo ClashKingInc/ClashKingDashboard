@@ -120,6 +120,18 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* Native WebView has one fixed shell and one content scroller. Match the page
+   behind that scroller so reaching either edge never exposes a white document. */
+html[data-embedded-dashboard="true"],
+html[data-embedded-dashboard="true"] body,
+html[data-embedded-dashboard="true"] #root {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+  background-color: hsl(var(--background));
+  scroll-behavior: auto;
+}
+
 /* Inter, which ClashKing is based on, does not include these writing systems.
    Use one native UI family for the whole localized interface so words are not
    assembled from visually incompatible fallback glyphs. */

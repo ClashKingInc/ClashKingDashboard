@@ -68,9 +68,10 @@ export class RosterClient extends BaseApiClient {
   async create(
     serverId: string,
     data: CreateRosterModel,
+    unassignedOnly = false,
   ): Promise<ApiResponse<{ message: string; roster_id: string }>> {
     const response = await this.executeEndpoint(DashboardCreateRosterEndpoint, {
-      path: {}, query: { server_id: serverId }, body: data,
+      path: {}, query: { server_id: serverId, ...(unassignedOnly ? { unassigned_only: true } : {}) }, body: data,
     });
     return mapData(response, ({ message, roster_id }) => ({ message, roster_id }));
   }

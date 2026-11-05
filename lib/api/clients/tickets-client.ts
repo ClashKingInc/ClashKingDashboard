@@ -7,11 +7,17 @@ import {
   DeleteTicketPanelEndpoint,
   ServerEmbedsEndpoint,
   TicketPanelsEndpoint,
+  PublishTicketPanelEndpoint,
   UpdateServerEmbedEndpoint,
   UpdateTicketApproveMessagesEndpoint,
   UpdateTicketButtonAppearanceEndpoint,
   UpdateTicketButtonSettingsEndpoint,
   UpdateTicketPanelEndpoint,
+  TicketMessageLibraryEndpoint,
+  UpdateTicketMessageLibraryEndpoint,
+  TicketDashboardActionEndpoint,
+  TicketDashboardJobEndpoint,
+  type EndpointRequest,
 } from "@clashking/api-contracts";
 
 import { BaseApiClient } from '../core/base-client';
@@ -29,6 +35,21 @@ import type {
 } from '../types/tickets';
 
 export class TicketsClient extends BaseApiClient {
+  async runAction(serverId: string, ticketId: string, data: EndpointRequest<typeof TicketDashboardActionEndpoint>["body"]) {
+    return this.executeEndpoint(TicketDashboardActionEndpoint, { path: { serverId, ticketId }, query: {}, body: data });
+  }
+  async getAction(serverId: string, ticketId: string, jobId: string) {
+    return this.executeEndpoint(TicketDashboardJobEndpoint, { path: { serverId, ticketId, jobId }, query: {}, body: {} });
+  }
+  async getMessageLibrary(serverId: string) {
+    return this.executeEndpoint(TicketMessageLibraryEndpoint, { path: { serverId }, query: {}, body: {} });
+  }
+  async saveMessageLibrary(serverId: string, data: EndpointRequest<typeof UpdateTicketMessageLibraryEndpoint>["body"]) {
+    return this.executeEndpoint(UpdateTicketMessageLibraryEndpoint, { path: { serverId }, query: {}, body: data });
+  }
+  async publishPanel(serverId: string, panelName: string, data: EndpointRequest<typeof PublishTicketPanelEndpoint>["body"]) {
+    return this.executeEndpoint(PublishTicketPanelEndpoint, { path: { serverId, panelName }, query: {}, body: data });
+  }
   async getPanels(serverId: string): Promise<ApiResponse<TicketPanelsResponse>> {
     return this.executeEndpoint(TicketPanelsEndpoint, {
       path: { serverId },

@@ -1,3 +1,4 @@
+import { ServerLimitsEndpoint } from "@clashking/api-contracts";
 /**
  * Server/Guild API client
  */
@@ -85,6 +86,10 @@ function failedResponse(response: ApiResponse<unknown>): ApiResponse<never> {
 }
 
 export class ServerClient extends BaseApiClient {
+  async getResourceLimits(serverId:string) {
+    return this.executeEndpoint(ServerLimitsEndpoint,{path:{serverId},query:{},body:{}});
+  }
+
   async getDashboardCapabilities(
     serverId: string,
     signal?: AbortSignal,
@@ -93,7 +98,7 @@ export class ServerClient extends BaseApiClient {
       path: { serverId },
       query: {},
       body: {},
-    }, { signal });
+    }, { signal, timeoutMs: 15_000 });
   }
 
   async getDashboardAccess(serverId: string): Promise<ApiResponse<DashboardAccessConfig>> {
@@ -138,7 +143,7 @@ export class ServerClient extends BaseApiClient {
     const response = await this.executeEndpoint(
       GuildsEndpoint,
       { path: {}, query: {}, body: {} },
-      { signal },
+      { signal, timeoutMs: 15_000 },
     );
     if (!response.data) return failedResponse(response);
     return { data: [...response.data], status: response.status };
@@ -149,7 +154,7 @@ export class ServerClient extends BaseApiClient {
       path: { guildId },
       query: {},
       body: {},
-    }, { signal });
+    }, { signal, timeoutMs: 15_000 });
   }
 
   async reactivateServer(serverId: string): Promise<ApiResponse<{ message: string }>> {

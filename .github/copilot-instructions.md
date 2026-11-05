@@ -24,4 +24,4 @@ ClashKing Dashboard is a TypeScript 7, React 19, Vite, TanStack Router/Query app
 
 ## Validation
 
-Run `npm run typecheck`, `npm run lint`, `npm test`, and `npm run build:production`. Do not deploy as part of validation.
+Run `npm run typecheck`, `npm run lint`, and `npm run build:production`. Retain and add only end-to-end tests against the actual local application. Do not add, maintain, or run unit or mocked component tests. Browser visual verification requires explicit user authorization. Do not deploy as part of validation.

@@ -23,8 +23,11 @@ type PageImporter = () => Promise<PageModule>;
 
 function RootLayout() {
   const pathname = useLocation({ select: (location) => location.pathname });
+  const requestedTheme=new URLSearchParams(globalThis.location?.search??'').get('theme');
+  if(requestedTheme==='light'||requestedTheme==='dark')sessionStorage.setItem('ck_embedded_theme',requestedTheme);
+  const forcedTheme=typeof window!=='undefined'&&sessionStorage.getItem('ck_scoped_server')?sessionStorage.getItem('ck_embedded_theme')??undefined:undefined;
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+    <ThemeProvider attribute="class" defaultTheme="system" forcedTheme={forcedTheme} enableSystem disableTransitionOnChange>
       <LocaleProvider pathname={pathname}>
         <AuthSessionProvider>
           <DocumentMetadata />
@@ -94,6 +97,8 @@ const publicRoutes = [
 ] as const;
 
 const applicationRoutes = [
+  rootPage("access", () => import("@/app/access/page")),
+  rootPage("transcript", () => import("@/app/transcript/page")),
   rootPage("login", () => import("@/app/login/page")),
   rootPage("servers", () => import("@/app/servers/page")),
   rootPage("auth/callback", () => import("@/app/auth/callback/page")),
@@ -107,8 +112,8 @@ const dashboardRoutes = [
   dashboardPage("bans-and-strikes", () => import("@/app/dashboard/bans-and-strikes/page")),
   dashboardPage("bases", () => import("@/app/dashboard/bases/page")),
   dashboardPage("clans", () => import("@/app/dashboard/clans/page")),
+  dashboardPage("analytics", () => import("@/app/dashboard/analytics/page")),
   dashboardPage("embeds", () => import("@/app/dashboard/embeds/page")),
-  dashboardPage("family-settings", () => import("@/app/dashboard/family-settings/page")),
   dashboardPage("general", () => import("@/app/dashboard/general/page")),
   dashboardPage("giveaways", () => import("@/app/dashboard/giveaways/page"), GiveawaysLoadingPage),
   dashboardPage("graphics", () => import("@/app/dashboard/graphics/page")),
@@ -123,9 +128,9 @@ const dashboardRoutes = [
   dashboardPage("rosters/cwl-bonuses", () => import("@/app/dashboard/rosters/cwl-bonuses/page")),
   dashboardPage("rosters/detail", () => import("@/app/dashboard/rosters/detail/page")),
   dashboardPage("settings", () => import("@/app/dashboard/settings/page")),
-  dashboardPage("settings/billing", () => import("@/app/dashboard/settings/billing/page")),
   dashboardPage("support", () => import("@/app/dashboard/support/page")),
   dashboardPage("tickets", () => import("@/app/dashboard/tickets/page")),
+  dashboardPage("tickets/detail", () => import("@/app/dashboard/tickets/detail/page")),
   dashboardPage("tickets/settings", () => import("@/app/dashboard/tickets/settings/page")),
 ] as const;
 
@@ -142,6 +147,17 @@ export const router = createRouter({
   routeTree,
   defaultPreload: "intent",
   scrollRestoration: true,
+  // Search values are URL text, especially Discord snowflakes. The default
+  // JSON parser rounds 64-bit IDs before useSearchParams ever reads them.
+  parseSearch: (search) => Object.fromEntries(new URLSearchParams(search)),
+  stringifySearch: (search) => {
+    const params = new URLSearchParams();
+    for (const [key, value] of Object.entries(search)) {
+      if (value !== undefined && value !== null) params.set(key, String(value));
+    }
+    const query = params.toString();
+    return query ? `?${query}` : "";
+  },
 });
 
 declare module "@tanstack/react-router" {

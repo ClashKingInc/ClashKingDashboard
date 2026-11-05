@@ -1,4 +1,4 @@
-import type { RoleMode, ServerRole, ServerRoleResponse } from "./roles";
+import type { ServerRole, ServerRoleResponse } from "./roles";
 
 // These groupings are a Dashboard view over the canonical server-role API.
 export type FamilyRoleType =
@@ -8,7 +8,7 @@ export type FamilyRoleType =
   | "family_coleader"
   | "family_leader";
 
-export type FamilyRole = Pick<ServerRole, "id" | "role_id" | "mode">;
+export type FamilyRole = Pick<ServerRole, "id" | "role_id">;
 
 export type FamilyRolesResponse = {
   server_id: ServerRole["server_id"];
@@ -22,7 +22,6 @@ export type FamilyRolesResponse = {
 export type FamilyRoleAdd = {
   role: ServerRole["role_id"];
   type: FamilyRoleType;
-  mode?: RoleMode;
 };
 
 export type FamilyRoleOperationResponse = {

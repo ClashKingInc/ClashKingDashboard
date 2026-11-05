@@ -11,5 +11,6 @@ export function dashboardGuilds(guilds: readonly GuildInfo[]): GuildInfo[] {
 export function requiresServerReactivation(
   guild: Pick<GuildInfo, "inactive" | "last_command_at">,
 ): boolean {
+  // A never-used server has no timestamp but still needs activation.
   return guild.inactive;
 }
