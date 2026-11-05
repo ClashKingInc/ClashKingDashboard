@@ -730,7 +730,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
       });
       return;
     }
-    if (!clans.some(clan => clan.tag === newRosterData.clan_tag)) {
+    if (newRosterData.roster_type === "clan" && !clans.some(clan => clan.tag === newRosterData.clan_tag)) {
       toast({
         title: tCommon("error"),
         description: t("createErrorClan"),
@@ -768,7 +768,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
 
   const isCreateRosterValid =
     newRosterData.alias.trim().length > 0 &&
-    clans.some(clan => clan.tag === newRosterData.clan_tag);
+    (newRosterData.roster_type === "family" || clans.some(clan => clan.tag === newRosterData.clan_tag));
 
   // Loading state
   if (loading) {
@@ -843,7 +843,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
                 </DialogHeader>
 
                 <div className="space-y-4 py-4">
-                  {clans.length === 0 && (
+                  {newRosterData.roster_type === "clan" && clans.length === 0 && (
                     <div className="space-y-2 text-sm text-muted-foreground">
                       <p>{tClans("getStartedAdding")}</p>
                       <Button variant="secondary" onClick={() => router.push(dashboardHref("clans", guildId))}>
@@ -864,7 +864,16 @@ export default function RostersPage() { // NOSONAR — React page component: com
                     />
                   </div>
 
-                  {(
+                  <div className="space-y-2">
+                    <Label htmlFor="roster-type">{t("createDialog.typeLabel")}</Label>
+                    <Select value={newRosterData.roster_type} onValueChange={(value: "clan" | "family") =>
+                      setNewRosterData({ ...newRosterData, roster_type: value, clan_tag: value === "family" ? "" : newRosterData.clan_tag,
+                        signup_scope: value === "family" && newRosterData.signup_scope === "clan-only" ? "family-only" : newRosterData.signup_scope })}>
+                      <SelectTrigger id="roster-type"><SelectValue /></SelectTrigger>
+                      <SelectContent><SelectItem value="clan">{t("createDialog.typeClan")}</SelectItem><SelectItem value="family">{t("createDialog.typeFamily")}</SelectItem></SelectContent>
+                    </Select>
+                  </div>
+                  {newRosterData.roster_type === "clan" && (
                     <div className="space-y-2">
                       <Label>
                         {t("createDialog.clanLabel")} <span className="text-destructive">*</span>
@@ -894,7 +903,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="clan-only">{t("createDialog.scopeClanOnly")}</SelectItem>
+                        {newRosterData.roster_type === "clan" && <SelectItem value="clan-only">{t("createDialog.scopeClanOnly")}</SelectItem>}
                         <SelectItem value="family-only">{t("createDialog.scopeFamilyOnly")}</SelectItem>
                         <SelectItem value="anyone">{t("createDialog.scopeAnyone")}</SelectItem>
                       </SelectContent>

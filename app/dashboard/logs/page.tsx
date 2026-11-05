@@ -269,6 +269,7 @@ export default function LogsPage() {
     { keys: ['legend_log_defenses'], label: t('playerLogs.legendLogDefenses.label'), description: t('playerLogs.legendLogDefenses.description'), icon: Trophy, color: 'blue' },
   ];
   const SERVER_LOGS: LogTypeDefinition[] = [
+    { keys: ['clash_maintenance'], label: t('serverLogs.maintenance.label'), description: t('serverLogs.maintenance.description'), icon: ScrollText, color: 'orange', scope: 'server' },
     { keys: ['reddit_feed'], label: t('serverLogs.redditFeed.label'), description: t('serverLogs.redditFeed.description'), icon: ScrollText, color: 'orange', scope: 'server' },
   ];
   const [loading, setLoading] = useState(true);

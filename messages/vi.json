@@ -2412,6 +2412,10 @@
       "redditFeed": {
         "label": "Bảng tin Reddit",
         "description": "Đăng bảng tin Reddit của máy chủ"
+      },
+      "maintenance": {
+        "label": "Clash of Clans maintenance",
+        "description": "When maintenance starts and ends"
       }
     },
     "warLogs": {
@@ -2959,7 +2963,9 @@
       "calendar_month": "Tháng dương lịch",
       "game_season": "Mùa trò chơi",
       "seconds": "Khoảng làm mới (giây)",
-      "description": "Top 1–5 thành viên hiện tại. Cập nhật một tin nhắn và đếm các trận cày tài nguyên đã ghi nhận."
+      "description": "Top 1–5 thành viên hiện tại. Cập nhật một tin nhắn và đếm các trận cày tài nguyên đã ghi nhận.",
+      "rolling_days": "Last number of days",
+      "days": "Days"
     },
     "donationRows": {
       "label": "Players to show",
@@ -3009,19 +3015,20 @@
     "targets": {
       "kind": "Loại mục tiêu: {kind}",
       "kindDescription": "Sổ đăng ký xác định cách diễn giải từng giá trị mục tiêu.",
-      "scope": "Phạm vi mục tiêu",
-      "scopeDescription": "Phạm vi hệ thống dùng mọi bang hội thuộc hệ thống đã cấu hình và không có mục tiêu cụ thể.",
+      "scope": "Clans",
+      "scopeDescription": "",
       "family": "Hệ thống bang hội",
       "custom": "Mục tiêu tùy chỉnh",
-      "values": "Mục tiêu",
+      "values": "Selected clans",
       "count": "Cung cấp từ {min} đến {max} mục tiêu cho loại bảng này.",
       "placeholder": "Nhập mục tiêu loại {kind}",
-      "add": "Thêm mục tiêu",
-      "remove": "Xóa mục tiêu"
+      "add": "Add clan",
+      "remove": "Remove clan",
+      "selectClan": "Select a clan"
     },
     "modes": {
-      "label": "Chế độ phân phối",
-      "description": "Sổ đăng ký kiểm soát các chế độ phân phối mà bảng hỗ trợ.",
+      "label": "Update style",
+      "description": "",
       "refresh": "Làm mới",
       "send": "Gửi theo lịch"
     },
@@ -3039,7 +3046,8 @@
     },
     "refresh": {
       "interval": "Khoảng làm mới (phút)",
-      "intervalDescription": "Phạm vi cho phép: {minimum}–{maximum} phút."
+      "intervalDescription": "Phạm vi cho phép: {minimum}–{maximum} phút.",
+      "fixed": "Refreshes every 5 minutes"
     },
     "schedule": {
       "label": "Lịch",
@@ -4054,7 +4062,8 @@
       "infoLabel": "How free usage works",
       "freePoolInfo": "Free server usage is available while ClashKing's shared monthly free allowance still has capacity. It can pause before your server reaches its own limit and resets at the start of each UTC month.",
       "subscribers": "Credit from {count, plural, one {# subscription} other {# subscriptions}}"
-    }
+    },
+    "hideSupport": "Hide support reminders on this device"
   },
   "GraphicsPage": {
     "desktopOnlyTitle": "Graphics is available on desktop",
@@ -4069,8 +4078,8 @@
     "raise": "Need higher limits? Join our Discord server and ask for raised limits.",
     "discord": "Join our Discord server",
     "supportTitle": "Support ClashKing",
-    "supportText": "If you enjoy ClashKing, maybe think about supporting us.",
-    "kofi": "Support us on Ko-fi",
+    "supportText": "Nếu bạn thích ClashKing, hãy cân nhắc ủng hộ chúng tôi.",
+    "kofi": "Buy us a coffee",
     "dismiss": "Dismiss support message"
   },
   "BotCustomizationGrant": {

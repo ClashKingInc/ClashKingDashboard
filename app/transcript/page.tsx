@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Schema } from "effect";
 import { TicketTranscriptDocument } from "@clashking/api-contracts";
@@ -14,13 +14,31 @@ import { transcriptRasterMime } from "@/lib/ticket-transcript-image";
 function ArchivedAttachment({ url, attachment }: {url: string; attachment: typeof TicketTranscriptDocument.Type.attachments[number]}) {
   const [image, setImage] = useState<string | null>(null);
   useEffect(() => {
-    if (!/^image\/(png|jpeg|gif|webp)$/u.test(attachment.contentType)) return;
+    const displayLimit = 8 * 1024 * 1024;
+    if (!/^image\/(png|jpeg|gif|webp)$/u.test(attachment.contentType) || attachment.size > displayLimit) return;
     const controller = new AbortController(); let objectUrl: string | undefined;
     void (async () => {
       const response = await fetch(url, {credentials:"omit",referrerPolicy:"no-referrer",signal:controller.signal});
       if (!response.ok) return;
-      const bytes = new Uint8Array(await response.arrayBuffer());
-      if (bytes.byteLength !== attachment.size || bytes.byteLength > 8 * 1024 * 1024) return;
+      if (!response.body) return;
+      const reader = response.body.getReader();
+      const chunks: Uint8Array[] = [];
+      let size = 0;
+      try {
+        // Enforce the cap while streaming; metadata and Content-Length cannot
+        // bound memory if the archive response is larger than advertised.
+        for (;;) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          size += value.byteLength;
+          if (size > displayLimit || size > attachment.size) return;
+          chunks.push(value);
+        }
+      } finally { await reader.cancel(); reader.releaseLock(); }
+      if (size !== attachment.size) return;
+      const bytes = new Uint8Array(size);
+      let offset = 0;
+      for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
       const mime = transcriptRasterMime(bytes); if (!mime) return;
       const hash = [...new Uint8Array(await crypto.subtle.digest("SHA-256",bytes))].map(value => value.toString(16).padStart(2,"0")).join("");
       if (hash !== attachment.sha256 || controller.signal.aborted) return;
@@ -53,6 +71,15 @@ function TranscriptContent() {
     } });
   const document = query.data;
   const channel = document?.channels.find(item => item.id === channelId) ?? document?.channels[0];
+  const mentionContext = useMemo(() => {
+    const users = new Map<string, { id: string; name: string }>();
+    // Build the document-wide identity index once, not for every message.
+    for (const item of document?.channels ?? []) for (const message of item.messages) {
+      users.set(message.author.id, { id: message.author.id, name: message.author.displayName });
+      for (const mention of message.mentions ?? []) users.set(mention.id, { id: mention.id, name: mention.displayName });
+    }
+    return { channels: (document?.channels ?? []).map(item => ({ id: item.id, name: item.name })), users: [...users.values()] };
+  }, [document]);
   return <main className="mx-auto min-h-dvh max-w-5xl px-4 py-8 sm:px-8">
     <header className="mb-8 flex flex-wrap items-center justify-between gap-4">
       <div className="flex items-center gap-3"><FileText className="h-6 w-6 text-muted-foreground" />
@@ -84,11 +111,7 @@ function TranscriptContent() {
           }} className="mb-2 ml-12 block text-xs text-muted-foreground">↳ {channel.messages.find(item => item.id === message.referencedMessageId)?.author.displayName ?? message.referencedMessageId}</a>}
           <DiscordMessagePreview profile={{ name: message.author.displayName, avatar_url: message.author.avatarUrl ?? `https://cdn.discordapp.com/embed/avatars/${Number(BigInt(message.author.id) % 5n)}.png` }}
             bot={message.author.bot} timestamp={message.createdAt} content={message.content}
-            mentionContext={{
-              channels: document.channels.map(item => ({ id: item.id, name: item.name })),
-              users: [...(message.mentions ?? []).map(item => ({ id: item.id, name: item.displayName })),
-                ...document.channels.flatMap(item => item.messages.map(entry => ({ id: entry.author.id, name: entry.author.displayName })))],
-            }}
+            mentionContext={mentionContext}
             embeds={extractEmbeds({ embeds: message.embeds })} components={extractComponents({ components: message.components })}
             isV2={message.components.some(item => item.type !== 1)} className="max-w-none" />
           <div className="ml-12 mt-2 flex flex-wrap gap-2">

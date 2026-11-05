@@ -2412,6 +2412,10 @@
       "redditFeed": {
         "label": "Reddit فیڈ",
         "description": "سرور کی Reddit فیڈ شائع کریں"
+      },
+      "maintenance": {
+        "label": "Clash of Clans maintenance",
+        "description": "When maintenance starts and ends"
       }
     },
     "warLogs": {
@@ -2959,7 +2963,9 @@
       "calendar_month": "کیلنڈر مہینہ",
       "game_season": "گیم سیزن",
       "seconds": "تازہ کاری کا وقفہ (سیکنڈ)",
-      "description": "موجودہ بہترین 1–5 اراکین۔ ایک پیغام اپ ڈیٹ ہوتا ہے اور ریکارڈ شدہ لوٹ کے حملے گنے جاتے ہیں۔"
+      "description": "موجودہ بہترین 1–5 اراکین۔ ایک پیغام اپ ڈیٹ ہوتا ہے اور ریکارڈ شدہ لوٹ کے حملے گنے جاتے ہیں۔",
+      "rolling_days": "Last number of days",
+      "days": "Days"
     },
     "donationRows": {
       "label": "Players to show",
@@ -3009,19 +3015,20 @@
     "targets": {
       "kind": "ہدف کی قسم: {kind}",
       "kindDescription": "رجسٹری طے کرتی ہے کہ ہر ہدف کی قدر کیسے سمجھی جائے۔",
-      "scope": "ہدف کا دائرہ",
-      "scopeDescription": "فیملی کا دائرہ ہر ترتیب شدہ فیملی کلین استعمال کرتا ہے اور اس کے واضح اہداف نہیں ہوتے۔",
+      "scope": "Clans",
+      "scopeDescription": "",
       "family": "فیملی",
       "custom": "حسب ضرورت اہداف",
-      "values": "اہداف",
+      "values": "Selected clans",
       "count": "اس بورڈ کی قسم کے لیے {min} سے {max} اہداف دیں۔",
       "placeholder": "{kind} ہدف درج کریں",
-      "add": "ہدف شامل کریں",
-      "remove": "ہدف ہٹائیں"
+      "add": "Add clan",
+      "remove": "Remove clan",
+      "selectClan": "Select a clan"
     },
     "modes": {
-      "label": "ترسیل کا موڈ",
-      "description": "رجسٹری طے کرتی ہے کہ یہ بورڈ کون سے ترسیلی موڈز کی معاونت کرتا ہے۔",
+      "label": "Update style",
+      "description": "",
       "refresh": "ریفریش",
       "send": "شیڈول شدہ ترسیل"
     },
@@ -3039,7 +3046,8 @@
     },
     "refresh": {
       "interval": "تازہ کاری کا وقفہ (منٹ)",
-      "intervalDescription": "اجازت یافتہ حد: {minimum}–{maximum} منٹ۔"
+      "intervalDescription": "اجازت یافتہ حد: {minimum}–{maximum} منٹ۔",
+      "fixed": "Refreshes every 5 minutes"
     },
     "schedule": {
       "label": "شیڈول",
@@ -4054,7 +4062,8 @@
       "infoLabel": "How free usage works",
       "freePoolInfo": "Free server usage is available while ClashKing's shared monthly free allowance still has capacity. It can pause before your server reaches its own limit and resets at the start of each UTC month.",
       "subscribers": "Credit from {count, plural, one {# subscription} other {# subscriptions}}"
-    }
+    },
+    "hideSupport": "Hide support reminders on this device"
   },
   "GraphicsPage": {
     "desktopOnlyTitle": "Graphics is available on desktop",
@@ -4069,8 +4078,8 @@
     "raise": "Need higher limits? Join our Discord server and ask for raised limits.",
     "discord": "Join our Discord server",
     "supportTitle": "Support ClashKing",
-    "supportText": "If you enjoy ClashKing, maybe think about supporting us.",
-    "kofi": "Support us on Ko-fi",
+    "supportText": "اگر آپ کو ClashKing پسند ہے تو ہماری مدد کرنے پر غور کریں۔",
+    "kofi": "Buy us a coffee",
     "dismiss": "Dismiss support message"
   },
   "BotCustomizationGrant": {

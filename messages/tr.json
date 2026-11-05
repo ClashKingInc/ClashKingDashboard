@@ -2412,6 +2412,10 @@
       "redditFeed": {
         "label": "Reddit akışı",
         "description": "Sunucunun Reddit akışını yayımlayın"
+      },
+      "maintenance": {
+        "label": "Clash of Clans maintenance",
+        "description": "When maintenance starts and ends"
       }
     },
     "warLogs": {
@@ -2959,7 +2963,9 @@
       "calendar_month": "Takvim ayı",
       "game_season": "Oyun sezonu",
       "seconds": "Yenileme aralığı (saniye)",
-      "description": "En iyi 1–5 mevcut üye. Tek mesajı günceller ve kaydedilen yağma saldırılarını sayar."
+      "description": "En iyi 1–5 mevcut üye. Tek mesajı günceller ve kaydedilen yağma saldırılarını sayar.",
+      "rolling_days": "Last number of days",
+      "days": "Days"
     },
     "donationRows": {
       "label": "Players to show",
@@ -3009,19 +3015,20 @@
     "targets": {
       "kind": "Hedef türü: {kind}",
       "kindDescription": "Kayıt defteri her hedef değerinin nasıl yorumlanacağını belirler.",
-      "scope": "Hedef kapsamı",
-      "scopeDescription": "Aile kapsamı yapılandırılmış tüm aile klanlarını kullanır ve açık hedef içermez.",
+      "scope": "Clans",
+      "scopeDescription": "",
       "family": "Aile",
       "custom": "Özel hedefler",
-      "values": "Hedefler",
+      "values": "Selected clans",
       "count": "Bu tablo türü için {min} ile {max} arasında hedef belirtin.",
       "placeholder": "Bir {kind} hedefi girin",
-      "add": "Hedef ekle",
-      "remove": "Hedefi kaldır"
+      "add": "Add clan",
+      "remove": "Remove clan",
+      "selectClan": "Select a clan"
     },
     "modes": {
-      "label": "Gönderim modu",
-      "description": "Kayıt defteri tablonun desteklediği gönderim modlarını belirler.",
+      "label": "Update style",
+      "description": "",
       "refresh": "Yenile",
       "send": "Planlanmış gönderim"
     },
@@ -3039,7 +3046,8 @@
     },
     "refresh": {
       "interval": "Yenileme aralığı (dakika)",
-      "intervalDescription": "İzin verilen aralık: {minimum}–{maximum} dakika."
+      "intervalDescription": "İzin verilen aralık: {minimum}–{maximum} dakika.",
+      "fixed": "Refreshes every 5 minutes"
     },
     "schedule": {
       "label": "Zamanlama",
@@ -4054,7 +4062,8 @@
       "infoLabel": "How free usage works",
       "freePoolInfo": "Free server usage is available while ClashKing's shared monthly free allowance still has capacity. It can pause before your server reaches its own limit and resets at the start of each UTC month.",
       "subscribers": "Credit from {count, plural, one {# subscription} other {# subscriptions}}"
-    }
+    },
+    "hideSupport": "Hide support reminders on this device"
   },
   "GraphicsPage": {
     "desktopOnlyTitle": "Graphics is available on desktop",
@@ -4069,8 +4078,8 @@
     "raise": "Need higher limits? Join our Discord server and ask for raised limits.",
     "discord": "Join our Discord server",
     "supportTitle": "Support ClashKing",
-    "supportText": "If you enjoy ClashKing, maybe think about supporting us.",
-    "kofi": "Support us on Ko-fi",
+    "supportText": "ClashKing’i seviyorsanız bize destek olmayı düşünün.",
+    "kofi": "Buy us a coffee",
     "dismiss": "Dismiss support message"
   },
   "BotCustomizationGrant": {

@@ -1,5 +1,6 @@
 "use client";
 
+import { useDashboardAccess } from "@/components/dashboard/dashboard-access-provider";
 import { useGuildId } from "@/lib/dashboard-route";
 import { dashboardEndpoints } from "@clashking/api-contracts";
 import { executeSharedEndpoint } from "@/lib/api/shared-client";
@@ -13,7 +14,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { InfoPopover } from "@/components/ui/info-popover";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RoleCombobox } from "@/components/ui/role-combobox";
@@ -57,7 +57,6 @@ import {
 } from "./role-assets";
 
 
-const AUTO_ROLE_TRIGGERS = ["member_join", "member_leave", "townhall_change", "league_change", "role_change"] as const;
 
 const ROLE_TYPES_CONFIG: RoleType[] = ["townhall", "league", "builderhall", "builder_league", "clan_category"];
 
@@ -106,6 +105,7 @@ function SortIcon({ col, sortCol, sortDir }: { readonly col: "role" | "criteria"
 
 export default function RolesPage() { // NOSONAR — complexity comes from aggregate role-type handling, not a single logic unit
   const guildId = useGuildId();
+  const canEdit = useDashboardAccess().canManage("roles");
   const locale = useLocale();
   const t = useTranslations("RolesPage");
   const tCommon = useTranslations("Common");
@@ -319,6 +319,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
   useEffect(() => { loadInitialData(); }, [guildId, locale]);
 
   const handleSaveSettings = async () => {
+    if (!canEdit) return;
     try {
       setSaveStatus('saving');
       setError(null);
@@ -815,7 +816,6 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
   // API would silently ignore on save during a rolling update.
   const autoPolicySupported = roleSettings.auto_eval_role_treatment !== undefined
     && Array.isArray(roleSettings.auto_eval_blacklist_roles);
-  const autoTriggersSupported = roleSettings.auto_eval_triggers !== undefined;
   const hasChanged = JSON.stringify(roleSettings.auto_eval_triggers) !== JSON.stringify(originalRoleSettings.auto_eval_triggers) ||
     roleSettings.auto_eval_status !== originalRoleSettings.auto_eval_status ||
     roleSettings.auto_eval_nickname !== originalRoleSettings.auto_eval_nickname ||
@@ -861,7 +861,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
           </Alert>
         )}
 
-        <section className="space-y-3">
+        <fieldset disabled={!canEdit} className="min-w-0 space-y-3">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
@@ -962,70 +962,8 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                 onCheckedChange={checked => setRoleSettings({ ...roleSettings, flair_non_family: checked })} />
             </div>
           </div>
-          {autoTriggersSupported && <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <Label htmlFor="auto-role-trigger-mode">{t("settings.triggers")}</Label>
-              <InfoPopover content={t("settings.triggerHelp")} label={t("settings.triggers")} />
-            </div>
-            <Select value={roleSettings.auto_eval_triggers === null ? "all" : "selected"}
-              disabled={isLoading || saveStatus === 'saving'}
-              onValueChange={value => setRoleSettings({...roleSettings,auto_eval_triggers:value === "all" ? null : [...AUTO_ROLE_TRIGGERS].sort()})}>
-              <SelectTrigger id="auto-role-trigger-mode" className="w-full sm:max-w-sm"><SelectValue /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">{t("settings.triggerAll")}</SelectItem>
-                <SelectItem value="selected">{t("settings.triggerSelected")}</SelectItem>
-              </SelectContent>
-            </Select>
-            {Array.isArray(roleSettings.auto_eval_triggers) && <fieldset className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              <legend className="sr-only">{t("settings.triggerSelected")}</legend>
-              {AUTO_ROLE_TRIGGERS.map(trigger => <div key={trigger} className="flex items-center gap-2">
-                <Checkbox id={`auto-trigger-${trigger}`} checked={roleSettings.auto_eval_triggers?.includes(trigger) ?? false}
-                  disabled={isLoading || saveStatus === 'saving'}
-                  onCheckedChange={checked => setRoleSettings({...roleSettings,auto_eval_triggers:[...new Set([
-                    ...(roleSettings.auto_eval_triggers ?? []).filter(value => value !== trigger),
-                    ...(checked === true ? [trigger] : []),
-                  ])].sort()})} />
-                <Label htmlFor={`auto-trigger-${trigger}`} className="cursor-pointer font-normal">{t(`triggers.${trigger}`)}</Label>
-              </div>)}
-            </fieldset>}
-          </div>}
-          {autoPolicySupported && <div className="grid gap-5 md:grid-cols-2">
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <Label htmlFor="auto-role-treatment">{t("settings.automaticTreatment")}</Label>
-                <InfoPopover content={t("settings.automaticTreatmentDesc")} label={t("settings.automaticTreatment")} />
-              </div>
-              <Select value={roleSettings.auto_eval_role_treatment ?? "both"} disabled={isLoading || saveStatus === 'saving'}
-                onValueChange={value => setRoleSettings({...roleSettings, auto_eval_role_treatment: value as 'add' | 'remove' | 'both'})}>
-                <SelectTrigger id="auto-role-treatment"><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="both">{t("settings.treatmentBoth")}</SelectItem>
-                  <SelectItem value="add">{t("settings.treatmentAdd")}</SelectItem>
-                  <SelectItem value="remove">{t("settings.treatmentRemove")}</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <Label htmlFor="auto-role-exclusions">{t("settings.excludedRoles")}</Label>
-                <InfoPopover content={t("settings.excludedRolesDesc")} label={t("settings.excludedRoles")} />
-              </div>
-              <RoleCombobox id="auto-role-exclusions" roles={discordRoles} mode="add"
-                excludeRoleIds={roleSettings.auto_eval_blacklist_roles ?? []}
-                placeholder={t("addRoleDialog.selectRole")} addPlaceholder={t("addRoleDialog.selectRole")}
-                disabled={isLoading || saveStatus === 'saving'}
-                onAdd={roleId => setRoleSettings({...roleSettings,auto_eval_blacklist_roles:[...new Set([...(roleSettings.auto_eval_blacklist_roles ?? []),roleId])].sort()})} />
-              <div className="flex flex-wrap gap-2">
-                {(roleSettings.auto_eval_blacklist_roles ?? []).map(roleId => <Button key={roleId} size="sm" variant="ghost" className="rounded-full bg-muted"
-                  disabled={isLoading || saveStatus === 'saving'}
-                  aria-label={`${t("settings.removeExcludedRole")}: ${discordRoles.find(role => role.id === roleId)?.name ?? roleId}`}
-                  onClick={() => setRoleSettings({...roleSettings,auto_eval_blacklist_roles:(roleSettings.auto_eval_blacklist_roles ?? []).filter(id => id !== roleId)})}>
-                  {discordRoles.find(role => role.id === roleId)?.name ?? roleId}<Trash2 className="ml-2 h-3.5 w-3.5" aria-hidden="true" />
-                </Button>)}
-              </div>
-            </div>
-          </div>}
-        </section>
+
+        </fieldset>
 
         <FamilyNicknameSettings section="family" />
         <section className="space-y-6" aria-labelledby="player-roles-heading">

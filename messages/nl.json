@@ -2412,6 +2412,10 @@
       "redditFeed": {
         "label": "Reddit-feed",
         "description": "Publiceer de Reddit-feed van de server"
+      },
+      "maintenance": {
+        "label": "Clash of Clans maintenance",
+        "description": "When maintenance starts and ends"
       }
     },
     "warLogs": {
@@ -2959,7 +2963,9 @@
       "calendar_month": "Kalendermaand",
       "game_season": "Spelseizoen",
       "seconds": "Verversingsinterval (seconden)",
-      "description": "De beste 1–5 huidige leden. Werkt één bericht bij en telt geregistreerde farmaanvallen."
+      "description": "De beste 1–5 huidige leden. Werkt één bericht bij en telt geregistreerde farmaanvallen.",
+      "rolling_days": "Last number of days",
+      "days": "Days"
     },
     "donationRows": {
       "label": "Players to show",
@@ -3009,19 +3015,20 @@
     "targets": {
       "kind": "Doeltype: {kind}",
       "kindDescription": "Het register bepaalt hoe iedere doelwaarde wordt geïnterpreteerd.",
-      "scope": "Doelbereik",
-      "scopeDescription": "Het bereik Clanfamilie gebruikt alle ingestelde clans uit de clanfamilie, zonder expliciete doelen.",
+      "scope": "Clans",
+      "scopeDescription": "",
       "family": "Clanfamilie",
       "custom": "Aangepaste doelen",
-      "values": "Doelen",
+      "values": "Selected clans",
       "count": "Geef tussen {min} en {max} doelen op voor dit bordtype.",
       "placeholder": "Voer een {kind}-doel in",
-      "add": "Doel toevoegen",
-      "remove": "Doel verwijderen"
+      "add": "Add clan",
+      "remove": "Remove clan",
+      "selectClan": "Select a clan"
     },
     "modes": {
-      "label": "Leveringsmodus",
-      "description": "Het register bepaalt welke modi dit bord ondersteunt.",
+      "label": "Update style",
+      "description": "",
       "refresh": "Vernieuwen",
       "send": "Gepland versturen"
     },
@@ -3039,7 +3046,8 @@
     },
     "refresh": {
       "interval": "Vernieuwingsinterval (minuten)",
-      "intervalDescription": "Toegestaan bereik: {minimum}–{maximum} minuten."
+      "intervalDescription": "Toegestaan bereik: {minimum}–{maximum} minuten.",
+      "fixed": "Refreshes every 5 minutes"
     },
     "schedule": {
       "label": "Schema",
@@ -4054,7 +4062,8 @@
       "infoLabel": "Hoe gratis gebruik werkt",
       "freePoolInfo": "Gratis servergebruik is beschikbaar zolang de gedeelde maandelijkse gratis ruimte van ClashKing capaciteit heeft. Het kan pauzeren voordat je server zijn eigen limiet bereikt en reset aan het begin van elke UTC-maand.",
       "subscribers": "Tegoed van {count, plural, one {# abonnement} other {# abonnementen}}"
-    }
+    },
+    "hideSupport": "Hide support reminders on this device"
   },
   "GraphicsPage": {
     "desktopOnlyTitle": "Graphics is beschikbaar op desktop",
@@ -4069,8 +4078,8 @@
     "raise": "Need higher limits? Join our Discord server and ask for raised limits.",
     "discord": "Join our Discord server",
     "supportTitle": "Support ClashKing",
-    "supportText": "If you enjoy ClashKing, maybe think about supporting us.",
-    "kofi": "Support us on Ko-fi",
+    "supportText": "Als je ClashKing leuk vindt, overweeg dan om ons te steunen.",
+    "kofi": "Buy us a coffee",
     "dismiss": "Dismiss support message"
   },
   "BotCustomizationGrant": {

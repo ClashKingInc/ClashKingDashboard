@@ -2412,6 +2412,10 @@
       "redditFeed": {
         "label": "Reddit-feed",
         "description": "Publiseer die Reddit-feed van die bediener"
+      },
+      "maintenance": {
+        "label": "Clash of Clans maintenance",
+        "description": "When maintenance starts and ends"
       }
     },
     "warLogs": {
@@ -2959,7 +2963,9 @@
       "calendar_month": "Kalendermaand",
       "game_season": "Spelseisoen",
       "seconds": "Verfrisinterval (sekondes)",
-      "description": "Top 1–5 huidige lede. Wysig een boodskap; tel aangetekende boerderyaanvalle."
+      "description": "Top 1–5 huidige lede. Wysig een boodskap; tel aangetekende boerderyaanvalle.",
+      "rolling_days": "Last number of days",
+      "days": "Days"
     },
     "donationRows": {
       "label": "Players to show",
@@ -3009,19 +3015,20 @@
     "targets": {
       "kind": "Teikensoort: {kind}",
       "kindDescription": "Die register bepaal hoe elke teikenwaarde vertolk word.",
-      "scope": "Doelbereik",
-      "scopeDescription": "Familieomvang gebruik alle opgestelde familieclans sonder eksplisiete teikens.",
+      "scope": "Clans",
+      "scopeDescription": "",
       "family": "Familie",
       "custom": "Pasgemaakte teikens",
-      "values": "Teikens",
+      "values": "Selected clans",
       "count": "Gee tussen {min} en {max} teikens op vir hierdie bordsoort.",
       "placeholder": "Voer 'n {kind}-doel in",
-      "add": "Voeg teiken by",
-      "remove": "Doel Verwyder"
+      "add": "Add clan",
+      "remove": "Remove clan",
+      "selectClan": "Select a clan"
     },
     "modes": {
-      "label": "Afleweringsmodus",
-      "description": "Die register bepaal watter modusse hierdie bord ondersteun.",
+      "label": "Update style",
+      "description": "",
       "refresh": "Verfris",
       "send": "Skeduleer versending"
     },
@@ -3039,7 +3046,8 @@
     },
     "refresh": {
       "interval": "Verfrisinterval (minute)",
-      "intervalDescription": "Toegelate reeks: {minimum}–{maximum} minute."
+      "intervalDescription": "Toegelate reeks: {minimum}–{maximum} minute.",
+      "fixed": "Refreshes every 5 minutes"
     },
     "schedule": {
       "label": "skedule",
@@ -4054,7 +4062,8 @@
       "infoLabel": "How free usage works",
       "freePoolInfo": "Free server usage is available while ClashKing's shared monthly free allowance still has capacity. It can pause before your server reaches its own limit and resets at the start of each UTC month.",
       "subscribers": "Credit from {count, plural, one {# subscription} other {# subscriptions}}"
-    }
+    },
+    "hideSupport": "Hide support reminders on this device"
   },
   "GraphicsPage": {
     "desktopOnlyTitle": "Graphics is available on desktop",
@@ -4069,8 +4078,8 @@
     "raise": "Need higher limits? Join our Discord server and ask for raised limits.",
     "discord": "Join our Discord server",
     "supportTitle": "Support ClashKing",
-    "supportText": "If you enjoy ClashKing, maybe think about supporting us.",
-    "kofi": "Support us on Ko-fi",
+    "supportText": "As jy ClashKing geniet, oorweeg dit om ons te ondersteun.",
+    "kofi": "Buy us a coffee",
     "dismiss": "Dismiss support message"
   },
   "BotCustomizationGrant": {

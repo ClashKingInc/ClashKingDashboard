@@ -1131,7 +1131,8 @@ function RosterBuilderWorkspace() {
         apiClient.rosters.listViews(guildId),
       ]);
       setRosters(rosterItems);
-      setViewRosterIds((current) => current.length > 0 ? current : rosterItems.slice(0, 1).map((roster) => roster.id));
+      // Empty selection is the deliberate Family scope. Refresh must not
+      // silently replace it with the first roster, including after restoration.
       if (viewResponse.error) throw new Error(viewResponse.error);
       setViews(viewResponse.data ?? []);
     } catch (loadError) {

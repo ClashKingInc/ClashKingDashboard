@@ -2412,6 +2412,10 @@
       "redditFeed": {
         "label": "Reddit动态",
         "description": "发布服务器Reddit动态"
+      },
+      "maintenance": {
+        "label": "Clash of Clans maintenance",
+        "description": "When maintenance starts and ends"
       }
     },
     "warLogs": {
@@ -2959,7 +2963,9 @@
       "calendar_month": "自然月",
       "game_season": "游戏赛季",
       "seconds": "刷新间隔（秒）",
-      "description": "当前成员前1–5名。更新同一条消息，统计已记录的资源掠夺进攻。"
+      "description": "当前成员前1–5名。更新同一条消息，统计已记录的资源掠夺进攻。",
+      "rolling_days": "Last number of days",
+      "days": "Days"
     },
     "donationRows": {
       "label": "Players to show",
@@ -3009,19 +3015,20 @@
     "targets": {
       "kind": "目标类型：{kind}",
       "kindDescription": "注册表定义每个目标值的解释方式。",
-      "scope": "目标范围",
-      "scopeDescription": "家族范围涵盖所有已配置的家族部落，无需指定目标。",
+      "scope": "Clans",
+      "scopeDescription": "",
       "family": "家族",
       "custom": "自定义目标",
-      "values": "目标",
+      "values": "Selected clans",
       "count": "请为此看板类型提供{min}至{max}个目标。",
       "placeholder": "输入{kind}目标",
-      "add": "添加目标",
-      "remove": "移除目标"
+      "add": "Add clan",
+      "remove": "Remove clan",
+      "selectClan": "Select a clan"
     },
     "modes": {
-      "label": "发送模式",
-      "description": "注册表决定此看板支持哪些发送模式。",
+      "label": "Update style",
+      "description": "",
       "refresh": "刷新",
       "send": "定时发送"
     },
@@ -3039,7 +3046,8 @@
     },
     "refresh": {
       "interval": "刷新间隔(分钟)",
-      "intervalDescription": "允许范围：{minimum}–{maximum}分钟。"
+      "intervalDescription": "允许范围：{minimum}–{maximum}分钟。",
+      "fixed": "Refreshes every 5 minutes"
     },
     "schedule": {
       "label": "计划",
@@ -4054,7 +4062,8 @@
       "infoLabel": "How free usage works",
       "freePoolInfo": "Free server usage is available while ClashKing's shared monthly free allowance still has capacity. It can pause before your server reaches its own limit and resets at the start of each UTC month.",
       "subscribers": "Credit from {count, plural, one {# subscription} other {# subscriptions}}"
-    }
+    },
+    "hideSupport": "Hide support reminders on this device"
   },
   "GraphicsPage": {
     "desktopOnlyTitle": "Graphics is available on desktop",
@@ -4069,8 +4078,8 @@
     "raise": "Need higher limits? Join our Discord server and ask for raised limits.",
     "discord": "Join our Discord server",
     "supportTitle": "Support ClashKing",
-    "supportText": "If you enjoy ClashKing, maybe think about supporting us.",
-    "kofi": "Support us on Ko-fi",
+    "supportText": "如果您喜欢 ClashKing，请考虑支持我们。",
+    "kofi": "Buy us a coffee",
     "dismiss": "Dismiss support message"
   },
   "BotCustomizationGrant": {

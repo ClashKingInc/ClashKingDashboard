@@ -21,7 +21,8 @@ export interface AutoboardFormState {
   enabled: boolean;
   intervalMinutes: string;
   intervalSeconds: string;
-  farmingWindow: "since_start" | "calendar_month" | "game_season";
+  farmingDays: string;
+  farmingWindow: "since_start" | "calendar_month" | "game_season" | "rolling_days";
   farmingTimezone: string;
   scheduleKind: AutoboardScheduleKind;
   timeOfDay: string;
@@ -69,8 +70,9 @@ export function createInitialAutoboardForm(
     threadId: "",
     enabled: true,
     intervalMinutes: capability?.refreshInterval?.defaultMinutes.toString() ?? "",
-    intervalSeconds: capability?.refreshSeconds?.default.toString() ?? "30",
-    farmingWindow: "since_start",
+    intervalSeconds: capability?.refreshSeconds?.default.toString() ?? "300",
+    farmingDays: "30",
+    farmingWindow: "game_season",
     farmingTimezone: "UTC",
     scheduleKind: "daily",
     timeOfDay: "09:00",
@@ -90,8 +92,9 @@ export function createEditAutoboardForm(item: AutoboardItem): AutoboardFormState
     threadId: item.threadId ?? "",
     enabled: item.enabled,
     intervalMinutes: item.intervalMinutes?.toString() ?? "",
-    intervalSeconds: item.intervalSeconds?.toString() ?? "30",
-    farmingWindow: item.farming?.window ?? "since_start",
+    intervalSeconds: item.intervalSeconds?.toString() ?? "300",
+    farmingDays: String(item.farming?.days ?? 30),
+    farmingWindow: item.farming?.window === "rolling_days" ? "rolling_days" : "game_season",
     farmingTimezone: item.farming?.timezone ?? "UTC",
     scheduleKind: item.schedule?.kind ?? "daily",
     timeOfDay: item.schedule?.timeOfDay ?? "09:00",
@@ -183,7 +186,7 @@ export function buildAutoboardRequest(form: AutoboardFormState): AutoboardWriteR
     enabled: form.enabled,
     intervalMinutes: form.deliveryMode === "refresh" && form.boardType !== "farming" ? Number(form.intervalMinutes) : null,
     intervalSeconds: form.boardType === "farming" ? Number(form.intervalSeconds) : null,
-    farming: form.boardType === "farming" ? { window: form.farmingWindow, timezone: form.farmingTimezone } : null,
+    farming: form.boardType === "farming" ? { days: form.farmingWindow === "rolling_days" ? Number(form.farmingDays) : undefined, window: form.farmingWindow, timezone: form.farmingTimezone } : null,
     schedule,
   };
 }

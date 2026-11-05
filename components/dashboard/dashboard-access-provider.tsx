@@ -11,6 +11,7 @@ import { dashboardQueryOptions } from "@/lib/dashboard-query-options";
 interface DashboardAccessContextValue {
   capabilities: DashboardCapabilities | null;
   loading: boolean;
+  error: boolean;
   canView: (section: DashboardSection) => boolean;
   canManage: (section: DashboardSection) => boolean;
   refresh: () => Promise<void>;
@@ -39,7 +40,11 @@ function readCachedCapabilities(guildId: string): CachedCapabilities | null {
 }
 
 function writeCachedCapabilities(guildId: string, capabilities: DashboardCapabilities) {
-  sessionStorage.setItem(capabilitiesCacheKey(guildId), JSON.stringify({ capabilities, cachedAt: Date.now() } satisfies CachedCapabilities));
+  try {
+    sessionStorage.setItem(capabilitiesCacheKey(guildId), JSON.stringify({ capabilities, cachedAt: Date.now() } satisfies CachedCapabilities));
+  } catch {
+    // Storage is optional; a full or disabled cache must not break server access.
+  }
 }
 
 const pathSections: Array<[string, DashboardSection]> = [
@@ -85,10 +90,11 @@ export function DashboardAccessProvider({ guildId, children }: { guildId: string
   const value = useMemo<DashboardAccessContextValue>(() => ({
     capabilities,
     loading,
+    error: capabilitiesQuery.isError,
     canView: (section) => capabilities?.full_access === true || Boolean(capabilities?.sections[section]),
     canManage: (section) => capabilities?.full_access === true || capabilities?.sections[section] === "manage",
     refresh,
-  }), [capabilities, loading, refresh]);
+  }), [capabilities, loading, refresh, capabilitiesQuery.isError]);
 
   return <DashboardAccessContext.Provider value={value}>{children}</DashboardAccessContext.Provider>;
 }
@@ -102,10 +108,25 @@ export function useDashboardAccess() {
 export function DashboardRouteAccess({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const { capabilities, loading } = useDashboardAccess();
+  const { capabilities, loading, error, refresh } = useDashboardAccess();
   const allowed = canAccessDashboardPath(capabilities, pathname, searchParams.get("tab"));
 
   if (loading) return <div className="p-6 text-sm text-muted-foreground">Loading dashboard access…</div>;
+  // Never turn an unavailable permission service into an access denial, or
+  // mount the entry redirect while it is failing (which remounts this query).
+  if (error) return (
+    <div className="flex min-h-[60vh] items-center justify-center p-6">
+      <div className="max-w-md text-center">
+        <ShieldAlert className="mx-auto mb-4 h-9 w-9 text-primary" aria-hidden="true" />
+        <h1 className="text-xl font-semibold">Couldn&apos;t load server access</h1>
+        <p className="mt-2 text-sm text-muted-foreground">Discord server information is temporarily unavailable. Please try again.</p>
+        <div className="mt-5 flex justify-center gap-3">
+          <Button onClick={() => void refresh()}>Try again</Button>
+          <Button variant="secondary" asChild><a href="/servers">Choose another server</a></Button>
+        </div>
+      </div>
+    </div>
+  );
   if (allowed) return children;
 
   return (

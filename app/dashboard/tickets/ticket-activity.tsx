@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { FileText, Loader2 } from "lucide-react";
 import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from "@/components/ui/alert-dialog";
+import { useDashboardAccess } from "@/components/dashboard/dashboard-access-provider";
 import { apiClient } from "@/lib/api/client";
 import { transcriptTabUrl } from "@/lib/ticket-transcript-link";
 import { apiCache } from "@/lib/api-cache";
@@ -22,6 +23,7 @@ function StatusLabel({ status }: { readonly status: string }) {
   return <span className="inline-flex items-center gap-2"><span aria-hidden="true">{status === "open" ? "✅" : status === "sleep" ? "💤" : "❌"}</span>{t(status === "open" ? "statusOpen" : status === "sleep" ? "statusSleeping" : "statusClosed")}</span>;
 }
 function TicketActions({ record, guildId, transcriptsEnabled, children }: { readonly record: Record; readonly guildId: string; readonly transcriptsEnabled: boolean; readonly children: (path: string | null | undefined) => ReactNode }) {
+  const canEdit = useDashboardAccess().canManage("tickets");
   const t = useTranslations("TicketsSettingsPage"), client = useQueryClient();
   const tCommon = useTranslations("Common");
   const [closeOpen, setCloseOpen] = useState(false);
@@ -40,6 +42,7 @@ function TicketActions({ record, guildId, transcriptsEnabled, children }: { read
   }, [job.data?.state, client, guildId]);
   const pending = submitting || !!jobId && (!job.data || ["pending", "running"].includes(job.data.state)) && !job.error;
   const run = async (action: "set_status" | "capture_transcript" | "delete_ticket", status?: "open" | "sleep" | "closed") => {
+    if (!canEdit) return;
     setSubmitting(true); setError("");
     const id = crypto.randomUUID();
     try {
@@ -59,13 +62,13 @@ function TicketActions({ record, guildId, transcriptsEnabled, children }: { read
   const closed = ["delete", "closed"].includes(record.status);
   return <div className="w-full space-y-2"><div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
     <div className="shrink-0">
-    <><Select value={closed ? "closed" : record.status} disabled={closed || pending} onValueChange={value => { if (value === "closed") setCloseOpen(true); else if (value !== record.status) void run("set_status", value as "open" | "sleep"); }}>
+    <><Select value={closed ? "closed" : record.status} disabled={!canEdit || closed || pending} onValueChange={value => { if (value === "closed") setCloseOpen(true); else if (value !== record.status) void run("set_status", value as "open" | "sleep"); }}>
       <SelectTrigger className="h-9 w-36 border-0 bg-muted/55" aria-label={t("changeStatus")}><SelectValue /></SelectTrigger><SelectContent>
         <SelectItem value="open"><StatusLabel status="open" /></SelectItem><SelectItem value="sleep"><StatusLabel status="sleep" /></SelectItem><SelectItem value="closed"><StatusLabel status="closed" /></SelectItem>
       </SelectContent></Select>
       <AlertDialog open={closeOpen} onOpenChange={setCloseOpen}>
         <AlertDialogContent><AlertDialogHeader><AlertDialogTitle>{t("closeTicketTitle", { number: record.number })}</AlertDialogTitle><AlertDialogDescription>{t(transcriptsEnabled ? "deleteTicketWithTranscript" : "deleteTicketWithoutTranscript")}</AlertDialogDescription></AlertDialogHeader>
-          <AlertDialogFooter><AlertDialogCancel>{tCommon("cancel")}</AlertDialogCancel><AlertDialogAction onClick={() => void run("set_status", "closed")}>{t("closeTicket")}</AlertDialogAction></AlertDialogFooter>
+          <AlertDialogFooter><AlertDialogCancel>{tCommon("cancel")}</AlertDialogCancel><AlertDialogAction disabled={!canEdit || pending} onClick={() => void run("set_status", "closed")}>{t("closeTicket")}</AlertDialogAction></AlertDialogFooter>
         </AlertDialogContent></AlertDialog></>
     </div>
     <div className="min-w-0 flex-1">{children(path)}</div>

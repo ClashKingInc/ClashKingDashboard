@@ -2412,6 +2412,10 @@
       "redditFeed": {
         "label": "Reddit-syöte",
         "description": "Julkaise palvelimen Reddit-syöte"
+      },
+      "maintenance": {
+        "label": "Clash of Clans maintenance",
+        "description": "When maintenance starts and ends"
       }
     },
     "warLogs": {
@@ -2959,7 +2963,9 @@
       "calendar_month": "Kalenterikuukausi",
       "game_season": "Pelikausi",
       "seconds": "Päivitysväli (sekuntia)",
-      "description": "1–5 parasta nykyistä jäsentä. Päivittää yhtä viestiä ja laskee tallennetut resurssihyökkäykset."
+      "description": "1–5 parasta nykyistä jäsentä. Päivittää yhtä viestiä ja laskee tallennetut resurssihyökkäykset.",
+      "rolling_days": "Last number of days",
+      "days": "Days"
     },
     "donationRows": {
       "label": "Players to show",
@@ -3009,19 +3015,20 @@
     "targets": {
       "kind": "Kohteen tyyppi: {kind}",
       "kindDescription": "Rekisteri määrittää, miten kukin kohdearvo tulkitaan.",
-      "scope": "Kohteen laajuus",
-      "scopeDescription": "Perhelaajuus käyttää kaikkia määritettyjä perheklaaneja eikä sisällä erillisiä kohteita.",
+      "scope": "Clans",
+      "scopeDescription": "",
       "family": "Perhe",
       "custom": "Mukautetut kohteet",
-      "values": "Kohteet",
+      "values": "Selected clans",
       "count": "Anna tälle taulutyypille {min}–{max} kohdetta.",
       "placeholder": "Anna tyypin {kind} kohde",
-      "add": "Lisää kohde",
-      "remove": "Poista kohde"
+      "add": "Add clan",
+      "remove": "Remove clan",
+      "selectClan": "Select a clan"
     },
     "modes": {
-      "label": "Toimitustapa",
-      "description": "Rekisteri määrittää taulun tukemat toimitustavat.",
+      "label": "Update style",
+      "description": "",
       "refresh": "Päivitä",
       "send": "Ajastettu lähetys"
     },
@@ -3039,7 +3046,8 @@
     },
     "refresh": {
       "interval": "Päivitysväli (minuuttia)",
-      "intervalDescription": "Sallittu väli: {minimum}–{maximum} minuuttia."
+      "intervalDescription": "Sallittu väli: {minimum}–{maximum} minuuttia.",
+      "fixed": "Refreshes every 5 minutes"
     },
     "schedule": {
       "label": "Aikataulu",
@@ -4054,7 +4062,8 @@
       "infoLabel": "How free usage works",
       "freePoolInfo": "Free server usage is available while ClashKing's shared monthly free allowance still has capacity. It can pause before your server reaches its own limit and resets at the start of each UTC month.",
       "subscribers": "Credit from {count, plural, one {# subscription} other {# subscriptions}}"
-    }
+    },
+    "hideSupport": "Hide support reminders on this device"
   },
   "GraphicsPage": {
     "desktopOnlyTitle": "Graphics is available on desktop",
@@ -4069,8 +4078,8 @@
     "raise": "Need higher limits? Join our Discord server and ask for raised limits.",
     "discord": "Join our Discord server",
     "supportTitle": "Support ClashKing",
-    "supportText": "If you enjoy ClashKing, maybe think about supporting us.",
-    "kofi": "Support us on Ko-fi",
+    "supportText": "Jos pidät ClashKingistä, harkitse tukemistamme.",
+    "kofi": "Buy us a coffee",
     "dismiss": "Dismiss support message"
   },
   "BotCustomizationGrant": {

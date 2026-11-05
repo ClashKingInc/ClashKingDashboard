@@ -7,6 +7,7 @@ import { Sidebar } from "./sidebar";
 import { MobileServerDropdown } from "./mobile-server-dropdown";
 import type { GuildInfo } from "@/lib/api/types/server";
 import { dashboardQueryOptions } from "@/lib/dashboard-query-options";
+import { usePathname, useRouter, useSearchParams } from "@/lib/navigation";
 import { embeddedServerId } from '@/lib/auth/embedded';
 
 interface SidebarWrapperProps {
@@ -52,6 +53,9 @@ function getStoredGuildInfo(guildId: string): CachedGuildInfo | null {
 
 export function SidebarDataProvider({ guildId, children }: { readonly guildId: string; readonly children: ReactNode }) {
   const { status: authStatus } = useAuthSession();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const storedGuild = useMemo(() => getStoredGuildInfo(guildId), [guildId]);
   const enabled = authStatus === "authenticated" && Boolean(guildId);
 
@@ -66,14 +70,30 @@ export function SidebarDataProvider({ guildId, children }: { readonly guildId: s
   });
 
   useEffect(() => {
+    const guilds = guildsQuery.data;
+    if (embeddedServerId() || !guilds || guilds.some((guild) => guild.id === guildId)) return;
+    // Older router URLs rounded snowflakes through JSON numbers. Repair only
+    // an unambiguous match from the user's authorized server list, never a guess.
+    const matches = guilds.filter((guild) => String(Number(guild.id)) === guildId);
+    if (matches.length !== 1) return;
+    const params = new URLSearchParams(searchParams);
+    params.set("guildId", matches[0].id);
+    router.replace(`${pathname}?${params.toString()}`);
+  }, [guildId, guildsQuery.data, pathname, router, searchParams]);
+
+  useEffect(() => {
     const guild = guildQuery.data;
     if (!guild) return;
     const icon = guild.icon?.startsWith("https") ? guild.icon : undefined;
-    sessionStorage.setItem("selected_guild", JSON.stringify({
-      id: guildId,
-      name: guild.name || "My Server",
-      icon,
-    }));
+    try {
+      sessionStorage.setItem("selected_guild", JSON.stringify({
+        id: guildId,
+        name: guild.name || "My Server",
+        icon,
+      }));
+    } catch {
+      // Cached labels are optional when browser storage is unavailable.
+    }
   }, [guildId, guildQuery.data]);
 
   useEffect(() => {

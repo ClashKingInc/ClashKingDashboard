@@ -1,5 +1,7 @@
 "use client";
 
+import { useDashboardAccess } from "@/components/dashboard/dashboard-access-provider";
+import { Switch } from "@/components/ui/switch";
 import { useGuildId } from "@/lib/dashboard-route";
 
 
@@ -188,6 +190,7 @@ function FamilyRoleCard({
 
 export function FamilyNicknameSettings({ section }: { readonly section: "family" | "nicknames" }) {
   const guildId = useGuildId();
+  const canEdit = useDashboardAccess().canManage("roles");
   const queryClient = useQueryClient();
   const t = useTranslations("FamilySettingsPage");
   const tCommon = useTranslations("Common");
@@ -374,12 +377,14 @@ export function FamilyNicknameSettings({ section }: { readonly section: "family"
   };
 
   const persistSettings = (nextSettings: NicknameSettings) => {
+    if (!canEdit) return;
     saveQueueRef.current = saveQueueRef.current.catch(() => undefined).then(async () => {
       try {
         setIsSaving(true);
         setShowSaved(false);
         setError(null);
         const response = await apiClient.roles.updateRoleSettings(guildId, {
+          change_nickname: nextSettings.change_nickname,
           nickname_rule: nextSettings.nickname_rule,
           non_family_nickname_rule: nextSettings.non_family_nickname_rule,
         });
@@ -473,7 +478,7 @@ export function FamilyNicknameSettings({ section }: { readonly section: "family"
   };
 
   return (
-    <div className="space-y-6">
+    <fieldset disabled={!canEdit} className="min-w-0 space-y-6">
 
         {error && (
           <Alert variant="destructive" className="rounded-2xl">
@@ -517,6 +522,15 @@ export function FamilyNicknameSettings({ section }: { readonly section: "family"
             </div>
           </div>
 
+          <div className="flex items-center justify-between gap-4">
+            <div><label htmlFor="nickname-changes" className="text-sm font-medium">{t("nickname.automaticChanges")}</label>
+              <p className="text-xs text-muted-foreground">{t("nickname.automaticChangesDesc")}</p></div>
+            <Switch id="nickname-changes" disabled={!canEdit || isLoading || isSaving} checked={settings.change_nickname} onCheckedChange={checked => {
+              cancelPendingSave();
+              const nextSettings = { ...settingsRef.current, change_nickname: checked };
+              settingsRef.current = nextSettings; setSettings(nextSettings); void persistSettings(nextSettings);
+            }} />
+          </div>
           {isLoading ? (
             <div className="grid gap-4 lg:grid-cols-2">
               <Skeleton className="h-36 rounded-[22px]" />
@@ -613,6 +627,6 @@ export function FamilyNicknameSettings({ section }: { readonly section: "family"
             ))}
           </div>
         </section>}
-    </div>
+    </fieldset>
   );
 }

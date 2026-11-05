@@ -92,15 +92,14 @@ export default function AnalyticsPage() {
     </div>)}</div></section>;
   }
 
-  return <div className="min-h-screen min-w-0 p-4 md:p-6"><main className="mx-auto w-full min-w-0 max-w-[1440px] space-y-6 pb-12">
-    <section className="relative isolate min-w-0 overflow-hidden rounded-3xl bg-card px-5 py-7 shadow-sm sm:px-7 sm:py-9">
-      <div className="absolute inset-0 -z-20 bg-gradient-to-br from-slate-800 to-slate-950" style={guild.data?.banner ? { backgroundImage: `url(${JSON.stringify(guild.data.banner)})`, backgroundSize: "cover", backgroundPosition: "center" } : undefined}/><div className="absolute inset-0 -z-10 bg-black/55"/>
-      <div className="flex flex-wrap items-center gap-4 text-white">
-        {guild.data?.icon && <Image src={guild.data.icon} alt="" width={64} height={64} className="h-16 w-16 rounded-2xl object-cover"/>}
-        <div className="min-w-0 flex-1"><h1 className="break-words text-2xl font-semibold">{guild.data?.name}</h1>{guild.data?.description && <p className="mt-2 max-w-2xl text-sm text-white/80">{guild.data.description}</p>}</div>
+  return <div className="min-h-screen min-w-0 p-4 md:p-6"><main className="mx-auto w-full min-w-0 max-w-6xl space-y-6 pb-12">
+    <section className="space-y-4">
+      <div className="flex flex-wrap items-center gap-4">
+        {guild.data?.icon && <Image src={guild.data.icon} alt="" width={64} height={64} className="h-10 w-10 rounded-xl object-cover"/>}
+        <div className="min-w-0 flex-1"><h1 className="break-words text-2xl font-semibold">{guild.data?.name}</h1></div>
         {selected && <Button variant="secondary" className="rounded-full" onClick={()=>setFilters({clans:null})}>{t("allClans")} ←</Button>}
       </div>
-      <div className="mt-6 flex flex-wrap items-center justify-end gap-2 text-foreground [&_input]:bg-background/95 [&_button]:bg-background/95">
+      <div className="flex flex-wrap items-center justify-start gap-2 text-foreground [&_input]:bg-background/95 [&_button]:bg-background/95">
       <Select value={preset} onValueChange={value => {if(value==="custom") setFilters({period:value});else setFilters({...presetRange(value),period:value});}}><SelectTrigger className={cn(control,"w-44")}><SelectValue/></SelectTrigger><SelectContent>{["month","30","90","180","custom"].map(value => <SelectItem key={value} value={value}>{t(`periods.${value}`)}</SelectItem>)}</SelectContent></Select>
       {preset==="custom" && <div className="flex flex-wrap items-center gap-2"><Input type="date" aria-label={t("startDate")} value={start} max={utcDate(new Date())} onChange={event => event.target.value&&setFilters({start:event.target.value})} className={cn(control,"w-40")}/><span className="text-muted-foreground">—</span><Input type="date" aria-label={t("endDate")} value={utcDate(new Date(Date.parse(end)-86_400_000))} max={utcDate(new Date())} onChange={event => event.target.value&&setFilters({end:nextDay(event.target.value)})} className={cn(control,"w-40")}/></div>}
       </div>

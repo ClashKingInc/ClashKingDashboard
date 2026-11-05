@@ -10,6 +10,8 @@ import { updateDashboardLocale } from "@/components/locale-provider";
 import { DASHBOARD_LOCALE_MODE_STORAGE_KEY,LANGUAGE_OPTIONS,getLocaleModeFromStorage,resolveBrowserLocale,type LocaleMode,type SupportedLocale } from "@/lib/locale-preference";
 import { useGuildId } from "@/lib/dashboard-route";
 import { ResourceLimits } from "@/components/support/resource-limits";
+import { Switch } from "@/components/ui/switch";
+import { SUPPORT_HIDDEN_KEY, SUPPORT_PREFERENCE_EVENT } from "@/lib/support";
 const THEME_OPTIONS=["system","light","dark"] as const;
 const FILLED_SELECT_CLASS="border-0 bg-muted/55 shadow-sm shadow-black/5 focus:ring-2 focus:ring-ring/30";
 function LanguageOption({ flagCode, locale, name }: { readonly flagCode: string; readonly locale: SupportedLocale; readonly name: string }) {
@@ -25,8 +27,9 @@ function LanguageOption({ flagCode, locale, name }: { readonly flagCode: string;
 
 export default function AccountSettingsPage(){
  const t=useTranslations("AccountSettings"),locale=useLocale() as SupportedLocale,{user}=useAuthSession(),serverId=useGuildId(),{theme="system",setTheme}=useTheme();
+ const [hideSupport,setHideSupport]=useState(false);
  const [mounted,setMounted]=useState(false),[localeMode,setLocaleMode]=useState<LocaleMode>("manual");
- useEffect(()=>{setMounted(true);setLocaleMode(getLocaleModeFromStorage(localStorage.getItem(DASHBOARD_LOCALE_MODE_STORAGE_KEY)))},[]);
+ useEffect(()=>{setMounted(true);setHideSupport(localStorage.getItem(SUPPORT_HIDDEN_KEY)==="1");setLocaleMode(getLocaleModeFromStorage(localStorage.getItem(DASHBOARD_LOCALE_MODE_STORAGE_KEY)))},[]);
  const applyLanguage=(value:string)=>{const mode=value==="browser"?"browser":"manual";setLocaleMode(mode);updateDashboardLocale(value==="browser"?resolveBrowserLocale(navigator.languages):value as SupportedLocale,mode)};
  const languageValue=localeMode==="browser"?"browser":locale;
  return <div className="mx-auto max-w-4xl space-y-7 p-4 pb-12 md:p-6"><header><h1 className="text-2xl font-bold">{t("title")}</h1><p className="text-sm text-muted-foreground">{t("description")}</p></header>
@@ -63,5 +66,9 @@ export default function AccountSettingsPage(){
         </div>
       </section>
 
+<section className="flex items-center justify-between gap-4 rounded-3xl bg-card p-5">
+ <label htmlFor="hide-support" className="text-sm font-medium">{t("hideSupport")}</label>
+ <Switch id="hide-support" checked={hideSupport} onCheckedChange={value=>{setHideSupport(value);localStorage.setItem(SUPPORT_HIDDEN_KEY,value?"1":"0");window.dispatchEvent(new Event(SUPPORT_PREFERENCE_EVENT))}}/>
+ </section>
 {serverId && <ResourceLimits serverId={serverId}/>}</div>;
 }

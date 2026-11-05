@@ -2412,6 +2412,10 @@
       "redditFeed": {
         "label": "Kanał Reddit",
         "description": "Publikuj kanał Reddit serwera"
+      },
+      "maintenance": {
+        "label": "Clash of Clans maintenance",
+        "description": "When maintenance starts and ends"
       }
     },
     "warLogs": {
@@ -2959,7 +2963,9 @@
       "calendar_month": "Miesiąc kalendarzowy",
       "game_season": "Sezon gry",
       "seconds": "Interwał odświeżania (sekundy)",
-      "description": "Najlepszych 1–5 obecnych członków. Edytuje jedną wiadomość i liczy zapisane ataki farmiące."
+      "description": "Najlepszych 1–5 obecnych członków. Edytuje jedną wiadomość i liczy zapisane ataki farmiące.",
+      "rolling_days": "Last number of days",
+      "days": "Days"
     },
     "donationRows": {
       "label": "Players to show",
@@ -3009,19 +3015,20 @@
     "targets": {
       "kind": "Typ celu: {kind}",
       "kindDescription": "Rejestr określa sposób interpretacji każdej wartości celu.",
-      "scope": "Zakres celu",
-      "scopeDescription": "Zakres rodziny używa wszystkich skonfigurowanych klanów rodziny i nie ma jawnych celów.",
+      "scope": "Clans",
+      "scopeDescription": "",
       "family": "Rodzina",
       "custom": "Własne cele",
-      "values": "Cele",
+      "values": "Selected clans",
       "count": "Podaj od {min} do {max} celów dla tego typu tablicy.",
       "placeholder": "Wpisz cel typu {kind}",
-      "add": "Dodaj cel",
-      "remove": "Usuń cel"
+      "add": "Add clan",
+      "remove": "Remove clan",
+      "selectClan": "Select a clan"
     },
     "modes": {
-      "label": "Tryb dostawy",
-      "description": "Rejestr określa tryby dostawy obsługiwane przez tę tablicę.",
+      "label": "Update style",
+      "description": "",
       "refresh": "Odśwież",
       "send": "Zaplanowana wysyłka"
     },
@@ -3039,7 +3046,8 @@
     },
     "refresh": {
       "interval": "Interwał odświeżania (minuty)",
-      "intervalDescription": "Dozwolony zakres: {minimum}–{maximum} minut."
+      "intervalDescription": "Dozwolony zakres: {minimum}–{maximum} minut.",
+      "fixed": "Refreshes every 5 minutes"
     },
     "schedule": {
       "label": "Harmonogram",
@@ -4054,7 +4062,8 @@
       "infoLabel": "How free usage works",
       "freePoolInfo": "Free server usage is available while ClashKing's shared monthly free allowance still has capacity. It can pause before your server reaches its own limit and resets at the start of each UTC month.",
       "subscribers": "Credit from {count, plural, one {# subscription} other {# subscriptions}}"
-    }
+    },
+    "hideSupport": "Hide support reminders on this device"
   },
   "GraphicsPage": {
     "desktopOnlyTitle": "Graphics is available on desktop",
@@ -4069,8 +4078,8 @@
     "raise": "Need higher limits? Join our Discord server and ask for raised limits.",
     "discord": "Join our Discord server",
     "supportTitle": "Support ClashKing",
-    "supportText": "If you enjoy ClashKing, maybe think about supporting us.",
-    "kofi": "Support us on Ko-fi",
+    "supportText": "Jeśli lubisz ClashKing, rozważ wsparcie nas.",
+    "kofi": "Buy us a coffee",
     "dismiss": "Dismiss support message"
   },
   "BotCustomizationGrant": {

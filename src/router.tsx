@@ -147,6 +147,17 @@ export const router = createRouter({
   routeTree,
   defaultPreload: "intent",
   scrollRestoration: true,
+  // Search values are URL text, especially Discord snowflakes. The default
+  // JSON parser rounds 64-bit IDs before useSearchParams ever reads them.
+  parseSearch: (search) => Object.fromEntries(new URLSearchParams(search)),
+  stringifySearch: (search) => {
+    const params = new URLSearchParams();
+    for (const [key, value] of Object.entries(search)) {
+      if (value !== undefined && value !== null) params.set(key, String(value));
+    }
+    const query = params.toString();
+    return query ? `?${query}` : "";
+  },
 });
 
 declare module "@tanstack/react-router" {

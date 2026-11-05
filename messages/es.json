@@ -2412,6 +2412,10 @@
       "redditFeed": {
         "label": "Canal de Reddit",
         "description": "Publica el canal de Reddit del servidor"
+      },
+      "maintenance": {
+        "label": "Clash of Clans maintenance",
+        "description": "When maintenance starts and ends"
       }
     },
     "warLogs": {
@@ -2959,7 +2963,9 @@
       "calendar_month": "Mes natural",
       "game_season": "Temporada del juego",
       "seconds": "Intervalo de actualización (segundos)",
-      "description": "Los 1–5 mejores miembros actuales. Edita un mensaje y cuenta los ataques de saqueo registrados."
+      "description": "Los 1–5 mejores miembros actuales. Edita un mensaje y cuenta los ataques de saqueo registrados.",
+      "rolling_days": "Last number of days",
+      "days": "Days"
     },
     "donationRows": {
       "label": "Players to show",
@@ -3009,19 +3015,20 @@
     "targets": {
       "kind": "Tipo de objetivo: {kind}",
       "kindDescription": "El registro define cómo se interpreta cada objetivo.",
-      "scope": "Ámbito del objetivo",
-      "scopeDescription": "El ámbito familiar usa todos los clanes de la familia configurados y no tiene objetivos explícitos.",
+      "scope": "Clans",
+      "scopeDescription": "",
       "family": "Familia",
       "custom": "Objetivos personalizados",
-      "values": "Objetivos",
+      "values": "Selected clans",
       "count": "Indica entre {min} y {max} objetivos para este tipo de tablero.",
       "placeholder": "Introduce un objetivo de tipo {kind}",
-      "add": "Añadir objetivo",
-      "remove": "Eliminar objetivo"
+      "add": "Add clan",
+      "remove": "Remove clan",
+      "selectClan": "Select a clan"
     },
     "modes": {
-      "label": "Modo de entrega",
-      "description": "El registro controla los modos de entrega compatibles.",
+      "label": "Update style",
+      "description": "",
       "refresh": "Actualizar",
       "send": "Envío programado"
     },
@@ -3039,7 +3046,8 @@
     },
     "refresh": {
       "interval": "Intervalo de actualización (minutos)",
-      "intervalDescription": "Intervalo permitido: {minimum}-{maximum} minutos."
+      "intervalDescription": "Intervalo permitido: {minimum}-{maximum} minutos.",
+      "fixed": "Refreshes every 5 minutes"
     },
     "schedule": {
       "label": "Programación",
@@ -4054,7 +4062,8 @@
       "infoLabel": "How free usage works",
       "freePoolInfo": "Free server usage is available while ClashKing's shared monthly free allowance still has capacity. It can pause before your server reaches its own limit and resets at the start of each UTC month.",
       "subscribers": "Credit from {count, plural, one {# subscription} other {# subscriptions}}"
-    }
+    },
+    "hideSupport": "Hide support reminders on this device"
   },
   "GraphicsPage": {
     "desktopOnlyTitle": "Graphics is available on desktop",
@@ -4069,8 +4078,8 @@
     "raise": "Need higher limits? Join our Discord server and ask for raised limits.",
     "discord": "Join our Discord server",
     "supportTitle": "Support ClashKing",
-    "supportText": "If you enjoy ClashKing, maybe think about supporting us.",
-    "kofi": "Support us on Ko-fi",
+    "supportText": "Si disfrutas de ClashKing, considera apoyarnos.",
+    "kofi": "Buy us a coffee",
     "dismiss": "Dismiss support message"
   },
   "BotCustomizationGrant": {

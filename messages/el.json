@@ -2412,6 +2412,10 @@
       "redditFeed": {
         "label": "Ροή Reddit",
         "description": "Δημοσίευση της ροής Reddit του διακομιστή"
+      },
+      "maintenance": {
+        "label": "Clash of Clans maintenance",
+        "description": "When maintenance starts and ends"
       }
     },
     "warLogs": {
@@ -2959,7 +2963,9 @@
       "calendar_month": "Ημερολογιακός μήνας",
       "game_season": "Σεζόν παιχνιδιού",
       "seconds": "Διάστημα ανανέωσης (δευτερόλεπτα)",
-      "description": "Οι 1–5 κορυφαίοι τρέχοντες παίκτες. Ενημερώνει ένα μήνυμα και μετρά καταγεγραμμένες επιθέσεις πόρων."
+      "description": "Οι 1–5 κορυφαίοι τρέχοντες παίκτες. Ενημερώνει ένα μήνυμα και μετρά καταγεγραμμένες επιθέσεις πόρων.",
+      "rolling_days": "Last number of days",
+      "days": "Days"
     },
     "donationRows": {
       "label": "Players to show",
@@ -3009,19 +3015,20 @@
     "targets": {
       "kind": "Τύπος στόχου: {kind}",
       "kindDescription": "Το μητρώο καθορίζει πώς ερμηνεύεται κάθε τιμή στόχου.",
-      "scope": "Εύρος στόχου",
-      "scopeDescription": "Το εύρος οικογένειας χρησιμοποιεί όλες τις ρυθμισμένες φυλές της οικογένειας και δεν έχει συγκεκριμένους στόχους.",
+      "scope": "Clans",
+      "scopeDescription": "",
       "family": "Οικογένεια",
       "custom": "Προσαρμοσμένοι στόχοι",
-      "values": "Στόχοι",
+      "values": "Selected clans",
       "count": "Δώστε από {min} έως {max} στόχους για αυτόν τον τύπο πίνακα.",
       "placeholder": "Εισαγάγετε στόχο τύπου {kind}",
-      "add": "Προσθήκη στόχου",
-      "remove": "Αφαίρεση στόχου"
+      "add": "Add clan",
+      "remove": "Remove clan",
+      "selectClan": "Select a clan"
     },
     "modes": {
-      "label": "Τρόπος παράδοσης",
-      "description": "Το μητρώο καθορίζει τους τρόπους παράδοσης που υποστηρίζει αυτός ο πίνακας.",
+      "label": "Update style",
+      "description": "",
       "refresh": "Ανανέωση",
       "send": "Προγραμματισμένη αποστολή"
     },
@@ -3039,7 +3046,8 @@
     },
     "refresh": {
       "interval": "Διάστημα ανανέωσης (λεπτά)",
-      "intervalDescription": "Επιτρεπόμενο εύρος: {minimum}–{maximum} λεπτά."
+      "intervalDescription": "Επιτρεπόμενο εύρος: {minimum}–{maximum} λεπτά.",
+      "fixed": "Refreshes every 5 minutes"
     },
     "schedule": {
       "label": "Πρόγραμμα",
@@ -4054,7 +4062,8 @@
       "infoLabel": "How free usage works",
       "freePoolInfo": "Free server usage is available while ClashKing's shared monthly free allowance still has capacity. It can pause before your server reaches its own limit and resets at the start of each UTC month.",
       "subscribers": "Credit from {count, plural, one {# subscription} other {# subscriptions}}"
-    }
+    },
+    "hideSupport": "Hide support reminders on this device"
   },
   "GraphicsPage": {
     "desktopOnlyTitle": "Graphics is available on desktop",
@@ -4069,8 +4078,8 @@
     "raise": "Need higher limits? Join our Discord server and ask for raised limits.",
     "discord": "Join our Discord server",
     "supportTitle": "Support ClashKing",
-    "supportText": "If you enjoy ClashKing, maybe think about supporting us.",
-    "kofi": "Support us on Ko-fi",
+    "supportText": "Αν σας αρέσει το ClashKing, σκεφτείτε να μας υποστηρίξετε.",
+    "kofi": "Buy us a coffee",
     "dismiss": "Dismiss support message"
   },
   "BotCustomizationGrant": {

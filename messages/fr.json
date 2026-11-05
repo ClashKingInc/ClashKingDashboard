@@ -2412,6 +2412,10 @@
       "redditFeed": {
         "label": "Flux Reddit",
         "description": "Publier le flux Reddit du serveur"
+      },
+      "maintenance": {
+        "label": "Clash of Clans maintenance",
+        "description": "When maintenance starts and ends"
       }
     },
     "warLogs": {
@@ -2959,7 +2963,9 @@
       "calendar_month": "Mois calendaire",
       "game_season": "Saison de jeu",
       "seconds": "Intervalle d’actualisation (secondes)",
-      "description": "Les 1 à 5 meilleurs membres actuels. Modifie un message et compte les attaques de pillage enregistrées."
+      "description": "Les 1 à 5 meilleurs membres actuels. Modifie un message et compte les attaques de pillage enregistrées.",
+      "rolling_days": "Last number of days",
+      "days": "Days"
     },
     "donationRows": {
       "label": "Players to show",
@@ -3009,19 +3015,20 @@
     "targets": {
       "kind": "Type de cible : {kind}",
       "kindDescription": "Le registre définit l’interprétation de chaque cible.",
-      "scope": "Portée des cibles",
-      "scopeDescription": "La portée famille utilise tous les clans configurés sans cible explicite.",
+      "scope": "Clans",
+      "scopeDescription": "",
       "family": "Famille",
       "custom": "Cibles personnalisées",
-      "values": "Cibles",
+      "values": "Selected clans",
       "count": "Fournissez entre {min} et {max} cibles pour ce type.",
       "placeholder": "Saisir une cible {kind}",
-      "add": "Ajouter une cible",
-      "remove": "Supprimer la cible"
+      "add": "Add clan",
+      "remove": "Remove clan",
+      "selectClan": "Select a clan"
     },
     "modes": {
-      "label": "Mode de livraison",
-      "description": "Le registre contrôle les modes disponibles pour ce tableau.",
+      "label": "Update style",
+      "description": "",
       "refresh": "Actualiser",
       "send": "Envoi programmé"
     },
@@ -3039,7 +3046,8 @@
     },
     "refresh": {
       "interval": "Intervalle d’actualisation (minutes)",
-      "intervalDescription": "Plage autorisée : {minimum}–{maximum} minutes."
+      "intervalDescription": "Plage autorisée : {minimum}–{maximum} minutes.",
+      "fixed": "Refreshes every 5 minutes"
     },
     "schedule": {
       "label": "Calendrier",
@@ -4054,7 +4062,8 @@
       "infoLabel": "Fonctionnement de l’utilisation gratuite",
       "freePoolInfo": "L’utilisation gratuite par serveur est disponible tant que l’allocation mensuelle partagée de ClashKing le permet. Elle peut être suspendue avant que votre serveur atteigne sa propre limite et se réinitialise au début de chaque mois UTC.",
       "subscribers": "Crédit de {count, plural, one {# abonnement} other {# abonnements}}"
-    }
+    },
+    "hideSupport": "Hide support reminders on this device"
   },
   "GraphicsPage": {
     "desktopOnlyTitle": "Graphics est disponible sur ordinateur",
@@ -4069,8 +4078,8 @@
     "raise": "Need higher limits? Join our Discord server and ask for raised limits.",
     "discord": "Join our Discord server",
     "supportTitle": "Support ClashKing",
-    "supportText": "If you enjoy ClashKing, maybe think about supporting us.",
-    "kofi": "Support us on Ko-fi",
+    "supportText": "Si vous appréciez ClashKing, pensez à nous soutenir.",
+    "kofi": "Buy us a coffee",
     "dismiss": "Dismiss support message"
   },
   "BotCustomizationGrant": {

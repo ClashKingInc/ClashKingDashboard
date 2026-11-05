@@ -3,7 +3,7 @@
 import Image from "@/components/app-image";
 import { useLocale, useTranslations } from "use-intl";
 import { useGuildId } from "@/lib/dashboard-route";
-import { AutoboardCapabilitiesEndpoint, ServerAutoboardsEndpoint, CreateAutoboardEndpoint, ReplaceAutoboardEndpoint, DeleteAutoboardEndpoint } from "@clashking/api-contracts";
+import { AutoboardCapabilitiesEndpoint, ServerAutoboardsEndpoint, CreateAutoboardEndpoint, ReplaceAutoboardEndpoint, DeleteAutoboardEndpoint, ServerLimitsEndpoint } from "@clashking/api-contracts";
 import { executeSharedEndpoint } from "@/lib/api/shared-client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -81,6 +81,8 @@ import {
 
 import { dashboardQueryOptions } from "@/lib/dashboard-query-options";
 
+import type { ServerClanListItem } from "@/lib/api/types/server";
+
 type BoardFilter = "all" | AutoboardDeliveryMode;
 
 const ISO_WEEKDAYS = [1, 2, 3, 4, 5, 6, 7] as const;
@@ -123,12 +125,14 @@ export default function AutoboardsPage() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
+  const [customInterval, setCustomInterval] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<AutoboardsResponse | null>(null);
   const [capabilities, setCapabilities] = useState<readonly AutoboardBoardTypeCapability[]>([]);
+  const [clans, setClans] = useState<ServerClanListItem[]>([]);
   const [channels, setChannels] = useState<DiscordDestinationChannel[]>([]);
   const [threads, setThreads] = useState<DiscordDestinationThread[]>([]);
   const [destinationsLoading, setDestinationsLoading] = useState(true);
@@ -162,12 +166,14 @@ export default function AutoboardsPage() {
     setLoading(true);
     setError(null);
     try {
-      const [boardsPayload, capabilityPayload] = await Promise.all([
+      const [boardsPayload, capabilityPayload, limitsPayload] = await Promise.all([
         executeSharedEndpoint(ServerAutoboardsEndpoint, { path: { serverId: guildId }, query: {}, body: {} }),
         executeSharedEndpoint(AutoboardCapabilitiesEndpoint, { path: { serverId: guildId }, query: {}, body: {} }),
+        executeSharedEndpoint(ServerLimitsEndpoint, { path: { serverId: guildId }, query: {}, body: {} }),
       ]);
-      setData(boardsPayload);
-      setCapabilities(capabilityPayload.boardTypes);
+      setCustomInterval(limitsPayload.customAutoboardIntervalEnabled);
+      setData({...boardsPayload, items: boardsPayload.items.filter(item => !item.boardType.startsWith("sample-"))});
+      setCapabilities(capabilityPayload.boardTypes.filter(item => !item.boardType.startsWith("sample-")));
     } catch (loadError) {
       setError(loadError instanceof Error ? loadError.message : t("errors.load"));
     } finally {
@@ -178,10 +184,12 @@ export default function AutoboardsPage() {
   const loadDestinations = useCallback(async () => {
     setDestinationsLoading(true);
     try {
-      const [channelsPayload, threadsPayload] = await Promise.all([
+      const [channelsPayload, threadsPayload, clansPayload] = await Promise.all([
         queryClient.fetchQuery(dashboardQueryOptions.channels(guildId)),
         queryClient.fetchQuery(dashboardQueryOptions.threads(guildId)),
+        queryClient.fetchQuery(dashboardQueryOptions.clans(guildId)),
       ]);
+      setClans(clansPayload);
       setChannels(normalizeDestinationChannels(channelsPayload));
       setThreads(normalizeDestinationThreads(threadsPayload));
     } catch (destinationError) {
@@ -210,7 +218,7 @@ export default function AutoboardsPage() {
 
   const openEdit = (item: AutoboardItem) => {
     setEditing(item);
-    setForm(createEditAutoboardForm(item));
+    setForm({...createEditAutoboardForm(item), ...(!customInterval ? {intervalSeconds:"300", intervalMinutes:"5"} : {})});
     setFormError(null);
     setDialogOpen(true);
   };
@@ -528,16 +536,7 @@ export default function AutoboardsPage() {
                     </SelectContent>
                   </Select>
                 </Field>
-                <Field
-                  label={t("targets.kind", {
-                    kind: formatTargetKind(selectedCapability?.targetKind ?? "—"),
-                  })}
-                  description={t("targets.kindDescription")}
-                >
-                  <div className="flex h-10 items-center rounded-xl bg-muted/55 px-3 text-sm shadow-sm shadow-black/5">
-                    {formatTargetKind(selectedCapability?.targetKind ?? "—")}
-                  </div>
-                </Field>
+
               </div>
 
               <Field label={t("targets.scope")} description={t("targets.scopeDescription")}>
@@ -565,13 +564,10 @@ export default function AutoboardsPage() {
                   <div className="space-y-2">
                     {form.targets.map((target, index) => (
                       <div key={`${index}-${form.targets.length}`} className="flex gap-2">
-                        <Input
-                          value={target}
-                          onChange={(event) => updateTarget(index, event.target.value)}
-                          placeholder={t("targets.placeholder", {
-                            kind: formatTargetKind(selectedCapability.targetKind),
-                          })}
-                        />
+                        <Select value={target} onValueChange={value => updateTarget(index, value)}>
+                          <SelectTrigger><SelectValue placeholder={t("targets.selectClan")} /></SelectTrigger>
+                          <SelectContent>{clans.map(clan => <SelectItem key={clan.tag} value={clan.tag}>{clan.name}</SelectItem>)}</SelectContent>
+                        </Select>
                         <Button
                           type="button"
                           variant="secondary"
@@ -598,7 +594,7 @@ export default function AutoboardsPage() {
                 </Field>
               )}
 
-              <Field label={t("modes.label")} description={t("modes.description")}>
+              {(selectedCapability?.allowedModes.length ?? 0) > 1 && <Field label={t("modes.label")} description={t("modes.description")}>
                 <Select
                   value={form.deliveryMode}
                   onValueChange={(value) => changeDeliveryMode(value as AutoboardDeliveryMode)}
@@ -610,7 +606,7 @@ export default function AutoboardsPage() {
                     ))}
                   </SelectContent>
                 </Select>
-              </Field>
+              </Field>}
 
               {destinationsLoading ? (
                 <div className="grid gap-4 sm:grid-cols-2" aria-busy="true">
@@ -660,19 +656,21 @@ export default function AutoboardsPage() {
                 </Field>
               )}
 
-              {selectedCapability?.refreshSeconds && <Field label={t("farming.seconds")}>
+              {!customInterval && <p className="text-sm text-muted-foreground">{t("refresh.fixed")}</p>}
+              {customInterval && selectedCapability?.refreshSeconds && <Field label={t("farming.seconds")}>
                 <Input type="number" min={selectedCapability.refreshSeconds.min} max={selectedCapability.refreshSeconds.max}
                   value={form.intervalSeconds} onChange={(event) => setForm({ ...form, intervalSeconds: event.target.value })} />
               </Field>}
               {selectedCapability?.uiCapabilities.includes("farmingWindow") && <Field label={t("farming.window")}>
                 <Select value={form.farmingWindow} onValueChange={(value) => setForm({ ...form, farmingWindow: value as AutoboardFormState["farmingWindow"] })}>
                   <SelectTrigger><SelectValue /></SelectTrigger><SelectContent>
-                    {(["since_start", "calendar_month", "game_season"] as const).map((window) => <SelectItem key={window} value={window}>{t(`farming.${window}`)}</SelectItem>)}
+                    {(["rolling_days", "game_season"] as const).map((window) => <SelectItem key={window} value={window}>{t(`farming.${window}`)}</SelectItem>)}
                   </SelectContent>
                 </Select>
               </Field>}
 
-              {form.deliveryMode === "refresh" && selectedCapability?.refreshInterval && (
+              {form.farmingWindow === "rolling_days" && form.boardType === "farming" && <Field label={t("farming.days")}><Input type="number" min={1} max={180} value={form.farmingDays} onChange={event=>setForm({...form,farmingDays:event.target.value})}/></Field>}
+              {customInterval && form.deliveryMode === "refresh" && selectedCapability?.refreshInterval && (
                 <Field
                   label={t("refresh.interval")}
                   description={t("refresh.intervalDescription", {
