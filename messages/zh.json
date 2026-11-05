@@ -2585,6 +2585,11 @@
           "description": "Show the time remaining in this clan's current war in a voice channel."
         }
       }
+    },
+    "redditOptions": {
+      "role": "提及的身份组（可选）",
+      "authors": "关注的帖子作者",
+      "help": "发送这些 Reddit 账号所发帖子的评论提醒。请用逗号分隔名称。"
     }
   },
   "GeneralPage": {

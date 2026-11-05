@@ -2585,6 +2585,11 @@
           "description": "Show the time remaining in this clan's current war in a voice channel."
         }
       }
+    },
+    "redditOptions": {
+      "role": "Rolle å nevne (valgfritt)",
+      "authors": "Innleggsforfattere å følge",
+      "help": "Send varsler om kommentarer på innlegg fra disse Reddit-kontoene. Skill navnene med komma."
     }
   },
   "GeneralPage": {

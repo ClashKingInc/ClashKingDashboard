@@ -2585,6 +2585,11 @@
           "description": "Show the time remaining in this clan's current war in a voice channel."
         }
       }
+    },
+    "redditOptions": {
+      "role": "Vai trò được nhắc đến (tùy chọn)",
+      "authors": "Tác giả bài đăng cần theo dõi",
+      "help": "Gửi thông báo về bình luận trên bài đăng của các tài khoản Reddit này. Phân tách tên bằng dấu phẩy."
     }
   },
   "GeneralPage": {

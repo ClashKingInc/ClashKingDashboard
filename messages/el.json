@@ -2585,6 +2585,11 @@
           "description": "Show the time remaining in this clan's current war in a voice channel."
         }
       }
+    },
+    "redditOptions": {
+      "role": "Ρόλος για αναφορά (προαιρετικό)",
+      "authors": "Συντάκτες αναρτήσεων για παρακολούθηση",
+      "help": "Στείλε ειδοποιήσεις σχολίων για αναρτήσεις αυτών των λογαριασμών Reddit. Χώρισε τα ονόματα με κόμματα."
     }
   },
   "GeneralPage": {

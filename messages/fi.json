@@ -2585,6 +2585,11 @@
           "description": "Show the time remaining in this clan's current war in a voice channel."
         }
       }
+    },
+    "redditOptions": {
+      "role": "Mainittava rooli (valinnainen)",
+      "authors": "Seurattavat julkaisujen tekijät",
+      "help": "Lähetä ilmoituksia näiden Reddit-tilien julkaisujen kommenteista. Erota nimet pilkuilla."
     }
   },
   "GeneralPage": {

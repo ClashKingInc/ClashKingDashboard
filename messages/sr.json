@@ -2585,6 +2585,11 @@
           "description": "Show the time remaining in this clan's current war in a voice channel."
         }
       }
+    },
+    "redditOptions": {
+      "role": "Улога за помињање (опционо)",
+      "authors": "Аутори објава за праћење",
+      "help": "Шаљи обавештења о коментарима на објаве ових Reddit налога. Одвоји имена зарезима."
     }
   },
   "GeneralPage": {

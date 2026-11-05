@@ -2585,6 +2585,11 @@
           "description": "Show the time remaining in this clan's current war in a voice channel."
         }
       }
+    },
+    "redditOptions": {
+      "role": "Rol om te noem (opsioneel)",
+      "authors": "Plasingskrywers om te volg",
+      "help": "Stuur kommentaarkennisgewings vir plasings deur hierdie Reddit-rekeninge. Skei name met kommas."
     }
   },
   "GeneralPage": {

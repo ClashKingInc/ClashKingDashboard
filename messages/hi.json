@@ -2585,6 +2585,11 @@
           "description": "Show the time remaining in this clan's current war in a voice channel."
         }
       }
+    },
+    "redditOptions": {
+      "role": "उल्लेख करने की भूमिका (वैकल्पिक)",
+      "authors": "निगरानी के लिए पोस्ट लेखक",
+      "help": "इन Reddit खातों की पोस्ट पर टिप्पणियों की सूचनाएँ भेजें। नामों को कॉमा से अलग करें।"
     }
   },
   "GeneralPage": {
