@@ -1,3 +1,4 @@
+import { assistantErrorMessage, logAssistantFailure } from "./provider-errors";
 import { hardBudget } from "./hard-budget";
 import { patchRosterViewSource } from "./view-patch";
 import { cwlPerformanceViewSource } from "./cwl-performance-view";
@@ -672,6 +673,7 @@ const rosterAssistantWorker = {
     );
     const result = streamText({
       model: openai.responses(MODEL),
+      onError: ({ error }) => { logAssistantFailure(body.requestId, error); },
       abortSignal: request.signal,
       instructions: [
         {
@@ -703,7 +705,7 @@ const rosterAssistantWorker = {
       originalMessages: body.request.messages,
       execute: async ({ writer }) => {
         writeProgress = (event) => writer.write({ type: "data-rosterTool", data: event, transient: false });
-        writer.merge(result.toUIMessageStream());
+        writer.merge(result.toUIMessageStream({ onError: assistantErrorMessage }));
         await result.totalUsage;
         if (requestsLinkedAccountList(body.request.messages) && !artifacts.some((artifact) => artifact.type === "viewResult")) {
           if (!accountGroupsResult) {
@@ -759,7 +761,7 @@ const rosterAssistantWorker = {
           transient: false,
         });
       },
-      onError: (error) => error instanceof Error ? error.message : "Roster assistant failed",
+      onError: assistantErrorMessage,
     });
     const response = createUIMessageStreamResponse({ stream });
     const headers = new Headers(response.headers);

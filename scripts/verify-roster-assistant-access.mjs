@@ -5,10 +5,11 @@
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import { randomBytes,randomUUID } from 'node:crypto';
-import { mkdtemp,writeFile,rm } from 'node:fs/promises';
+import { mkdtemp,writeFile,readFile,rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { resolve,join } from 'node:path';
 import { createRequire } from 'node:module';
+import { createServer } from 'node:http';
 import { AI_NOTICE_VERSION } from '@clashking/api-contracts';
 
 assert.equal(process.env.CLASHKING_DISPOSABLE_TIMESCALE,'1');
@@ -21,10 +22,11 @@ const pg=require('pg');
 const {SignJWT}=await import(require.resolve('jose'));
 const db=new pg.Client({connectionString:dsn.href});await db.connect();
 const temp=await mkdtemp(join(tmpdir(),'ck-roster-access-'));
-const children=[];let logs='';
+const children=[];let logs='';let runtime,provider;
 const start=(script,env,cwd)=>{const child=spawn(process.execPath,[script],{cwd,env:{...process.env,...env},stdio:['ignore','pipe','pipe']});children.push(child);child.stdout.on('data',d=>logs+=d);child.stderr.on('data',d=>logs+=d);return child;};
 const ready=async(url,child)=>{for(let i=0;i<120;i++){if(child.exitCode!==null)throw Error(logs.slice(-2500));try{if((await fetch(url,{signal:AbortSignal.timeout(1000)})).ok)return;}catch{}await new Promise(r=>setTimeout(r,250));}throw Error(logs.slice(-2500));};
 const signingKey=randomBytes(32).toString('base64url');
+const meteringKey=randomBytes(32).toString('base64url');
 const origin='http://127.0.0.1:8818',assistant='http://127.0.0.1:8819';
 const actor='999999999999993201',server='999999999999993202',foreign='999999999999993203';
 try {
@@ -41,9 +43,9 @@ try {
   const session=(await db.query("INSERT INTO dashboard_scoped_sessions(grant_id,user_id,server_id,permissions,refresh_hash,expires_at) VALUES($1,$2,$3,$4,$5,now()+interval '1 hour') RETURNING id",[grant,actor,server,permissions,randomUUID()])).rows[0].id;
   tokens[level]=await new SignJWT({dashboard_session:session}).setProtectedHeader({alg:'HS256'}).setSubject(actor).setAudience('clashking-server-dashboard').setIssuedAt().setExpirationTime('1h').sign(new TextEncoder().encode(signingKey));
  }
- const api=start('scripts/start-local-rewrite-api.mjs',{CLASHKING_LOCAL_API_PORT:'8818',CLASHKING_LOCAL_ARCHIVE_BRIDGE:'0',CLASHKING_LOCAL_PRODUCTION_READS:'0',CLASHKING_E2E_JWT_ACCESS_SECRET:signingKey,CLASHKING_E2E_API_BOT_TOKEN:randomBytes(32).toString('base64url'),CLASHKING_LOCAL_STATIC_ASSETS_ROOT:process.env.CLASHKING_E2E_STATIC_ASSETS_ROOT,CLASHKING_LOCAL_DISCORD_CLIENT_ID:'999999999999999999',CLASHKING_LOCAL_DISCORD_CLIENT_SECRET:'local-only'},apiRepo);
+ const api=start('scripts/start-local-rewrite-api.mjs',{CLASHKING_LOCAL_API_PORT:'8818',CLASHKING_LOCAL_ARCHIVE_BRIDGE:'0',CLASHKING_LOCAL_PRODUCTION_READS:'0',CLASHKING_E2E_JWT_ACCESS_SECRET:signingKey,CLASHKING_E2E_AI_USAGE_SECRET:meteringKey,CLASHKING_E2E_API_BOT_TOKEN:randomBytes(32).toString('base64url'),CLASHKING_LOCAL_STATIC_ASSETS_ROOT:process.env.CLASHKING_E2E_STATIC_ASSETS_ROOT,CLASHKING_LOCAL_DISCORD_CLIENT_ID:'999999999999999999',CLASHKING_LOCAL_DISCORD_CLIENT_SECRET:'local-only'},apiRepo);
  await ready(origin+'/v2/health',api);
- const vars=join(temp,'assistant.vars');await writeFile(vars,'OPENAI_API_KEY="local-never-used"\nAI_USAGE_SECRET="local-never-used"\n',{mode:0o600});
+ const vars=join(temp,'assistant.vars');await writeFile(vars,'OPENAI_API_KEY="local-never-used"\nAI_USAGE_SECRET="'+meteringKey+'"\n',{mode:0o600});
  const ai=start('scripts/start-local-roster-assistant.mjs',{CLASHKING_ASSISTANT_PORT:'8819',CLASHKING_ASSISTANT_INSPECTOR_PORT:'9249',CLASHKING_API_ORIGIN:origin,CLASHKING_ASSISTANT_ENV_FILE:vars},resolve('.'));
  await ready(assistant+'/health',ai);
  const body={serverId:server,rosterIds:[],mode:'replay',messages:[{id:'fixture',role:'user',parts:[{type:'text',text:'Open the saved roster view'}]}]};
@@ -56,8 +58,38 @@ try {
  const admitted=await call(tokens.manage);assert.equal(admitted.status,400);assert.match(admitted.body.error,/sourceCode is required/);
  assert.equal((await db.query('SELECT count(*)::int AS n FROM roster_ai_usage WHERE discord_user_id=$1',[actor])).rows[0].n,1);
  console.log('PASS real assistant/API: nondeveloper roster manager admitted, anonymous/view-only/foreign server denied, consent required; no AI provider calls');
+ if(process.env.CLASHKING_E2E_PROVIDER_ERRORS==='1') {
+  await db.query('DELETE FROM roster_ai_usage WHERE discord_user_id=$1',[actor]);
+  let status=429;
+  provider=createServer((req,res)=>{req.resume();res.writeHead(status,{'content-type':'application/json'});res.end(JSON.stringify({error:{message:status===429?'You have no credits remaining.':'upstream failed',type:status===429?'insufficient_quota':'server_error',code:status===429?'insufficient_quota':'server_error'}}));});
+  await new Promise(r=>provider.listen(0,'127.0.0.1',r));
+  const {build}=require('esbuild');const wranglerRequire=createRequire(createRequire(import.meta.url).resolve('wrangler/package.json'));const {Miniflare,convertV4MiniflareOptions}=wranglerRequire('miniflare');
+  const file=join(temp,'assistant.mjs');
+  await build({entryPoints:[resolve('workers/roster-assistant/index.ts')],bundle:true,platform:'node',conditions:['workerd'],format:'esm',target:'es2022',external:['cloudflare:*'],banner:{js:'import { createRequire } from "node:module"; const require = createRequire("/assistant/index.js");'},outfile:file});
+  runtime=new Miniflare(convertV4MiniflareOptions({modulesRoot:"/assistant",modules:[{type:"ESModule",path:"/assistant/index.js",contents:await readFile(file,"utf8")}],compatibilityDate:'2026-08-10',compatibilityFlags:['nodejs_compat','enable_request_signal'],port:8820,workerLoaders:{LOADER:{}},bindings:{CLASHKING_API_ORIGIN:origin,OPENAI_API_KEY:'local-never-used',AI_USAGE_SECRET:meteringKey},outboundService:async request=>{
+   const url=new URL(request.url);
+   const init={method:request.method,headers:Object.fromEntries(request.headers),...(!['GET','HEAD'].includes(request.method)?{body:new Uint8Array(await request.arrayBuffer())}:{})};
+   if(url.hostname==='api.openai.com')return fetch('http://127.0.0.1:'+provider.address().port+url.pathname,init);
+   assert.equal(url.origin,origin,'external network blocked');return fetch(request.url,init);
+  }}));
+  await runtime.ready;
+  const run=async()=>{const response=await runtime.dispatchFetch('http://localhost/chat',{method:'POST',headers:{authorization:'Bearer '+tokens.manage,'content-type':'application/json'},body:JSON.stringify({...body,mode:'chat'})});return {status:response.status,text:await response.text()};};
+  for(let n=0;n<2;n++){
+   const result=await run();assert.equal(result.status,200,result.text);assert.match(result.text,/out of provider credits/);assert.doesNotMatch(result.text,/An error occurred/);
+   const rows=(await db.query('SELECT b.actual_usd,b.settled_at FROM roster_ai_step_budgets b JOIN roster_ai_usage u ON u.id=b.usage_id WHERE u.discord_user_id=$1',[actor])).rows;
+   assert.equal(rows.length,n+1);assert(rows.every(row=>Number(row.actual_usd)===0&&row.settled_at));
+  }
+  status=500;await run();
+  assert.equal((await run()).status,429,'uncertain provider result must stay reserved');
+  const held=(await db.query('SELECT count(*)::int AS n FROM roster_ai_step_budgets b JOIN roster_ai_usage u ON u.id=b.usage_id WHERE u.discord_user_id=$1 AND b.settled_at IS NULL',[actor])).rows[0].n;
+  assert.equal(held,1);
+  console.log('PASS real Worker/SDK/API: structured provider 429 releases zero-cost reservation and allows retry; 500 remains held; no external AI calls');
+ }
+
 } finally {
+ try {await runtime?.dispose();} catch {}
+ if(provider)await new Promise(r=>provider.close(r));
  for(const child of children.reverse())child.kill('SIGTERM');
- await new Promise(r=>setTimeout(r,300));
+ await Promise.all(children.map(child=>new Promise(resolve=>{if(child.exitCode!==null)return resolve();child.once('exit',resolve);setTimeout(resolve,5000);})));
  await db.end();await rm(temp,{recursive:true,force:true});
 }

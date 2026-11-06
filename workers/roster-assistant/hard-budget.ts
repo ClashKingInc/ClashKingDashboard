@@ -34,9 +34,24 @@ export function hardBudget(env: RosterAssistantRuntimeEnv, requestId: string) {
         {path:{},query:{},body:{requestId,step,inputTokenLimit,outputTokenLimit:64000}},init.signal??undefined,{headers});
       active=step;
       payload.max_output_tokens=reservation.maxOutputTokens;
-      // A failed/aborted transport retains this reservation. Only reported
-      // complete usage may settle it; expiration must never free unknown spend.
-      return fetch(input,{...init,body:JSON.stringify(payload)});
+      // A transport failure or 5xx may have incurred spend and stays reserved.
+      // A complete structured 4xx rejection occurred before inference, so it
+      // can settle at zero instead of consuming the server's entire allowance.
+      const response = await fetch(input,{...init,body:JSON.stringify(payload)});
+      if ([400,401,403,404,422,429].includes(response.status)) {
+        const rejected = await response.clone().json().catch(() => null) as {error?:{message?:unknown}} | null;
+        if (typeof rejected?.error?.message === "string") {
+          try {
+            await executeAssistantEndpoint(env.CLASHKING_API_ORIGIN,undefined,SettleAIStepEndpoint,
+              {path:{},query:{},body:{requestId,step,inputTokens:0,outputTokens:0}},
+              AbortSignal.timeout(5000),{headers});
+            active = undefined;
+          } catch {
+            console.error(JSON.stringify({event:"roster_rejection_settlement_failed",requestId,step}));
+          }
+        }
+      }
+      return response;
     },
     settle: async (usage: NormalizedAIUsage) => {
       if(active===undefined)return;
