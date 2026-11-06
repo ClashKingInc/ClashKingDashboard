@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AI_NOTICE_VERSION, AiNoticeAcceptEndpoint, AiNoticeGetEndpoint } from "@clashking/api-contracts";
 import { executeSharedEndpoint } from "@/lib/api/shared-client";
 import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter } from "@/components/ui/alert-dialog";
@@ -14,24 +14,29 @@ export function useAiNotice(userId: string | undefined, onDecline: () => void) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string>();
   const [attempt, setAttempt] = useState(0);
+  const revision = useRef(0);
   useEffect(() => {
     let active = true;
-    setChecked(false); setError(undefined);
+    const current = ++revision.current;
+    setChecked(false); setSaving(false); setError(undefined);
     if (!userId) return;
     void executeSharedEndpoint(AiNoticeGetEndpoint,{path:{},query:{},body:{}})
-      .then(value => { if(active)setResult({userId,accepted:value.acknowledged&&value.version===AI_NOTICE_VERSION}); })
-      .catch(() => { if(active)setError("We could not load your AI notice preference. Try again before using the assistant."); });
+      .then(value => { if(active && current === revision.current)setResult({userId,accepted:value.acknowledged&&value.version===AI_NOTICE_VERSION}); })
+      .catch(() => { if(active && current === revision.current)setError("We could not load your AI notice preference. Try again before using the assistant."); });
     return () => { active=false; };
   },[userId,attempt]);
   const accepted=Boolean(userId&&result?.userId===userId&&result.accepted);
   const accept=useCallback(async()=>{
     if(!checked||!userId||saving)return;
+    // A late initial GET must not reopen the notice after the POST succeeds.
+    const current = ++revision.current;
     setSaving(true);setError(undefined);
     try{
       const value=await executeSharedEndpoint(AiNoticeAcceptEndpoint,{path:{},query:{},body:{version:AI_NOTICE_VERSION}});
-      setResult({userId,accepted:value.acknowledged&&value.version===AI_NOTICE_VERSION});
-    }catch{setError("We could not save your preference. Nothing has been sent to the AI provider.");}
-    finally{setSaving(false);}
+      if(!value.acknowledged || value.version!==AI_NOTICE_VERSION)throw new Error("Acknowledgement was not confirmed");
+      if(current === revision.current)setResult({userId,accepted:true});
+    }catch{if(current === revision.current)setError("We could not save your preference. Nothing has been sent to the AI provider.");}
+    finally{if(current === revision.current)setSaving(false);}
   },[checked,userId,saving]);
   const notice=<AlertDialog open={Boolean(userId&&!accepted)}>
     <AlertDialogContent className="sm:max-w-lg">

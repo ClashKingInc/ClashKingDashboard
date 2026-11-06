@@ -23,7 +23,7 @@ export default function DashboardAccessPage() {
     const requestKey=JSON.stringify(input);
     if(pendingExchange?.key!==requestKey){
      pendingExchange={key:requestKey,promise:(async()=>{
-      const token=getAccessToken();const response=await fetch(`${getDefaultBaseUrl()}/v2/auth/server-dashboard/exchange`,{method:'POST',credentials:'include',headers:{'Content-Type':'application/json',...(token?{Authorization:`Bearer ${token}`}:{})},body:JSON.stringify(input)});
+      const token=embeddedServerId()?undefined:getAccessToken();const response=await fetch(`${getDefaultBaseUrl()}/v2/auth/server-dashboard/exchange`,{method:'POST',credentials:'include',headers:{'Content-Type':'application/json',...(token?{Authorization:`Bearer ${token}`}:{})},body:JSON.stringify(input)});
       if(!response.ok)throw Error('Grant rejected');const data=await response.json();
       if(typeof data.access_token!=='string'||!/^\d+$/.test(data.serverId))throw Error('Invalid grant response');
       return data as {access_token:string;serverId:string};
@@ -56,7 +56,9 @@ export default function DashboardAccessPage() {
   }
   const code=sessionStorage.getItem('ck_pending_dashboard_grant');
   const rosterId=sessionStorage.getItem('ck_pending_dashboard_roster')??undefined;
-  if(code){if(getAccessToken())void exchange({code},rosterId);else if(status==='anonymous'){sessionStorage.setItem('auth_return_to','/access');router.replace('/login');}}
+  // The private bot grant is itself a short-lived, one-use login proof. The
+  // server checks its actor and current permissions; no OAuth detour is needed.
+  if(code)void exchange({code},rosterId);
 
   if(embeddedServerId()){target.ReactNativeWebView?.postMessage(JSON.stringify({type:'dashboard-ready'}));if(window.parent!==window)window.parent.postMessage({type:'dashboard-ready'},'*');}
   return()=>{active=false;delete target.__clashkingDashboardHandoff;window.removeEventListener('message',listener);};
