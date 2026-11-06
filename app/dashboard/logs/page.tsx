@@ -56,6 +56,7 @@ import {
   Clock3,
   ExternalLink,
   LayoutTemplate,
+  RefreshCw,
 } from "lucide-react";
 import { clashKingAssets } from "@/lib/theme";
 
@@ -236,6 +237,7 @@ export default function LogsPage() {
   const guildId = useGuildId();
   const queryClient = useQueryClient();
   const t = useTranslations("LogsPage");
+  const common = useTranslations("Common");
   const CLAN_LOGS: LogTypeDefinition[] = [
     { keys: ['join_log'], label: t('clanLogs.joinLog.label'), description: t('clanLogs.joinLog.description'), icon: Users, color: 'green', exampleLink: 'https://discord.com/channels/923764211845312533/1128182552121839648' },
     { keys: ['leave_log'], label: t('clanLogs.leaveLog.label'), description: t('clanLogs.leaveLog.description'), icon: Users, color: 'red', exampleLink: 'https://discord.com/channels/923764211845312533/1128182846218055722' },
@@ -277,6 +279,11 @@ export default function LogsPage() {
   ];
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState<string | null>(null);
+  const [dataError,setDataError]=useState<string|null>(null);
+  const [saveErrors,setSaveErrors]=useState<Record<string,string>>({});
+  const [reload,setReload]=useState(0);
+  type LogDraft={channel:string;thread:string;show:boolean;redditRole:string;redditAccounts:string};
+  const [logDrafts,setLogDrafts]=useState<Record<string,LogDraft>>({});
   const [channels, setChannels] = useState<Channel[]>([]);
   const [threads, setThreads] = useState<Thread[]>([]);
   const [roles, setRoles] = useState<DiscordRole[]>([]);
@@ -306,12 +313,13 @@ export default function LogsPage() {
     const fetchData = async () => {
       try {
         setLoading(true);
+        setDataError(null);
         const threadsPromise = queryClient.fetchQuery(dashboardQueryOptions.threads(guildId)).catch((error) => {
           console.error("Failed to fetch threads:", error);
           return [];
         });
         const [channelsData, clansData, logsData, guildData, rolesData] = await Promise.all([
-          queryClient.fetchQuery(dashboardQueryOptions.channels(guildId)),
+          queryClient.fetchQuery({...dashboardQueryOptions.channels(guildId),staleTime:0}),
           queryClient.fetchQuery(dashboardQueryOptions.clans(guildId)),
           queryClient.fetchQuery({
             queryKey: dashboardQueryKeys.route("logs", guildId),
@@ -339,6 +347,7 @@ export default function LogsPage() {
         }
         void threadsPromise.then((threadsData) => setThreads(normalizeDestinationThreads(threadsData)));
       } catch (error) {
+        setDataError(error instanceof Error?error.message:common("loadError"));
         console.error("Failed to fetch logs data:", error);
       } finally {
         setLoading(false);
@@ -346,7 +355,7 @@ export default function LogsPage() {
     };
 
     fetchData();
-  }, [guildId, mounted, queryClient]);
+  }, [guildId, mounted, queryClient, reload, common]);
 
   const focusLog = (log: ServerLog) => {
     const serverScoped = !log.clan_tag;
@@ -392,8 +401,10 @@ export default function LogsPage() {
   ) => {
     if (!serverScoped && !selectedClan) return;
     if (getSelectedLog(logKeys, serverScoped)?.disabled) return;
+    const errorKey=`${guildId}:${serverScoped?"server":selectedClan}:${logKeys[0]}`;
 
     try {
+      setSaveErrors(current=>({...current,[errorKey]:""}));
       setSaving(logKeys[0]);
       const requestBody = {
         ...(!serverScoped ? { clan_tag: selectedClan } : {}),
@@ -403,21 +414,28 @@ export default function LogsPage() {
         ...redditOptions,
       };
 
-      await executeSharedEndpoint(dashboardEndpoints.saveServerLogs, {
+      setDataError(null);
+      const saved=await executeSharedEndpoint(dashboardEndpoints.saveServerLogs, {
         path: { serverId: guildId },
         query: {},
         body: requestBody,
       });
 
-      const data = await executeSharedEndpoint(dashboardEndpoints.serverLogs, {
-        path: { serverId: guildId },
-        query: {},
-        body: {},
-      });
-      setServerLogs([...data.logs]);
-      queryClient.setQueryData(dashboardQueryKeys.route("logs", guildId), data);
+      // The mutation returns its authoritative destination. A second read can
+      // fail independently and must not make a successful save look undone.
+      const updatedLogs=saved.logs??[];
+      if(!logKeys.every(type=>updatedLogs.some(log=>log.type===type&&log.channel_id===channelId&&(log.thread_id??null)===threadId))) {
+        throw new Error(common("error"));
+      }
+      setServerLogs(current=>[...current.filter(log=>!updatedLogs.some(next=>next.type===log.type&&(next.clan_tag??null)===(log.clan_tag??null))),...updatedLogs]);
+      await queryClient.invalidateQueries({queryKey:dashboardQueryKeys.route("logs",guildId)});
+      return true;
     } catch (error) {
+      const message=error instanceof Error?error.message:common("error");
+      setDataError(message);
+      setSaveErrors(current=>({...current,[errorKey]:message}));
       console.error("Failed to update clan logs:", error);
+      return false;
     } finally {
       setSaving(null);
     }
@@ -491,8 +509,9 @@ export default function LogsPage() {
   };
 
 
-  // Separate component for LogCard to use hooks properly
-  const LogCard = ({ logDef, statusLoading = false }: { logDef: LogTypeDefinition; statusLoading?: boolean }) => { // NOSONAR — inline sub-component uses parent closures; complexity is structural JSX, not logic
+  // Render stable elements from parent-owned drafts. Defining a component here
+  // remounted the form whenever channels/threads or saving state changed.
+  const renderLogCard = ({ logDef, statusLoading = false }: { logDef: LogTypeDefinition; statusLoading?: boolean }) => {
     const Icon = logDef.icon;
     const currentClan = getCurrentClan();
     const serverScoped = logDef.scope === "server";
@@ -504,12 +523,16 @@ export default function LogsPage() {
     const selectedChannel = getSelectedChannelForLogs(logDef.keys, serverScoped);
     const selectedThread = getSelectedThreadForLogs(logDef.keys, serverScoped);
     const colors = getLogColorClasses(logDef.color);
-    const [showEnableForm, setShowEnableForm] = useState(false);
-    const [pendingChannel, setPendingChannel] = useState(selectedChannel);
-    const [pendingThread, setPendingThread] = useState(selectedThread);
     const isReddit = logDef.keys[0] === "reddit_feed";
-    const [redditRole, setRedditRole] = useState(selectedLog?.reddit_role_id ?? "");
-    const [redditAccounts, setRedditAccounts] = useState((selectedLog?.reddit_accounts ?? []).join(", "));
+    const draftKey=`${guildId}:${serverScoped?"server":selectedClan}:${logDef.keys[0]}`;
+    const defaults:LogDraft={channel:selectedChannel,thread:selectedThread,show:false,redditRole:selectedLog?.reddit_role_id??"",redditAccounts:(selectedLog?.reddit_accounts??[]).join(", ")};
+    const draft=logDrafts[draftKey]??defaults;
+    const updateDraft=(changes:Partial<LogDraft>)=>setLogDrafts(current=>({...current,[draftKey]:{...defaults,...current[draftKey],...changes}}));
+    const showEnableForm=draft.show,setShowEnableForm=(show:boolean)=>updateDraft({show});
+    const pendingChannel=draft.channel,setPendingChannel=(channel:string)=>updateDraft({channel});
+    const pendingThread=draft.thread,setPendingThread=(thread:string)=>updateDraft({thread});
+    const redditRole=draft.redditRole,setRedditRole=(redditRole:string)=>updateDraft({redditRole});
+    const redditAccounts=draft.redditAccounts,setRedditAccounts=(redditAccounts:string)=>updateDraft({redditAccounts});
     const parsedAccounts = redditAccounts.split(",").map(value => value.trim().replace(/^u\//iu, "")).filter(Boolean);
     const accountsValid = parsedAccounts.every(value => /^[a-z0-9_-]{1,30}$/iu.test(value)) && new Set(parsedAccounts.map(value => value.toLowerCase())).size === parsedAccounts.length;
     const redditChanged = isReddit && (redditRole !== (selectedLog?.reddit_role_id ?? "") || JSON.stringify(parsedAccounts) !== JSON.stringify(selectedLog?.reddit_accounts ?? []));
@@ -536,14 +559,14 @@ export default function LogsPage() {
 
     const saveDestination = async () => {
       if (!draftChannel || !draftValid) return;
-      await handleDestinationChange(
+      const saved=await handleDestinationChange(
         logDef.keys,
         draftChannel,
         draftThread || null,
         serverScoped,
         isReddit ? { reddit_role_id: redditRole || null, reddit_accounts: parsedAccounts } : undefined,
       );
-      setShowEnableForm(false);
+      if(saved)setShowEnableForm(false);
     };
 
     return (
@@ -676,10 +699,10 @@ export default function LogsPage() {
                     : 'border-0 bg-muted/55 shadow-sm shadow-black/5'}
                   showDisabled={false}
                 />
-                {!channelExists && isEnabled && !isSaving && (
+                {!channelExists && isEnabled && !isSaving && !dataError && (
                   <p className="text-xs text-orange-600 flex items-center gap-1">
                     <AlertCircle className="w-3 h-3" />
-                    {t('logCard.channelDeleted')}
+                    {common("noChannelFound")}
                   </p>
                 )}
               </div>
@@ -749,6 +772,7 @@ export default function LogsPage() {
                 {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {t('logCard.saveDestination')}
               </Button>}
+              {saveErrors[draftKey]&&<p role="alert" className="text-sm text-destructive">{saveErrors[draftKey]}</p>}
             </div>
           )}
         </div>
@@ -774,10 +798,12 @@ export default function LogsPage() {
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="mx-auto max-w-7xl space-y-8">
-        <header>
-          <h1 className="text-2xl font-bold text-foreground md:text-3xl">{t("title")}</h1>
-          <p className="mt-1 text-muted-foreground">{t("description")}</p>
+        <header className="flex items-start justify-between gap-3">
+          <div><h1 className="text-2xl font-bold text-foreground md:text-3xl">{t("title")}</h1>
+          <p className="mt-1 text-muted-foreground">{t("description")}</p></div>
+          <Button type="button" variant="secondary" size="icon" disabled={loading} onClick={()=>setReload(value=>value+1)} aria-label={common("refresh")}><RefreshCw className="size-4" /></Button>
         </header>
+        {dataError&&<div role="alert" className="rounded-xl bg-destructive/10 p-3 text-sm text-destructive">{dataError}</div>}
 
         {!loading && logsWithIssues.length > 0 && (
           <Collapsible>
@@ -881,7 +907,7 @@ export default function LogsPage() {
                         selectedClan && <CountdownsPanel serverId={guildId} clanTag={selectedClan} />
                       ) : (
                         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-                          {tab.definitions?.map((logDef) => <LogCard key={logDef.keys[0]} logDef={logDef} statusLoading={loading} />)}
+                          {tab.definitions?.map((logDef) => renderLogCard({logDef,statusLoading:loading}))}
                         </div>
                       )}
                     </TabsContent>
@@ -903,7 +929,7 @@ export default function LogsPage() {
                 </DashboardTabsList>
                 <TabsContent value="logs" className="mt-0">
                   <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-                    {SERVER_LOGS.map((logDef) => <LogCard key={logDef.keys[0]} logDef={logDef} statusLoading={loading} />)}
+                    {SERVER_LOGS.map((logDef) => renderLogCard({logDef,statusLoading:loading}))}
                   </div>
                 </TabsContent>
                 <TabsContent value="countdowns" className="mt-0">
