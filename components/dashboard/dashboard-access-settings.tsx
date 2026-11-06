@@ -14,6 +14,7 @@ const sectionMessageKeys: Record<DashboardSection, string> = {
   settings: "general.name",
   logs: "logs.name",
   clans: "clans.name",
+  competitive: "competitive.name",
   rosters: "rosters.name",
   links: "links.name",
   moderation: "bans.name",
