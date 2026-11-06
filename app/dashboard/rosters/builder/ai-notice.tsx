@@ -12,33 +12,38 @@ export function useAiNotice(userId: string | undefined, onDecline: () => void) {
   const [result, setResult] = useState<{userId:string; accepted:boolean}>();
   const [checked, setChecked] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string>();
+  const [failure, setFailure] = useState<{userId:string; message:string}>();
   const [attempt, setAttempt] = useState(0);
   const revision = useRef(0);
   useEffect(() => {
     let active = true;
     const current = ++revision.current;
-    setChecked(false); setSaving(false); setError(undefined);
+    setChecked(false); setSaving(false); setFailure(undefined);
     if (!userId) return;
     void executeSharedEndpoint(AiNoticeGetEndpoint,{path:{},query:{},body:{}})
       .then(value => { if(active && current === revision.current)setResult({userId,accepted:value.acknowledged&&value.version===AI_NOTICE_VERSION}); })
-      .catch(() => { if(active && current === revision.current)setError("We could not load your AI notice preference. Try again before using the assistant."); });
+      .catch(() => { if(active && current === revision.current)setFailure({userId,message:"We could not load your AI notice preference. Try again before using the assistant."}); });
     return () => { active=false; };
   },[userId,attempt]);
-  const accepted=Boolean(userId&&result?.userId===userId&&result.accepted);
+  const resolved=Boolean(userId&&result?.userId===userId);
+  const accepted=Boolean(resolved&&result?.accepted);
+  const error=failure?.userId===userId?failure?.message:undefined;
   const accept=useCallback(async()=>{
     if(!checked||!userId||saving)return;
     // A late initial GET must not reopen the notice after the POST succeeds.
     const current = ++revision.current;
-    setSaving(true);setError(undefined);
+    setSaving(true);setFailure(undefined);
     try{
       const value=await executeSharedEndpoint(AiNoticeAcceptEndpoint,{path:{},query:{},body:{version:AI_NOTICE_VERSION}});
       if(!value.acknowledged || value.version!==AI_NOTICE_VERSION)throw new Error("Acknowledgement was not confirmed");
       if(current === revision.current)setResult({userId,accepted:true});
-    }catch{if(current === revision.current)setError("We could not save your preference. Nothing has been sent to the AI provider.");}
+    }catch{if(current === revision.current)setFailure({userId,message:"We could not save your preference. Nothing has been sent to the AI provider."});}
     finally{if(current === revision.current)setSaving(false);}
   },[checked,userId,saving]);
-  const notice=<AlertDialog open={Boolean(userId&&!accepted)}>
+  // Missing browser state means unknown, not declined. Wait for this person's
+  // persisted preference so a new device never flashes an already-accepted notice.
+  // A failed lookup still opens the retry UI and never authorizes an AI request.
+  const notice=<AlertDialog open={Boolean(userId&&!accepted&&(resolved||error))}>
     <AlertDialogContent className="sm:max-w-lg">
       <AlertDialogHeader>
         <AlertDialogTitle>Before you use the AI assistant</AlertDialogTitle>
