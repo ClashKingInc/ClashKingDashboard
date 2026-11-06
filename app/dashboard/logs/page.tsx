@@ -443,10 +443,12 @@ export default function LogsPage() {
 
   const handleDisabledChange = async (logKeys: string[], disabled: boolean, serverScoped = false) => {
     if (!serverScoped && !selectedClan) return;
+    const errorKey = `${guildId}:${serverScoped ? "server" : selectedClan}:${logKeys[0]}`;
 
     try {
+      setSaveErrors(current => ({ ...current, [errorKey]: "" }));
       setSaving(logKeys[0]);
-      await executeSharedEndpoint(dashboardEndpoints.updateServerLogsState, {
+      const result = await executeSharedEndpoint(dashboardEndpoints.updateServerLogsState, {
         path: { serverId: guildId },
         query: {},
         body: {
@@ -456,14 +458,23 @@ export default function LogsPage() {
         },
       });
 
-      const data = await executeSharedEndpoint(dashboardEndpoints.serverLogs, {
-        path: { serverId: guildId },
-        query: {},
-        body: {},
+      const updated = result.logs ?? [];
+      if (!logKeys.every(type => updated.some(log => log.type === type && log.disabled === disabled))) {
+        throw new Error(common("error"));
+      }
+      // Apply the confirmed write directly. A second read can be stale or fail
+      // independently. Keep channel_id when the state-only response omits it.
+      const applyState = (logs: ServerLog[]) => logs.map(log => {
+        const next = updated.find(item => item.type === log.type && (item.clan_tag ?? null) === (log.clan_tag ?? null));
+        return next ? { ...log, ...next } : log;
       });
-      setServerLogs([...data.logs]);
-      queryClient.setQueryData(dashboardQueryKeys.route("logs", guildId), data);
+      setServerLogs(applyState);
+      queryClient.setQueryData<EndpointResponse<typeof dashboardEndpoints.serverLogs>>(
+        dashboardQueryKeys.route("logs", guildId),
+        current => current ? { ...current, logs: applyState([...current.logs]) } : current,
+      );
     } catch (error) {
+      setSaveErrors(current => ({ ...current, [errorKey]: error instanceof Error ? error.message : common("error") }));
       console.error("Failed to change clan log state:", error);
     } finally {
       setSaving(null);
