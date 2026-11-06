@@ -128,7 +128,19 @@ export function clearSession(broadcast = true): void {
 
 export function getCachedUser(): UserInfo | undefined {
   if (typeof window === "undefined") return undefined;
-  if (embeddedServerId()) return undefined;
+  if (embeddedServerId()) {
+    // Server-only sessions cannot read the private profile endpoint. Expose
+    // only their subject for presentation and per-person notice state. This
+    // decoded value is never authorization; the API verifies every operation.
+    try {
+      const payload = getAccessToken()?.split(".")[1];
+      if (!payload) return undefined;
+      const encoded = payload.replaceAll("-", "+").replaceAll("_", "/");
+      const claims = JSON.parse(atob(encoded.padEnd(Math.ceil(encoded.length / 4) * 4, "="))) as { sub?: unknown; aud?: unknown };
+      if (claims.aud !== "clashking-server-dashboard" || typeof claims.sub !== "string" || !/^\d+$/.test(claims.sub)) return undefined;
+      return { user_id: claims.sub, username: "", avatar_url: "", auth_methods: ["discord"] };
+    } catch { return undefined; }
+  }
   const raw = localStorage.getItem("user");
   if (!raw) return undefined;
   try {
