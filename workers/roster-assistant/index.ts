@@ -44,7 +44,6 @@ import {
   savedViewProgramGuidance,
 } from "./view-program-contract";
 import { resolveAssistantSecrets } from "./runtime-secrets";
-import { RosterAssistantAuthorizationError } from "./developer-authorization";
 import { readFamilyMembers, readFamilyWarMetric, validateNewFamilyRoster } from "./family-context";
 
 const MODEL = ROSTER_ASSISTANT_MODEL;
@@ -270,7 +269,7 @@ const rosterAssistantWorker = {
       return json(
         request,
         { error: error instanceof Error ? error.message : "Roster context request failed" },
-        error instanceof AssistantApiError || error instanceof RosterAssistantAuthorizationError ? error.status : 502,
+        error instanceof AssistantApiError ? error.status : 502,
       );
     }
 

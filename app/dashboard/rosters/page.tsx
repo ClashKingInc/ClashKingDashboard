@@ -37,8 +37,7 @@ import { ChannelCombobox } from "@/components/ui/channel-combobox";
 import { ClanCombobox } from "@/components/ui/clan-combobox";
 import { useToast } from "@/components/ui/use-toast";
 import { apiCache } from "@/lib/api-cache";
-import { useAuthSession } from "@/components/auth-session-provider";
-import { isDeveloperUserId } from "@/lib/internal/developer-access";
+import { useDashboardAccess } from "@/components/dashboard/dashboard-access-provider";
 import { clanBadgeUrl } from "@/lib/clash-asset-urls";
 import {
   AlertDialog,
@@ -330,8 +329,8 @@ function RosterCard({
 export default function RostersPage() { // NOSONAR — React page component: complexity is aggregate state/handler management, not a single logic unit
   const guildId = useGuildId();
   const router = useRouter();
-  const { user } = useAuthSession();
-  const canUseRosterBuilder = isDeveloperUserId(user?.user_id);
+  const { canManage } = useDashboardAccess();
+  const canUseRosterBuilder = canManage("rosters");
   const { toast } = useToast();
   const t = useTranslations("RostersPage");
   const tCommon = useTranslations("Common");

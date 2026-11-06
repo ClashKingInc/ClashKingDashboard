@@ -1,4 +1,6 @@
 "use client";
+
+import { useDashboardAccess } from "@/components/dashboard/dashboard-access-provider";
 import { useTranslations } from "use-intl";
 import { useAiNotice } from "./ai-notice";
 
@@ -950,18 +952,19 @@ function ViewTable({
 export default function RosterBuilderPage() {
   const guildId = useGuildId();
   const router = useRouter();
-  const { status, user } = useAuthSession();
-  const canUseRosterBuilder = status === "authenticated" && isDeveloperUserId(user?.user_id);
+  const { status } = useAuthSession();
+  const { canManage, loading: accessLoading } = useDashboardAccess();
+  const canUseRosterBuilder = status === "authenticated" && canManage("rosters");
 
   useEffect(() => {
     if (status === "anonymous") {
       router.replace("/login");
       return;
     }
-    if (status === "authenticated" && !canUseRosterBuilder) {
+    if (status === "authenticated" && !accessLoading && !canUseRosterBuilder) {
       router.replace(dashboardHref("rosters", guildId));
     }
-  }, [canUseRosterBuilder, guildId, router, status]);
+  }, [accessLoading, canUseRosterBuilder, guildId, router, status]);
 
   if (!canUseRosterBuilder) {
     return (

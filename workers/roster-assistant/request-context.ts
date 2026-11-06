@@ -3,7 +3,6 @@ import type { UIMessage } from "ai";
 import { z } from "zod";
 import { ROSTER_ASSISTANT_MODEL } from "../../lib/roster-assistant-constants";
 import { AssistantApiError, executeAssistantEndpoint } from "./api-client";
-import { assertRosterAssistantDeveloper } from "./developer-authorization";
 import { buildTrustedUserTranscript } from "./request-guard";
 
 const BrowserRequest = z.object({
@@ -50,7 +49,8 @@ export async function prepareRequest(
   userToken: string,
   signal: AbortSignal,
 ): Promise<AssistantRequest> {
-  await assertRosterAssistantDeveloper(env.CLASHKING_API_ORIGIN, userToken, signal);
+  // The API context endpoint authorizes roster management and enforces notice
+  // acceptance plus usage limits before any model or replay work begins.
   // The same user-only text is reserved by the API and forwarded to the model.
   const messages = buildTrustedUserTranscript(request.messages);
   const payload = await executeAssistantEndpoint(env.CLASHKING_API_ORIGIN, userToken, DashboardRosterAIContextEndpoint, {
