@@ -105,3 +105,18 @@
 .ck-home[data-motion=paused] *,.ck-home[data-motion=paused] *::before{animation:none!important;transition:none!important}
 /* The shared sunset button rule must not turn the primary session action dark. */
 .ck-home[data-cs-theme=sunset] .cs-session-action{color:#fff!important;background:#c90d18}
+
+/* Translation length must consume available space, never extend the page. */
+@media(max-width:760px){
+  .ck-home .cs-nav{grid-template-columns:minmax(0,1fr) minmax(0,1.7fr)}
+  .ck-home .cs-nav-brand{width:min(124px,100%);min-width:0}
+  .ck-home .cs-nav-actions{min-width:0;max-width:100%;justify-content:flex-end}
+  .ck-home .cs-language-trigger{flex-shrink:0}
+  .ck-home .cs-session-action{min-width:0;white-space:normal;overflow-wrap:anywhere;text-align:center;line-height:1.25}
+  .ck-home .ck-discord>svg{flex-shrink:0}
+}
+@media(max-width:480px){
+  .ck-home{--ck-gutter:max(16px,env(safe-area-inset-left),env(safe-area-inset-right))}
+  .ck-home .ck-hero-actions{display:grid;grid-template-columns:minmax(0,1fr);gap:8px}
+  .ck-home .ck-discord,.ck-home .ck-get-app{min-width:0;min-height:44px;text-align:center;overflow-wrap:anywhere}
+}
