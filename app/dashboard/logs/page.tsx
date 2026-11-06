@@ -280,6 +280,7 @@ export default function LogsPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState<string | null>(null);
   const [dataError,setDataError]=useState<string|null>(null);
+  const [saveErrors,setSaveErrors]=useState<Record<string,string>>({});
   const [reload,setReload]=useState(0);
   type LogDraft={channel:string;thread:string;show:boolean;redditRole:string;redditAccounts:string};
   const [logDrafts,setLogDrafts]=useState<Record<string,LogDraft>>({});
@@ -400,8 +401,10 @@ export default function LogsPage() {
   ) => {
     if (!serverScoped && !selectedClan) return;
     if (getSelectedLog(logKeys, serverScoped)?.disabled) return;
+    const errorKey=`${guildId}:${serverScoped?"server":selectedClan}:${logKeys[0]}`;
 
     try {
+      setSaveErrors(current=>({...current,[errorKey]:""}));
       setSaving(logKeys[0]);
       const requestBody = {
         ...(!serverScoped ? { clan_tag: selectedClan } : {}),
@@ -421,11 +424,16 @@ export default function LogsPage() {
       // The mutation returns its authoritative destination. A second read can
       // fail independently and must not make a successful save look undone.
       const updatedLogs=saved.logs??[];
+      if(!logKeys.every(type=>updatedLogs.some(log=>log.type===type&&log.channel_id===channelId&&(log.thread_id??null)===threadId))) {
+        throw new Error(common("error"));
+      }
       setServerLogs(current=>[...current.filter(log=>!updatedLogs.some(next=>next.type===log.type&&(next.clan_tag??null)===(log.clan_tag??null))),...updatedLogs]);
       await queryClient.invalidateQueries({queryKey:dashboardQueryKeys.route("logs",guildId)});
       return true;
     } catch (error) {
-      setDataError(error instanceof Error?error.message:common("error"));
+      const message=error instanceof Error?error.message:common("error");
+      setDataError(message);
+      setSaveErrors(current=>({...current,[errorKey]:message}));
       console.error("Failed to update clan logs:", error);
       return false;
     } finally {
@@ -764,6 +772,7 @@ export default function LogsPage() {
                 {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {t('logCard.saveDestination')}
               </Button>}
+              {saveErrors[draftKey]&&<p role="alert" className="text-sm text-destructive">{saveErrors[draftKey]}</p>}
             </div>
           )}
         </div>
