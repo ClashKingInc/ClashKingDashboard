@@ -9,7 +9,7 @@ import { useGuildId } from "@/lib/dashboard-route";
 import { dashboardHref } from "@/lib/dashboard-route";
 import { getAccessToken } from "@/lib/auth/session";
 import { dashboardEndpoints } from "@clashking/api-contracts";
-import { executeSharedEndpoint } from "@/lib/api/shared-client";
+import { executeSharedApiResult, executeSharedEndpoint } from "@/lib/api/shared-client";
 import { clanBadgeUrl } from "@/lib/clash-asset-urls";
 
 
@@ -227,11 +227,15 @@ export default function ClansPage() {
       setSaving(true);
       const accessToken = getAccessToken();
 
-      const added = await executeSharedEndpoint(dashboardEndpoints.addServerClan, {
+      const response = await executeSharedApiResult(dashboardEndpoints.addServerClan, {
         path: { serverId: guildId },
         query: {},
         body: { tag: newClanTag },
       });
+      // Keep the server's conflict reason visible (for example the clan cap),
+      // rather than replacing it with the transport's generic status message.
+      if (response.error || !response.data) throw new Error(response.error || t("toast.errorAddingClan"));
+      const added = response.data;
 
       toast({
         title: tCommon("success"),
@@ -787,7 +791,7 @@ export default function ClansPage() {
           <AlertDialogHeader>
             <AlertDialogTitle className="text-foreground">{tCommon("confirm")}</AlertDialogTitle>
             <AlertDialogDescription className="text-muted-foreground">
-              {t("deleteConfirm", { name: clanToDelete?.name ?? "" })}
+              {t("deleteConfirm", { tag: clanToDelete?.tag ?? "" })}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
