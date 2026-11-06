@@ -791,7 +791,7 @@ export default function ClansPage() {
           <AlertDialogHeader>
             <AlertDialogTitle className="text-foreground">{tCommon("confirm")}</AlertDialogTitle>
             <AlertDialogDescription className="text-muted-foreground">
-              {t("deleteConfirm", { tag: clanToDelete?.tag || clanToDelete?.clan_tag || "" })}
+              {t("deleteConfirm", { tag: clanToDelete?.tag ?? "" })}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
