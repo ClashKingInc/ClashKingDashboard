@@ -186,6 +186,10 @@ export function TicketPanelTab({ panel, guildId, embeds, previewButtons, onOpenB
   const [publishing, setPublishing] = useState(false);
   const [editorDirty, setEditorDirty] = useState(false);
   const [channelId, setChannelId] = useState<string | null>(null);
+  // Channel metadata uses text/news names as well as numeric Discord types.
+  // Publishing needs a real sendable channel; "disabled" is only a settings value.
+  const publishChannels = channels.filter(channel => ["0", "5", "text", "news"].includes(getChannelTypeToken(channel)));
+  const hasPublishChannel = publishChannels.some(channel => channel.id === channelId);
   useEffect(() => { setSavedPanel(panel); }, [panel]);
   const reloadPanel = async () => {
     apiCache.invalidate(getTicketsPanelsCacheKey(guildId));
@@ -199,7 +203,7 @@ export function TicketPanelTab({ panel, guildId, embeds, previewButtons, onOpenB
   };
   const draftChanged = !savedPanel.publication || new Date(savedPanel.draftUpdatedAt ?? "").getTime() !== new Date(savedPanel.publication.sourceUpdatedAt).getTime();
   const publish = async () => {
-    if (!savedPanel.draftUpdatedAt || publishing || (!savedPanel.publication && !channelId)) return;
+    if (!savedPanel.draftUpdatedAt || publishing || (!savedPanel.publication && !hasPublishChannel)) return;
     setPublishing(true);
     try {
       const body = { nonce: `${Date.now()}${Math.floor(Math.random() * 900000 + 100000)}`, expectedUpdatedAt: savedPanel.draftUpdatedAt,
@@ -253,8 +257,8 @@ export function TicketPanelTab({ panel, guildId, embeds, previewButtons, onOpenB
     <Dialog open={publishOpen} onOpenChange={open => { if (!publishing) setPublishOpen(open); }}>
       <DialogContent variant="form">
         <DialogHeader><DialogTitle>{t("panelPublishTitle")}</DialogTitle><DialogDescription>{t(savedPanel.publication ? "panelPublishUpdateDescription" : "panelPublishFirstDescription")}</DialogDescription></DialogHeader>
-        {!savedPanel.publication && <ChannelCombobox channels={channels.filter(channel => Number(channel.type) === 0 || Number(channel.type) === 5)} value={channelId ?? ""} onValueChange={setChannelId} placeholder={t("selectChannel")} />}
-        <DialogFooter><Button variant="outline" disabled={publishing} onClick={() => setPublishOpen(false)}>{t("panelPublishLater")}</Button><Button disabled={publishing || (!savedPanel.publication && !channelId)} onClick={publish}>{publishing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}{t("panelPublishNow")}</Button></DialogFooter>
+        {!savedPanel.publication && <ChannelCombobox channels={publishChannels} value={channelId ?? ""} onValueChange={setChannelId} placeholder={t("selectChannel")} showDisabled={false} />}
+        <DialogFooter><Button variant="outline" disabled={publishing} onClick={() => setPublishOpen(false)}>{t("panelPublishLater")}</Button><Button disabled={publishing || (!savedPanel.publication && !hasPublishChannel)} onClick={publish}>{publishing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}{t("panelPublishNow")}</Button></DialogFooter>
       </DialogContent>
     </Dialog>
     <div className="min-w-0 rounded-3xl bg-card">
