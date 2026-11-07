@@ -1,4 +1,5 @@
 import { sharedViewImage } from "./shared-view-image";
+import { isNativeLocalizedRoute } from "../../lib/native-localized-routes";
 const MARKETING_HOST = "clashk.ing";
 const DASHBOARD_HOST = "dash.clashk.ing";
 const WWW_HOST = "www.clashk.ing";
@@ -49,7 +50,7 @@ export async function handleDashboardRequest(
   }
   if (requestUrl.pathname === "/view" && /^(GET|HEAD)$/.test(request.method)) {
     const token = requestUrl.searchParams.get("share") ?? "";
-    if (/^[A-Za-z0-9_-]{16}$/.test(token)) return sharedViewHtml(request, env, token);
+    if (/^[A-Za-z0-9_-]{16}$/.test(token)) return protectNativeLocale(await sharedViewHtml(request, env, token), requestUrl.pathname);
   }
   if (requestUrl.pathname === "/api/tenor-media") return resolveTenorMedia(request);
   if(requestUrl.pathname==='/access' || (requestUrl.pathname.startsWith('/dashboard') && requestUrl.searchParams.get('embedded')==='1')) {
@@ -59,9 +60,23 @@ export async function handleDashboardRequest(
     headers.delete('X-Frame-Options');
     headers.set('Cache-Control','no-store');headers.set('Referrer-Policy','no-referrer');
     headers.set('Content-Security-Policy',"frame-ancestors 'self' https://app.clashk.ing https://dev-app.clashk.ing http://localhost:7357");
-    return new Response(response.body,{status:response.status,statusText:response.statusText,headers});
+    return protectNativeLocale(new Response(response.body,{status:response.status,statusText:response.statusText,headers}), requestUrl.pathname);
   }
-  return env.ASSETS.fetch(request);
+  return protectNativeLocale(await env.ASSETS.fetch(request), requestUrl.pathname);
+}
+
+function protectNativeLocale(response: Response, pathname: string): Response {
+  if (!isNativeLocalizedRoute(pathname) || !response.headers.get("content-type")?.includes("text/html")) return response;
+  // Send the policy in the original HTML, before auto-translation can run.
+  // LocaleProvider still chooses and renders the user's language normally.
+  return new HTMLRewriter().on("html, body, #root", {
+    element(element) {
+      element.setAttribute("translate", "no");
+      const classes = new Set((element.getAttribute("class") ?? "").split(/\s+/).filter(Boolean));
+      classes.add("notranslate");
+      element.setAttribute("class", [...classes].join(" "));
+    },
+  }).transform(response);
 }
 
 export default {
