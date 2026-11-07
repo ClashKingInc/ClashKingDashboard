@@ -110,7 +110,7 @@ export default function SharedRosterViewPage() {
             <h2 className="text-lg font-semibold leading-snug">{view?.name}</h2>
             <div className="flex items-center gap-3">
               <Avatar className="h-9 w-9"><AvatarImage src={view?.sharedBy.avatarUrl??undefined} alt=""/><AvatarFallback>{view?.sharedBy.name.slice(0,1)}</AvatarFallback></Avatar>
-              <div className="min-w-0 text-sm"><p className="truncate"><span className="text-muted-foreground">{view?.attribution==="shared"?"Shared by ":"Created by "}</span><span className="font-medium">{view?.sharedBy.name}</span></p><p className="truncate text-muted-foreground">From {view?.sourceServer.name}</p></div>
+              <div className="min-w-0 text-sm"><p className="truncate"><span className="text-muted-foreground">{"Shared by "}</span><span className="font-medium">{view?.sharedBy.name}</span></p><p className="truncate text-muted-foreground">From {view?.sourceServer.name}</p></div>
             </div>
           </div>
           <div className="space-y-2">

@@ -24,7 +24,6 @@ import {
   DashboardQueryRosterMetricEndpoint,
   DashboardRefreshRostersEndpoint,
   DashboardRemoveRosterMemberEndpoint,
-  DashboardResolveSharedRosterViewEndpoint,
   DashboardPreviewSharedViewEndpoint,
   DashboardShareRosterViewEndpoint,
   DashboardImportSharedViewEndpoint,
@@ -347,12 +346,6 @@ export class RosterClient extends BaseApiClient {
   async getView(viewId: string, serverId: string): Promise<ApiResponse<RosterView>> {
     return this.executeEndpoint(DashboardGetRosterViewEndpoint, {
       path: { viewId }, query: { server_id: serverId }, body: {},
-    });
-  }
-
-  async resolveSharedView(viewId: string): Promise<ApiResponse<RosterView>> {
-    return this.executeEndpoint(DashboardResolveSharedRosterViewEndpoint, {
-      path: { viewId }, query: {}, body: {},
     });
   }
 
