@@ -5,6 +5,7 @@ import { dashboardEndpoints, type EndpointResponse } from "@clashking/api-contra
 import { executeSharedEndpoint } from "@/lib/api/shared-client";
 
 import Image from "@/components/app-image";
+import { townHallImageUrl } from "@/lib/theme";
 import { useState, useEffect, useRef, type ReactNode } from "react";
 import { useTranslations } from "use-intl";
 import { useQueryClient } from "@tanstack/react-query";
@@ -775,7 +776,7 @@ export default function LogsPage() {
                   <Label htmlFor="reddit-authors">{t("redditOptions.authors")}</Label>
                   <Input id="reddit-authors" value={redditAccounts} onChange={event => setRedditAccounts(event.target.value)} disabled={isSaving || (isConfigured && !isEnabled)} aria-invalid={!accountsValid} placeholder="u/ClashKing, u/Recruiter" />
                   <p className="text-xs text-muted-foreground">{t("redditOptions.userHelp")}</p>
-                </div><div className="flex items-center justify-between gap-3"><Label htmlFor="reddit-comments">{t("redditOptions.includeComments")}</Label><Switch id="reddit-comments" checked={redditComments} onCheckedChange={value=>updateDraft({redditComments:value})} disabled={isSaving || (isConfigured && !isEnabled)} /></div></> : <div className="space-y-1.5"><Label>{t("redditOptions.minimumTownHall")}</Label><Select value={redditMin} onValueChange={value=>updateDraft({redditMin:value})} disabled={isSaving || (isConfigured && !isEnabled)}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="any">{t("redditOptions.anyTownHall")}</SelectItem>{Array.from({length:18},(_,i)=>i+1).map(level=><SelectItem key={level} value={String(level)}>TH{level}+</SelectItem>)}</SelectContent></Select><p className="text-xs text-muted-foreground">{t("redditOptions.minimumHelp")}</p></div>}
+                </div><div className="flex items-center justify-between gap-3"><Label htmlFor="reddit-comments">{t("redditOptions.includeComments")}</Label><Switch id="reddit-comments" checked={redditComments} onCheckedChange={value=>updateDraft({redditComments:value})} disabled={isSaving || (isConfigured && !isEnabled)} /></div></> : <div className="space-y-1.5"><Label>{t("redditOptions.minimumTownHall")}</Label><Select value={redditMin} onValueChange={value=>updateDraft({redditMin:value})} disabled={isSaving || (isConfigured && !isEnabled)}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="any">{t("redditOptions.anyTownHall")}</SelectItem>{Array.from({length:12},(_,i)=>18-i).map(level=><SelectItem key={level} value={String(level)}><span className="flex items-center gap-2"><Image src={townHallImageUrl(level)} alt="" width={24} height={24} className="size-6 object-contain" />TH{level}+</span></SelectItem>)}</SelectContent></Select><p className="text-xs text-muted-foreground">{t("redditOptions.minimumHelp")}</p></div>}
               </div>}
               {destinationChanged && <Button
                 type="button"
