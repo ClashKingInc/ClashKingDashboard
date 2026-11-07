@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
+import { useTranslations } from "use-intl";
 import { useRouter } from "@/lib/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { dashboardHref, useGuildId } from "@/lib/dashboard-route";
@@ -18,6 +19,7 @@ function hasNoConfiguredClans(payload: unknown): boolean {
 }
 
 export default function DashboardEntryPage() {
+  const tCommon = useTranslations("Common");
   const guildId = useGuildId();
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -54,7 +56,7 @@ export default function DashboardEntryPage() {
   return (
     <div className="flex min-h-[60vh] items-center justify-center text-sm text-muted-foreground" role="status">
       <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
-      Opening server settings…
+      <span>{tCommon("loading")}</span>
     </div>
   );
 }
