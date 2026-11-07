@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useLocale } from "use-intl";
+import { useLocale, useTranslations } from "use-intl";
 import { useRouter } from "@/lib/navigation";
 import { Loader2 } from "lucide-react";
 import { useAuthSession } from "@/components/auth-session-provider";
@@ -19,6 +19,7 @@ import { EmbeddedDashboard } from './embedded-dashboard';
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const locale = useLocale();
+  const tCommon = useTranslations("Common");
   const router = useRouter();
   const guildId = useGuildId();
   const { status: authStatus } = useAuthSession();
@@ -35,7 +36,10 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   if (!guildId || authStatus !== "authenticated") {
     return (
       <div className="flex h-dvh items-center justify-center bg-background text-sm text-muted-foreground">
-        <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Loading dashboard…
+        <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+        {/* Keep text in its own element: browser translators can replace bare
+            text nodes beside the spinner before React removes this state. */}
+        <span>{tCommon("loading")}</span>
       </div>
     );
   }

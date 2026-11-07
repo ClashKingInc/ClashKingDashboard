@@ -63,5 +63,7 @@ export default function DashboardAccessPage() {
   if(embeddedServerId()){target.ReactNativeWebView?.postMessage(JSON.stringify({type:'dashboard-ready'}));if(window.parent!==window)window.parent.postMessage({type:'dashboard-ready'},'*');}
   return()=>{active=false;delete target.__clashkingDashboardHandoff;window.removeEventListener('message',listener);};
  },[router,bootstrapMode]);
- return <main className="flex min-h-dvh items-center justify-center gap-3 bg-background p-6 text-foreground">{failed?t('error'):<><Loader2 className="h-5 w-5 animate-spin"/>{t('loading')}</>}</main>;
+ // A translator can replace bare text beside the spinner. Keep the label in
+ // one stable element when a failed exchange switches loading to an error.
+ return <main className="flex min-h-dvh items-center justify-center gap-3 bg-background p-6 text-foreground">{!failed&&<Loader2 className="h-5 w-5 animate-spin" aria-hidden="true"/>}<span>{failed?t('error'):t('loading')}</span></main>;
 }
