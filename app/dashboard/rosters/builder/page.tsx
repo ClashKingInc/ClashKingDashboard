@@ -76,6 +76,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   TableBody,
@@ -1003,6 +1004,7 @@ function RosterBuilderWorkspace() {
   const [viewDirty, setViewDirty] = useState(false);
   const [viewDialogMode, setViewDialogMode] = useState<"save" | "rename">();
   const [viewName, setViewName] = useState("");
+  const [viewDescription, setViewDescription] = useState("");
   const [viewLinkCopied, setViewLinkCopied] = useState(false);
   const [sharingView, setSharingView] = useState(false);
   const [savingView, setSavingView] = useState(false);
@@ -1070,7 +1072,8 @@ function RosterBuilderWorkspace() {
         setViewOpen(true);
       }
       if (part.type === "data-viewDraft") {
-        setSelectedView({ ...part.data, name: cleanGeneratedViewName(part.data.name, rosters) });
+        // Generated previews must not replace an owner-edited description on a saved view.
+        setSelectedView(previous => ({ ...part.data, description: previous?.id ? previous.description : part.data.description, name: cleanGeneratedViewName(part.data.name, rosters) }));
         setViewDirty(true);
       }
     },
@@ -1379,6 +1382,7 @@ function RosterBuilderWorkspace() {
     if (!selectedView) return;
     setViewDialogMode(mode);
     setViewName(cleanGeneratedViewName(selectedView.name, rosters));
+    setViewDescription(selectedView.description ?? "");
     setViewLinkCopied(false);
   };
 
@@ -1388,6 +1392,7 @@ function RosterBuilderWorkspace() {
     setPageError(undefined);
     const payload = {
       name: viewName.trim(),
+      description: viewDescription.trim(),
       sourceCode: selectedView.sourceCode,
       sourceVersion: selectedView.sourceVersion,
     };
@@ -1988,6 +1993,11 @@ function RosterBuilderWorkspace() {
             maxLength={80}
             placeholder="View name"
           />
+          <div className="space-y-2">
+            <Label htmlFor="view-description">Description</Label>
+            <Textarea id="view-description" value={viewDescription} onChange={event=>setViewDescription(event.target.value)} maxLength={300} placeholder="What this view shows and when to use it" className="min-h-24 resize-none"/>
+            <p className="text-right text-xs text-muted-foreground">{viewDescription.length}/300</p>
+          </div>
           <DialogFooter>
             <div className="mr-auto flex items-center gap-1">
               {viewDialogMode === "rename" && selectedView?.id && (

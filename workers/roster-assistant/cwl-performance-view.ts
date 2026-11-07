@@ -26,7 +26,7 @@ export function cwlPerformanceViewSource(seasonCount: number, options: {windowMo
       { id: "missed", label: "Missed attacks", metricId: "view.computed", format: "number" },
       { id: "completion", label: "Attack completion", metricId: "view.computed", format: "percent" }
     ];
-    return { name: ${JSON.stringify(name)}, columns,
+    return { name: ${JSON.stringify(name)}, description: ${JSON.stringify(`CWL performance across ${options.windowMonths ? `the last ${options.windowMonths} calendar months` : `each player’s last ${seasonCount} participated seasons`}${options.familyOnly ? " in family clans" : ""}, including average stars, attacks, total stars, destruction and missed attacks.`)}, columns,
       rows: members.map(member => {
         const history = byPlayer.get(member.rosterId + ":" + member.playerTag);
         const s = history?.summary;

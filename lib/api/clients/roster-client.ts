@@ -406,6 +406,7 @@ export class RosterClient extends BaseApiClient {
         rosterIds,
         ...(view.id ? { viewId: view.id } : {}),
         name: view.name,
+        ...(view.description === undefined ? {} : {description: view.description}),
         sourceCode: view.sourceCode,
         sourceVersion: view.sourceVersion,
         columns: view.spec.columns,

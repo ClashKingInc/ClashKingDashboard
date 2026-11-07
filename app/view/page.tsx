@@ -100,17 +100,18 @@ export default function SharedRosterViewPage() {
     </div>
 
     <Dialog open={status==="authenticated"&&!loading&&!!view&&open} onOpenChange={value=>{if(!saving)setOpen(value);}}>
-      <DialogContent aria-busy={saving} variant="form" className="gap-6 border-0 bg-card shadow-xl" onInteractOutside={event=>{if(saving)event.preventDefault();}} onEscapeKeyDown={event=>{if(saving)event.preventDefault();}}>
+      <DialogContent {...(!saved?{"aria-describedby":undefined}:{})} aria-busy={saving} variant="form" className="gap-6 border-0 bg-card shadow-xl" onInteractOutside={event=>{if(saving)event.preventDefault();}} onEscapeKeyDown={event=>{if(saving)event.preventDefault();}}>
         <DialogHeader>
           <DialogTitle className="text-xl">{saved?"View saved":"Save this shared view"}</DialogTitle>
-          <DialogDescription>{saved?`Your copy is ready in ${saved.serverName}.`:"Choose where to keep your own copy."}</DialogDescription>
+          {saved&&<DialogDescription>{`Your copy is ready in ${saved.serverName}.`}</DialogDescription>}
         </DialogHeader>
         {saved?<div className="flex items-center gap-3 rounded-2xl bg-muted/55 p-4"><span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary"><Check aria-hidden className="h-5 w-5"/></span><div className="min-w-0"><p className="truncate font-medium">{saved.name}</p><p className="truncate text-sm text-muted-foreground">{saved.serverName}</p></div></div>:<>
           <div className="space-y-3">
             <h2 className="text-lg font-semibold leading-snug">{view?.name}</h2>
+            {view?.description&&<p className="text-sm leading-relaxed text-muted-foreground">{view.description}</p>}
             <div className="flex items-center gap-3">
               <Avatar className="h-9 w-9"><AvatarImage src={view?.sharedBy.avatarUrl??undefined} alt=""/><AvatarFallback>{view?.sharedBy.name.slice(0,1)}</AvatarFallback></Avatar>
-              <div className="min-w-0 text-sm"><p className="truncate"><span className="text-muted-foreground">{"Shared by "}</span><span className="font-medium">{view?.sharedBy.name}</span></p><p className="truncate text-muted-foreground">From {view?.sourceServer.name}</p></div>
+              <div className="min-w-0 text-sm"><p className="truncate"><span className="text-muted-foreground">{"Shared by "}</span><span className="font-medium">{view?.sharedBy.name}</span></p><p className="flex items-center gap-1.5 text-muted-foreground"><span>From</span><Avatar className="h-5 w-5 shrink-0"><AvatarImage src={view?.sourceServer.iconUrl??undefined} alt=""/><AvatarFallback className="text-[10px]">{view?.sourceServer.name.slice(0,1)}</AvatarFallback></Avatar><span className="truncate">{view?.sourceServer.name}</span></p></div>
             </div>
           </div>
           <div className="space-y-2">
@@ -119,7 +120,7 @@ export default function SharedRosterViewPage() {
               <SelectTrigger id="destination-server" className="h-12 rounded-xl border-0 bg-muted/55 shadow-sm"><SelectValue placeholder="Choose a server"/></SelectTrigger>
               <SelectContent>{servers.map(server=><SelectItem key={server.id} value={server.id}><span className="flex items-center gap-2"><Avatar className="h-6 w-6"><AvatarImage src={server.icon??undefined} alt=""/><AvatarFallback className="text-xs">{server.name.slice(0,1)}</AvatarFallback></Avatar><span className="truncate">{server.name}</span></span></SelectItem>)}</SelectContent>
             </Select>
-            <p className="text-xs leading-relaxed text-muted-foreground">{servers.length?"Uses the rosters you select in that server.":"You need roster-management access in an active server with ClashKing."}</p>
+            {!servers.length&&<p className="text-xs leading-relaxed text-muted-foreground">You need roster-management access in an active server with ClashKing.</p>}
           </div>
         </>}
         {error&&<div role="alert" className="space-y-2 text-sm text-destructive"><p>{error}</p>{!servers.length&&<Button variant="secondary" onClick={()=>setAttempt(value=>value+1)}>Try again</Button>}</div>}
