@@ -83,6 +83,25 @@ try {
    assert.equal(url.origin,origin,'external network blocked');if(failSettlement && url.pathname.endsWith('/settle')){failSettlement=false;return new Response('temporary accounting outage',{status:503});}return fetch(request.url,init);
   }}));
   await runtime.ready;
+  // Replay the production-generated CWL view through the real dynamic Worker,
+  // API authorization and SQL. An unobserved player remains visible as unknown.
+  const cwlModule=join(temp,'cwl-view.mjs');
+  await build({entryPoints:[resolve('workers/roster-assistant/cwl-performance-view.ts')],bundle:true,platform:'node',format:'esm',outfile:cwlModule});
+  const {cwlPerformanceViewSource}=await import('file://'+cwlModule);
+  const roster=randomUUID();
+  await db.query("INSERT INTO rosters(id,server_id,alias,roster_type,signup_scope) VALUES($1,$2,'CWL replay','family','family-only')",[roster,server]);
+  await db.query("INSERT INTO roster_members(roster_id,tag,name,townhall) VALUES($1,'#PYLQCVVV','Unknown history',18)",[roster]);
+  const replay=await runtime.dispatchFetch('http://localhost/chat',{method:'POST',headers:{authorization:'Bearer '+tokens.manage,'content-type':'application/json'},body:JSON.stringify({...body,rosterIds:[roster],sourceCode:cwlPerformanceViewSource(6,{windowMonths:3,familyOnly:true}),sourceVersion:1})});
+  const replayText=await replay.text();
+  assert.equal(replay.status,200,replayText);
+  const replayEvents=replayText.split('\n').filter(line=>line.startsWith('data: {')).map(line=>JSON.parse(line.slice(6)));
+  assert(!replayEvents.some(event=>event.type==='error'),replayText);
+  const view=replayEvents.find(event=>event.type==='data-viewResult');
+  assert(view,replayText);
+  assert.equal(view.data.rows[0].values.stars_per_war,null);
+  assert.equal(view.data.rows[0].values.wars,0);
+  console.log('PASS generated CWL view replay: actual dynamic Worker/API/SQL, calendar/family parameters accepted, unknown player retained, no paid model calls');
+
   const run=async()=>{const response=await runtime.dispatchFetch('http://localhost/chat',{method:'POST',headers:{authorization:'Bearer '+tokens.manage,'content-type':'application/json'},body:JSON.stringify({...body,mode:'chat'})});return {status:response.status,text:await response.text()};};
   for(let n=0;n<2;n++){
    const result=await run();assert.equal(result.status,200,result.text);assert.match(result.text,/out of provider credits/);assert.doesNotMatch(result.text,/An error occurred/);

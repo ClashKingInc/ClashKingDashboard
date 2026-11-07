@@ -51,7 +51,7 @@ export async function prepareRequest(
 ): Promise<AssistantRequest> {
   // The API context endpoint authorizes roster management and enforces notice
   // acceptance plus usage limits before any model or replay work begins.
-  // The same user-only text is reserved by the API and forwarded to the model.
+  // The same user-only text is authorized by the API and forwarded to the model.
   const messages = buildTrustedUserTranscript(request.messages);
   const payload = await executeAssistantEndpoint(env.CLASHKING_API_ORIGIN, userToken, DashboardRosterAIContextEndpoint, {
     path: {}, query: {}, body: {
