@@ -2416,6 +2416,10 @@
       "maintenance": {
         "label": "Clash of Clans maintenance",
         "description": "When maintenance starts and ends"
+      },
+      "redditUserFeed": {
+        "label": "Reddit User Feed",
+        "description": "Posts from up to two Reddit users, with optional replies to their posts."
       }
     },
     "warLogs": {
@@ -2589,7 +2593,12 @@
     "redditOptions": {
       "role": "멘션할 역할 (선택 사항)",
       "authors": "지켜볼 게시물 작성자",
-      "help": "이 Reddit 계정의 게시물에 달린 댓글 알림을 보냅니다. 이름은 쉼표로 구분하세요."
+      "help": "이 Reddit 계정의 게시물에 달린 댓글 알림을 보냅니다. 이름은 쉼표로 구분하세요.",
+      "userHelp": "One or two usernames, separated by a comma. Posts from r/ClashOfClansRecruit only.",
+      "includeComments": "Include comments on their posts",
+      "minimumTownHall": "Minimum Town Hall",
+      "anyTownHall": "Any Town Hall",
+      "minimumHelp": "Match a player’s Town Hall or an explicit Town Hall in the post title. Description text does not qualify."
     }
   },
   "GeneralPage": {

@@ -2416,6 +2416,10 @@
       "maintenance": {
         "label": "Clash of Clans maintenance",
         "description": "When maintenance starts and ends"
+      },
+      "redditUserFeed": {
+        "label": "Reddit User Feed",
+        "description": "Posts from up to two Reddit users, with optional replies to their posts."
       }
     },
     "warLogs": {
@@ -2589,7 +2593,12 @@
     "redditOptions": {
       "role": "Bahsedilecek rol (isteğe bağlı)",
       "authors": "Takip edilecek gönderi yazarları",
-      "help": "Bu Reddit hesaplarının gönderilerine yapılan yorumlar için bildirim gönder. Adları virgülle ayır."
+      "help": "Bu Reddit hesaplarının gönderilerine yapılan yorumlar için bildirim gönder. Adları virgülle ayır.",
+      "userHelp": "One or two usernames, separated by a comma. Posts from r/ClashOfClansRecruit only.",
+      "includeComments": "Include comments on their posts",
+      "minimumTownHall": "Minimum Town Hall",
+      "anyTownHall": "Any Town Hall",
+      "minimumHelp": "Match a player’s Town Hall or an explicit Town Hall in the post title. Description text does not qualify."
     }
   },
   "GeneralPage": {

@@ -275,6 +275,7 @@ export default function LogsPage() {
   ];
   const SERVER_LOGS: LogTypeDefinition[] = [
     { keys: ['clash_maintenance'], label: t('serverLogs.maintenance.label'), description: t('serverLogs.maintenance.description'), icon: ScrollText, color: 'orange', scope: 'server' },
+    { keys: ['reddit_user_feed'], label: t('serverLogs.redditUserFeed.label'), description: t('serverLogs.redditUserFeed.description'), icon: ScrollText, color: 'orange', scope: 'server' },
     { keys: ['reddit_feed'], label: t('serverLogs.redditFeed.label'), description: t('serverLogs.redditFeed.description'), icon: ScrollText, color: 'orange', scope: 'server' },
   ];
   const [loading, setLoading] = useState(true);
@@ -282,7 +283,7 @@ export default function LogsPage() {
   const [dataError,setDataError]=useState<string|null>(null);
   const [saveErrors,setSaveErrors]=useState<Record<string,string>>({});
   const [reload,setReload]=useState(0);
-  type LogDraft={channel:string;thread:string;show:boolean;redditRole:string;redditAccounts:string};
+  type LogDraft={channel:string;thread:string;show:boolean;redditRole:string;redditAccounts:string;redditMin:string;redditComments:boolean};
   const [logDrafts,setLogDrafts]=useState<Record<string,LogDraft>>({});
   const [channels, setChannels] = useState<Channel[]>([]);
   const [threads, setThreads] = useState<Thread[]>([]);
@@ -397,7 +398,7 @@ export default function LogsPage() {
     channelId: string,
     threadId: string | null,
     serverScoped = false,
-    redditOptions?: { reddit_role_id: string | null; reddit_accounts: string[] },
+    redditOptions?: { reddit_role_id: string | null; reddit_accounts?: string[]; reddit_min_townhall?: number|null; reddit_include_comments?: boolean },
   ) => {
     if (!serverScoped && !selectedClan) return;
     if (getSelectedLog(logKeys, serverScoped)?.disabled) return;
@@ -534,9 +535,10 @@ export default function LogsPage() {
     const selectedChannel = getSelectedChannelForLogs(logDef.keys, serverScoped);
     const selectedThread = getSelectedThreadForLogs(logDef.keys, serverScoped);
     const colors = getLogColorClasses(logDef.color);
-    const isReddit = logDef.keys[0] === "reddit_feed";
+    const isUserReddit = logDef.keys[0] === "reddit_user_feed";
+    const isReddit = isUserReddit || logDef.keys[0] === "reddit_feed";
     const draftKey=`${guildId}:${serverScoped?"server":selectedClan}:${logDef.keys[0]}`;
-    const defaults:LogDraft={channel:selectedChannel,thread:selectedThread,show:false,redditRole:selectedLog?.reddit_role_id??"",redditAccounts:(selectedLog?.reddit_accounts??[]).join(", ")};
+    const defaults:LogDraft={channel:selectedChannel,thread:selectedThread,show:false,redditRole:selectedLog?.reddit_role_id??"",redditAccounts:(selectedLog?.reddit_accounts??[]).join(", "),redditMin:String(selectedLog?.reddit_min_townhall??"any"),redditComments:selectedLog?.reddit_include_comments??false};
     const draft=logDrafts[draftKey]??defaults;
     const updateDraft=(changes:Partial<LogDraft>)=>setLogDrafts(current=>({...current,[draftKey]:{...defaults,...current[draftKey],...changes}}));
     const showEnableForm=draft.show,setShowEnableForm=(show:boolean)=>updateDraft({show});
@@ -544,9 +546,10 @@ export default function LogsPage() {
     const pendingThread=draft.thread,setPendingThread=(thread:string)=>updateDraft({thread});
     const redditRole=draft.redditRole,setRedditRole=(redditRole:string)=>updateDraft({redditRole});
     const redditAccounts=draft.redditAccounts,setRedditAccounts=(redditAccounts:string)=>updateDraft({redditAccounts});
+    const redditMin=draft.redditMin, redditComments=draft.redditComments;
     const parsedAccounts = redditAccounts.split(",").map(value => value.trim().replace(/^u\//iu, "")).filter(Boolean);
-    const accountsValid = parsedAccounts.every(value => /^[a-z0-9_-]{1,30}$/iu.test(value)) && new Set(parsedAccounts.map(value => value.toLowerCase())).size === parsedAccounts.length;
-    const redditChanged = isReddit && (redditRole !== (selectedLog?.reddit_role_id ?? "") || JSON.stringify(parsedAccounts) !== JSON.stringify(selectedLog?.reddit_accounts ?? []));
+    const accountsValid = !isUserReddit || (parsedAccounts.length >= 1 && parsedAccounts.length <= 2 && parsedAccounts.every(value => /^[a-z0-9_-]{1,30}$/iu.test(value)) && new Set(parsedAccounts.map(value=>value.toLowerCase())).size === parsedAccounts.length);
+    const redditChanged = isReddit && (redditRole !== (selectedLog?.reddit_role_id ?? "") || JSON.stringify(parsedAccounts) !== JSON.stringify(selectedLog?.reddit_accounts ?? []) || redditMin !== String(selectedLog?.reddit_min_townhall??"any") || redditComments !== (selectedLog?.reddit_include_comments??false));
     const isSaving = saving === logDef.keys[0];
 
     const channelExists = selectedChannel && channels.some(ch => ch.id === selectedChannel);
@@ -575,7 +578,7 @@ export default function LogsPage() {
         draftChannel,
         draftThread || null,
         serverScoped,
-        isReddit ? { reddit_role_id: redditRole || null, reddit_accounts: parsedAccounts } : undefined,
+        isReddit ? { reddit_role_id: redditRole || null, ...(isUserReddit ? {reddit_accounts:parsedAccounts,reddit_include_comments:redditComments} : {reddit_min_townhall:redditMin==="any"?null:Number(redditMin)}) } : undefined,
       );
       if(saved)setShowEnableForm(false);
     };
@@ -768,11 +771,11 @@ export default function LogsPage() {
                   <Label>{t("redditOptions.role")}</Label>
                   <RoleCombobox roles={roles} value={redditRole || "disabled"} onValueChange={value => setRedditRole(value === "disabled" ? "" : value)} disabled={isSaving || (isConfigured && !isEnabled)} />
                 </div>
-                <div className="space-y-1.5">
+                {isUserReddit ? <><div className="space-y-1.5">
                   <Label htmlFor="reddit-authors">{t("redditOptions.authors")}</Label>
                   <Input id="reddit-authors" value={redditAccounts} onChange={event => setRedditAccounts(event.target.value)} disabled={isSaving || (isConfigured && !isEnabled)} aria-invalid={!accountsValid} placeholder="u/ClashKing, u/Recruiter" />
-                  <p className="text-xs text-muted-foreground">{t("redditOptions.help")}</p>
-                </div>
+                  <p className="text-xs text-muted-foreground">{t("redditOptions.userHelp")}</p>
+                </div><div className="flex items-center justify-between gap-3"><Label htmlFor="reddit-comments">{t("redditOptions.includeComments")}</Label><Switch id="reddit-comments" checked={redditComments} onCheckedChange={value=>updateDraft({redditComments:value})} disabled={isSaving || (isConfigured && !isEnabled)} /></div></> : <div className="space-y-1.5"><Label>{t("redditOptions.minimumTownHall")}</Label><Select value={redditMin} onValueChange={value=>updateDraft({redditMin:value})} disabled={isSaving || (isConfigured && !isEnabled)}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="any">{t("redditOptions.anyTownHall")}</SelectItem>{Array.from({length:18},(_,i)=>i+1).map(level=><SelectItem key={level} value={String(level)}>TH{level}+</SelectItem>)}</SelectContent></Select><p className="text-xs text-muted-foreground">{t("redditOptions.minimumHelp")}</p></div>}
               </div>}
               {destinationChanged && <Button
                 type="button"
