@@ -1004,6 +1004,7 @@ function RosterBuilderWorkspace() {
   const [viewDialogMode, setViewDialogMode] = useState<"save" | "rename">();
   const [viewName, setViewName] = useState("");
   const [viewLinkCopied, setViewLinkCopied] = useState(false);
+  const [sharingView, setSharingView] = useState(false);
   const [savingView, setSavingView] = useState(false);
   const [deletingView, setDeletingView] = useState(false);
   const [deleteViewOpen, setDeleteViewOpen] = useState(false);
@@ -1434,12 +1435,22 @@ function RosterBuilderWorkspace() {
   };
 
   const shareSelectedView = async () => {
-    if (!selectedView?.shareId || typeof window === "undefined") return;
-    const url = new URL("/view", window.location.origin);
-    url.searchParams.set("share", selectedView.shareId);
-    const copied = await copyText(url.toString());
-    setViewLinkCopied(copied);
-    if (!copied) setPageError("The share link could not be copied.");
+    if (!selectedView?.id || !guildId || sharingView || typeof window === "undefined") return;
+    if (viewDirty) {setPageError("Save your changes before sharing this view.");return;}
+    setSharingView(true);
+    try {
+      const response = await apiClient.rosters.shareView(selectedView.id, guildId);
+      if (!response.data || response.error) {
+        setPageError(response.error ?? "The share link could not be created.");
+        return;
+      }
+      const url = new URL("/view", window.location.origin);
+      url.searchParams.set("share", response.data.shareId);
+      const copied = await copyText(url.toString());
+      setViewLinkCopied(copied);
+      if (!copied) setPageError("The share link could not be copied.");
+    } catch {setPageError("The share link could not be created. Please try again.");}
+    finally {setSharingView(false);}
   };
 
   useEffect(() => {
@@ -1626,10 +1637,11 @@ function RosterBuilderWorkspace() {
                 size="icon"
                 variant="ghost"
                 aria-label={viewLinkCopied ? "Share link copied" : "Copy share link"}
-                title={viewLinkCopied ? "Copied" : "Copy share link"}
+                title={viewDirty ? "Save changes before sharing" : viewLinkCopied ? "Copied" : "Copy share link"}
+                disabled={sharingView || viewDirty}
                 onClick={() => void shareSelectedView()}
               >
-                {viewLinkCopied ? <Check className="h-4 w-4 text-emerald-500" /> : <Share2 className="h-4 w-4" />}
+                {sharingView ? <Loader2 className="h-4 w-4 animate-spin" /> : viewLinkCopied ? <Check className="h-4 w-4 text-emerald-500" /> : <Share2 className="h-4 w-4" />}
               </Button>
             </>
           )}
@@ -1711,7 +1723,7 @@ function RosterBuilderWorkspace() {
               {selectedView?.id && !viewDirty && (
                 <>
                   <DropdownMenuItem onClick={() => openViewDialog("rename")}><Pencil className="mr-2 h-4 w-4" /> Rename view</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => void shareSelectedView()}><Share2 className="mr-2 h-4 w-4" /> {viewLinkCopied ? "Link copied" : "Copy share link"}</DropdownMenuItem>
+                  <DropdownMenuItem disabled={sharingView || viewDirty} onClick={() => void shareSelectedView()}><Share2 className="mr-2 h-4 w-4" /> {viewLinkCopied ? "Link copied" : "Copy share link"}</DropdownMenuItem>
                 </>
               )}
               {messages.length > 0 && (

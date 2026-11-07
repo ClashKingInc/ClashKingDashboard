@@ -25,6 +25,9 @@ import {
   DashboardRefreshRostersEndpoint,
   DashboardRemoveRosterMemberEndpoint,
   DashboardResolveSharedRosterViewEndpoint,
+  DashboardPreviewSharedViewEndpoint,
+  DashboardShareRosterViewEndpoint,
+  DashboardImportSharedViewEndpoint,
   DashboardServerClanMembersEndpoint,
   DashboardUpdateRosterAutomationEndpoint,
   DashboardUpdateRosterEndpoint,
@@ -351,6 +354,18 @@ export class RosterClient extends BaseApiClient {
     return this.executeEndpoint(DashboardResolveSharedRosterViewEndpoint, {
       path: { viewId }, query: {}, body: {},
     });
+  }
+
+  async previewSharedView(shareId: string) {
+    return this.executeEndpoint(DashboardPreviewSharedViewEndpoint, {path:{viewId:shareId},query:{},body:{}});
+  }
+
+  async shareView(viewId: string, serverId: string) {
+    return this.executeEndpoint(DashboardShareRosterViewEndpoint, {path:{viewId},query:{server_id:serverId},body:{}});
+  }
+
+  async importSharedView(shareId: string, serverId: string) {
+    return this.executeEndpoint(DashboardImportSharedViewEndpoint, {path:{viewId:shareId},query:{server_id:serverId},body:{}});
   }
 
   async createView(
