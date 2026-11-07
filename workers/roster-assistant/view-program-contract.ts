@@ -43,7 +43,7 @@ export const savedViewProgramGuidance = [
   "The source runs later in an isolated worker and cannot use variables from the outer request, including rosterIds or selectedRosterIds.",
   "It must be one async arrow function and read the current selection inside that function.",
   'For computed views, use exactly this data shape: const { rows } = await codemode.getRosterMembers({ fields: ["playerName"] }); rows is an array whose records always have rosterId and playerTag, plus only the requested fields.',
-  "Return { name, columns, rows, filters, sort, highlights, limit }.",
+  "Return { name, description, columns, rows, filters, sort, highlights, limit }. description is a clear summary of at most 300 characters for the first save; it is not saved before confirmation.",
   "Each returned row must be { rosterId: member.rosterId, playerTag: member.playerTag, values: { ... } }.",
   'Use metricId "view.computed" for a novel calculated column.',
   'Example structure: async () => { const { rows } = await codemode.getRosterMembers({ fields: ["playerName"] }); return { name: "Player name lengths", columns: [{ id: "player_name", label: "Player", metricId: "player.name", format: "player" }, { id: "name_length", label: "Name length", metricId: "view.computed", format: "number" }], rows: rows.map((member) => { const playerName = member.playerName ?? member.playerTag; return { rosterId: member.rosterId, playerTag: member.playerTag, values: { player_name: playerName, name_length: [...playerName].length } }; }), filters: [], sort: [], highlights: [{ id: "long_name", target: "row", when: { columnId: "name_length", operator: "gt", value: 15 }, tone: "amber" }], limit: null }; }.',

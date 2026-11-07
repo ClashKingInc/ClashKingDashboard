@@ -24,7 +24,9 @@ import {
   DashboardQueryRosterMetricEndpoint,
   DashboardRefreshRostersEndpoint,
   DashboardRemoveRosterMemberEndpoint,
-  DashboardResolveSharedRosterViewEndpoint,
+  DashboardPreviewSharedViewEndpoint,
+  DashboardShareRosterViewEndpoint,
+  DashboardImportSharedViewEndpoint,
   DashboardServerClanMembersEndpoint,
   DashboardUpdateRosterAutomationEndpoint,
   DashboardUpdateRosterEndpoint,
@@ -347,10 +349,16 @@ export class RosterClient extends BaseApiClient {
     });
   }
 
-  async resolveSharedView(viewId: string): Promise<ApiResponse<RosterView>> {
-    return this.executeEndpoint(DashboardResolveSharedRosterViewEndpoint, {
-      path: { viewId }, query: {}, body: {},
-    });
+  async previewSharedView(shareId: string) {
+    return this.executeEndpoint(DashboardPreviewSharedViewEndpoint, {path:{viewId:shareId},query:{},body:{}});
+  }
+
+  async shareView(viewId: string, serverId: string) {
+    return this.executeEndpoint(DashboardShareRosterViewEndpoint, {path:{viewId},query:{server_id:serverId},body:{}});
+  }
+
+  async importSharedView(shareId: string, serverId: string) {
+    return this.executeEndpoint(DashboardImportSharedViewEndpoint, {path:{viewId:shareId},query:{server_id:serverId},body:{}});
   }
 
   async createView(
@@ -398,6 +406,7 @@ export class RosterClient extends BaseApiClient {
         rosterIds,
         ...(view.id ? { viewId: view.id } : {}),
         name: view.name,
+        ...(view.description === undefined ? {} : {description: view.description}),
         sourceCode: view.sourceCode,
         sourceVersion: view.sourceVersion,
         columns: view.spec.columns,

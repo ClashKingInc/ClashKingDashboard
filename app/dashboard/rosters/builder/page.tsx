@@ -76,6 +76,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   TableBody,
@@ -1003,7 +1004,9 @@ function RosterBuilderWorkspace() {
   const [viewDirty, setViewDirty] = useState(false);
   const [viewDialogMode, setViewDialogMode] = useState<"save" | "rename">();
   const [viewName, setViewName] = useState("");
+  const [viewDescription, setViewDescription] = useState("");
   const [viewLinkCopied, setViewLinkCopied] = useState(false);
+  const [sharingView, setSharingView] = useState(false);
   const [savingView, setSavingView] = useState(false);
   const [deletingView, setDeletingView] = useState(false);
   const [deleteViewOpen, setDeleteViewOpen] = useState(false);
@@ -1069,7 +1072,8 @@ function RosterBuilderWorkspace() {
         setViewOpen(true);
       }
       if (part.type === "data-viewDraft") {
-        setSelectedView({ ...part.data, name: cleanGeneratedViewName(part.data.name, rosters) });
+        // Generated previews must not replace an owner-edited description on a saved view.
+        setSelectedView(previous => ({ ...part.data, description: previous?.id ? previous.description : part.data.description, name: cleanGeneratedViewName(part.data.name, rosters) }));
         setViewDirty(true);
       }
     },
@@ -1378,6 +1382,7 @@ function RosterBuilderWorkspace() {
     if (!selectedView) return;
     setViewDialogMode(mode);
     setViewName(cleanGeneratedViewName(selectedView.name, rosters));
+    setViewDescription(selectedView.description ?? "");
     setViewLinkCopied(false);
   };
 
@@ -1387,6 +1392,7 @@ function RosterBuilderWorkspace() {
     setPageError(undefined);
     const payload = {
       name: viewName.trim(),
+      description: viewDescription.trim(),
       sourceCode: selectedView.sourceCode,
       sourceVersion: selectedView.sourceVersion,
     };
@@ -1434,12 +1440,22 @@ function RosterBuilderWorkspace() {
   };
 
   const shareSelectedView = async () => {
-    if (!selectedView?.shareId || typeof window === "undefined") return;
-    const url = new URL("/view", window.location.origin);
-    url.searchParams.set("share", selectedView.shareId);
-    const copied = await copyText(url.toString());
-    setViewLinkCopied(copied);
-    if (!copied) setPageError("The share link could not be copied.");
+    if (!selectedView?.id || !guildId || sharingView || typeof window === "undefined") return;
+    if (viewDirty) {setPageError("Save your changes before sharing this view.");return;}
+    setSharingView(true);
+    try {
+      const response = await apiClient.rosters.shareView(selectedView.id, guildId);
+      if (!response.data || response.error) {
+        setPageError(response.error ?? "The share link could not be created.");
+        return;
+      }
+      const url = new URL("/view", window.location.origin);
+      url.searchParams.set("share", response.data.shareId);
+      const copied = await copyText(url.toString());
+      setViewLinkCopied(copied);
+      if (!copied) setPageError("The share link could not be copied.");
+    } catch {setPageError("The share link could not be created. Please try again.");}
+    finally {setSharingView(false);}
   };
 
   useEffect(() => {
@@ -1626,10 +1642,11 @@ function RosterBuilderWorkspace() {
                 size="icon"
                 variant="ghost"
                 aria-label={viewLinkCopied ? "Share link copied" : "Copy share link"}
-                title={viewLinkCopied ? "Copied" : "Copy share link"}
+                title={viewDirty ? "Save changes before sharing" : viewLinkCopied ? "Copied" : "Copy share link"}
+                disabled={sharingView || viewDirty}
                 onClick={() => void shareSelectedView()}
               >
-                {viewLinkCopied ? <Check className="h-4 w-4 text-emerald-500" /> : <Share2 className="h-4 w-4" />}
+                {sharingView ? <Loader2 className="h-4 w-4 animate-spin" /> : viewLinkCopied ? <Check className="h-4 w-4 text-emerald-500" /> : <Share2 className="h-4 w-4" />}
               </Button>
             </>
           )}
@@ -1711,7 +1728,7 @@ function RosterBuilderWorkspace() {
               {selectedView?.id && !viewDirty && (
                 <>
                   <DropdownMenuItem onClick={() => openViewDialog("rename")}><Pencil className="mr-2 h-4 w-4" /> Rename view</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => void shareSelectedView()}><Share2 className="mr-2 h-4 w-4" /> {viewLinkCopied ? "Link copied" : "Copy share link"}</DropdownMenuItem>
+                  <DropdownMenuItem disabled={sharingView || viewDirty} onClick={() => void shareSelectedView()}><Share2 className="mr-2 h-4 w-4" /> {viewLinkCopied ? "Link copied" : "Copy share link"}</DropdownMenuItem>
                 </>
               )}
               {messages.length > 0 && (
@@ -1976,6 +1993,11 @@ function RosterBuilderWorkspace() {
             maxLength={80}
             placeholder="View name"
           />
+          <div className="space-y-2">
+            <Label htmlFor="view-description">Description</Label>
+            <Textarea id="view-description" value={viewDescription} onChange={event=>setViewDescription(event.target.value)} maxLength={300} placeholder="What this view shows and when to use it" className="min-h-24 resize-none"/>
+            <p className="text-right text-xs text-muted-foreground">{viewDescription.length}/300</p>
+          </div>
           <DialogFooter>
             <div className="mr-auto flex items-center gap-1">
               {viewDialogMode === "rename" && selectedView?.id && (
