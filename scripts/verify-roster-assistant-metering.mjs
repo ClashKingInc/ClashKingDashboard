@@ -60,7 +60,7 @@ try {
  console.log('PASS real assistant/API: nondeveloper roster manager admitted, anonymous/view-only/foreign server denied, consent required; no AI provider calls');
  {
   await db.query('DELETE FROM roster_ai_usage WHERE discord_user_id=$1',[actor]);
-  let status=429; let streamMode=false; let failSettlement=false; let providerCalls=0;
+  let status=429; let streamMode=false; let failSettlement=false; let providerCalls=0; let terminalType="response.completed";
   provider=createServer((req,res)=>{providerCalls++;req.resume();
    if(!streamMode){res.writeHead(status,{'content-type':'application/json'});res.end(JSON.stringify({error:{message:status===429?'You have no credits remaining.':'upstream failed',type:'server_error',code:'server_error'}}));return;}
    res.writeHead(200,{'content-type':'text/event-stream'});
@@ -68,7 +68,7 @@ try {
    res.write('event: response.created\ndata: '+JSON.stringify({type:'response.created',sequence_number:0,response:{...response,status:'in_progress',usage:null}})+'\n\n');
    setTimeout(()=>{
     if(status===502){res.end();return;}
-    const frame='event: response.completed\ndata: '+JSON.stringify({type:'response.completed',sequence_number:1,response})+'\n\n';
+    const frame='event: '+terminalType+'\ndata: '+JSON.stringify({type:terminalType,sequence_number:1,response})+'\n\n';
     res.write(frame.slice(0,42));setTimeout(()=>res.end(frame.slice(42)),30);
    },120);
   });
@@ -105,11 +105,15 @@ try {
   await waitFor(async()=>providerCalls>beforeCancel);
   await cancelled.body.cancel();
   await waitFor(async()=>Number((await db.query('SELECT sum(total_tokens) AS n FROM roster_ai_usage WHERE discord_user_id=$1',[actor])).rows[0].n)===240);
+  for(const type of ['response.incomplete','response.failed']) {
+   terminalType=type;await run();
+  }
+  await waitFor(async()=>Number((await db.query('SELECT sum(total_tokens) AS n FROM roster_ai_usage WHERE discord_user_id=$1',[actor])).rows[0].n)===480);
   status=502;await run();
   await waitFor(async()=>Number((await db.query("SELECT count(*) AS n FROM roster_ai_step_budgets b JOIN roster_ai_usage u ON u.id=b.usage_id WHERE u.discord_user_id=$1 AND b.outcome='unknown'",[actor])).rows[0].n)===3);
   usage=(await db.query('SELECT sum(total_tokens)::int AS tokens,sum(reasoning_tokens)::int AS reasoning FROM roster_ai_usage WHERE discord_user_id=$1',[actor])).rows[0];
-  assert.deepEqual(usage,{tokens:240,reasoning:10});
-  console.log('PASS real Worker/SDK/API/SQL: 429 rejected, 500 unknown and retryable; fragmented terminal usage persisted once despite SDK callback; transient settlement 503 retried; browser disconnect retains receipt; missing terminal usage explicitly unknown; no external model calls');
+  assert.deepEqual(usage,{tokens:480,reasoning:20});
+  console.log('PASS real Worker/SDK/API/SQL: 429 rejected, 500 unknown and retryable; fragmented terminal usage persisted once despite SDK callback; transient settlement 503 retried; browser disconnect retains receipt; failed/incomplete responses retain reported usage; missing terminal usage explicitly unknown; no external model calls');
 
  }
 
