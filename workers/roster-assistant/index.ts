@@ -1,5 +1,5 @@
 import { assistantErrorMessage, logAssistantFailure } from "./provider-errors";
-import { hardBudget } from "./hard-budget";
+import { usageMetering } from "./usage-metering";
 import { patchRosterViewSource } from "./view-patch";
 import { cwlPerformanceViewSource } from "./cwl-performance-view";
 import { assistantStepLimit, completionStep, emptyResponseMessage } from "./response-completion";
@@ -229,7 +229,7 @@ function markLatestUserCacheBreakpoint(messages: ModelMessage[]): ModelMessage[]
 }
 
 const rosterAssistantWorker = {
-  async fetch(request: Request, bindings: RosterAssistantBindings, _ctx: ExecutionContext): Promise<Response> {
+  async fetch(request: Request, bindings: RosterAssistantBindings, ctx: ExecutionContext): Promise<Response> {
     const pathname = new URL(request.url).pathname;
     if (request.method === "GET" && pathname === "/health") return json(request, { status: "ok", model: MODEL });
     if (request.method === "OPTIONS" && pathname === "/chat") {
@@ -665,7 +665,7 @@ const rosterAssistantWorker = {
 
     const executor = new DynamicWorkerExecutor({ loader: constrainedLoader(env.LOADER), globalOutbound: null, timeout: 60_000 });
     const codemode = createCodeTool({ tools, executor });
-    const budget=hardBudget(env,body.requestId);
+    const budget=usageMetering(env,body.requestId,ctx);
     const openai = createOpenAI({ apiKey: env.OPENAI_API_KEY, fetch: budget.fetch });
     const startedAt = Date.now();
     const conversation = markLatestUserCacheBreakpoint(
