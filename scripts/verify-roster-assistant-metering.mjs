@@ -60,8 +60,24 @@ try {
  console.log('PASS real assistant/API: nondeveloper roster manager admitted, anonymous/view-only/foreign server denied, consent required; no AI provider calls');
  {
   await db.query('DELETE FROM roster_ai_usage WHERE discord_user_id=$1',[actor]);
-  let status=429; let streamMode=false; let failSettlement=false; let providerCalls=0; let terminalType="response.completed";
-  provider=createServer((req,res)=>{providerCalls++;req.resume();
+  let status=429; let streamMode=false; let failSettlement=false; let providerCalls=0; let terminalType="response.completed"; let cwlToolMode=false; let observedToolOutput;
+  provider=createServer(async (req,res)=>{providerCalls++;
+   let requestBody='';for await(const chunk of req)requestBody+=chunk;
+   const input=JSON.parse(requestBody).input??[];
+   if(cwlToolMode){
+    const output=input.find(item=>item.type==='function_call_output');
+    if(output)observedToolOutput=JSON.parse(output.output);
+    const item=output?{id:'msg_fixture',type:'message',status:'completed',role:'assistant',content:[{type:'output_text',text:'Published.',annotations:[]}]}:{id:'fc_fixture',type:'function_call',status:'completed',name:'codemode',call_id:'call_cwl',arguments:JSON.stringify({code:'async () => await codemode.publishCwlPerformanceView({windowMonths:3,familyOnly:true})'})};
+    const response={id:'resp_fixture',object:'response',created_at:0,model:'gpt-6-luna',status:'completed',output:[item],usage:{input_tokens:100,output_tokens:20,input_tokens_details:{cached_tokens:0},output_tokens_details:{reasoning_tokens:0}}};
+    res.writeHead(200,{'content-type':'text/event-stream'});
+    const emit=(type,extra)=>res.write('data: '+JSON.stringify({type,...extra})+'\n\n');
+    emit('response.created',{response:{...response,status:'in_progress',output:[],usage:null},sequence_number:0});
+    emit('response.output_item.added',{item:{...item,arguments:'',status:'in_progress'},output_index:0,sequence_number:1});
+    if(output)emit('response.output_text.delta',{item_id:item.id,output_index:0,content_index:0,delta:'Published.',sequence_number:2});
+    else emit('response.function_call_arguments.delta',{item_id:item.id,output_index:0,delta:item.arguments,sequence_number:2});
+    emit('response.output_item.done',{item,output_index:0,sequence_number:3});
+    emit('response.completed',{response,sequence_number:4});res.end();return;
+   }
    if(!streamMode){res.writeHead(status,{'content-type':'application/json'});res.end(JSON.stringify({error:{message:status===429?'You have no credits remaining.':'upstream failed',type:'server_error',code:'server_error'}}));return;}
    res.writeHead(200,{'content-type':'text/event-stream'});
    const response={id:'resp_local_accounting',object:'response',created_at:0,model:'gpt-6-luna',status:'completed',output:[],usage:{input_tokens:100,output_tokens:20,input_tokens_details:{cached_tokens:25},output_tokens_details:{reasoning_tokens:5}}};
@@ -91,6 +107,17 @@ try {
   const roster=randomUUID();
   await db.query("INSERT INTO rosters(id,server_id,alias,roster_type,signup_scope) VALUES($1,$2,'CWL replay','family','family-only')",[roster,server]);
   await db.query("INSERT INTO roster_members(roster_id,tag,name,townhall) VALUES($1,'#PYLQCVVV','Unknown history',18)",[roster]);
+  const family='#PYLQCCCU', enemy='#PYLQCCCY', known=['#PYLQCVVY','#PYLQCVVR'];
+  await db.query("INSERT INTO basic_clan(tag,name,public_war_log,war_wins,member_count,badge_token,troops_donated,troops_received) VALUES($1,'Fixture family',true,0,2,'local',0,0)",[family]);
+  await db.query('INSERT INTO server_clans(server_id,tag) VALUES($1,$2)',[server,family]);
+  for(const tag of known)await db.query("INSERT INTO roster_members(roster_id,tag,name,townhall) VALUES($1,$2,$2,18)",[roster,tag]);
+  const ended=new Date(Date.now()-1000),started=new Date(ended.valueOf()-86400000),prepared=new Date(started.valueOf()-86400000),warTag='#LOCALCWL',group='LOCALCWL0001';
+  const id=(await db.query("INSERT INTO wars(clan_tag,opponent_tag,prep_time,start_time,end_time,size,attacks_per_member,war_type,state,war_tag) VALUES($1,$2,$3,$4,$5,2,1,'cwl','warEnded',$6) RETURNING war_id",[family,enemy,prepared,started,ended,warTag])).rows[0].war_id;
+  const side=(tag,members)=>({tag,name:tag,badgeToken:'local',clanLevel:1,attacks:0,stars:0,destructionPercentage:0,members});
+  await db.query('INSERT INTO war_archive_pending(war_id,end_time,payload) VALUES($1,$2,$3)',[id,ended,JSON.stringify({warTag,state:'warEnded',battleModifier:'none',teamSize:2,attacksPerMember:1,preparationStartTime:prepared.toISOString(),startTime:started.toISOString(),endTime:ended.toISOString(),clan:side(family,known.map((tag,index)=>({tag,name:tag,townhallLevel:18,mapPosition:index+1,attacks:[{defenderTag:enemy,stars:2,destructionPercentage:index?95:85,order:index+1,duration:100}]}))),opponent:side(enemy,[])})]);
+  for(const tag of known)await db.query('INSERT INTO player_war_history(player_tag,war_ids) VALUES($1,$2)',[tag,[id]]);
+  await db.query("INSERT INTO cwl_groups(cwl_id,season,state,rounds) VALUES($1,$2,'ended',$3)",[group,ended.toISOString().slice(0,7),JSON.stringify([[warTag]])]);
+  await db.query('INSERT INTO cwl_group_clans(cwl_id,clan_tag) VALUES($1,$2)',[group,family]);
   const replay=await runtime.dispatchFetch('http://localhost/chat',{method:'POST',headers:{authorization:'Bearer '+tokens.manage,'content-type':'application/json'},body:JSON.stringify({...body,rosterIds:[roster],sourceCode:cwlPerformanceViewSource(6,{windowMonths:3,familyOnly:true}),sourceVersion:1})});
   const replayText=await replay.text();
   assert.equal(replay.status,200,replayText);
@@ -98,8 +125,15 @@ try {
   assert(!replayEvents.some(event=>event.type==='error'),replayText);
   const view=replayEvents.find(event=>event.type==='data-viewResult');
   assert(view,replayText);
-  assert.equal(view.data.rows[0].values.stars_per_war,null);
-  assert.equal(view.data.rows[0].values.wars,0);
+  const unknownPlayer=view.data.rows.find(row=>row.playerTag==='#PYLQCVVV');
+  assert.equal(unknownPlayer.values.stars_per_war,null);
+  assert.equal(unknownPlayer.values.destruction,null);
+  assert.equal(unknownPlayer.values.wars,0);
+  assert.deepEqual(view.data.rows.filter(row=>known.includes(row.playerTag)).map(row=>row.playerTag),[known[1],known[0]]);
+  assert.equal(view.data.rows.find(row=>row.playerTag===known[1]).values.destruction,95);
+  assert.equal(view.data.rows.find(row=>row.playerTag===known[1]).values.stars,2);
+  const draft=replayEvents.find(event=>event.type==='data-viewDraft');
+  assert.deepEqual(draft.data.spec.sort.map(item=>[item.columnId,item.direction]),[['stars_per_war','desc'],['attacks','desc'],['stars','desc'],['destruction','desc']]);
   console.log('PASS generated CWL view replay: actual dynamic Worker/API/SQL, calendar/family parameters accepted, unknown player retained, no paid model calls');
 
   const run=async()=>{const response=await runtime.dispatchFetch('http://localhost/chat',{method:'POST',headers:{authorization:'Bearer '+tokens.manage,'content-type':'application/json'},body:JSON.stringify({...body,mode:'chat'})});return {status:response.status,text:await response.text()};};
@@ -132,6 +166,17 @@ try {
   await waitFor(async()=>Number((await db.query("SELECT count(*) AS n FROM roster_ai_step_budgets b JOIN roster_ai_usage u ON u.id=b.usage_id WHERE u.discord_user_id=$1 AND b.outcome='unknown'",[actor])).rows[0].n)===3);
   usage=(await db.query('SELECT sum(total_tokens)::int AS tokens,sum(reasoning_tokens)::int AS reasoning FROM roster_ai_usage WHERE discord_user_id=$1',[actor])).rows[0];
   assert.deepEqual(usage,{tokens:480,reasoning:20});
+  cwlToolMode=true;
+  const toolRun=await runtime.dispatchFetch('http://localhost/chat',{method:'POST',headers:{authorization:'Bearer '+tokens.manage,'content-type':'application/json'},body:JSON.stringify({...body,mode:'chat',rosterIds:[roster]})});
+  const toolText=await toolRun.text();
+  assert.equal(toolRun.status,200,toolText);
+  assert(observedToolOutput,toolText);
+  const outputResult=observedToolOutput.result??observedToolOutput;
+  assert(outputResult.rows,JSON.stringify(outputResult));
+  assert.equal(outputResult.rows.find(row=>row.playerTag===known[1]).totalDestruction,95);
+  assert.equal(outputResult.rows.find(row=>row.playerTag===known[1]).totalStars,2);
+  assert.deepEqual(outputResult.sort.map(item=>[item.columnId,item.direction]),[['stars_per_war','desc'],['attacks','desc'],['stars','desc'],['destruction','desc']]);
+  console.log('PASS model-facing tool response: actual SDK function call receives per-player total destruction and stars plus all four sort keys');
   console.log('PASS real Worker/SDK/API/SQL: 429 rejected, 500 unknown and retryable; fragmented terminal usage persisted once despite SDK callback; transient settlement 503 retried; browser disconnect retains receipt; failed/incomplete responses retain reported usage; missing terminal usage explicitly unknown; no external model calls');
 
  }
