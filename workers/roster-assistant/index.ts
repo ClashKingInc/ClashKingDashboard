@@ -349,7 +349,9 @@ const rosterAssistantWorker = {
       columns: z.array(viewColumn).min(1).max(24),
       rows: z.array(computedViewRow).max(500),
       filters: z.array(viewFilter).max(20).default([]),
-      sort: z.array(viewSort).max(5).default([]),
+      // Clan + league grouping and the four requested performance tie-breaks
+      // need six rules. Keep this bound aligned with the editable view tool.
+      sort: z.array(viewSort).max(24).default([]),
       highlights: z.array(viewHighlight).max(20).default([]),
       limit: z.number().int().min(1).max(500).nullable().default(null),
     });
@@ -567,7 +569,7 @@ const rosterAssistantWorker = {
           upsertColumns: z.array(viewColumn).max(24).optional(),
           removeColumnIds: z.array(stableId).max(24).optional(),
           columnOrder: z.array(stableId).max(24).optional(),
-          sort: z.array(viewSort).max(5).optional(),
+          sort: z.array(viewSort).max(24).optional(),
           upsertHighlights: z.array(viewHighlight).max(20).optional(),
           removeHighlightIds: z.array(stableId).max(20).optional(),
         }).refine((patch) => Object.keys(patch).length > 0, "Provide at least one view change"),
