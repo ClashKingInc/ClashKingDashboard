@@ -2602,6 +2602,15 @@
     }
   },
   "GeneralPage": {
+    "linkParsing": {
+      "title": "Zpracování odkazů",
+      "description": "Vyberte odkazy a příkazy, které ClashKing rozbalí ve zprávách na Discordu.",
+      "clan": "Odkazy na klany",
+      "army": "Odkazy na armády",
+      "player": "Odkazy na hráče",
+      "base": "Odkazy na základny",
+      "show": "Příkazy -show"
+    },
     "title": "Obecná nastavení",
     "description": "Nastavte chování a vzhled bota pro celý server",
     "loading": "Načítání nastavení...",

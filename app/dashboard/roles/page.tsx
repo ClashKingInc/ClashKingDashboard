@@ -698,12 +698,10 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                   style={{ backgroundColor: discordRole && discordRole.color !== 0 ? `#${discordRole.color.toString(16).padStart(6, "0")}` : "#99AAB5" }}
                 />
                 <span className="min-w-0 flex-1 truncate text-sm font-medium">{discordRole?.name || t("configuredRoles.unknownRole")}</span>
-                <span className="inline-flex shrink-0 items-center gap-1.5 text-sm text-muted-foreground">
+                <span className="inline-flex min-w-0 max-w-[45%] items-center gap-1.5 text-sm text-muted-foreground">
                   {criteriaImage && <Image src={criteriaImage} alt="" width={24} height={24} unoptimized className="h-6 w-6 object-contain" />}
-                  {criteria || "—"}
+                  <span className="truncate" title={criteria || undefined}>{criteria || "—"}</span>
                 </span>
-              </div>
-              <div className="mt-3 flex items-center gap-2 border-t border-border/60 pt-3">
                 <Button variant="ghost" size="touch-icon" onClick={() => handleDeleteRole(roleType, role.rule_id)} className="shrink-0 text-destructive hover:bg-destructive/10 hover:text-destructive" aria-label={t("configuredRoles.remove")}>
                   <Trash2 className="h-4 w-4" />
                 </Button>

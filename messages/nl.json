@@ -2602,6 +2602,15 @@
     }
   },
   "GeneralPage": {
+    "linkParsing": {
+      "title": "Links verwerken",
+      "description": "Kies welke links en opdrachten ClashKing uitbreidt in Discord-berichten.",
+      "clan": "Clanlinks",
+      "army": "Legerlinks",
+      "player": "Spelerslinks",
+      "base": "Basislinks",
+      "show": "-show-opdrachten"
+    },
     "title": "Algemene instellingen",
     "description": "Stel het gedrag en uiterlijk van de bot voor de hele server in",
     "loading": "Instellingen laden...",

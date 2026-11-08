@@ -2602,6 +2602,15 @@
     }
   },
   "GeneralPage": {
+    "linkParsing": {
+      "title": "Skakelontleding",
+      "description": "Kies watter skakels en opdragte ClashKing in Discord-boodskappe uitbrei.",
+      "clan": "Clanskakels",
+      "army": "Leërskakels",
+      "player": "Spelerskakels",
+      "base": "Basisskakels",
+      "show": "-show-opdragte"
+    },
     "title": "Algemene instellings",
     "description": "Stel die bot se bedienerwye gedrag en voorkoms op",
     "loading": "instellings laai...",

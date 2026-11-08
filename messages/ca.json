@@ -2602,6 +2602,15 @@
     }
   },
   "GeneralPage": {
+    "linkParsing": {
+      "title": "Interpretació d’enllaços",
+      "description": "Tria quins enllaços i ordres amplia ClashKing als missatges de Discord.",
+      "clan": "Enllaços de clans",
+      "army": "Enllaços d’exèrcits",
+      "player": "Enllaços de jugadors",
+      "base": "Enllaços de bases",
+      "show": "Ordres -show"
+    },
     "title": "Configuració general",
     "description": "Configura el comportament i l’aspecte del bot a tot el servidor",
     "loading": "S’està carregant la configuració...",

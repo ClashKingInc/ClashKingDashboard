@@ -2602,6 +2602,15 @@
     }
   },
   "GeneralPage": {
+    "linkParsing": {
+      "title": "Länktolkning",
+      "description": "Välj vilka länkar och kommandon ClashKing utvecklar i Discord-meddelanden.",
+      "clan": "Klanlänkar",
+      "army": "Armélänkar",
+      "player": "Spelarlänkar",
+      "base": "Baslänkar",
+      "show": "-show-kommandon"
+    },
     "title": "Allmänna inställningar",
     "description": "Konfigurera botens beteende och utseende för hela servern",
     "loading": "Läser in inställningar...",

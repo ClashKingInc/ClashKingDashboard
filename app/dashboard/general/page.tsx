@@ -6,6 +6,8 @@ import { useGuildId } from "@/lib/dashboard-route";
 import React, { useState, useEffect, useEffectEvent } from "react";
 import { useTranslations } from "use-intl";
 import { useQueryClient } from "@tanstack/react-query";
+import { Switch } from "@/components/ui/switch";
+import type { LinkParseSettings } from "@/lib/api/types/server";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -49,6 +51,7 @@ export default function GeneralSettingsPage() {
   const [settings, setSettings] = useState({
     embed_color: 14223113, // #D90709 as integer
     full_whitelist_role: null as string | null,
+    link_parse: { clan: false, army: false, player: false, base: false, show: false } as LinkParseSettings,
   });
 
   const [discordRoles, setDiscordRoles] = useState<Array<{ id: string; name: string; color?: number }>>([]);
@@ -58,7 +61,6 @@ export default function GeneralSettingsPage() {
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
 
-  // Discord Tenure Roles state
   const [tenureRoles, setTenureRoles] = useState<Array<{ id: string; rule_id: string; months: number }>>([]);
   const [isLoadingTenureRoles, setIsLoadingTenureRoles] = useState(true);
   const [isTenureDialogOpen, setIsTenureDialogOpen] = useState(false);
@@ -78,6 +80,7 @@ export default function GeneralSettingsPage() {
         const newSettings = {
           embed_color: embedColor,
           full_whitelist_role: settingsData.full_whitelist_role?.toString() ?? null,
+          link_parse: settingsData.link_parse ?? { clan: false, army: false, player: false, base: false, show: false },
         };
         setSettings(newSettings);
         setHasLoadedSettings(true);
@@ -92,7 +95,6 @@ export default function GeneralSettingsPage() {
 
   async function loadDiscordRoles() {
     try {
-      // Use cache to prevent duplicate requests
       const rolesPayload = await queryClient.fetchQuery(dashboardQueryOptions.roles(guildId));
       setDiscordRoles([...normalizeDiscordRolesPayload(rolesPayload)]);
     } catch (err) {
@@ -269,6 +271,19 @@ export default function GeneralSettingsPage() {
           </section>
           {fullAccess && <DashboardAccessSettings guildId={guildId} />}
         </div>
+
+        <section className="min-w-0 space-y-3">
+          <div><h2 className="text-lg font-semibold">{t("linkParsing.title")}</h2><p className="mt-1 text-sm text-muted-foreground">{t("linkParsing.description")}</p></div>
+          <div className="divide-y divide-border/50 rounded-[24px] bg-card px-4 shadow-sm shadow-black/5 sm:px-5">
+            {(["clan", "army", "player", "base", "show"] as const).map(kind => (
+              <div key={kind} className="flex min-w-0 items-center justify-between gap-4 py-4">
+                <Label htmlFor={`link-parse-${kind}`} className="min-w-0 flex-1 text-sm font-medium">{t(`linkParsing.${kind}`)}</Label>
+                <Switch id={`link-parse-${kind}`} checked={settings.link_parse[kind] === true} disabled={!editable || isSaving || isLoading || !hasLoadedSettings}
+                  onCheckedChange={checked => void applySettingsChange({ link_parse: { ...settings.link_parse, [kind]: checked } })} />
+              </div>
+            ))}
+          </div>
+        </section>
 
         <section className="space-y-3">
           <div className="flex flex-wrap items-end justify-between gap-3">

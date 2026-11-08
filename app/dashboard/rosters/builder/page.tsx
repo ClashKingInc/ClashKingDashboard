@@ -1,5 +1,7 @@
 "use client";
 
+import { isLabeledRosterCell } from "@/lib/roster-cell";
+
 import { useDashboardAccess } from "@/components/dashboard/dashboard-access-provider";
 import { useTranslations } from "use-intl";
 import { useAiNotice } from "./ai-notice";
@@ -195,6 +197,7 @@ async function assistantFetch(input: RequestInfo | URL, init?: RequestInit): Pro
 
 function formatCell(value: unknown): string {
   if (value === null || value === undefined || value === "") return "—";
+  if (isLabeledRosterCell(value)) return value.label;
   if (typeof value === "boolean") return value ? "Yes" : "No";
   if (typeof value === "number") return Number.isInteger(value) ? String(value) : value.toFixed(1);
   if (Array.isArray(value)) return value.map(formatCell).join(", ");
@@ -281,8 +284,8 @@ function highlightMatches(actual: unknown, operator: string, expected: unknown):
 }
 
 function compareRosterValues(left: unknown, right: unknown): number {
-  const leftValue = isLeagueTrophiesValue(left) ? left.trophies : left;
-  const rightValue = isLeagueTrophiesValue(right) ? right.trophies : right;
+  const leftValue = isLabeledRosterCell(left) ? left.sortValue : isLeagueTrophiesValue(left) ? left.trophies : left;
+  const rightValue = isLabeledRosterCell(right) ? right.sortValue : isLeagueTrophiesValue(right) ? right.trophies : right;
   if (typeof leftValue === "number" && typeof rightValue === "number") return leftValue - rightValue;
   return String(leftValue ?? "").localeCompare(String(rightValue ?? ""), undefined, { numeric: true, sensitivity: "base" });
 }
@@ -791,7 +794,10 @@ function ViewTable({
     }));
     return [...filtered].sort((left, right) => {
       for (const rule of sortRules) {
-        const comparison = compareRosterValues(left.values[rule.columnId], right.values[rule.columnId]);
+        const a = left.values[rule.columnId], b = right.values[rule.columnId];
+        if (a == null && b != null) return 1;
+        if (b == null && a != null) return -1;
+        const comparison = compareRosterValues(a, b);
         if (comparison !== 0) return rule.direction === "desc" ? -comparison : comparison;
       }
       return 0;

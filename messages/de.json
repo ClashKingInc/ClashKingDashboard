@@ -2602,6 +2602,15 @@
     }
   },
   "GeneralPage": {
+    "linkParsing": {
+      "title": "Link-Verarbeitung",
+      "description": "Wähle aus, welche Links und Befehle ClashKing in Discord-Nachrichten erweitert.",
+      "clan": "Clan-Links",
+      "army": "Armee-Links",
+      "player": "Spieler-Links",
+      "base": "Basis-Links",
+      "show": "-show-Befehle"
+    },
     "title": "Allgemeine Einstellungen",
     "description": "Konfiguriere das serverweite Verhalten und Erscheinungsbild des Bots",
     "loading": "Einstellungen werden geladen...",

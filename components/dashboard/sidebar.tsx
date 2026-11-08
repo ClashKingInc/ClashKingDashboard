@@ -190,6 +190,7 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, availableGuilds
                     <div className="flex-1 min-w-0">
                       <div className="truncate">{t(item.nameKey)}</div>
                     </div>
+                    {item.beta && <span className="shrink-0 rounded-md bg-current/10 px-1.5 py-0.5 text-[10px] font-medium">Beta</span>}
                   </Link>
                 );
               })}

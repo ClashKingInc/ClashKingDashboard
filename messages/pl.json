@@ -2602,6 +2602,15 @@
     }
   },
   "GeneralPage": {
+    "linkParsing": {
+      "title": "Przetwarzanie linków",
+      "description": "Wybierz linki i polecenia, które ClashKing rozwija w wiadomościach na Discordzie.",
+      "clan": "Linki do klanów",
+      "army": "Linki do armii",
+      "player": "Linki do graczy",
+      "base": "Linki do baz",
+      "show": "Polecenia -show"
+    },
     "title": "Ustawienia ogólne",
     "description": "Konfiguruj zachowanie i wygląd bota na całym serwerze",
     "loading": "Wczytywanie ustawień...",

@@ -2602,6 +2602,15 @@
     }
   },
   "GeneralPage": {
+    "linkParsing": {
+      "title": "Interpretazione dei link",
+      "description": "Scegli quali link e comandi ClashKing espande nei messaggi Discord.",
+      "clan": "Link dei clan",
+      "army": "Link degli eserciti",
+      "player": "Link dei giocatori",
+      "base": "Link delle basi",
+      "show": "Comandi -show"
+    },
     "title": "Impostazioni generali",
     "description": "Configura il comportamento e l'aspetto del bot per tutto il server",
     "loading": "Caricamento impostazioni...",

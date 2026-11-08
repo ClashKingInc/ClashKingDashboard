@@ -1,3 +1,4 @@
+import { isLabeledRosterCell } from "@/lib/roster-cell";
 import type { Cell, SheetData } from "write-excel-file/browser";
 
 import type { RosterViewColumn, RosterViewResult } from "@/lib/api/types/roster";
@@ -17,6 +18,7 @@ function safeJson(value: object): string {
 
 export function rosterViewCellValue(metricId: string, value: unknown): string | number | boolean | null {
   if (value === null || value === undefined || value === "") return null;
+  if (isLabeledRosterCell(value)) return value.label;
   if (metricId === "player.league_trophies" && typeof value === "object") {
     const trophies = (value as { trophies?: unknown }).trophies;
     if (typeof trophies === "number" && Number.isFinite(trophies)) return trophies;

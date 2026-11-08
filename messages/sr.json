@@ -2602,6 +2602,15 @@
     }
   },
   "GeneralPage": {
+    "linkParsing": {
+      "title": "Обрада веза",
+      "description": "Изаберите везе и команде које ClashKing проширује у Discord порукама.",
+      "clan": "Везе ка клановима",
+      "army": "Везе ка војскама",
+      "player": "Везе ка играчима",
+      "base": "Везе ка базама",
+      "show": "Команде -show"
+    },
     "title": "Opšta podešavanja",
     "description": "Podesite ponašanje i izgled bota na celom serveru",
     "loading": "Učitavanje podešavanja...",

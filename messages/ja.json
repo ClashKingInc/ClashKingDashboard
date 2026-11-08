@@ -2602,6 +2602,15 @@
     }
   },
   "GeneralPage": {
+    "linkParsing": {
+      "title": "リンクの解析",
+      "description": "DiscordメッセージでClashKingが展開するリンクとコマンドを選択します。",
+      "clan": "クランのリンク",
+      "army": "編成のリンク",
+      "player": "プレイヤーのリンク",
+      "base": "配置のリンク",
+      "show": "-showコマンド"
+    },
     "title": "一般設定",
     "description": "サーバー全体のボットの動作と外観を設定します",
     "loading": "設定を読み込み中...",

@@ -2602,6 +2602,15 @@
     }
   },
   "GeneralPage": {
+    "linkParsing": {
+      "title": "링크 분석",
+      "description": "ClashKing이 Discord 메시지에서 펼쳐 보여 줄 링크와 명령어를 선택하세요.",
+      "clan": "클랜 링크",
+      "army": "군대 링크",
+      "player": "플레이어 링크",
+      "base": "배치 링크",
+      "show": "-show 명령어"
+    },
     "title": "일반 설정",
     "description": "서버 전체의 봇 동작과 화면 표시를 설정합니다",
     "loading": "설정 불러오는 중...",

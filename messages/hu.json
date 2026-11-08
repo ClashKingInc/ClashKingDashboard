@@ -2602,6 +2602,15 @@
     }
   },
   "GeneralPage": {
+    "linkParsing": {
+      "title": "Hivatkozások feldolgozása",
+      "description": "Válaszd ki, mely hivatkozásokat és parancsokat bontsa ki a ClashKing a Discord-üzenetekben.",
+      "clan": "Klánhivatkozások",
+      "army": "Sereghivatkozások",
+      "player": "Játékoshivatkozások",
+      "base": "Bázishivatkozások",
+      "show": "-show parancsok"
+    },
     "title": "Általános beállítások",
     "description": "A bot szerverszintű viselkedésének és megjelenésének beállítása",
     "loading": "Beállítások betöltése...",
