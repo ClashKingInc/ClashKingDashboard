@@ -135,9 +135,9 @@ export function DashboardLayoutWrapper({
               <SettingsDropdown
                 locale={locale}
                 triggerButtonClassName="h-10 w-10 text-muted-foreground hover:bg-accent/60 hover:text-foreground"
-                menuClassName="w-48"
               />
               {accountLink}
+              {logoutControl}
             </div>
           )}
         </div>}
@@ -149,7 +149,6 @@ export function DashboardLayoutWrapper({
               <SettingsDropdown
                 locale={locale}
                 triggerButtonClassName="h-9 w-9 text-muted-foreground hover:bg-accent/60 hover:text-foreground"
-                menuClassName="w-48"
               />
               {accountLink}
               {logoutControl}

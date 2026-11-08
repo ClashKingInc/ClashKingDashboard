@@ -2602,6 +2602,15 @@
     }
   },
   "GeneralPage": {
+    "linkParsing": {
+      "title": "Linkfortolkning",
+      "description": "Vælg hvilke links og kommandoer ClashKing udfolder i Discord-beskeder.",
+      "clan": "Klanlinks",
+      "army": "Hærlinks",
+      "player": "Spillerlinks",
+      "base": "Baselinks",
+      "show": "-show-kommandoer"
+    },
     "title": "Generelle indstillinger",
     "description": "Konfigurer botadfærd og udseende for hele serveren",
     "loading": "Indlæser indstillinger...",

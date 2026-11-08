@@ -40,13 +40,11 @@ export interface DiscordUserDisplayProps {
 function extractUserId(value: string | null | undefined): string | null {
   if (!value) return null;
 
-  // Check for mention format <@123> or <@!123>
   const mentionMatch = /<@!?(\d+)>/.exec(value);
   if (mentionMatch) {
     return mentionMatch[1];
   }
 
-  // Check if it's just a numeric ID
   if (/^\d+$/.test(value)) {
     return value;
   }
@@ -68,13 +66,12 @@ export function DiscordUserDisplay({ // NOSONAR — complexity comes from multi-
   const t = useTranslations("DiscordUserDisplay");
   const [copied, setCopied] = React.useState(false);
 
-  // Extract user ID from raw value if not provided directly
   const resolvedUserId = userId || extractUserId(rawDiscordValue);
 
-  // A missing cached profile is not evidence that someone left the guild.
-  const isOnServer = isOnServerOverride ?? (username ? true : undefined);
+  // Global profiles can exist after someone leaves. Only authoritative guild
+  // membership may label a person as on or off the server.
+  const isOnServer = isOnServerOverride;
 
-  // If no user ID and no username, player has no Discord link
   if (!resolvedUserId && !username) {
     return (
       <span className="flex items-center gap-1.5 text-muted-foreground/60 italic">
@@ -84,7 +81,7 @@ export function DiscordUserDisplay({ // NOSONAR — complexity comes from multi-
     );
   }
 
-  const avatarSize = size === "sm" ? "h-6 w-6" : "h-8 w-8";
+  const avatarSize = size === "sm" ? "h-6 w-6 shrink-0" : "h-8 w-8 shrink-0";
   const textSize = size === "sm" ? "text-xs" : "text-sm";
 
   const handleCopyId = async () => {
@@ -97,7 +94,6 @@ export function DiscordUserDisplay({ // NOSONAR — complexity comes from multi-
 
   const openDiscordProfile = () => {
     if (resolvedUserId) {
-      // Try Discord app first, fallback to web
       window.open(`https://discord.com/users/${resolvedUserId}`, "_blank");
     }
   };
@@ -105,7 +101,7 @@ export function DiscordUserDisplay({ // NOSONAR — complexity comes from multi-
   const defaultDisplayContent = (
     <div
       className={cn(
-        "flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity",
+        "flex min-w-0 max-w-full items-center gap-2 text-left hover:opacity-80 transition-opacity",
         className
       )}
     >
@@ -131,7 +127,7 @@ export function DiscordUserDisplay({ // NOSONAR — complexity comes from multi-
       <span
         className={cn(
           textSize,
-          "truncate max-w-[120px]",
+          "min-w-0 truncate max-w-[160px]",
           isOnServer === false ? "text-orange-400 italic" : "text-foreground"
         )}
         title={
@@ -151,10 +147,9 @@ export function DiscordUserDisplay({ // NOSONAR — complexity comes from multi-
 
   return (
     <Popover>
-      <PopoverTrigger asChild>{displayContent}</PopoverTrigger>
+      <PopoverTrigger asChild>{triggerContent ?? <button type="button" className="min-w-0 max-w-full rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-ring">{defaultDisplayContent}</button>}</PopoverTrigger>
       <PopoverContent className="w-72 p-4" align="start">
         <div className="flex flex-col gap-4">
-          {/* Header with avatar and status */}
           <div className="flex items-center gap-3">
             <Avatar className="h-12 w-12">
               {avatarUrl ? (
@@ -163,16 +158,16 @@ export function DiscordUserDisplay({ // NOSONAR — complexity comes from multi-
               <AvatarFallback
                 className={cn(
                   "text-lg",
-                  isOnServer
+                  isOnServer !== false
                     ? "bg-blue-500/20 text-blue-400"
                     : "bg-orange-500/20 text-orange-400"
                 )}
               >
-                {isOnServer ? <User className="h-6 w-6" /> : <UserX className="h-6 w-6" />}
+                {isOnServer !== false ? <User className="h-6 w-6" /> : <UserX className="h-6 w-6" />}
               </AvatarFallback>
             </Avatar>
             <div className="flex-1 min-w-0">
-              <p className={cn("font-medium truncate", isOnServer ? "text-foreground" : "text-muted-foreground")}>
+              <p className={cn("font-medium truncate", isOnServer !== false ? "text-foreground" : "text-muted-foreground")}>
                 {username || t("unknownUser")}
               </p>
               {isOnServer !== undefined && <p className={cn("text-xs flex items-center gap-1", isOnServer ? "text-green-500" : "text-orange-400")}>
@@ -182,7 +177,6 @@ export function DiscordUserDisplay({ // NOSONAR — complexity comes from multi-
             </div>
           </div>
 
-          {/* User ID */}
           {resolvedUserId && (
             <div className="flex items-center justify-between bg-secondary/50 rounded-md px-3 py-2">
               <div>
@@ -204,7 +198,6 @@ export function DiscordUserDisplay({ // NOSONAR — complexity comes from multi-
             </div>
           )}
 
-          {/* Action button */}
           {resolvedUserId && (
             <Button
               variant="outline"

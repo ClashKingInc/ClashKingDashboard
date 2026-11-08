@@ -68,7 +68,7 @@ export function NicknameFormatInput({
   };
 
   return (
-    <div className="rounded-[22px] bg-card p-4 shadow-sm shadow-black/5 md:p-5">
+    <div className="min-w-0 max-w-full rounded-[22px] bg-card p-4 shadow-sm shadow-black/5 md:p-5">
       <div className="mb-3 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
         <Label htmlFor={id} className="text-sm font-semibold">
           {label}
@@ -143,7 +143,7 @@ export function NicknameFormatInput({
                 onMouseEnter={() => setActiveIndex(index)}
                 onClick={() => choosePlaceholder(placeholder)}
               >
-                <code className="shrink-0 text-xs font-semibold text-primary">{placeholder.key}</code>
+                <code className="min-w-0 max-w-full overflow-x-auto whitespace-nowrap text-xs font-semibold text-primary">{placeholder.key}</code>
                 <span className="min-w-0 flex-1 truncate text-xs text-muted-foreground">
                   {placeholder.description}
                 </span>
@@ -158,7 +158,7 @@ export function NicknameFormatInput({
 
       <div className="mt-3 flex min-w-0 items-center gap-2 rounded-xl bg-muted/40 px-3 py-2">
         <span className="shrink-0 text-xs font-medium text-muted-foreground">{previewLabel}</span>
-        <span className="truncate font-mono text-sm text-foreground">{preview || "—"}</span>
+        <span className="min-w-0 overflow-x-auto whitespace-nowrap font-mono text-sm text-foreground">{preview || "—"}</span>
       </div>
     </div>
   );

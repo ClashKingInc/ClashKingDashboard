@@ -4,7 +4,7 @@ import Image from "@/components/app-image";
 import { useTranslations } from "use-intl";
 import { SUPPORT_DISCORD_URL } from "@/lib/support";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { Camera, Pencil, RotateCcw } from "lucide-react";
+import { Camera, LockKeyhole, Pencil, RotateCcw } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import type { Components } from "react-markdown";
 import { apiClient } from "@/lib/api/client";
@@ -14,6 +14,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import type { BotGuildProfile, BotGuildProfileUpdate } from "@/lib/api/types/dashboard-access";
 
 const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
@@ -147,7 +148,9 @@ export function BotProfileCard({ guildId }: { guildId: string }) {
 
   return <section className="min-w-0 max-w-full space-y-3">
     <div className="min-w-0">
-      <h2 className="text-lg font-semibold">Bot server profile</h2>
+      <div className="flex items-center gap-2"><h2 className="text-lg font-semibold">Bot server profile</h2>
+        {canManageSettings && !customizationEnabled && <Dialog><DialogTrigger asChild><Button type="button" variant="ghost" size="touch-icon" className="text-muted-foreground" aria-label={tGrant("required")}><LockKeyhole className="h-4 w-4" /></Button></DialogTrigger><DialogContent><DialogHeader><DialogTitle>{tGrant("required")}</DialogTitle><DialogDescription>{tGrant("request")}</DialogDescription></DialogHeader><Button asChild><a href={SUPPORT_DISCORD_URL} target="_blank" rel="noopener noreferrer">{tGrant("request")}</a></Button></DialogContent></Dialog>}
+      </div>
       <p className="mt-1 break-words text-sm text-muted-foreground">Customize how ClashKing appears in this Discord server.</p>
     </div>
     <div className="min-w-0 max-w-full space-y-4">
@@ -191,7 +194,6 @@ export function BotProfileCard({ guildId }: { guildId: string }) {
         </div>
 
       </div>
-      {canManageSettings && !customizationEnabled && <p className="text-sm text-muted-foreground">{tGrant("required")} <a href={SUPPORT_DISCORD_URL} target="_blank" rel="noopener noreferrer" className="font-medium text-primary underline">{tGrant("request")}</a></p>}
       {saving && <p className="text-right text-xs text-muted-foreground">Saving profile…</p>}
     </div>
   </section>;

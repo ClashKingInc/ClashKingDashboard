@@ -23,6 +23,8 @@ export interface DashboardNavigationItem {
   capability?: DashboardSection;
   fullAccess?: boolean;
   desktopOnly?: boolean;
+  beta?: boolean;
+  serverScoped?: boolean;
   disabledInProduction?: boolean;
 }
 
@@ -35,24 +37,24 @@ export const dashboardNavigationSections: DashboardNavigationSection[] = [
   {
     titleKey: null,
     items: [
-      { nameKey: "general.name", path: "general", icon: Settings, capability: "settings" },
-      { nameKey: "logs.name", path: "logs", icon: ScrollText, capability: "logs" },
-      { nameKey: "roles.name", path: "roles", icon: ShieldCheck, capability: "roles" },
-      { nameKey: "reminders.name", path: "reminders", icon: Bell, capability: "reminders" },
-      { nameKey: "autoboards.name", path: "autoboards", icon: LayoutDashboard, capability: "autoboards" },
+      { nameKey: "general.name", path: "general", icon: Settings, capability: "settings", serverScoped: true },
+      { nameKey: "logs.name", path: "logs", icon: ScrollText, capability: "logs", serverScoped: true },
+      { nameKey: "roles.name", path: "roles", icon: ShieldCheck, capability: "roles", serverScoped: true },
+      { nameKey: "reminders.name", path: "reminders", icon: Bell, capability: "reminders", serverScoped: true },
+      { nameKey: "autoboards.name", path: "autoboards", icon: LayoutDashboard, capability: "autoboards", beta: true, serverScoped: true },
     ],
   },
   {
     titleKey: "sections.management",
     items: [
-      { nameKey: "clans.name", path: "clans", icon: Users, capability: "clans" },
-      { nameKey: "analytics.name", path: "analytics", icon: ChartNoAxesCombined, capability: "clans" },
-      { nameKey: "rosters.name", path: "rosters", icon: ClipboardList, capability: "rosters" },
-      { nameKey: "bases.name", path: "bases", icon: Map, fullAccess: true },
-      { nameKey: "links.name", path: "links", icon: Link2, capability: "links" },
-      { nameKey: "bans.name", path: "bans-and-strikes", icon: Ban, capability: "moderation" },
-      { nameKey: "giveaways.name", path: "giveaways", icon: Gift, capability: "giveaways" },
-      { nameKey: "tickets.name", path: "tickets", icon: TicketIcon, capability: "tickets" },
+      { nameKey: "clans.name", path: "clans", icon: Users, capability: "clans", serverScoped: true },
+      { nameKey: "analytics.name", path: "analytics", icon: ChartNoAxesCombined, capability: "clans", beta: true, serverScoped: true },
+      { nameKey: "rosters.name", path: "rosters", icon: ClipboardList, capability: "rosters", serverScoped: true },
+      { nameKey: "bases.name", path: "bases", icon: Map, fullAccess: true, serverScoped: true },
+      { nameKey: "links.name", path: "links", icon: Link2, capability: "links", serverScoped: true },
+      { nameKey: "bans.name", path: "bans-and-strikes", icon: Ban, capability: "moderation", serverScoped: true },
+      { nameKey: "giveaways.name", path: "giveaways", icon: Gift, capability: "giveaways", serverScoped: true },
+      { nameKey: "tickets.name", path: "tickets", icon: TicketIcon, capability: "tickets", serverScoped: true },
       // Embeds and Graphics are temporarily hidden from dashboard navigation.
     ],
   },
@@ -60,10 +62,9 @@ export const dashboardNavigationSections: DashboardNavigationSection[] = [
 
 // Reuse the normal menu while keeping server-scoped sessions away from global
 // personal/account APIs. Hiding a link supplements, never replaces, API checks.
-export const serverScopedDashboardPaths = new Set([
-  "general", "logs", "roles", "reminders", "autoboards", "clans", "analytics",
-  "links", "bans-and-strikes", "giveaways", "tickets",
-]);
+export const serverScopedDashboardPaths = new Set(
+  dashboardNavigationSections.flatMap(section => section.items.filter(item => item.serverScoped).map(item => item.path)),
+);
 
 export function firstViewableDashboardPath(capabilities: DashboardCapabilities): string | undefined {
   if (capabilities.full_access) return "general";

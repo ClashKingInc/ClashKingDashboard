@@ -27,7 +27,27 @@ Local inference still sends requested roster context/tool results to OpenAI. Loc
 - `player.hero_percent`: home-village hero completion against released Town Hall maxima, using profile levels or the retained home-village total from a refreshed roster snapshot. `player.hero_rushed_percent` is 100 minus completion. Missing data remains unknown; this does not measure buildings or troops.
 - `player.last_online`: latest observed activity from the roster snapshot and online events. An absent observation is not proof of inactivity.
 - `cwl.league_history`: season, clan and league from registered CWL squads. The evidence explicitly says registration; it does not prove the player attacked in every round.
-- `cwl.performance_history`: last `seasonCount` participated seasons (default 6, range 1–24), confirmed by completed-war lineups. Per-season and combined attack/defense averages, triples, missed attacks, completion and sample counts are computed from archives. Seasons use actual CWL group round identities, not the end month. Bench-only registrations do not count; zero-attack lineups do count. Coverage is observed lineups, not a claim that every historical war was tracked. Late-attack timing is unavailable. Historical averages can be shown as baseline estimates, never as a calibrated forecast.
+- `cwl.performance_history`: completed CWL lineups selected by one exact `season` (`YYYY-MM`), a rolling `windowMonths` (1–24, including the current month), or each player's last `seasonCount` participated seasons (default 6, range 1–24). An exact season cannot be combined with either other period form. Calendar windows do not fill missing months from older seasons. `familyOnly:true` checks the player's historical side against this server's configured clans, excluding opponents and appearances in outside clans. Seasons use CWL group round identities, so delayed rounds remain in their original season.
+
+The CWL metric returns historical clan names and CWL leagues, total stars,
+`attackDestruction` (sum of attack percentages), attack/defense averages, triples,
+missed attacks, completion and sample counts. Destruction totals can exceed 100.
+`averageStarsPerWar` includes missed lineup slots; `averageStars` divides by
+attacks made. Bench-only registrations do not count; zero-attack lineups do.
+Coverage is observed completed lineups, not proof that all career history was
+tracked. Late-attack timing remains unavailable. Historical averages are baseline
+estimates, never calibrated predictions.
+
+- `publishCwlPerformanceView` previews the reusable view directly. For October
+  2026, pass `season:"2026-10"`; never replace a named month with a rolling window.
+  `groupByClan:true` adds historical clan/CWL league columns and sorts strongest
+  CWL league first, then clan, average stars, attacks, total stars and total
+  destruction. Numeric league strength remains separate from the displayed and
+  exported human label. `hideZeroMisses:true` leaves zero-miss cells blank.
+  Calendar/exact-season views use stars per completed war; participation-count
+  baseline views use stars per attack. All metric tie-breaks descend. Unknown
+  observations stay last in either direction. The tool returns actual columns,
+  rows and sort rules so the assistant can describe what it published accurately.
 - Questionnaire answers, anonymous linked-owner account groups and stored Discord identity are available through existing member/account tools.
 
 Reusable views can include computed grouping, all requested metrics and signup answers. For a split, select the source and existing destination rosters. Exactly-equal thresholds and unknown rates must be handled explicitly.

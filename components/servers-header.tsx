@@ -79,10 +79,6 @@ export function ServersHeader() {
             <SettingsDropdown
               locale={locale}
               triggerButtonClassName="border-border h-12 w-12 md:h-9 md:w-9 [&_svg]:size-6 md:[&_svg]:size-5"
-              menuClassName="w-48 bg-popover border border-border shadow-2xl"
-              subTriggerClassName="flex items-center space-x-2 hover:!bg-transparent cursor-pointer"
-              itemClassName="flex items-center space-x-2 hover:!bg-transparent cursor-pointer"
-              textClassName="hover:!text-primary"
             />
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>

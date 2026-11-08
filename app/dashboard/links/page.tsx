@@ -627,10 +627,10 @@ function MemberCard({ member, expanded, pendingAccount, onToggle, onAdd, onLoad 
           </div>
           {member.linked_accounts.length ? <div className="space-y-1 rounded-2xl bg-muted/45 p-2">{member.linked_accounts.map(account => (
             <div key={account.player_tag} className="flex items-center gap-3 rounded-xl px-2 py-2">
-              {account.town_hall ? <Image src={townHallImageUrl(account.town_hall)} alt={`Town Hall ${account.town_hall}`} width={36} height={36} unoptimized className="h-9 w-9 object-contain" /> : <span className="flex h-9 w-9 items-center justify-center rounded bg-muted text-xs text-muted-foreground">?</span>}
+              {account.town_hall ? <Image src={townHallImageUrl(account.town_hall)} alt={`Town Hall ${account.town_hall}`} width={36} height={36} unoptimized className="h-9 w-9 shrink-0 object-contain" /> : <span className="flex h-9 w-9 items-center justify-center rounded bg-muted text-xs text-muted-foreground">?</span>}
               {account.player_name ? (
                 <div className="min-w-0 flex-1">
-                  <span className="block font-medium">{account.player_name}</span>
+                  <span className="block truncate font-medium" title={account.player_name}>{account.player_name}</span>
                   <span className="block text-sm text-muted-foreground">{account.player_tag}{account.town_hall ? ` · TH${account.town_hall}` : ""}</span>
                 </div>
               ) : (

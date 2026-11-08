@@ -2602,6 +2602,15 @@
     }
   },
   "GeneralPage": {
+    "linkParsing": {
+      "title": "Interpretarea linkurilor",
+      "description": "Alege linkurile și comenzile pe care ClashKing le extinde în mesajele Discord.",
+      "clan": "Linkuri de clanuri",
+      "army": "Linkuri de armate",
+      "player": "Linkuri de jucători",
+      "base": "Linkuri de baze",
+      "show": "Comenzi -show"
+    },
     "title": "Setări generale",
     "description": "Configurează comportamentul și aspectul botului pe întregul server",
     "loading": "Se încarcă setările...",

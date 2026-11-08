@@ -5,6 +5,7 @@ import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { X } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import { useOverlayViewport } from "./use-overlay-viewport"
 
 type DialogVariant = "compact" | "form" | "workspace"
 
@@ -46,13 +47,17 @@ const DialogContent = React.forwardRef<
     variant?: DialogVariant
     closeLabel?: string
   }
->(({ className, children, variant = "compact", closeLabel = "Close", ...props }, ref) => (
+>(({ className, children, variant = "compact", closeLabel = "Close", style, ...props }, ref) => {
+  const viewport = useOverlayViewport();
+  return (
   <DialogPortal>
     <DialogOverlay />
     <DialogPrimitive.Content
       ref={ref}
+      data-dialog-variant={variant}
+      style={{ ...viewport, ...style }}
       className={cn(
-        "scrollbar-custom fixed z-50 grid gap-5 border-border bg-popover shadow-2xl shadow-black/35 outline-none duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 sm:data-[state=closed]:zoom-out-95 sm:data-[state=open]:zoom-in-95",
+        "ck-dialog-viewport scrollbar-custom fixed z-50 grid gap-5 border-border bg-popover shadow-2xl shadow-black/35 outline-none duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 sm:data-[state=closed]:zoom-out-95 sm:data-[state=open]:zoom-in-95",
         dialogVariantClasses[variant],
         className
       )}
@@ -65,7 +70,8 @@ const DialogContent = React.forwardRef<
       </DialogPrimitive.Close>
     </DialogPrimitive.Content>
   </DialogPortal>
-))
+  );
+})
 DialogContent.displayName = DialogPrimitive.Content.displayName
 
 const DialogHeader = ({

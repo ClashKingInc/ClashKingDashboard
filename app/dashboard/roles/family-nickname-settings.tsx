@@ -146,11 +146,11 @@ function FamilyRoleCard({
                   <div
                     key={role.id}
                     data-slot="family-role-row"
-                    className={`flex min-w-0 flex-col gap-3 rounded-xl p-3 sm:flex-row sm:items-center sm:justify-between sm:gap-2 sm:p-2.5 ${
+                    className={`flex min-w-0 items-center justify-between gap-2 rounded-xl p-2.5 ${
                       role.exists ? "bg-muted/45" : "bg-orange-500/10"
                     }`}
                   >
-                    <div className="flex min-w-0 w-full items-center gap-2 sm:flex-1">
+                    <div className="flex min-w-0 flex-1 items-center gap-2">
                       <div
                         className="w-3 h-3 rounded-full shrink-0"
                         style={{ backgroundColor: role.exists ? intToHexColor(role.color) : "#f97316" }}
@@ -159,12 +159,12 @@ function FamilyRoleCard({
                         {role.displayName}
                       </span>
                     </div>
-                    <div data-slot="family-role-actions" className="flex w-full min-w-0 items-center gap-2 sm:w-auto sm:shrink-0 sm:gap-1.5">
+                    <div data-slot="family-role-actions" className="flex shrink-0 items-center gap-1.5">
                       <button
                         type="button"
                         onClick={() => onRemove(role.id, role.role_id)}
                         disabled={isLoading}
-                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-muted-foreground transition-colors hover:bg-red-500/10 hover:text-red-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:h-8 sm:w-8 sm:rounded-lg"
+                        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-muted-foreground transition-colors hover:bg-red-500/10 hover:text-red-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:h-8 sm:w-8 sm:rounded-lg"
                         aria-label={`${removeLabel} ${role.displayName}`}
                       >
                         <Trash2 className="h-3.5 w-3.5" />

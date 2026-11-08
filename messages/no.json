@@ -2602,6 +2602,15 @@
     }
   },
   "GeneralPage": {
+    "linkParsing": {
+      "title": "Lenketolking",
+      "description": "Velg hvilke lenker og kommandoer ClashKing utvider i Discord-meldinger.",
+      "clan": "Klanlenker",
+      "army": "Hærlenker",
+      "player": "Spillerlenker",
+      "base": "Baselenker",
+      "show": "-show-kommandoer"
+    },
     "title": "Generelle innstillinger",
     "description": "Konfigurer botatferd og utseende for hele serveren",
     "loading": "Laster inn innstillinger...",

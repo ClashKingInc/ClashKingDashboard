@@ -302,3 +302,75 @@ html:lang(zh) body,
     transition-duration: 0.01ms !important;
   }
 }
+
+
+/* Editable controls stay legible without iOS focus zoom; pinch zoom remains enabled. */
+@media (max-width: 767px), (pointer: coarse) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]):not([type="hidden"]),
+  textarea,
+  [contenteditable="true"] {
+    font-size: max(16px, 1em);
+  }
+}
+
+/* Use the visible viewport so keyboards cannot cover a modal's final action. */
+@media (max-width: 767px), (pointer: coarse) {
+  .ck-dialog-viewport,
+  .ck-alert-viewport {
+    max-height: calc(var(--overlay-height, 100dvh) - 2rem);
+    overscroll-behavior: contain;
+    scroll-padding-block: 1rem;
+  }
+  .ck-dialog-viewport[data-dialog-variant="compact"],
+  .ck-alert-viewport {
+    top: calc(var(--overlay-top, 0px) + var(--overlay-height, 100dvh) / 2);
+  }
+  .ck-dialog-viewport[data-dialog-variant="form"] {
+    bottom: calc(100dvh - var(--overlay-top, 0px) - var(--overlay-height, 100dvh));
+    max-height: calc(var(--overlay-height, 100dvh) - env(safe-area-inset-top));
+  }
+  .ck-dialog-viewport[data-dialog-variant="workspace"],
+  .ck-sheet-viewport {
+    top: var(--overlay-top, 0px);
+    bottom: auto;
+    height: var(--overlay-height, 100dvh);
+    max-height: var(--overlay-height, 100dvh);
+  }
+}
+@media (min-width: 640px) and (max-width: 767px), (min-width: 640px) and (pointer: coarse) {
+  .ck-dialog-viewport[data-dialog-variant="form"],
+  .ck-dialog-viewport[data-dialog-variant="workspace"] {
+    top: calc(var(--overlay-top, 0px) + var(--overlay-height, 100dvh) / 2);
+    bottom: auto;
+    max-height: calc(var(--overlay-height, 100dvh) - 2rem);
+  }
+  .ck-dialog-viewport[data-dialog-variant="workspace"] {
+    height: min(52rem, calc(var(--overlay-height, 100dvh) - 2rem));
+  }
+}
+
+
+.ck-dashboard-preferences button { cursor: pointer; }
+.ck-dashboard-preferences .ck-language-open { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 10px; border-radius: 12px; text-align: left; }
+.ck-dashboard-preferences .ck-language-open:hover { background: hsl(var(--muted)); }
+.ck-dashboard-preferences .ck-language-open span { display: grid; gap: 3px; }
+.ck-dashboard-preferences small, .ck-dashboard-preferences legend { font-size: 12px; color: hsl(var(--muted-foreground)); }
+.ck-dashboard-preferences fieldset { margin-top: 12px; padding-top: 12px; border-top: 1px solid hsl(var(--border)); }
+.ck-dashboard-preferences legend { float: left; width: 100%; margin-bottom: 10px; padding-inline: 10px; }
+.ck-dashboard-preferences .ck-theme-options { clear: both; display: grid; gap: 6px; }
+.ck-dashboard-preferences .ck-theme-options button { position: relative; display: flex; min-width: 0; flex-direction: column; align-items: center; gap: 8px; border-radius: 12px; padding: 6px 4px 10px; font-size: 12px; }
+.ck-dashboard-preferences .ck-theme-options button[aria-pressed=true] { background: hsl(var(--muted)); box-shadow: inset 0 0 0 1px hsl(var(--border)); }
+.ck-dashboard-preferences .ck-theme-options button>svg { position: absolute; right: 8px; top: 8px; padding: 2px; width: 17px; height: 17px; border-radius: 50%; background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); }
+.ck-dashboard-preferences .ck-theme-preview { width: 100%; height: 48px; border: 1px solid #d4d4d4; border-radius: 8px; background: linear-gradient(90deg, #efefef 23%, #fff 23%); box-shadow: inset 0 9px #f5f5f5; }
+.ck-dashboard-preferences .ck-theme-dark { border-color: #454545; background: linear-gradient(90deg, #171717 23%, #262626 23%); box-shadow: inset 0 9px #333; }
+.ck-dashboard-preferences .ck-theme-system { background: linear-gradient(90deg, #fff 50%, #262626 50%); box-shadow: inset 0 9px #8885; }
+.ck-dashboard-preferences .ck-language-heading { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.ck-dashboard-preferences .ck-language-heading button { display: grid; width: 40px; height: 40px; place-items: center; border-radius: 10px; }
+.ck-dashboard-preferences .ck-language-heading button:hover { background: hsl(var(--muted)); }
+.ck-dashboard-preferences .ck-language-command [cmdk-input-wrapper] { border: 0; background: hsl(var(--muted)); border-radius: 10px; }
+.ck-dashboard-preferences .ck-language-command [cmdk-list] { margin-top: 8px; max-height: min(310px, 45svh); }
+.ck-dashboard-preferences .ck-language-command [cmdk-item] { gap: 10px; min-height: 44px; border-radius: 9px; }
+.ck-dashboard-preferences .ck-language-command [cmdk-item]>span:not(.cs-language-flag) { flex: 1; }
+.ck-dashboard-preferences .cs-language-flag { width: 24px; height: 18px; flex-shrink: 0; overflow: hidden; border-radius: 3px; }
+.ck-dashboard-preferences .ck-theme-preview::after { content: none; }
+.ck-dashboard-preferences .ck-language-open strong { font: inherit; font-weight: 600; }

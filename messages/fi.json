@@ -2602,6 +2602,15 @@
     }
   },
   "GeneralPage": {
+    "linkParsing": {
+      "title": "Linkkien käsittely",
+      "description": "Valitse, mitkä linkit ja komennot ClashKing avaa Discord-viesteissä.",
+      "clan": "Klaanilinkit",
+      "army": "Armeijalinkit",
+      "player": "Pelaajalinkit",
+      "base": "Tukikohtalinkit",
+      "show": "-show-komennot"
+    },
     "title": "Yleiset asetukset",
     "description": "Määritä botin toiminta ja ulkoasu koko palvelimelle",
     "loading": "Ladataan asetuksia...",

@@ -2602,6 +2602,15 @@
     }
   },
   "GeneralPage": {
+    "linkParsing": {
+      "title": "链接解析",
+      "description": "选择 ClashKing 在 Discord 消息中展开的链接和命令。",
+      "clan": "部落链接",
+      "army": "军队链接",
+      "player": "玩家链接",
+      "base": "阵型链接",
+      "show": "-show 命令"
+    },
     "title": "常规设置",
     "description": "配置服务器范围内的机器人行为和外观",
     "loading": "正在加载设置...",

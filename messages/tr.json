@@ -2602,6 +2602,15 @@
     }
   },
   "GeneralPage": {
+    "linkParsing": {
+      "title": "Bağlantı işleme",
+      "description": "ClashKing’in Discord mesajlarında hangi bağlantıları ve komutları genişleteceğini seçin.",
+      "clan": "Klan bağlantıları",
+      "army": "Ordu bağlantıları",
+      "player": "Oyuncu bağlantıları",
+      "base": "Üs bağlantıları",
+      "show": "-show komutları"
+    },
     "title": "Genel ayarlar",
     "description": "Sunucu genelindeki bot davranışını ve görünümünü yapılandırın",
     "loading": "Ayarlar yükleniyor...",

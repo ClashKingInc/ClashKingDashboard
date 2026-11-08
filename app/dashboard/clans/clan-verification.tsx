@@ -24,8 +24,10 @@ export function ClanVerificationIcon({ guildId, clanTag, onClick }: { guildId: s
   const verified = report.data.state === "verified";
   const label = verified ? "Verified clan" : report.data.state === "pending" ? "Clan verification pending" : "Verify clan";
   return <button type="button" onClick={onClick} aria-label={label} title={label}
-    className="absolute -bottom-0.5 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-card shadow-sm ring-1 ring-border/50 transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-    {verified ? <ShieldCheck aria-hidden="true" className="h-3.5 w-3.5" color={clashKingColors.verifiedGreen} /> : <TriangleAlert aria-hidden="true" className="h-3.5 w-3.5 text-orange-500" />}
+    className="absolute -bottom-3 -right-3 grid h-11 w-11 place-items-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+    <span className="grid h-[18px] w-[18px] place-items-center rounded-full bg-card shadow-sm ring-1 ring-border/50 transition-colors hover:bg-muted sm:h-[22px] sm:w-[22px]">
+      {verified ? <ShieldCheck aria-hidden="true" className="h-3 w-3 sm:h-3.5 sm:w-3.5" color={clashKingColors.verifiedGreen} /> : <TriangleAlert aria-hidden="true" className="h-3 w-3 text-orange-500 sm:h-3.5 sm:w-3.5" />}
+    </span>
   </button>;
 }
 

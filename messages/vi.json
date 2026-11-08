@@ -2602,6 +2602,15 @@
     }
   },
   "GeneralPage": {
+    "linkParsing": {
+      "title": "Phân tích liên kết",
+      "description": "Chọn những liên kết và lệnh mà ClashKing mở rộng trong tin nhắn Discord.",
+      "clan": "Liên kết bang hội",
+      "army": "Liên kết đội quân",
+      "player": "Liên kết người chơi",
+      "base": "Liên kết căn cứ",
+      "show": "Lệnh -show"
+    },
     "title": "Cài đặt chung",
     "description": "Cấu hình hành vi và giao diện bot trên toàn máy chủ",
     "loading": "Đang tải cài đặt...",

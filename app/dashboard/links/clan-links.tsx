@@ -44,19 +44,19 @@ export function ClanLinks({guildId,onLinked}:{guildId:string;onLinked:()=>void})
     {report.data?.clans.map(clan=>{
       const linked=clan.members.filter(member=>member.link || member.hidden).length;
       return <Collapsible key={clan.tag} className="rounded-3xl bg-card shadow-sm shadow-black/5">
-        <CollapsibleTrigger className="group flex w-full items-center gap-3 p-4 text-left md:p-5">
+        <CollapsibleTrigger className="group grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-3 gap-y-2 p-4 text-left md:p-5">
           {clan.badge && <Image src={clan.badge} alt="" width={48} height={48} unoptimized className="h-12 w-12 shrink-0 object-contain" />}
           <span className="min-w-0 flex-1"><span className="block truncate font-semibold">{clan.name}</span><span className="text-xs text-muted-foreground">{clan.tag} · Level {clan.level}</span></span>
-          <span className="flex flex-wrap justify-end gap-2 text-xs text-muted-foreground"><Badge variant="secondary">{clan.members.length} members</Badge><Badge variant="secondary">{linked} linked</Badge>{clan.verified && <Badge variant="secondary">Verified clan</Badge>}</span>
-          <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground group-data-[state=open]:rotate-180" />
+          <span className="col-span-2 col-start-2 row-start-2 flex flex-wrap gap-2 text-xs text-muted-foreground"><Badge variant="secondary">{clan.members.length} members</Badge><Badge variant="secondary">{linked} linked</Badge>{clan.verified && <Badge variant="secondary">Verified clan</Badge>}</span>
+          <ChevronDown className="col-start-3 row-start-1 h-4 w-4 shrink-0 text-muted-foreground group-data-[state=open]:rotate-180" />
         </CollapsibleTrigger>
         <CollapsibleContent className="px-4 pb-4 md:px-5 md:pb-5">
           {clan.observedAt && <p className="mb-3 text-xs text-muted-foreground">Roster updated <time dateTime={clan.observedAt}>{new Date(clan.observedAt).toLocaleString()}</time></p>}
           <div className="space-y-2 rounded-2xl bg-muted/45 p-2">
-            {clan.members.map(member=><div key={member.tag} className="flex flex-wrap items-center gap-3 rounded-xl px-2 py-2">
-              {member.townHall ? <Image src={townHallImageUrl(member.townHall)} alt={`Town Hall ${member.townHall}`} width={36} height={36} unoptimized className="h-9 w-9 object-contain" /> : <span className="flex h-9 w-9 items-center justify-center text-xs text-muted-foreground" title="Town Hall unavailable">—</span>}
-              <div className="min-w-0 flex-1"><p className="font-medium">{member.name}</p><p className="text-xs text-muted-foreground">{member.tag}</p></div>
-              <div className="flex flex-wrap items-center gap-3">
+            {clan.members.map(member=><div key={member.tag} className="grid grid-cols-[36px_minmax(0,1fr)] items-center gap-x-3 gap-y-2 rounded-xl px-2 py-3 sm:grid-cols-[36px_minmax(0,1fr)_auto]">
+              {member.townHall ? <Image src={townHallImageUrl(member.townHall)} alt={`Town Hall ${member.townHall}`} width={36} height={36} unoptimized className="h-9 w-9 shrink-0 object-contain" /> : <span className="flex h-9 w-9 items-center justify-center text-xs text-muted-foreground" title="Town Hall unavailable">—</span>}
+              <div className="min-w-0 flex-1"><p className="truncate font-medium" title={member.name}>{member.name}</p><p className="text-xs text-muted-foreground">{member.tag}</p></div>
+              <div className="col-start-2 flex min-w-0 flex-wrap items-center gap-2 sm:col-start-3 sm:row-start-1 sm:justify-end">
                 {member.hidden && !member.link ? <span className="text-sm italic text-muted-foreground">Hidden</span> : <DiscordUserDisplay userId={member.link?.userId} username={member.link?.username} avatarUrl={member.link?.avatar} isOnServer={member.link?.inServer} />}
                 {member.hidden && member.link && <Badge variant="secondary">Hidden</Badge>}
                 {member.link ? <Badge variant="secondary" className={member.link.verified ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300" : "text-muted-foreground"}>{member.link.verified ? "Verified" : "Unverified"}</Badge>

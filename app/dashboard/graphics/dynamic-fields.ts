@@ -234,10 +234,17 @@ export function mapWarApiData(payload: Record<string, unknown>, warSize = 5): Bi
   const safeWarSize = normalizeGraphicWarSize(warSize);
   const clan = isRecord(payload.clan) ? payload.clan : {};
   const opponent = isRecord(payload.opponent) ? payload.opponent : {};
+  const warType = stringValue(payload.type)?.trim().toLowerCase();
+  const warTag = stringValue(payload.tag)?.trim();
+  const isCwl = warType === "cwl" || warType === "league" || Boolean(warTag && warTag !== "#0");
+  const reportedAttacks = numberValue(payload.attacksPerMember);
+  // CWL omits attacksPerMember and always allows one. Friendly/regular wars
+  // must use their reported allowance; a missing count must never imply two.
+  const attacksPerMember = isCwl ? 1 : reportedAttacks !== undefined && Number.isInteger(reportedAttacks) && reportedAttacks > 0 ? reportedAttacks : undefined;
   const bindings: BindingValues = {
     war_state: stringValue(payload.state),
     war_team_size: numberValue(payload.teamSize),
-    war_attacks_per_member: numberValue(payload.attacksPerMember),
+    war_attacks_per_member: attacksPerMember,
     war_preparation_start_time: stringValue(payload.preparationStartTime),
     war_start_time: stringValue(payload.startTime),
     war_end_time: stringValue(payload.endTime),
