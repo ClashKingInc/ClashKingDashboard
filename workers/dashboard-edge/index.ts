@@ -115,6 +115,9 @@ async function sharedViewHtml(
     const rewritten = new HTMLRewriter()
       .on("title", { element(element) { element.setInnerContent(`${data.name} | ClashKing`); } })
       .on('meta[property^="og:"],meta[name^="twitter:"],meta[name="robots"]', { element(element) { element.remove(); } })
+      .on('script[id="discord:component-embed"]', {
+        element(element) { element.remove(); }
+      })
       .on('meta[name="description"]', { element(element) { element.setAttribute("content", description); } })
       .on("head", { element(element) { element.append(tags, { html: true }); } }).transform(shell);
     const headers = new Headers(rewritten.headers);
