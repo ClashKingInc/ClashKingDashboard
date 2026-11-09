@@ -2858,7 +2858,7 @@
         "ctaSecondary": "Συμμετοχή στην κοινότητα"
       },
       "app": {
-        "title": "Εφαρμογή ClashKing (Ανοιχτή beta)",
+        "title": "Εφαρμογή ClashKing",
         "description": "Η εφαρμογή ClashKing αποτελεί την ιδανική επέκταση του ClashKing Bot, φέρνοντας βασικά εργαλεία και πληροφορίες απευθείας στην κινητή συσκευή σας. Σας κρατά συνδεδεμένους πάντα και παντού, ακόμη και χωρίς το Discord.",
         "items": [
           "Στατιστικά σε πραγματικό χρόνο: Αναλυτικά στατιστικά παικτών και φυλών συγχρονισμένα με το bot.",
@@ -2869,7 +2869,7 @@
           "Προηγμένες ειδοποιήσεις: (Σύντομα διαθέσιμο) Προσαρμόστε τις ειδοποιήσεις για σημαντικές εκδηλώσεις."
         ],
         "ctaPrimary": "Android Beta",
-        "ctaSecondary": "iOS TestFlight"
+        "ctaSecondary": "App Store"
       },
       "api": {
         "title": "ClashKing API",
@@ -3892,7 +3892,6 @@
       "addToDiscord": "Προσθήκη στο Discord",
       "addClashKing": "Προσθήκη του ClashKing",
       "openDashboard": "Άνοιγμα πίνακα ελέγχου",
-      "joinTestFlight": "Συμμετοχή στο TestFlight",
       "getAndroidApp": "Λήψη εφαρμογής Android",
       "login": "Log in",
       "dashboard": "Dashboard",

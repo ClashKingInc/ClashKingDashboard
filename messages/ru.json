@@ -2858,7 +2858,7 @@
         "ctaSecondary": "Вступить в сообщество"
       },
       "app": {
-        "title": "Приложение ClashKing (открытая бета)",
+        "title": "Приложение ClashKing",
         "description": "Приложение ClashKing дополняет бот важными инструментами и аналитикой на мобильном устройстве. Оставайтесь на связи в любое время и в любом месте, даже без Discord.",
         "items": [
           "Статистика в реальном времени: подробные данные игроков и кланов, синхронизированные с ботом.",
@@ -2869,7 +2869,7 @@
           "Расширенные уведомления: скоро можно будет настроить оповещения о важных событиях."
         ],
         "ctaPrimary": "Бета-версия для Android",
-        "ctaSecondary": "iOS TestFlight"
+        "ctaSecondary": "App Store"
       },
       "api": {
         "title": "ClashKing API",
@@ -3892,7 +3892,6 @@
       "addToDiscord": "Добавить в Discord",
       "addClashKing": "Добавить ClashKing",
       "openDashboard": "Открыть панель управления",
-      "joinTestFlight": "Присоединиться к TestFlight",
       "getAndroidApp": "Скачать приложение для Android",
       "login": "Log in",
       "dashboard": "Dashboard",

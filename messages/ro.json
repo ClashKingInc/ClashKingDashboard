@@ -2858,7 +2858,7 @@
         "ctaSecondary": "Alătură-te comunității"
       },
       "app": {
-        "title": "Aplicația ClashKing (beta deschisă)",
+        "title": "Aplicația ClashKing",
         "description": "Aplicația ClashKing completează botul cu instrumente și informații esențiale pe dispozitivul mobil. Rămâi conectat oriunde, chiar și fără Discord.",
         "items": [
           "Statistici în timp real: statistici detaliate pentru jucători și clanuri, sincronizate cu botul.",
@@ -2869,7 +2869,7 @@
           "Notificări avansate: (în curând) personalizează alertele pentru evenimente importante."
         ],
         "ctaPrimary": "Beta pentru Android",
-        "ctaSecondary": "iOS TestFlight"
+        "ctaSecondary": "App Store"
       },
       "api": {
         "title": "API-ul ClashKing",
@@ -3892,7 +3892,6 @@
       "addToDiscord": "Adaugă pe Discord",
       "addClashKing": "Adaugă ClashKing",
       "openDashboard": "Deschide panoul",
-      "joinTestFlight": "Alătură-te pe TestFlight",
       "getAndroidApp": "Descarcă aplicația Android",
       "login": "Log in",
       "dashboard": "Dashboard",

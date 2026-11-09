@@ -16,6 +16,7 @@ import { LandingCounts } from "./clan-signal/counts";
 import { useLandingMotion } from "./clan-signal/motion";
 import { readLandingTheme } from "./clan-signal/language-switcher";
 import { isPublicLocale, publicPath, type SupportedLocale } from "@/lib/locale-preference";
+import { IOS_APP_STORE_URL } from "@/lib/constants";
 import "../../../app/explorations/clan-signal.css";
 import "../../../app/explorations/clan-signal-rally.css";
 
@@ -201,7 +202,7 @@ export function ClanSignal() {
           <p className="cs-section-intro">{t("app.intro")}</p>
           <FeatureList features={appFeatures} />
           <div className="cs-actions ck-downloads">
-            <a className="ck-download" href="https://testflight.apple.com/join/6Q8dfnMX" target="_blank" rel="noreferrer"><PlatformMark platform="ios" /><span><small>{t('actions.joinTestFlight')}</small>TestFlight</span></a>
+            <a className="ck-download" href={IOS_APP_STORE_URL} target="_blank" rel="noreferrer"><PlatformMark platform="ios" /><span><small>{t('actions.iosApp')}</small>App Store</span></a>
             <a className="ck-download" href="https://play.google.com/store/apps/details?id=com.clashking.clashkingapp" target="_blank" rel="noreferrer"><PlatformMark platform="android" /><span><small>{t('actions.androidApp')}</small>Google Play</span></a>
           </div>
         </div>

@@ -2858,7 +2858,7 @@
         "ctaSecondary": "Připojit se ke komunitě"
       },
       "app": {
-        "title": "Aplikace ClashKing (otevřená beta)",
+        "title": "Aplikace ClashKing",
         "description": "Aplikace ClashKing skvěle doplňuje bota a přináší důležité nástroje a přehledy přímo do mobilního zařízení. Zůstanete ve spojení kdykoli a kdekoli, i bez Discordu.",
         "items": [
           "Statistiky v reálném čase: Podrobné statistiky hráčů a klanů synchronizované s botem.",
@@ -2869,7 +2869,7 @@
           "Pokročilá oznámení: (Již brzy) Přizpůsobte si upozornění na důležité události."
         ],
         "ctaPrimary": "Android Beta",
-        "ctaSecondary": "iOS TestFlight"
+        "ctaSecondary": "App Store"
       },
       "api": {
         "title": "ClashKing API",
@@ -3892,7 +3892,6 @@
       "addToDiscord": "Přidat do Discordu",
       "addClashKing": "Přidat ClashKing",
       "openDashboard": "Otevřít ovládací panel",
-      "joinTestFlight": "Připojit se k TestFlight",
       "getAndroidApp": "Získat aplikaci pro Android",
       "login": "Log in",
       "dashboard": "Dashboard",

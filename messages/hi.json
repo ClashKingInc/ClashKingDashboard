@@ -2858,7 +2858,7 @@
         "ctaSecondary": "समुदाय से जुड़ें"
       },
       "app": {
-        "title": "ClashKing ऐप (ओपन बीटा)",
+        "title": "ClashKing ऐप",
         "description": "ClashKing ऐप, ClashKing बॉट का बेहतरीन विस्तार है, जो ज़रूरी टूल और जानकारी सीधे मोबाइल पर लाता है। Discord के बिना भी कभी भी, कहीं भी जुड़े रहें।",
         "items": [
           "रियल-टाइम आँकड़े: बॉट के साथ सिंक किए गए खिलाड़ियों और क्लैनों के विस्तृत आँकड़े।",
@@ -2869,7 +2869,7 @@
           "उन्नत सूचनाएँ: (जल्द आ रही हैं) महत्वपूर्ण घटनाओं के लिए अलर्ट अनुकूलित करें।"
         ],
         "ctaPrimary": "Android बीटा",
-        "ctaSecondary": "iOS TestFlight"
+        "ctaSecondary": "App Store"
       },
       "api": {
         "title": "ClashKing API",
@@ -3892,7 +3892,6 @@
       "addToDiscord": "Discord में जोड़ें",
       "addClashKing": "ClashKing जोड़ें",
       "openDashboard": "डैशबोर्ड खोलें",
-      "joinTestFlight": "TestFlight से जुड़ें",
       "getAndroidApp": "Android ऐप पाएँ",
       "login": "Log in",
       "dashboard": "Dashboard",

@@ -2858,7 +2858,7 @@
         "ctaSecondary": "커뮤니티 참여"
       },
       "app": {
-        "title": "ClashKing 앱 (오픈 베타)",
+        "title": "ClashKing 앱",
         "description": "ClashKing 앱은 ClashKing 봇의 필수 도구와 통계를 모바일 기기로 가져오는 완벽한 확장 앱입니다. Discord가 없어도 언제 어디서나 연결된 상태를 유지할 수 있습니다.",
         "items": [
           "실시간 통계: 봇과 동기화된 플레이어 및 클랜의 상세 통계를 제공합니다.",
@@ -2869,7 +2869,7 @@
           "고급 알림: (출시 예정) 중요한 이벤트 알림을 원하는 대로 설정합니다."
         ],
         "ctaPrimary": "Android 베타",
-        "ctaSecondary": "iOS TestFlight"
+        "ctaSecondary": "App Store"
       },
       "api": {
         "title": "ClashKing API",
@@ -3892,7 +3892,6 @@
       "addToDiscord": "Discord에 추가",
       "addClashKing": "ClashKing 추가",
       "openDashboard": "대시보드 열기",
-      "joinTestFlight": "TestFlight 참여",
       "getAndroidApp": "Android 앱 받기",
       "login": "Log in",
       "dashboard": "Dashboard",

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "@/components/app-link";
+import { IOS_APP_STORE_URL } from "@/lib/constants";
 import { ClanSignalPageShell } from "@/components/landing/explorations/clan-signal/legal-shell";
 import { CheckCircle2 } from "lucide-react";
 import { useTranslations } from "use-intl";
@@ -22,7 +23,7 @@ export default function FeaturesPage() {
       description: t("sections.app.description"),
       items: (t.raw("sections.app.items") as string[]) ?? [],
       primary: { label: t("sections.app.ctaPrimary"), href: "https://play.google.com/apps/testing/com.clashking.clashkingapp" },
-      secondary: { label: t("sections.app.ctaSecondary"), href: "https://testflight.apple.com/join/6Q8dfnMX" },
+      secondary: { label: t("sections.app.ctaSecondary"), href: IOS_APP_STORE_URL },
     },
     {
       id: "api",

@@ -2858,7 +2858,7 @@
         "ctaSecondary": "Community beitreten"
       },
       "app": {
-        "title": "ClashKing-App (offene Beta)",
+        "title": "ClashKing-App",
         "description": "Die ClashKing-App ist die perfekte Ergänzung zum ClashKing-Bot und bringt wichtige Werkzeuge und Einblicke direkt auf dein Mobilgerät. So bleibst du jederzeit und überall verbunden, auch ohne Discord.",
         "items": [
           "Echtzeitstatistiken: Detaillierte Spieler- und Clanstatistiken, die mit dem Bot synchronisiert werden.",
@@ -2869,7 +2869,7 @@
           "Erweiterte Benachrichtigungen: (Demnächst verfügbar) Passe Benachrichtigungen für wichtige Ereignisse an."
         ],
         "ctaPrimary": "Android Beta",
-        "ctaSecondary": "iOS TestFlight"
+        "ctaSecondary": "App Store"
       },
       "api": {
         "title": "ClashKing API",
@@ -3892,7 +3892,6 @@
       "addToDiscord": "Zu Discord hinzufügen",
       "addClashKing": "ClashKing hinzufügen",
       "openDashboard": "Dashboard öffnen",
-      "joinTestFlight": "TestFlight beitreten",
       "getAndroidApp": "Android-App herunterladen",
       "login": "Log in",
       "dashboard": "Dashboard",

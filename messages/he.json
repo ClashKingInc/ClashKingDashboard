@@ -2858,7 +2858,7 @@
         "ctaSecondary": "הצטרפות לקהילה"
       },
       "app": {
-        "title": "אפליקציית ClashKing (בטא פתוחה)",
+        "title": "אפליקציית ClashKing",
         "description": "אפליקציית ClashKing משלימה את הבוט ומביאה כלים ותובנות חיוניים ישירות למכשיר הנייד, כדי שתישארו מחוברים בכל זמן ומקום גם ללא Discord.",
         "items": [
           "נתונים בזמן אמת: נתונים מפורטים לשחקנים ולשבטים המסונכרנים עם הבוט.",
@@ -2869,7 +2869,7 @@
           "התראות מתקדמות: (בקרוב) התאמת התראות לאירועים חשובים."
         ],
         "ctaPrimary": "גרסת בטא ל-Android",
-        "ctaSecondary": "גרסת iOS ב-TestFlight"
+        "ctaSecondary": "App Store"
       },
       "api": {
         "title": "ClashKing API",
@@ -3892,7 +3892,6 @@
       "addToDiscord": "הוספה ל-Discord",
       "addClashKing": "הוספת ClashKing",
       "openDashboard": "פתיחת לוח הבקרה",
-      "joinTestFlight": "הצטרפות ל-TestFlight",
       "getAndroidApp": "הורדת אפליקציית Android",
       "login": "Log in",
       "dashboard": "Dashboard",

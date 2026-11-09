@@ -2858,7 +2858,7 @@
         "ctaSecondary": "کمیونٹی میں شامل ہوں"
       },
       "app": {
-        "title": "ClashKing ایپ (اوپن بیٹا)",
+        "title": "ClashKing ایپ",
         "description": "ClashKing ایپ، ClashKing بوٹ کی بہترین توسیع ہے جو ضروری ٹولز اور معلومات براہِ راست آپ کے موبائل پر فراہم کرتی ہے۔ اس کی مدد سے آپ Discord کے بغیر بھی کسی بھی وقت، کہیں سے بھی رابطے میں رہ سکتے ہیں۔",
         "items": [
           "براہِ راست اعدادوشمار: بوٹ کے ساتھ ہم وقت کھلاڑیوں اور کلینز کے تفصیلی اعدادوشمار۔",
@@ -2869,7 +2869,7 @@
           "اعلیٰ اطلاعات: (جلد آ رہا ہے) اہم واقعات کے لیے الرٹس اپنی مرضی کے مطابق بنائیں۔"
         ],
         "ctaPrimary": "Android بیٹا حاصل کریں",
-        "ctaSecondary": "iOS TestFlight"
+        "ctaSecondary": "App Store"
       },
       "api": {
         "title": "ClashKing API",
@@ -3892,7 +3892,6 @@
       "addToDiscord": "Discord میں شامل کریں",
       "addClashKing": "ClashKing شامل کریں",
       "openDashboard": "ڈیش بورڈ کھولیں",
-      "joinTestFlight": "TestFlight میں شامل ہوں",
       "getAndroidApp": "Android ایپ حاصل کریں",
       "login": "Log in",
       "dashboard": "Dashboard",

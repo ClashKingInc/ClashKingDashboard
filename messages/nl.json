@@ -2858,7 +2858,7 @@
         "ctaSecondary": "Word lid van de gemeenschap"
       },
       "app": {
-        "title": "ClashKing App (open bèta)",
+        "title": "ClashKing App",
         "description": "ClashKing App is de perfecte uitbreiding op de ClashKing Bot, die essentiële tools en inzichten direct naar je mobiele apparaat brengt. Het helpt je altijd en overal verbonden te blijven, zelfs zonder Discord.",
         "items": [
           "Realtime statistieken: gedetailleerde statistieken voor spelers en clans, gesynchroniseerd met de bot.",
@@ -2869,7 +2869,7 @@
           "Geavanceerde meldingen: (binnenkort) pas meldingen voor belangrijke gebeurtenissen aan."
         ],
         "ctaPrimary": "Android-bèta",
-        "ctaSecondary": "iOS TestFlight"
+        "ctaSecondary": "App Store"
       },
       "api": {
         "title": "ClashKing API",
@@ -3892,7 +3892,6 @@
       "addToDiscord": "Voeg toe aan Discord",
       "addClashKing": "Voeg ClashKing toe",
       "openDashboard": "Dashboard openen",
-      "joinTestFlight": "Probeer via TestFlight",
       "getAndroidApp": "Download voor Android",
       "login": "Inloggen",
       "dashboard": "Dashboard",
