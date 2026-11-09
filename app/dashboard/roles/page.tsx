@@ -334,7 +334,9 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
         ...(roleSettings.auto_eval_triggers !== undefined ? {auto_eval_triggers: roleSettings.auto_eval_triggers} : {}),
         role_leave_delay_minutes: roleSettings.role_leave_delay_minutes,
         flair_non_family: roleSettings.flair_non_family,
-        autoeval_log: roleSettings.autoeval_log,
+        // Omit an unset optional key: the API client rejects an explicit undefined
+        // value before sending, which would block unrelated nickname changes.
+        ...(roleSettings.autoeval_log !== undefined ? { autoeval_log: roleSettings.autoeval_log } : {}),
       });
       if (result.error) throw new Error(result.error);
       await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.route("role-settings", guildId), exact: true });
