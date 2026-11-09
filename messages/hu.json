@@ -2858,7 +2858,7 @@
         "ctaSecondary": "Csatlakozás a közösséghez"
       },
       "app": {
-        "title": "ClashKing alkalmazás (nyílt béta)",
+        "title": "ClashKing alkalmazás",
         "description": "A ClashKing alkalmazás tökéletes kiegészítője a ClashKing Botnak: a legfontosabb eszközöket és elemzéseket közvetlenül a mobileszközödre hozza. Bárhol és bármikor kapcsolatban maradhatsz, Discord nélkül is.",
         "items": [
           "Valós idejű statisztikák: A játékosok és klánok részletes, bottal szinkronizált statisztikái.",
@@ -2869,7 +2869,7 @@
           "Speciális értesítések: (Hamarosan) Fontos események riasztásainak testreszabása."
         ],
         "ctaPrimary": "Android Beta",
-        "ctaSecondary": "iOS TestFlight"
+        "ctaSecondary": "App Store"
       },
       "api": {
         "title": "ClashKing API",
@@ -3892,7 +3892,6 @@
       "addToDiscord": "Hozzáadás egy Discordhoz",
       "addClashKing": "ClashKing hozzáadása",
       "openDashboard": "Vezérlőpult megnyitása",
-      "joinTestFlight": "Csatlakozás a TestFlighthoz",
       "getAndroidApp": "Android-alkalmazás letöltése",
       "login": "Log in",
       "dashboard": "Dashboard",

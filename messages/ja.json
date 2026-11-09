@@ -2858,7 +2858,7 @@
         "ctaSecondary": "コミュニティに参加"
       },
       "app": {
-        "title": "ClashKingアプリ（オープンベータ）",
+        "title": "ClashKingアプリ",
         "description": "ClashKingアプリはClashKingボットを補完し、必要なツールとデータをモバイル端末に直接届けます。Discordがなくても、いつでもどこでもつながれます。",
         "items": [
           "リアルタイム統計: ボットと同期されたプレイヤーとクランの詳細統計を確認できます。",
@@ -2869,7 +2869,7 @@
           "高度な通知: （近日公開）重要なイベントのアラートをカスタマイズします。"
         ],
         "ctaPrimary": "Androidベータ",
-        "ctaSecondary": "iOS TestFlight"
+        "ctaSecondary": "App Store"
       },
       "api": {
         "title": "ClashKing API",
@@ -3892,7 +3892,6 @@
       "addToDiscord": "Discordに追加",
       "addClashKing": "ClashKingを追加",
       "openDashboard": "ダッシュボードを開く",
-      "joinTestFlight": "TestFlightに参加",
       "getAndroidApp": "Androidアプリを入手",
       "login": "Log in",
       "dashboard": "Dashboard",

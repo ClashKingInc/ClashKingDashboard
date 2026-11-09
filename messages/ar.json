@@ -2858,7 +2858,7 @@
         "ctaSecondary": "الانضمام إلى المجتمع"
       },
       "app": {
-        "title": "تطبيق ClashKing (بيتا مفتوحة)",
+        "title": "تطبيق ClashKing",
         "description": "تطبيق ClashKing هو الامتداد المثالي لبوت ClashKing، ويجلب الأدوات والرؤى الأساسية مباشرة إلى هاتفك، لتبقى متصلًا دائمًا حتى دون Discord.",
         "items": [
           "إحصاءات مباشرة: إحصاءات مفصلة للاعبين والقبائل متزامنة مع البوت.",
@@ -2869,7 +2869,7 @@
           "إشعارات متقدمة: (قريبًا) خصص التنبيهات للأحداث المهمة."
         ],
         "ctaPrimary": "بيتا Android",
-        "ctaSecondary": "نسخة iOS على TestFlight"
+        "ctaSecondary": "App Store"
       },
       "api": {
         "title": "واجهة ClashKing البرمجية",
@@ -3892,7 +3892,6 @@
       "addToDiscord": "إضافة إلى Discord",
       "addClashKing": "إضافة ClashKing",
       "openDashboard": "فتح لوحة التحكم",
-      "joinTestFlight": "الانضمام إلى TestFlight",
       "getAndroidApp": "تنزيل تطبيق Android",
       "login": "Log in",
       "dashboard": "Dashboard",

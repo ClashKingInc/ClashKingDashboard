@@ -2858,7 +2858,7 @@
         "ctaSecondary": "Topluluğa katıl"
       },
       "app": {
-        "title": "ClashKing Uygulaması (Açık Beta)",
+        "title": "ClashKing Uygulaması",
         "description": "ClashKing Uygulaması, gerekli araçları ve bilgileri doğrudan mobil cihazınıza taşıyan kusursuz bir ClashKing Bot tamamlayıcısıdır. Discord olmadan da her zaman, her yerde bağlantıda kalın.",
         "items": [
           "Gerçek zamanlı istatistikler: Botla eşitlenen ayrıntılı oyuncu ve klan istatistiklerini görüntüleyin.",
@@ -2869,7 +2869,7 @@
           "Gelişmiş bildirimler: (Yakında) Önemli etkinlik uyarılarını özelleştirin."
         ],
         "ctaPrimary": "Android Beta",
-        "ctaSecondary": "iOS TestFlight"
+        "ctaSecondary": "App Store"
       },
       "api": {
         "title": "ClashKing API",
@@ -3892,7 +3892,6 @@
       "addToDiscord": "Discord’a ekle",
       "addClashKing": "ClashKing’i ekle",
       "openDashboard": "Kontrol panelini aç",
-      "joinTestFlight": "TestFlight’a katıl",
       "getAndroidApp": "Android uygulamasını indir",
       "login": "Log in",
       "dashboard": "Dashboard",

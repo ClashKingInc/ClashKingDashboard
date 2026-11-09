@@ -2858,7 +2858,7 @@
         "ctaSecondary": "Gå med i gemenskapen"
       },
       "app": {
-        "title": "ClashKing-appen (öppen beta)",
+        "title": "ClashKing-appen",
         "description": "ClashKing-appen kompletterar boten med viktiga verktyg och insikter direkt på mobilen. Den hjälper dig att hålla kontakten när och var som helst, även utan Discord.",
         "items": [
           "Realtidsstatistik: Detaljerad statistik för spelare och klaner som synkroniseras med boten.",
@@ -2869,7 +2869,7 @@
           "Avancerade aviseringar: (Kommer snart) Anpassa aviseringar om viktiga händelser."
         ],
         "ctaPrimary": "Android Beta",
-        "ctaSecondary": "iOS TestFlight"
+        "ctaSecondary": "App Store"
       },
       "api": {
         "title": "ClashKing API",
@@ -3892,7 +3892,6 @@
       "addToDiscord": "Lägg till i Discord",
       "addClashKing": "Lägg till ClashKing",
       "openDashboard": "Öppna kontrollpanelen",
-      "joinTestFlight": "Gå med i TestFlight",
       "getAndroidApp": "Hämta Android-appen",
       "login": "Log in",
       "dashboard": "Dashboard",

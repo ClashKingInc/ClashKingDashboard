@@ -2858,7 +2858,7 @@
         "ctaSecondary": "加入社区"
       },
       "app": {
-        "title": "ClashKing应用（公开测试版）",
+        "title": "ClashKing应用",
         "description": "ClashKing App是ClashKing Bot的理想扩展，将重要工具和数据直接带到移动设备，让你即使不使用Discord也能随时随地保持连接。",
         "items": [
           "实时统计：与机器人同步的详细玩家和部落数据。",
@@ -2869,7 +2869,7 @@
           "高级通知：（即将推出）为重要活动设置自定义提醒。"
         ],
         "ctaPrimary": "Android测试版",
-        "ctaSecondary": "iOS TestFlight"
+        "ctaSecondary": "App Store"
       },
       "api": {
         "title": "ClashKing API",
@@ -3892,7 +3892,6 @@
       "addToDiscord": "添加到Discord",
       "addClashKing": "添加ClashKing",
       "openDashboard": "打开控制面板",
-      "joinTestFlight": "加入TestFlight",
       "getAndroidApp": "获取Android应用",
       "login": "Log in",
       "dashboard": "Dashboard",

@@ -2858,7 +2858,7 @@
         "ctaSecondary": "Pridruži se zajednici"
       },
       "app": {
-        "title": "ClashKing aplikacija (otvorena beta)",
+        "title": "ClashKing aplikacija",
         "description": "ClashKing aplikacija savršeno dopunjuje ClashKing Bot jer donosi ključne alate i uvide pravo na mobilni uređaj. Ostanite povezani bilo kada i bilo gde, čak i bez Discorda.",
         "items": [
           "Statistika uživo: Detaljna statistika igrača i klanova sinhronizovana sa botom.",
@@ -2869,7 +2869,7 @@
           "Napredna obaveštenja: (Uskoro) Prilagodite upozorenja za važne događaje."
         ],
         "ctaPrimary": "Android Beta",
-        "ctaSecondary": "iOS TestFlight"
+        "ctaSecondary": "App Store"
       },
       "api": {
         "title": "ClashKing API",
@@ -3892,7 +3892,6 @@
       "addToDiscord": "Dodaj u Discord",
       "addClashKing": "Dodaj ClashKing",
       "openDashboard": "Otvori kontrolnu tablu",
-      "joinTestFlight": "Pridruži se TestFlightu",
       "getAndroidApp": "Preuzmi Android aplikaciju",
       "login": "Log in",
       "dashboard": "Dashboard",

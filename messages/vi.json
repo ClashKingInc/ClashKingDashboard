@@ -2858,7 +2858,7 @@
         "ctaSecondary": "Tham gia cộng đồng"
       },
       "app": {
-        "title": "Ứng dụng ClashKing (Beta công khai)",
+        "title": "Ứng dụng ClashKing",
         "description": "Ứng dụng ClashKing là phần mở rộng hoàn hảo cho Bot ClashKing, mang các công cụ và thông tin thiết yếu đến thẳng thiết bị di động. Bạn luôn có thể kết nối mọi lúc, mọi nơi, ngay cả khi không có Discord.",
         "items": [
           "Thống kê theo thời gian thực: Thống kê chi tiết của người chơi và bang hội được đồng bộ với bot.",
@@ -2869,7 +2869,7 @@
           "Thông báo nâng cao: (Sắp ra mắt) Tùy chỉnh cảnh báo cho các sự kiện quan trọng."
         ],
         "ctaPrimary": "Bản beta Android",
-        "ctaSecondary": "iOS TestFlight"
+        "ctaSecondary": "App Store"
       },
       "api": {
         "title": "API ClashKing",
@@ -3892,7 +3892,6 @@
       "addToDiscord": "Thêm vào Discord",
       "addClashKing": "Thêm ClashKing",
       "openDashboard": "Mở bảng điều khiển",
-      "joinTestFlight": "Tham gia TestFlight",
       "getAndroidApp": "Tải ứng dụng Android",
       "login": "Log in",
       "dashboard": "Dashboard",

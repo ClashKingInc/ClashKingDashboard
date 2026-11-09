@@ -2858,7 +2858,7 @@
         "ctaSecondary": "Liity yhteisöön"
       },
       "app": {
-        "title": "ClashKing-sovellus (avoin beta)",
+        "title": "ClashKing-sovellus",
         "description": "ClashKing-sovellus täydentää bottia tuomalla tärkeät työkalut ja tiedot mobiililaitteeseesi. Pysyt yhteydessä missä ja milloin tahansa, myös ilman Discordia.",
         "items": [
           "Reaaliaikaiset tilastot: Botin kanssa synkronoidut yksityiskohtaiset pelaaja- ja klaanitilastot.",
@@ -2869,7 +2869,7 @@
           "Edistyneet ilmoitukset: (Tulossa pian) Mukauta tärkeiden tapahtumien ilmoituksia."
         ],
         "ctaPrimary": "Android Beta",
-        "ctaSecondary": "iOS TestFlight"
+        "ctaSecondary": "App Store"
       },
       "api": {
         "title": "ClashKing API",
@@ -3892,7 +3892,6 @@
       "addToDiscord": "Lisää Discordiin",
       "addClashKing": "Lisää ClashKing",
       "openDashboard": "Avaa hallintapaneeli",
-      "joinTestFlight": "Liity TestFlightiin",
       "getAndroidApp": "Hanki Android-sovellus",
       "login": "Log in",
       "dashboard": "Dashboard",
