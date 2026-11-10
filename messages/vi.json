@@ -4104,7 +4104,8 @@
     "dismiss": "Dismiss support message"
   },
   "BotCustomizationGrant": {
-    "required": "Bot personalization is available to supporters and contributors.",
-    "request": "If you are one, ask for access in our Discord server."
+    "required": "Bot personalization",
+    "request": "For supporters and contributors. Request access on Discord.",
+    "action": "Join Discord"
   }
 }
