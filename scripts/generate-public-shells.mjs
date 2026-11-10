@@ -6,6 +6,39 @@ const baseShell = await readFile(join(clientRoot, "index.html"), "utf8");
 const siteOrigin = "https://clashk.ing";
 const socialImage = `${siteOrigin}/og/clashking-landing.png`;
 
+const discordEmbed = JSON.stringify({
+  component: {
+    type: 17,
+    accent_color: 5793266,
+    components: [
+      {
+        type: 9,
+        components: [
+          {
+            type: 10,
+            content:
+              "**[ClashKing | Run your clan](https://clashk.ing)**\nManage wars, rosters, accounts, reminders, and clan settings with ClashKing across Discord, mobile, and the web."
+          }
+        ],
+        accessory: {
+          type: 11,
+          media: { url: socialImage }
+        }
+      },
+      {
+        type: 1,
+        components: [
+          { type: 2, style: 5, label: "Website", url: "https://clashk.ing" },
+          { type: 2, style: 5, label: "Support Discord", url: "https://discord.clashk.ing" },
+          { type: 2, style: 5, label: "App", url: "https://app.clashk.ing" },
+          { type: 2, style: 5, label: "Invite Bot", url: "https://invite.clashk.ing" }
+        ]
+      }
+    ]
+  }
+});
+
+
 const locales = {
   en: { prefix: "", openGraph: "en_US" },
   fr: { prefix: "/fr", openGraph: "fr_FR" },
@@ -97,7 +130,8 @@ for (const [locale, localeConfig] of Object.entries(locales)) {
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="${escapeHtml(copy.openGraphTitle)}" />
     <meta name="twitter:description" content="${escapeHtml(copy.description)}" />
-    <meta name="twitter:image" content="${socialImage}" />`;
+    <meta name="twitter:image" content="${socialImage}" />
+    <script id="discord:component-embed" type="application/json">${discordEmbed}</script>`;
     const shell = baseShell
       .replace('<html lang="en"', `<html lang="${locale}"`)
       .replace(/<title>.*?<\/title>/u, `<title>${escapeHtml(copy.title)}</title>`)
