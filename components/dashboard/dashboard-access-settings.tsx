@@ -83,7 +83,18 @@ export function DashboardAccessSettings({ guildId }: { guildId: string }) {
           }
           return;
         }
-        savedFingerprint.current = snapshotFingerprint;
+        const savedGrants = response.data?.grants ?? snapshot;
+        savedFingerprint.current = serializeDashboardAccessGrants(savedGrants);
+        if (response.data) {
+          const savedConfig = response.data;
+          const available = new Set(savedConfig.roles.map((role) => role.id));
+          setConfig(savedConfig);
+          // The API can prune a role deleted since this page loaded. Keep its
+          // canonical result, while preserving any newer edits still queued.
+          setGrants((current) => snapshotFingerprint === serializeDashboardAccessGrants(current)
+            ? [...savedConfig.grants]
+            : current.filter((grant) => available.has(grant.role_id)));
+        }
         if (snapshotFingerprint === currentFingerprint.current) setSaveStatus("saved");
       });
     }, 450);
