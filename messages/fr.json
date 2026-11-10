@@ -4093,7 +4093,6 @@
   },
   "ManualLimits": {
     "title": "Server limits",
-    "clans": "Clans",
     "autoboards": "AutoBoards",
     "ai": "Monthly AI spend",
     "reserved": "${amount} reserved for ongoing or unconfirmed requests",
@@ -4105,7 +4104,7 @@
     "dismiss": "Dismiss support message"
   },
   "BotCustomizationGrant": {
-    "required": "Bot customization requires approval.",
-    "request": "Join our Discord server and ask for access."
+    "required": "Bot personalization is available to supporters and contributors.",
+    "request": "If you are one, ask for access in our Discord server."
   }
 }
