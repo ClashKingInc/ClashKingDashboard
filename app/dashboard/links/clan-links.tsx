@@ -16,7 +16,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 
 type Clan = EndpointResponse<typeof ServerClanLinksEndpoint>["clans"][number];
 type Member = Clan["members"][number];
@@ -110,12 +109,11 @@ export function ClanLinks({guildId,onLinked}:{guildId:string;onLinked:()=>void})
         }}>
         <DialogHeader className="shrink-0 space-y-1 pr-10 text-left">
           <DialogTitle className="truncate leading-6">Link {target?.member.name}</DialogTitle>
-          <DialogDescription className="truncate text-xs">{target?.member.tag} · {target?.clan.name}</DialogDescription>
+          <DialogDescription className="sr-only">{target?.member.tag} · {target?.clan.name}</DialogDescription>
         </DialogHeader>
         <div className="flex h-11 shrink-0 items-center gap-2 rounded-xl bg-muted/55 px-3 shadow-sm shadow-black/5 focus-within:ring-2 focus-within:ring-ring/35">
           <Search aria-hidden="true" className="h-4 w-4 shrink-0 text-muted-foreground" />
-          <Label htmlFor="clan-link-member" className="sr-only">Search server members</Label>
-          <Input ref={searchRef} id="clan-link-member" type="search" placeholder="Search members" aria-controls="clan-link-results"
+          <Input ref={searchRef} id="clan-link-member" type="search" placeholder="Search members" aria-label="Search server members" aria-controls="clan-link-results"
             autoComplete="off" autoCorrect="off" autoCapitalize="none" spellCheck={false} enterKeyHint="done" disabled={saving}
             className="h-full min-w-0 rounded-none border-0 bg-transparent px-0 shadow-none focus-visible:ring-0"
             value={query} onChange={event=>{setQuery(event.target.value);setUserId("");}}
