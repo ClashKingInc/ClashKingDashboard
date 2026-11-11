@@ -73,17 +73,25 @@ export function ClanLinks({guildId,onLinked}:{guildId:string;onLinked:()=>void})
         <CollapsibleContent className="px-4 pb-4 md:px-5 md:pb-5">
           {clan.observedAt && <p className="mb-3 text-xs text-muted-foreground">Roster updated <time dateTime={clan.observedAt}>{new Date(clan.observedAt).toLocaleString()}</time></p>}
           <div className="space-y-1 rounded-2xl bg-muted/45 p-2">
-            {clan.members.map(member=><div key={member.tag} className="grid grid-cols-[2rem_minmax(0,1fr)] items-center gap-x-2 gap-y-1 rounded-xl px-1 py-2 sm:grid-cols-[2rem_minmax(0,1fr)_auto] sm:gap-x-3 sm:px-2">
-              {member.townHall ? <Image src={townHallImageUrl(member.townHall)} alt={`Town Hall ${member.townHall}`} width={32} height={32} unoptimized className="h-8 w-8 shrink-0 object-contain" /> : <span className="flex h-8 w-8 items-center justify-center text-xs text-muted-foreground" title="Town Hall unavailable">—</span>}
-              <div className="min-w-0 flex-1"><p className="truncate text-sm font-medium" title={member.name}>{member.name}</p><p className="text-xs text-muted-foreground">{member.tag}</p></div>
-              <div className="col-start-2 flex min-w-0 flex-wrap items-center gap-2 sm:col-start-3 sm:row-start-1 sm:justify-end">
-                {member.hidden && !member.link ? <span className="text-sm italic text-muted-foreground">Hidden</span> : <DiscordUserDisplay userId={member.link?.userId} username={member.link?.username} avatarUrl={member.link?.avatar} isOnServer={member.link?.inServer} />}
-                {member.hidden && member.link && <Badge variant="secondary">Hidden</Badge>}
+            {clan.members.map(member=><div key={member.tag} className="flex min-w-0 items-center gap-3 rounded-xl px-1 py-2 sm:px-2">
+              <div className="min-w-0 flex-1">
+                <div className="flex min-w-0 items-center gap-1.5">
+                  {member.townHall ? <Image src={townHallImageUrl(member.townHall)} alt={`Town Hall ${member.townHall}`} width={20} height={20} unoptimized className="h-5 w-5 shrink-0 object-contain" /> : <span className="flex h-5 w-5 shrink-0 items-center justify-center text-xs text-muted-foreground" title="Town Hall unavailable">—</span>}
+                  <p className="truncate text-sm font-medium" title={member.name}>{member.name}</p>
+                </div>
+                <p className="truncate pl-[26px] text-xs text-muted-foreground" title={member.tag}>{member.tag}</p>
+              </div>
+              {/* Keep each Discord identity/action beside its player on mobile.
+                  Both columns may truncate names; neither may wrap below the tag. */}
+              <div className="flex min-w-0 max-w-[48%] shrink-0 items-center justify-end gap-1.5">
+                {member.hidden && !member.link ? <span className="text-xs italic text-muted-foreground">Hidden</span> : (member.link || !canManage("links")) && <DiscordUserDisplay userId={member.link?.userId} username={member.link?.username} avatarUrl={member.link?.avatar} isOnServer={member.link?.inServer} />}
+                {member.hidden && member.link && <Badge variant="secondary" className="shrink-0 border-0 px-1.5 py-0.5 text-[10px]">Hidden</Badge>}
                 {/* Verification is useful only beside a current server member; off-server links retain their profile popover. */}
                 {member.link?.inServer && <span role="img" aria-label={member.link.verified ? "Verified" : "Unverified"} title={member.link.verified ? "Verified" : "Unverified"} className="shrink-0">
                   {member.link.verified ? <ShieldCheck aria-hidden="true" className="h-4 w-4 text-emerald-600 dark:text-emerald-400" /> : <TriangleAlert aria-hidden="true" className="h-4 w-4 text-muted-foreground" />}
                 </span>}
-                {!member.link && !member.hidden && canManage("links") && <Button size="sm" variant="secondary" className="h-7 border-0 bg-muted/65 px-2 shadow-sm shadow-black/5 hover:bg-muted" aria-label={`Link ${member.name}`} onClick={()=>{setTarget({clan,member});setError("");}}><Plus className="mr-1 h-4 w-4" />Link</Button>}
+                {/* Override the shared mobile minimum height for this compact row control. */}
+                {!member.link && !member.hidden && canManage("links") && <Button size="sm" variant="secondary" className="h-7 min-h-0 min-w-0 shrink-0 gap-1 border-0 bg-muted/65 px-2 shadow-sm shadow-black/5 hover:bg-muted [&_svg]:size-3.5" aria-label={`Link ${member.name}`} onClick={()=>{setTarget({clan,member});setError("");}}><Plus />Link</Button>}
               </div>
             </div>)}
             {!clan.members.length && <p className="p-3 text-sm text-muted-foreground">No roster members are available yet.</p>}
