@@ -309,7 +309,7 @@ export default function LinksManagementPage() {
     } catch (caught) {
       const notFoundSchema = ProxyPlayerEndpoint.errors?.find((error) => error.status === 404)?.body;
       if (!automatic && caught instanceof ApiResponseError && caught.status === 404 && notFoundSchema
-        && Schema.is(notFoundSchema)(caught.body) && caught.body.reason === "notFound") {
+        && Schema.is(notFoundSchema)(caught.body) && "reason" in caught.body && caught.body.reason === "notFound") {
         try {
           await executeSharedEndpoint(DeleteServerLinkEndpoint, {
             path: { serverId: guildId }, query: { playerTag: account.player_tag }, body: {},
