@@ -71,7 +71,6 @@ export function ClanLinks({guildId,onLinked}:{guildId:string;onLinked:()=>void})
           <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground group-data-[state=open]:rotate-180" />
         </CollapsibleTrigger>
         <CollapsibleContent className="px-4 pb-4 md:px-5 md:pb-5">
-          {clan.observedAt && <p className="mb-3 text-xs text-muted-foreground">Roster updated <time dateTime={clan.observedAt}>{new Date(clan.observedAt).toLocaleString()}</time></p>}
           <div className="space-y-1 rounded-2xl bg-muted/45 p-2">
             {clan.members.map(member=><div key={member.tag} className="flex min-w-0 items-center gap-3 rounded-xl px-1 py-2 sm:px-2">
               <div className="min-w-0 flex-1">
