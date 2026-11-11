@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ServerClanLinksEndpoint, CreateClanRosterLinkEndpoint, dashboardEndpoints, type EndpointResponse } from "@clashking/api-contracts";
-import { ChevronDown, Loader2, Plus } from "lucide-react";
+import { ChevronDown, Loader2, Plus, ShieldCheck, TriangleAlert } from "lucide-react";
+import { useTranslations } from "use-intl";
+import { FolderIcon } from "@/components/ui/folder-icon";
 import Image from "@/components/app-image";
 import { executeSharedEndpoint } from "@/lib/api/shared-client";
 import { townHallImageUrl } from "@/lib/theme";
@@ -19,8 +21,22 @@ type Clan = EndpointResponse<typeof ServerClanLinksEndpoint>["clans"][number];
 type Member = Clan["members"][number];
 const key=(guildId:string)=>["clan-links",guildId];
 export function ClanLinks({guildId,onLinked}:{guildId:string;onLinked:()=>void}) {
+  const tCategories=useTranslations("ClansPage.categories");
   const client=useQueryClient(),{canManage}=useDashboardAccess();
   const report=useQuery({queryKey:key(guildId),enabled:Boolean(guildId),queryFn:({signal})=>executeSharedEndpoint(ServerClanLinksEndpoint,{path:{serverId:guildId},query:{},body:{}},{signal})});
+  const sections=useMemo(()=>{
+    const categories=report.data?.categories ?? [];
+    const byCategory=new Map(categories.map(category=>[category.name,[] as Clan[]]));
+    const uncategorized:Clan[]=[];
+    // Keep the API's name/tag order within each category, just like Clans.
+    for(const clan of report.data?.clans ?? []) {
+      const group=clan.category?.trim() ? byCategory.get(clan.category.trim()) : undefined;
+      (group ?? uncategorized).push(clan);
+    }
+    const groups=categories.map(category=>({...category,clans:byCategory.get(category.name) ?? []}));
+    if(uncategorized.length)groups.push({id:"uncategorized",name:tCategories("uncategorized"),clans:uncategorized});
+    return groups;
+  },[report.data,tCategories]);
   const [target,setTarget]=useState<{clan:Clan;member:Member}|null>(null);
   const [query,setQuery]=useState(""),[search,setSearch]=useState(""),[userId,setUserId]=useState("");
   const [saving,setSaving]=useState(false),[error,setError]=useState("");
@@ -39,28 +55,35 @@ export function ClanLinks({guildId,onLinked}:{guildId:string;onLinked:()=>void})
   if(report.isPending)return <div className="space-y-3">{[1,2,3].map(i=><Skeleton key={i} className="h-24 rounded-3xl" />)}</div>;
   if(report.error)return <div role="alert" className="rounded-3xl bg-card p-5 text-destructive">{report.error.message}<Button variant="secondary" className="ml-3" onClick={()=>void report.refetch()}>Retry</Button></div>;
   return <div className="space-y-3">
-    <p className="text-sm text-muted-foreground">Expand a clan to review its roster and Discord links. Rosters use the latest stored clan snapshot.</p>
     {!report.data?.clans.length && <p className="rounded-3xl bg-card p-6 text-sm text-muted-foreground">No clans are configured for this server.</p>}
-    {report.data?.clans.map(clan=>{
+    {sections.map(section=><section key={section.id} className="space-y-3 pt-3" aria-label={section.name}>
+      <div className="flex items-center gap-2"><FolderIcon size={24} /><h3 className="font-semibold">{section.name}</h3><span className="text-xs text-muted-foreground">{section.clans.length}</span></div>
+      {section.clans.map(clan=>{
       const linked=clan.members.filter(member=>member.link || member.hidden).length;
       return <Collapsible key={clan.tag} className="rounded-3xl bg-card shadow-sm shadow-black/5">
-        <CollapsibleTrigger className="group grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-3 gap-y-2 p-4 text-left md:p-5">
+        <CollapsibleTrigger className="group flex w-full items-center gap-3 p-4 text-left">
           {clan.badge && <Image src={clan.badge} alt="" width={48} height={48} unoptimized className="h-12 w-12 shrink-0 object-contain" />}
-          <span className="min-w-0 flex-1"><span className="block truncate font-semibold">{clan.name}</span><span className="text-xs text-muted-foreground">{clan.tag} · Level {clan.level}</span></span>
-          <span className="col-span-2 col-start-2 row-start-2 flex flex-wrap gap-2 text-xs text-muted-foreground"><Badge variant="secondary">{clan.members.length} members</Badge><Badge variant="secondary">{linked} linked</Badge>{clan.verified && <Badge variant="secondary">Verified clan</Badge>}</span>
-          <ChevronDown className="col-start-3 row-start-1 h-4 w-4 shrink-0 text-muted-foreground group-data-[state=open]:rotate-180" />
+          <span className="min-w-0 flex-1">
+            <span className="flex items-center gap-2"><span className="truncate font-semibold">{clan.name}</span>{clan.verified && <span role="img" aria-label="Verified clan" title="Verified clan"><ShieldCheck aria-hidden="true" className="h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" /></span>}</span>
+            <span className="block text-xs text-muted-foreground">{clan.tag} · Level {clan.level}</span>
+            <span className="mt-1 flex flex-wrap gap-2 text-xs text-muted-foreground"><span>{clan.members.length} members</span><span>·</span><span>{linked} linked</span></span>
+          </span>
+          <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground group-data-[state=open]:rotate-180" />
         </CollapsibleTrigger>
         <CollapsibleContent className="px-4 pb-4 md:px-5 md:pb-5">
           {clan.observedAt && <p className="mb-3 text-xs text-muted-foreground">Roster updated <time dateTime={clan.observedAt}>{new Date(clan.observedAt).toLocaleString()}</time></p>}
-          <div className="space-y-2 rounded-2xl bg-muted/45 p-2">
-            {clan.members.map(member=><div key={member.tag} className="grid grid-cols-[36px_minmax(0,1fr)] items-center gap-x-3 gap-y-2 rounded-xl px-2 py-3 sm:grid-cols-[36px_minmax(0,1fr)_auto]">
-              {member.townHall ? <Image src={townHallImageUrl(member.townHall)} alt={`Town Hall ${member.townHall}`} width={36} height={36} unoptimized className="h-9 w-9 shrink-0 object-contain" /> : <span className="flex h-9 w-9 items-center justify-center text-xs text-muted-foreground" title="Town Hall unavailable">—</span>}
-              <div className="min-w-0 flex-1"><p className="truncate font-medium" title={member.name}>{member.name}</p><p className="text-xs text-muted-foreground">{member.tag}</p></div>
+          <div className="space-y-1 rounded-2xl bg-muted/45 p-2">
+            {clan.members.map(member=><div key={member.tag} className="grid grid-cols-[2rem_minmax(0,1fr)] items-center gap-x-2 gap-y-1 rounded-xl px-1 py-2 sm:grid-cols-[2rem_minmax(0,1fr)_auto] sm:gap-x-3 sm:px-2">
+              {member.townHall ? <Image src={townHallImageUrl(member.townHall)} alt={`Town Hall ${member.townHall}`} width={32} height={32} unoptimized className="h-8 w-8 shrink-0 object-contain" /> : <span className="flex h-8 w-8 items-center justify-center text-xs text-muted-foreground" title="Town Hall unavailable">—</span>}
+              <div className="min-w-0 flex-1"><p className="truncate text-sm font-medium" title={member.name}>{member.name}</p><p className="text-xs text-muted-foreground">{member.tag}</p></div>
               <div className="col-start-2 flex min-w-0 flex-wrap items-center gap-2 sm:col-start-3 sm:row-start-1 sm:justify-end">
                 {member.hidden && !member.link ? <span className="text-sm italic text-muted-foreground">Hidden</span> : <DiscordUserDisplay userId={member.link?.userId} username={member.link?.username} avatarUrl={member.link?.avatar} isOnServer={member.link?.inServer} />}
                 {member.hidden && member.link && <Badge variant="secondary">Hidden</Badge>}
-                {member.link ? <Badge variant="secondary" className={member.link.verified ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300" : "text-muted-foreground"}>{member.link.verified ? "Verified" : "Unverified"}</Badge>
-                  : !member.hidden && canManage("links") && <Button size="sm" variant="secondary" aria-label={`Link ${member.name}`} onClick={()=>{setTarget({clan,member});setError("");}}><Plus className="mr-1 h-4 w-4" />Link</Button>}
+                {/* Verification is useful only beside a current server member; off-server links retain their profile popover. */}
+                {member.link?.inServer && <span role="img" aria-label={member.link.verified ? "Verified" : "Unverified"} title={member.link.verified ? "Verified" : "Unverified"} className="shrink-0">
+                  {member.link.verified ? <ShieldCheck aria-hidden="true" className="h-4 w-4 text-emerald-600 dark:text-emerald-400" /> : <TriangleAlert aria-hidden="true" className="h-4 w-4 text-muted-foreground" />}
+                </span>}
+                {!member.link && !member.hidden && canManage("links") && <Button size="sm" variant="secondary" className="h-7 border-0 bg-muted/65 px-2 shadow-sm shadow-black/5 hover:bg-muted" aria-label={`Link ${member.name}`} onClick={()=>{setTarget({clan,member});setError("");}}><Plus className="mr-1 h-4 w-4" />Link</Button>}
               </div>
             </div>)}
             {!clan.members.length && <p className="p-3 text-sm text-muted-foreground">No roster members are available yet.</p>}
@@ -68,6 +91,7 @@ export function ClanLinks({guildId,onLinked}:{guildId:string;onLinked:()=>void})
         </CollapsibleContent>
       </Collapsible>;
     })}
+    </section>)}
     <Dialog open={Boolean(target)} onOpenChange={open=>{if(!open && !saving)close();}}>
       <DialogContent variant="form"><DialogHeader><DialogTitle>Link {target?.member.name}</DialogTitle><DialogDescription>{target?.member.tag} · {target?.clan.name}. This creates an unverified link without an in-game API token.</DialogDescription></DialogHeader>
         <div className="space-y-3"><Label htmlFor="clan-link-member">Discord server member</Label><Input id="clan-link-member" placeholder="Search members or paste a Discord ID" value={query} onChange={event=>{setQuery(event.target.value);setUserId("");}} />
