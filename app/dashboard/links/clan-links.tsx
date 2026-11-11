@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ServerClanLinksEndpoint, CreateClanRosterLinkEndpoint, dashboardEndpoints, type EndpointResponse } from "@clashking/api-contracts";
-import { ChevronDown, Loader2, Plus, ShieldCheck, TriangleAlert } from "lucide-react";
+import { Check, ChevronDown, Loader2, Plus, Search, ShieldCheck, TriangleAlert } from "lucide-react";
 import { useTranslations } from "use-intl";
 import { FolderIcon } from "@/components/ui/folder-icon";
 import Image from "@/components/app-image";
@@ -11,6 +11,7 @@ import { useDashboardAccess } from "@/components/dashboard/dashboard-access-prov
 import { DiscordUserDisplay } from "@/components/ui/discord-user-display";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
@@ -40,6 +41,7 @@ export function ClanLinks({guildId,onLinked}:{guildId:string;onLinked:()=>void})
   const [target,setTarget]=useState<{clan:Clan;member:Member}|null>(null);
   const [query,setQuery]=useState(""),[search,setSearch]=useState(""),[userId,setUserId]=useState("");
   const [saving,setSaving]=useState(false),[error,setError]=useState("");
+  const pickerRef=useRef<HTMLDivElement>(null),searchRef=useRef<HTMLInputElement>(null);
   useEffect(()=>{const timer=setTimeout(()=>setSearch(query.trim()),250);return()=>clearTimeout(timer);},[query]);
   const users=useQuery({queryKey:["clan-link-members",guildId,search],enabled:Boolean(target),queryFn:({signal})=>executeSharedEndpoint(dashboardEndpoints.serverLinks,{path:{serverId:guildId},query:{limit:25,offset:0,...(search ? {query:search} : {})},body:{}},{signal})});
   const close=()=>{setTarget(null);setQuery("");setSearch("");setUserId("");setError("");};
@@ -100,18 +102,53 @@ export function ClanLinks({guildId,onLinked}:{guildId:string;onLinked:()=>void})
     })}
     </section>)}
     <Dialog open={Boolean(target)} onOpenChange={open=>{if(!open && !saving)close();}}>
-      <DialogContent variant="form"><DialogHeader><DialogTitle>Link {target?.member.name}</DialogTitle><DialogDescription>{target?.member.tag} · {target?.clan.name}. This creates an unverified link without an in-game API token.</DialogDescription></DialogHeader>
-        <div className="space-y-3"><Label htmlFor="clan-link-member">Discord server member</Label><Input id="clan-link-member" placeholder="Search members or paste a Discord ID" value={query} onChange={event=>{setQuery(event.target.value);setUserId("");}} />
-          <div className="max-h-64 space-y-1 overflow-y-auto">{users.isFetching && <p role="status" className="text-sm text-muted-foreground">Loading members…</p>}
-            {users.error && <p role="alert" className="text-sm text-destructive">{users.error.message}</p>}
-            {users.data?.members.map(member=><Button key={member.user_id} type="button" variant="secondary" className="h-auto w-full justify-start gap-3 p-3" aria-pressed={userId===member.user_id} onClick={()=>setUserId(member.user_id)}>
-              {member.avatar_url && <Image src={member.avatar_url} alt="" width={28} height={28} unoptimized className="h-7 w-7 rounded-full" />}<span className="min-w-0 text-left"><span className="block truncate">{member.display_name}</span><span className="block text-xs text-muted-foreground">@{member.username} · {member.user_id}</span></span>{userId===member.user_id && <Badge className="ml-auto">Selected</Badge>}
-            </Button>)}
-            {!users.isFetching && users.data?.members.length===0 && <p className="text-sm text-muted-foreground">No members matched.</p>}
-          </div>
+      <DialogContent variant="form" ref={pickerRef} tabIndex={-1}
+        className="flex h-[min(36rem,calc(var(--overlay-height,100dvh)-1rem-env(safe-area-inset-top)))] min-h-0 flex-col gap-3 overflow-hidden border-0 bg-card p-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:p-5"
+        onOpenAutoFocus={event=>{
+          // Focus the sheet, not search: opening the picker must not summon the mobile keyboard.
+          event.preventDefault();pickerRef.current?.focus({preventScroll:true});
+        }}>
+        <DialogHeader className="shrink-0 space-y-1 pr-10 text-left">
+          <DialogTitle className="truncate leading-6">Link {target?.member.name}</DialogTitle>
+          <DialogDescription className="truncate text-xs">{target?.member.tag} · {target?.clan.name}</DialogDescription>
+        </DialogHeader>
+        <div className="flex h-11 shrink-0 items-center gap-2 rounded-xl bg-muted/55 px-3 shadow-sm shadow-black/5 focus-within:ring-2 focus-within:ring-ring/35">
+          <Search aria-hidden="true" className="h-4 w-4 shrink-0 text-muted-foreground" />
+          <Label htmlFor="clan-link-member" className="sr-only">Search server members</Label>
+          <Input ref={searchRef} id="clan-link-member" type="search" placeholder="Search members" aria-controls="clan-link-results"
+            autoComplete="off" autoCorrect="off" autoCapitalize="none" spellCheck={false} enterKeyHint="done" disabled={saving}
+            className="h-full min-w-0 rounded-none border-0 bg-transparent px-0 shadow-none focus-visible:ring-0"
+            value={query} onChange={event=>{setQuery(event.target.value);setUserId("");}}
+            onKeyDown={event=>{if(event.key==="Enter"){event.preventDefault();pickerRef.current?.focus({preventScroll:true});}}} />
         </div>
-        {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
-        <DialogFooter><Button variant="secondary" disabled={saving} onClick={close}>Cancel</Button><Button disabled={!userId || saving} onClick={()=>void link()}>{saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}Add unverified link</Button></DialogFooter>
+        <div id="clan-link-results" role="group" aria-label="Server members" aria-busy={users.isFetching}
+          className="scrollbar-custom min-h-0 flex-1 space-y-0.5 overflow-y-auto overscroll-contain">
+          {users.isFetching && <p role="status" className="px-2 py-3 text-xs text-muted-foreground">Loading members…</p>}
+          {users.error && <p role="alert" className="px-2 py-3 text-sm text-destructive">{users.error.message}</p>}
+          {users.data?.members.map(member=><Button key={member.user_id} type="button" variant="ghost" disabled={saving || query.trim()!==search}
+            className="h-11 w-full justify-start gap-2.5 rounded-xl px-2 text-sm font-normal aria-pressed:bg-primary/10 aria-pressed:hover:bg-primary/15"
+            aria-pressed={userId===member.user_id} onClick={event=>{
+              setUserId(member.user_id);
+              // Dismiss search without submitting so the selected member and confirmation stay visible.
+              searchRef.current?.blur();event.currentTarget.focus({preventScroll:true});
+            }}>
+            <Avatar className="h-6 w-6 shrink-0">
+              <AvatarImage src={member.avatar_url ?? undefined} alt="" />
+              <AvatarFallback className="text-xs">{member.display_name.slice(0,1)}</AvatarFallback>
+            </Avatar>
+            <span className="flex min-w-0 flex-1 items-baseline gap-2 text-left">
+              <span className="max-w-[60%] truncate font-medium" title={member.display_name}>{member.display_name}</span>
+              <span className="min-w-0 truncate text-xs text-muted-foreground" title={`@${member.username}`}>@{member.username}</span>
+            </span>
+            {userId===member.user_id && <Check aria-hidden="true" className="h-4 w-4 shrink-0 text-primary" />}
+          </Button>)}
+          {!users.isFetching && users.data?.members.length===0 && <p className="px-2 py-3 text-sm text-muted-foreground">No members matched.</p>}
+        </div>
+        <DialogFooter className="shrink-0 flex-col gap-2 sm:flex-col sm:items-stretch [&>*]:w-full sm:[&>*]:w-full">
+          {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
+          <p className="text-center text-xs text-muted-foreground">Creates an unverified link.</p>
+          <Button className="h-11" disabled={!userId || saving} onClick={()=>void link()}>{saving && <Loader2 className="h-4 w-4 animate-spin" />}Link account</Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   </div>;
