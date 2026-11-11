@@ -73,12 +73,13 @@ export function ClanLinks({guildId,onLinked}:{guildId:string;onLinked:()=>void})
         <CollapsibleContent className="px-4 pb-4 md:px-5 md:pb-5">
           <div className="space-y-1 rounded-2xl bg-muted/45 p-2">
             {clan.members.map(member=><div key={member.tag} className="flex min-w-0 items-center gap-3 rounded-xl px-1 py-2 sm:px-2">
-              <div className="min-w-0 flex-1">
-                <div className="flex min-w-0 items-center gap-1.5">
-                  {member.townHall ? <Image src={townHallImageUrl(member.townHall)} alt={`Town Hall ${member.townHall}`} width={20} height={20} unoptimized className="h-5 w-5 shrink-0 object-contain" /> : <span className="flex h-5 w-5 shrink-0 items-center justify-center text-xs text-muted-foreground" title="Town Hall unavailable">—</span>}
+              {/* Center the Town Hall beside the complete two-line player identity. */}
+              <div className="flex min-w-0 flex-1 items-center gap-1.5">
+                {member.townHall ? <Image src={townHallImageUrl(member.townHall)} alt={`Town Hall ${member.townHall}`} width={20} height={20} unoptimized className="h-5 w-5 shrink-0 object-contain" /> : <span className="flex h-5 w-5 shrink-0 items-center justify-center text-xs text-muted-foreground" title="Town Hall unavailable">—</span>}
+                <div className="min-w-0">
                   <p className="truncate text-sm font-medium" title={member.name}>{member.name}</p>
+                  <p className="truncate text-xs text-muted-foreground" title={member.tag}>{member.tag}</p>
                 </div>
-                <p className="truncate pl-[26px] text-xs text-muted-foreground" title={member.tag}>{member.tag}</p>
               </div>
               {/* Keep each Discord identity/action beside its player on mobile.
                   Both columns may truncate names; neither may wrap below the tag. */}
