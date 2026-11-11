@@ -90,8 +90,7 @@ export function ClanLinks({guildId,onLinked}:{guildId:string;onLinked:()=>void})
                 {member.link?.inServer && <span role="img" aria-label={member.link.verified ? "Verified" : "Unverified"} title={member.link.verified ? "Verified" : "Unverified"} className="shrink-0">
                   {member.link.verified ? <ShieldCheck aria-hidden="true" className="h-4 w-4 text-emerald-600 dark:text-emerald-400" /> : <TriangleAlert aria-hidden="true" className="h-4 w-4 text-muted-foreground" />}
                 </span>}
-                {/* Override the shared mobile minimum height for this compact row control. */}
-                {!member.link && !member.hidden && canManage("links") && <Button size="sm" variant="secondary" className="h-7 min-h-0 min-w-0 shrink-0 gap-1 border-0 bg-muted/65 px-2 shadow-sm shadow-black/5 hover:bg-muted [&_svg]:size-3.5" aria-label={`Link ${member.name}`} onClick={()=>{setTarget({clan,member});setError("");}}><Plus />Link</Button>}
+                {!member.link && !member.hidden && canManage("links") && <Button size="sm" variant="secondary" className="h-7 shrink-0 gap-1 border-0 bg-muted/65 px-2 shadow-sm shadow-black/5 hover:bg-muted [&_svg]:size-3.5" aria-label={`Link ${member.name}`} onClick={()=>{setTarget({clan,member});setError("");}}><Plus />Link</Button>}
               </div>
             </div>)}
             {!clan.members.length && <p className="p-3 text-sm text-muted-foreground">No roster members are available yet.</p>}

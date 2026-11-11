@@ -282,8 +282,10 @@ html:lang(zh) body,
   }
 
   @media (max-width: 1023px) {
+    /* Let compact dashboard controls keep their intended 28px height instead
+       of expanding every button to 44px on mobile. */
     .dashboard-content button:not([role="switch"]):not([role="checkbox"]) {
-      min-height: 2.75rem;
+      min-height: 1.75rem;
     }
 
     .dashboard-content button[aria-label]:not([role="switch"]):not([role="checkbox"]) {
