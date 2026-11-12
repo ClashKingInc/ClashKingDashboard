@@ -56,7 +56,7 @@ export default function DashboardAccessPage() {
   }
   const code=sessionStorage.getItem('ck_pending_dashboard_grant');
   const rosterId=sessionStorage.getItem('ck_pending_dashboard_roster')??undefined;
-  // The private bot grant is itself a short-lived, one-use login proof. The
+  // The private bot grant is reusable for one hour; app/PKCE grants are single-use. The
   // server checks its actor and current permissions; no OAuth detour is needed.
   if(code)void exchange({code},rosterId);
 

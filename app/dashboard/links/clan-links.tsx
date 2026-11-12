@@ -66,7 +66,7 @@ export function ClanLinks({guildId,onLinked}:{guildId:string;onLinked:()=>void})
           {clan.badge && <Image src={clan.badge} alt="" width={48} height={48} unoptimized className="h-12 w-12 shrink-0 object-contain" />}
           <span className="min-w-0 flex-1">
             <span className="flex items-center gap-2"><span className="truncate font-semibold">{clan.name}</span>{clan.verified && <span role="img" aria-label="Verified clan" title="Verified clan"><ShieldCheck aria-hidden="true" className="h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" /></span>}</span>
-            <span className="block text-xs text-muted-foreground">{clan.tag} · Level {clan.level}</span>
+            <span className="block text-xs text-muted-foreground">{clan.tag}</span>
             <span className="mt-1 flex flex-wrap gap-2 text-xs text-muted-foreground"><span>{clan.members.length} members</span><span>·</span><span>{linked} linked</span></span>
           </span>
           <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground group-data-[state=open]:rotate-180" />

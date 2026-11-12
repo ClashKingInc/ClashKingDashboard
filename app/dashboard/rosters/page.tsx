@@ -777,8 +777,8 @@ export default function RostersPage() { // NOSONAR — React page component: com
           <div className="space-y-4">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <h1 className="text-2xl font-bold text-foreground md:text-3xl">{t("title")}</h1>
-                <p className="mt-1 text-muted-foreground">{t("description")}</p>
+                <h1 className="sr-only text-2xl font-bold text-foreground md:not-sr-only md:text-3xl">{t("title")}</h1>
+                <p className="mt-1 hidden text-muted-foreground md:block">{t("description")}</p>
               </div>
               <Skeleton className="h-10 w-32 shrink-0 rounded-xl" />
             </div>
@@ -825,8 +825,8 @@ export default function RostersPage() { // NOSONAR — React page component: com
         <div className="space-y-4">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <h1 className="text-2xl font-bold text-foreground md:text-3xl">{t("title")}</h1>
-              <p className="mt-1 text-muted-foreground">{t("description")}</p>
+              <h1 className="sr-only text-2xl font-bold text-foreground md:not-sr-only md:text-3xl">{t("title")}</h1>
+              <p className="mt-1 hidden text-muted-foreground md:block">{t("description")}</p>
             </div>
             <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
               <DialogTrigger asChild>

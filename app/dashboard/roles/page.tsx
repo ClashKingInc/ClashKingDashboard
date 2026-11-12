@@ -31,7 +31,6 @@ import {
   Trash2,
   Loader2,
   AlertCircle,
-  Save,
   ChevronsUpDown,
   ChevronUp,
   ChevronDown,
@@ -157,6 +156,9 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
     autoeval_log: undefined,
   });
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
+  const loadedGuild = useRef<string | null>(null);
+  const settingsDirty = useRef(false);
+  const settingsSaveInFlight = useRef(false);
 
   const [allRoles, setAllRoles] = useState<Record<string, any[]>>({
     townhall: [],
@@ -249,7 +251,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
 
   async function loadData() {
     try {
-      setIsLoading(true);
+      if (loadedGuild.current !== guildId) setIsLoading(true);
       setError(null);
 
       const [rolesData, settingsData, discordRolesData, clansData] = await Promise.all([
@@ -287,8 +289,13 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
 
       if (settingsData) {
         const loaded = settingsData;
-        setRoleSettings(loaded);
-        setOriginalRoleSettings(loaded);
+        // Role-list refreshes must retain a pending settings draft and must not
+        // replace the whole page with skeletons after a row mutation.
+        if (loadedGuild.current !== guildId || !settingsDirty.current) {
+          setRoleSettings(loaded);
+          setOriginalRoleSettings(loaded);
+        }
+        loadedGuild.current = guildId;
       }
 
       if (discordRolesData) {
@@ -319,7 +326,8 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
   useEffect(() => { loadInitialData(); }, [guildId, locale]);
 
   const handleSaveSettings = async () => {
-    if (!canEdit) return;
+    if (!canEdit || settingsSaveInFlight.current) return;
+    settingsSaveInFlight.current = true;
     try {
       setSaveStatus('saving');
       setError(null);
@@ -343,11 +351,11 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
 
       setOriginalRoleSettings({ ...roleSettings });
       setSaveStatus('saved');
-      setTimeout(() => setSaveStatus('idle'), 3000);
+
     } catch (err: any) {
       setError(err.message || "Failed to save settings");
       setSaveStatus('idle');
-    }
+    } finally { settingsSaveInFlight.current = false; }
   };
 
   const handleAddRole = async () => {
@@ -821,8 +829,19 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
     roleSettings.auto_eval_nickname !== originalRoleSettings.auto_eval_nickname ||
     roleSettings.role_leave_delay_minutes !== originalRoleSettings.role_leave_delay_minutes ||
     roleSettings.flair_non_family !== originalRoleSettings.flair_non_family ||
+    roleSettings.autoeval_log !== originalRoleSettings.autoeval_log ||
     roleSettings.auto_eval_role_treatment !== originalRoleSettings.auto_eval_role_treatment ||
     JSON.stringify(roleSettings.auto_eval_blacklist_roles ?? []) !== JSON.stringify(originalRoleSettings.auto_eval_blacklist_roles ?? []);
+
+  settingsDirty.current = hasChanged;
+  const saveLatestSettings = useEffectEvent(() => { void handleSaveSettings(); });
+  // Serialize writes and coalesce quick changes. A failed draft waits for an
+  // explicit retry or a new edit instead of continuously retrying the mutation.
+  useEffect(() => {
+    if (!canEdit || isLoading || !hasChanged || saveStatus === 'saving' || error) return;
+    const timer = window.setTimeout(() => saveLatestSettings(), 400);
+    return () => window.clearTimeout(timer);
+  }, [canEdit, isLoading, hasChanged, roleSettings, saveStatus, error]);
 
   const isAddRoleDisabled = () => {
     const hasRole = !!newRole.role_id;
@@ -854,13 +873,6 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
           </Alert>
         )}
 
-        {success && (
-          <Alert className="border-green-500/30 bg-green-500/5">
-            <AlertCircle className="h-4 w-4 text-green-500" />
-            <AlertDescription className="text-green-600">{t("toast.changesSaved")}</AlertDescription>
-          </Alert>
-        )}
-
         <fieldset disabled={!canEdit} className="min-w-0 space-y-3">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
               <div className="min-w-0">
@@ -879,31 +891,11 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                 </div>
                 <p className="mt-0.5 text-sm text-muted-foreground">{t("settings.description")}</p>
               </div>
-              {saveStatus === 'saved' ? (
-                <div className="flex items-center gap-2 text-sm font-medium text-green-600">
-                  <AlertCircle className="h-4 w-4" />
-                  <span>{t("toast.changesSaved")}</span>
-                </div>
-              ) : hasChanged && (
-                <Button
-                  onClick={handleSaveSettings}
-                  disabled={saveStatus === 'saving'}
-                  size="sm"
-                  className="w-full sm:w-auto"
-                >
-                  {saveStatus === 'saving' ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      {t("settings.saving")}
-                    </>
-                  ) : (
-                    <>
-                      <Save className="mr-2 h-4 w-4" />
-                      {t("settings.saveButton")}
-                    </>
-                  )}
-                </Button>
-              )}
+              <div className="flex min-h-6 items-center gap-2 text-sm" role="status" aria-live="polite">
+                {saveStatus === 'saving' ? <><Loader2 className="size-4 animate-spin" />{t("settings.saving")}</> :
+                  (saveStatus === 'saved' || success) && <span className="text-green-600">✓ {t("toast.changesSaved")}</span>}
+                {error && hasChanged && <Button variant="secondary" size="sm" onClick={() => { setError(null); void handleSaveSettings(); }}>{tCommon("retry")}</Button>}
+              </div>
           </div>
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
             <div className="flex items-center justify-between gap-4 rounded-[24px] bg-card px-5 py-3 shadow-sm shadow-black/5">
@@ -917,9 +909,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                 <Switch
                   id="auto-eval"
                   checked={roleSettings.auto_eval_status}
-                  onCheckedChange={(checked) =>
-                    setRoleSettings({ ...roleSettings, auto_eval_status: checked })
-                  }
+                  onCheckedChange={(checked) => { setError(null); setRoleSettings({ ...roleSettings, auto_eval_status: checked }); }}
                 />
               )}
             </div>
@@ -935,9 +925,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                 <Switch
                   id="auto-nickname"
                   checked={roleSettings.auto_eval_nickname}
-                  onCheckedChange={(checked) =>
-                    setRoleSettings({ ...roleSettings, auto_eval_nickname: checked })
-                  }
+                  onCheckedChange={(checked) => { setError(null); setRoleSettings({ ...roleSettings, auto_eval_nickname: checked }); }}
                 />
               )}
             </div>
@@ -947,7 +935,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                 <InfoPopover content={t("settings.leaveDelayDesc")} label={t("settings.leaveDelay")} />
               </div>
               <Select value={String(roleSettings.role_leave_delay_minutes ?? 5)} disabled={isLoading}
-                onValueChange={value => setRoleSettings({ ...roleSettings, role_leave_delay_minutes: Number(value) })}>
+                onValueChange={value => { setError(null); setRoleSettings({ ...roleSettings, role_leave_delay_minutes: Number(value) }); }}>
                 <SelectTrigger id="role-leave-delay" className="w-36 shrink-0"><SelectValue /></SelectTrigger>
                 <SelectContent>{Array.from({ length: 12 }, (_, i) => (i + 1) * 5).map(minutes =>
                   <SelectItem key={minutes} value={String(minutes)}>{t("settings.minutes", { minutes })}</SelectItem>)}</SelectContent>
@@ -959,7 +947,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                 <InfoPopover content={t("settings.flairNonFamilyDesc")} label={t("settings.flairNonFamily")} />
               </div>
               <Switch id="outside-family-player-roles" checked={roleSettings.flair_non_family ?? false} disabled={isLoading}
-                onCheckedChange={checked => setRoleSettings({ ...roleSettings, flair_non_family: checked })} />
+                onCheckedChange={checked => { setError(null); setRoleSettings({ ...roleSettings, flair_non_family: checked }); }} />
             </div>
           </div>
 

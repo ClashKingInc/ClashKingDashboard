@@ -1,4 +1,5 @@
 "use client";
+import { ReminderOffsetPicker } from "@/components/ui/reminder-offset-picker";
 
 import { useGuildId } from "@/lib/dashboard-route";
 import { dashboardEndpoints, type EndpointRequest, type EndpointResponse } from "@clashking/api-contracts";
@@ -155,8 +156,8 @@ function tabForReminderType(type: string): string {
 
 const TYPE_TIME_LIMIT: Record<string, number> = {
   War: 48,
-  "Clan Games": 336,
-  "Clan Capital": 168,
+  "Clan Games": 48,
+  "Clan Capital": 48,
 };
 
 function formatChannelLabel(channel: Channel | undefined): string | null {
@@ -368,12 +369,10 @@ export default function RemindersPage() { // NOSONAR — React page component: c
   const editReminder = (reminder: ReminderConfig) => {
     setEditingReminder(reminder);
 
-    // Extract the number from "X hr" format for display in input
-    let displayTime = reminder.time;
-    const timeMatch = /^(\d+(?:\.\d+)?)\s+hr$/.exec(reminder.time ?? '');
-    if (timeMatch) {
-      displayTime = timeMatch[1];
-    }
+    // Existing records can use minutes or hours; editing must not reinterpret
+    // a stored quarter-hour as fifteen hours.
+    const displayTime = /^\s*\d+(?:\.\d+)?\s*(?:hr|h|min|m)?\s*$/iu.test(reminder.time)
+      ? String(reminderTimeMinutes(reminder.time) / 60) : reminder.time;
 
     setDialogReminder({ ...reminder, time: displayTime });
     setPointThresholdTouched(reminder.point_threshold !== undefined);
@@ -504,18 +503,16 @@ export default function RemindersPage() { // NOSONAR — React page component: c
   const getMaxHours = (type: string): number => {
     switch (type) {
       case "War": return 48;
-      case "Clan Games": return 336;
-      case "Clan Capital": return 168;
+      case "Clan Games": return 48;
+      case "Clan Capital": return 48;
       default: return 0;
     }
   };
 
   const isTimeValid = (time: string, type: string): boolean => {
-    if (!time) return false;
-    const hours = Number.parseFloat(time);
-    if (Number.isNaN(hours) || hours <= 0) return false;
-    const max = getMaxHours(type);
-    return hours <= max;
+    if (!/^\d+(?:\.\d+)?$/u.test(time)) return false;
+    const hours = Number(time);
+    return ["War", "Clan Capital", "Clan Games"].includes(type) && Number.isFinite(hours) && hours >= 0 && hours <= 48 && Number.isInteger(hours * 4);
   };
 
   const isPointsValid = (points: number | undefined): boolean => {
@@ -528,32 +525,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
     return attacks >= ATTACK_THRESHOLD_MIN && attacks <= ATTACK_THRESHOLD_MAX;
   };
 
-  // Validate time based on reminder type
-  const validateTime = (timeString: string, reminderType: string): boolean => {
-    if (!timeString) return false;
-
-    // Parse as decimal number (hours)
-    const hours = Number.parseFloat(timeString);
-    if (Number.isNaN(hours) || hours <= 0) return false;
-
-    // Define max hours based on type
-    let maxHours: number;
-    switch (reminderType) {
-      case "War":
-        maxHours = 48; // 2 days
-        break;
-      case "Clan Games":
-        maxHours = 336; // 2 weeks (14 days)
-        break;
-      case "Clan Capital":
-        maxHours = 168; // 7 days
-        break;
-      default:
-        maxHours = 48;
-    }
-
-    return hours <= maxHours;
-  };
+  const validateTime = (time:string,type:string) => isTimeValid(time,type);
 
   // Delete a reminder
   const deleteReminder = async (index: number) => {
@@ -892,10 +864,6 @@ export default function RemindersPage() { // NOSONAR — React page component: c
 
         <section className="space-y-5">
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-            <div>
-              <h2 className="text-lg font-semibold text-foreground">{t('section.title')}</h2>
-              <p className="mt-1 text-sm text-muted-foreground">{t('section.description')}</p>
-            </div>
             <div className="flex w-full flex-col gap-3 sm:flex-row md:w-auto md:items-end">
             {(loading || clans.length > 0) && (
               <div className="w-full sm:w-[300px]">
@@ -1168,10 +1136,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="clone-time">{t('card.timeBefore')}</Label>
-                    <div className="flex items-center gap-2">
-                      <Input id="clone-time" type="number" step="0.01" min="0" value={cloneTime} onChange={(event) => setCloneTime(event.target.value)} aria-invalid={cloneHasDuplicate || !isTimeValid(cloneTime, cloningReminder.type)} aria-describedby="clone-time-error" />
-                      <span className="text-sm text-muted-foreground whitespace-nowrap">{t('card.timeUnit')}</span>
-                    </div>
+                    <ReminderOffsetPicker id="clone-time" value={cloneTime} onChange={setCloneTime} label={t('card.timeBefore')} unit={t('card.timeUnit')} />
                     <div id="clone-time-error" aria-live="polite">
                       {cloneHasDuplicate ? (
                         <p className="text-xs text-destructive">{t('clone.duplicate')}</p>
@@ -1234,23 +1199,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                       {t('card.timeBefore')}
                       <span className="text-destructive ml-1">*</span>
                     </Label>
-                    <div className="flex items-center gap-2">
-                      <Input
-                          id="dialog-time"
-                          type="number"
-                          step="0.01"
-                          min="0"
-                          placeholder={
-                            t('card.timeBeforePlaceholder')
-                          }
-                          value={dialogReminder.time || ""}
-                          onChange={(e) => updateDialogField("time", e.target.value)}
-                          className="w-3/4"
-                      />
-                      <span className="text-sm text-muted-foreground whitespace-nowrap">
-                      {t('card.timeUnit')}
-                    </span>
-                    </div>
+                    <ReminderOffsetPicker id="dialog-time" value={dialogReminder.time || ""} onChange={value=>updateDialogField("time",value)} label={t('card.timeBefore')} unit={t('card.timeUnit')} />
                     {dialogReminder.time && !isTimeValid(dialogReminder.time, dialogReminder.type || "") && (
                         <p className="text-xs text-destructive mt-1">
                           {t('toast.timeExceedsLimit', {
@@ -1343,16 +1292,13 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                 {dialogReminder.type === "War" && (
                     <div className="space-y-2">
                       <Label>{t('card.warTypes')} <span className="text-destructive">*</span></Label>
-                      <div className="flex gap-2 flex-wrap">
+                      <div className="grid grid-cols-3 gap-2 md:flex md:flex-wrap">
                         {["Random", "Friendly", "CWL"].map((type) => (
-                            <Badge
+                            <button
                                 key={type}
-                                variant={dialogReminder.war_types?.includes(type) ? "default" : "outline"}
-                                className={`cursor-pointer transition-all ${
-                                    dialogReminder.war_types?.includes(type)
-                                        ? "bg-red-600 hover:bg-red-700 text-white border-red-600"
-                                        : "hover:bg-muted hover:border-primary"
-                                }`}
+                                type="button"
+                                aria-pressed={Boolean(dialogReminder.war_types?.includes(type))}
+                                className={`flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 text-sm font-medium transition-colors md:min-h-9 ${dialogReminder.war_types?.includes(type) ? "bg-primary/15 text-primary ring-2 ring-primary shadow-sm" : "bg-muted/65 text-muted-foreground hover:bg-muted"}`}
                                 onClick={() => {
                                   const current = dialogReminder.war_types || [];
                                   const updated = current.includes(type)
@@ -1361,8 +1307,9 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                                   updateDialogField("war_types", updated);
                                 }}
                             >
+                              <span aria-hidden="true" className="w-4">{dialogReminder.war_types?.includes(type) ? "✓" : ""}</span>
                               {type === "Random" ? t('card.random') : type === "Friendly" ? t('card.friendly') : t('card.cwl') /* NOSONAR — JSX nested ternary for multi-branch display state */}
-                            </Badge>
+                            </button>
                         ))}
                       </div>
                     </div>
@@ -1404,19 +1351,10 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                 {dialogReminder.type === "Clan Capital" && (
                     <div className="space-y-2">
                       <Label htmlFor="dialog-attacks">{t('card.attackThreshold')} <span className="text-destructive">*</span></Label>
-                      <Input
-                          id="dialog-attacks"
-                          type="number"
-                          min="1"
-                          max="5"
-                          placeholder=""
-                          value={dialogReminder.attack_threshold ?? ""}
-                          onChange={(e) => {
-                            const value = e.target.value === "" ? undefined : Number.parseInt(e.target.value);
-                            setAttackThresholdTouched(true);
-                            updateDialogField("attack_threshold", value);
-                          }}
-                      />
+                      <Select value={String(dialogReminder.attack_threshold ?? "")} onValueChange={value=>{setAttackThresholdTouched(true);updateDialogField("attack_threshold",Number(value));}}>
+                        <SelectTrigger id="dialog-attacks"><SelectValue /></SelectTrigger>
+                        <SelectContent>{Array.from({length:ATTACK_THRESHOLD_MAX-ATTACK_THRESHOLD_MIN+1},(_,index)=>index+ATTACK_THRESHOLD_MIN).map(count=><SelectItem key={count} value={String(count)}>{count}</SelectItem>)}</SelectContent>
+                      </Select>
                       {dialogReminder.attack_threshold !== undefined && !isAttacksValid(dialogReminder.attack_threshold) ? (
                           <p className="text-xs text-destructive mt-1">
                             {t('toast.attackThresholdInvalid', {

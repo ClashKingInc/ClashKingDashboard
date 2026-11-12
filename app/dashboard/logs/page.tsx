@@ -867,10 +867,6 @@ export default function LogsPage() {
 
         <section className="space-y-6">
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-            <div>
-              <h2 className="text-lg font-semibold text-foreground">{t("source.title")}</h2>
-              <p className="mt-1 text-sm text-muted-foreground">{t("source.description")}</p>
-            </div>
             {loading ? (
               <Skeleton className="h-12 w-full rounded-xl md:w-[340px]" />
             ) : (

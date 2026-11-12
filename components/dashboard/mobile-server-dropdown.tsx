@@ -12,6 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { embeddedServerId } from "@/lib/auth/embedded";
 import { cn } from "@/lib/utils";
 import type { GuildInfo } from "@/lib/api/types/server";
 import { dashboardHref } from "@/lib/dashboard-route";
@@ -69,6 +70,18 @@ export function MobileServerDropdown({
       </div>
     );
   }
+
+  // Scoped setup sessions cannot switch guilds. Render identity rather than
+  // a disabled-looking dropdown that still invites an impossible action.
+  if (embeddedServerId()) return (
+    <div className="flex min-w-0 items-center gap-2 px-1 py-1">
+      <Avatar className="h-8 w-8 shrink-0 rounded-lg">
+        <AvatarImage src={guildIcon} className="rounded-lg" />
+        <AvatarFallback className="rounded-lg">{guildName.charAt(0)}</AvatarFallback>
+      </Avatar>
+      <span className="truncate text-sm font-semibold">{guildName}</span>
+    </div>
+  );
 
   return (
     <>

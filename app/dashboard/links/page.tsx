@@ -16,7 +16,6 @@ import {
   Users,
   ChevronDown,
   ChevronUp,
-  Download,
   List as ListIcon,
   Loader2,
   Plus,
@@ -36,7 +35,6 @@ import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { DashboardTabsList, DashboardTabTrigger } from "@/components/ui/dashboard-tabs";
 import { townHallImageUrl } from "@/lib/theme";
 import { ClanLinks } from "./clan-links";
-import { loadedMembersDetail } from "./links-utils";
 import { dashboardQueryOptions } from "@/lib/dashboard-query-options";
 
 interface LinkedAccount {
@@ -108,11 +106,6 @@ function roleColor(role: LinkRole): string {
   return role.color === 0 ? "#b5bac1" : `#${role.color.toString(16).padStart(6, "0")}`;
 }
 
-function csvCell(value: unknown): string {
-  const text = value == null ? "" : String(value);
-  return `"${text.replaceAll('"', '""')}"`;
-}
-
 function useDebouncedValue(value: string, delay: number): string {
   const [debounced, setDebounced] = useState(value);
   useEffect(() => {
@@ -144,7 +137,6 @@ export default function LinksManagementPage() {
   const [addTag, setAddTag] = useState("");
   const [addApiToken, setAddApiToken] = useState("");
   const [adding, setAdding] = useState(false);
-  const [exporting, setExporting] = useState<"csv" | "json" | null>(null);
 
   const serverQuery = useMemo(() => {
     const mentions = selectedRoles.map(role => `<@&${role.id}>`).join(" ");
@@ -252,51 +244,6 @@ export default function LinksManagementPage() {
     }
   };
 
-  const exportLinks = async (format: "csv" | "json") => {
-    setExporting(format);
-    setError(null);
-    try {
-      const exportData = await fetchAllServerLinks(query => fetchServerLinks(guildId, query), {
-        ...(serverQuery ? { query: serverQuery } : {}),
-        ...(accountFilter === "none" ? { account_filter: accountFilter } : {}),
-      });
-
-      let contents: string;
-      let contentType: string;
-      if (format === "json") {
-        contents = JSON.stringify(exportData, null, 2);
-        contentType = "application/json";
-      } else {
-        const rows = exportData.members.flatMap(member => member.linked_accounts.map(account => [
-          member.user_id,
-          member.username,
-          member.display_name,
-          account.player_tag,
-          account.player_name,
-          account.town_hall,
-          account.is_verified,
-          account.added_at,
-        ]));
-        contents = [
-          ["user_id", "username", "display_name", "player_tag", "player_name", "town_hall", "is_verified", "added_at"],
-          ...rows,
-        ].map(row => row.map(csvCell).join(",")).join("\n");
-        contentType = "text/csv";
-      }
-
-      const url = URL.createObjectURL(new Blob([contents], { type: contentType }));
-      const anchor = document.createElement("a");
-      anchor.href = url;
-      anchor.download = `server-${guildId}-links.${format}`;
-      anchor.click();
-      URL.revokeObjectURL(url);
-    } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Failed to export links");
-    } finally {
-      setExporting(null);
-    }
-  };
-
   const loadPlayer = async (account: LinkedAccount, automatic = false) => {
     setPendingAccount(account.player_tag);
     setError(null);
@@ -367,21 +314,17 @@ export default function LinksManagementPage() {
     <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="mx-auto max-w-7xl space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-foreground md:text-3xl">Links Management</h1>
-          <p className="mt-1 text-muted-foreground">Manage Discord members and their Clash of Clans accounts.</p>
+          <h1 className="sr-only text-2xl font-bold text-foreground md:not-sr-only md:text-3xl">Links Management</h1>
+          <p className="mt-1 hidden text-muted-foreground md:block">Manage Discord members and their Clash of Clans accounts.</p>
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-3">
-          <StatCard title="Members loaded" value={data?.total_members} detail={loadedMembersDetail(data?.total_members ?? 0, serverMemberCount)} loading={initialLoading} />
+        <div className="grid grid-cols-3 gap-2 sm:gap-3">
+          <StatCard title="Members" value={data?.total_members} detail={serverMemberCount && serverMemberCount > (data?.total_members ?? 0) ? `of ${serverMemberCount.toLocaleString()}` : ""} loading={initialLoading} />
           <StatCard title="Members with links" value={data?.members_with_links} detail={`${linkedPercent}% coverage`} loading={initialLoading} />
-          <StatCard title="Linked accounts" value={data?.total_linked_accounts} detail="Across loaded members" loading={initialLoading} />
+          <StatCard title="Linked accounts" value={data?.total_linked_accounts} detail="" loading={initialLoading} />
         </div>
 
         <section className="space-y-4">
-          <div>
-            <h2 className="text-lg font-semibold">Account links</h2>
-            <p className="mt-1 text-sm text-muted-foreground">Search members, player tags, or Discord roles, then expand a member to manage their accounts.</p>
-          </div>
             <Tabs defaultValue="clans" onValueChange={value => { if (value === "stats") void fetchStats(); }}>
               <DashboardTabsList className="grid-cols-3">
                 <DashboardTabTrigger value="clans" artwork={<Users />}>Clans</DashboardTabTrigger>
@@ -457,14 +400,6 @@ export default function LinksManagementPage() {
                 {initialLoading ? "Loading members…" : `${data?.filtered_members || 0} matching members`}
                 {loading && !initialLoading && <Loader2 className="h-3.5 w-3.5 animate-spin" aria-label="Updating members" />}
               </span>
-              <div className="flex gap-2">
-                <Button variant="secondary" size="sm" className="border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted" onClick={() => void exportLinks("csv")} disabled={Boolean(exporting)}>
-                  {exporting === "csv" ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Download className="mr-2 h-4 w-4" />}Export CSV
-                </Button>
-                <Button variant="secondary" size="sm" className="border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted" onClick={() => void exportLinks("json")} disabled={Boolean(exporting)}>
-                  {exporting === "json" ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Download className="mr-2 h-4 w-4" />}Export JSON
-                </Button>
-              </div>
             </div>
 
             {initialLoading ? <MemberSkeleton /> : memberResults}
@@ -537,8 +472,7 @@ function LinksStats({ data, loading }: Readonly<{ data: ServerLinksResponse | nu
   return (
     <div className="space-y-4">
       <div>
-        <h3 className="text-lg font-semibold">Link Statistics</h3>
-        <p className="text-sm text-muted-foreground">Server-wide account coverage, verification, and player distribution.</p>
+
       </div>
 
       <div className="grid gap-3 md:grid-cols-2">

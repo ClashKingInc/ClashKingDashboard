@@ -251,6 +251,13 @@ html:lang(zh) body,
     background: hsl(var(--muted-foreground) / 0.52);
   }
 
+  /* Dashboard owns its scrolling. Reserving gutters on html, body and main
+     narrows mobile content three times and leaves a false right-hand margin. */
+  html:has(.dashboard-app), body:has(.dashboard-app) {
+    scrollbar-gutter: auto;
+    overflow: hidden;
+  }
+
   .dashboard-app {
     background:
       radial-gradient(circle at 85% -20%, hsl(var(--primary) / 0.07), transparent 34rem),
@@ -263,6 +270,7 @@ html:lang(zh) body,
     container-type: inline-size;
     scrollbar-color: hsl(var(--muted-foreground) / 0.38) transparent;
     scrollbar-width: thin;
+    scrollbar-gutter: stable;
   }
 
   .dashboard-content > [class*="min-h-screen"] {
@@ -271,8 +279,9 @@ html:lang(zh) body,
     padding: 1.25rem;
   }
 
+  .dashboard-content > [class*="max-w-"],
   .dashboard-content [class*="max-w-7xl"] {
-    max-width: 90rem;
+    max-width: none;
   }
 
   @media (min-width: 768px) {
@@ -282,6 +291,9 @@ html:lang(zh) body,
   }
 
   @media (max-width: 1023px) {
+    .dashboard-content { scrollbar-gutter: auto; }
+    .dashboard-content > [class*="min-h-screen"] { padding: 1rem; }
+
     /* Let compact dashboard controls keep their intended 28px height instead
        of expanding every button to 44px on mobile. */
     .dashboard-content button:not([role="switch"]):not([role="checkbox"]) {
