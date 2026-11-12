@@ -1142,7 +1142,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="clone-time">{t('card.timeBefore')}</Label>
-                    <ReminderOffsetPicker id="clone-time" value={cloneTime} onChange={setCloneTime} label={t('card.timeBefore')} unit={t('card.timeUnit')} />
+                    <ReminderOffsetPicker id="clone-time" value={cloneTime} onChange={setCloneTime} label={t('card.timeBefore')} unit={t('card.timeUnit')} showPresets={cloningReminder.type !== "War"} />
                     <div id="clone-time-error" aria-live="polite">
                       {cloneHasDuplicate ? (
                         <p className="text-xs text-destructive">{t('clone.duplicate')}</p>
@@ -1177,7 +1177,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                   {editingReminder ? t('dialog.editDescription') : t('dialog.addDescription')}
                 </DialogDescription>
               </DialogHeader>
-              <div className="space-y-4 py-4">
+              <div className="space-y-4 pt-2">
                 {/* Type Selector */}
                 <div className="space-y-2">
                   <Label htmlFor="dialog-type">{t('dialog.type')}  <span className="text-destructive">*</span></Label>
@@ -1206,7 +1206,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                       {t('card.timeBefore')}
                       <span className="text-destructive ml-1">*</span>
                     </Label>
-                    <ReminderOffsetPicker id="dialog-time" value={dialogReminder.time || ""} onChange={value=>updateDialogField("time",value)} label={t('card.timeBefore')} unit={t('card.timeUnit')} />
+                    <ReminderOffsetPicker id="dialog-time" value={dialogReminder.time || ""} onChange={value=>updateDialogField("time",value)} label={t('card.timeBefore')} unit={t('card.timeUnit')} showPresets={dialogReminder.type !== "War"} />
                     {dialogReminder.time && !isTimeValid(dialogReminder.time, dialogReminder.type || "") && (
                         <p className="text-xs text-destructive mt-1">
                           {t('toast.timeExceedsLimit', {
@@ -1305,7 +1305,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                                 key={type}
                                 type="button"
                                 aria-pressed={Boolean(dialogReminder.war_types?.includes(type))}
-                                className={`flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 text-sm font-medium transition-colors md:min-h-9 ${dialogReminder.war_types?.includes(type) ? "bg-primary/15 text-primary ring-2 ring-primary shadow-sm" : "bg-muted/65 text-muted-foreground hover:bg-muted"}`}
+                                className={`flex min-h-10 items-center justify-center gap-1.5 rounded-lg px-3 text-sm font-medium transition-colors md:min-h-9 ${dialogReminder.war_types?.includes(type) ? "bg-primary/15 text-primary ring-1 ring-primary shadow-sm" : "bg-muted/65 text-muted-foreground hover:bg-muted"}`}
                                 onClick={() => {
                                   const current = dialogReminder.war_types || [];
                                   const updated = current.includes(type)
@@ -1382,7 +1382,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                     </div>
                 )}
               </div>
-              <ActionFeedback notice={notices.dialog} reserve />
+              {notices.dialog && <ActionFeedback notice={notices.dialog} />}
               <DialogFooter>
                 <Button
                     variant="outline"
