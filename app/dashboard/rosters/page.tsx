@@ -837,7 +837,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
           </div>
 
           <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
-            <div className="flex h-10 w-full items-center gap-2 rounded-xl bg-muted/55 px-3 shadow-sm shadow-black/5 transition-shadow focus-within:ring-2 focus-within:ring-ring/35 lg:max-w-sm">
+            <div className="order-2 flex h-10 w-full items-center gap-2 rounded-xl bg-muted/55 px-3 shadow-sm shadow-black/5 transition-shadow focus-within:ring-2 focus-within:ring-ring/35 md:order-1 lg:max-w-sm">
               <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
               <Input
                 placeholder={t("searchPlaceholder")}
@@ -846,7 +846,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
                 className="h-9 flex-1 border-0 bg-transparent px-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
               />
             </div>
-            <div className="grid grid-cols-2 gap-2 md:flex md:flex-wrap lg:ml-auto">
+            <div className="order-1 grid grid-cols-2 gap-2 md:order-2 md:flex md:flex-wrap lg:ml-auto">
             <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
               <DialogTrigger asChild>
                 <Button className="shrink-0 gap-2 rounded-xl bg-primary hover:bg-primary/90">
@@ -979,7 +979,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
           </div>
         </div>
 
-        <ActionFeedback notice={notices.list} reserve />
+        {notices.list && <ActionFeedback notice={notices.list} />}
         {/* Compare Mode Banner */}
         {compareMode && (
           <div className="rounded-2xl bg-primary/10 p-4 shadow-sm shadow-black/5">
