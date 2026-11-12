@@ -478,7 +478,7 @@ export default function ClansPage() {
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
-      <div className="mx-auto max-w-7xl space-y-7">
+      <div className="mx-auto max-w-7xl space-y-4 md:space-y-7">
         <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <div className="flex flex-wrap items-center gap-2"><h1 className="text-2xl font-bold text-foreground md:text-3xl">{t("listTitle")}</h1>{!loading && <span className="inline-flex items-center gap-1.5 rounded-full bg-muted/65 px-2.5 py-1 text-xs font-medium text-muted-foreground"><Users className="h-3.5 w-3.5" />{t("memberSummary", { count: totalMembers })}</span>}</div>
@@ -495,8 +495,8 @@ export default function ClansPage() {
           </div>
         </header>
 
-        <ActionFeedback notice={notices.list} reserve />
         <section className="space-y-4" aria-labelledby="clan-list-title">
+          {notices.list && <ActionFeedback notice={notices.list} />}
           <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
             <h2 id="clan-list-title" className="sr-only">{t("listTitle")}</h2>
             <div className="flex flex-col gap-2 sm:flex-row">
