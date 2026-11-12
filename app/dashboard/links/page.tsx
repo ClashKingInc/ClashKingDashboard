@@ -1,7 +1,7 @@
 "use client";
 
 import { useGuildId } from "@/lib/dashboard-route";
-import { dashboardEndpoints, CreateServerLinkEndpoint, DeleteServerLinkEndpoint, ProxyPlayerEndpoint } from "@clashking/api-contracts";
+import { ServerClanLinksEndpoint, dashboardEndpoints, CreateServerLinkEndpoint, DeleteServerLinkEndpoint, ProxyPlayerEndpoint } from "@clashking/api-contracts";
 import { ApiResponseError } from "@clashking/api-client";
 import { Schema } from "effect";
 import { executeSharedEndpoint } from "@/lib/api/shared-client";
@@ -9,7 +9,7 @@ import { fetchAllServerLinks } from "@/lib/api/all-server-links";
 
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "@/components/app-image";
 import {
   BarChart3,
@@ -325,7 +325,7 @@ export default function LinksManagementPage() {
         </div>
 
         <section className="space-y-4">
-            <Tabs defaultValue="clans" onValueChange={value => { if (value === "stats") void fetchStats(); }}>
+            <Tabs defaultValue="clans">
               <DashboardTabsList className="grid-cols-3">
                 <DashboardTabTrigger value="clans" artwork={<Users />}>Clans</DashboardTabTrigger>
                 <DashboardTabTrigger value="accounts" artwork={<ListIcon />}>Accounts</DashboardTabTrigger>
@@ -415,11 +415,7 @@ export default function LinksManagementPage() {
             )}
               </TabsContent>
               <TabsContent value="stats" className="mt-5">
-                {(error && !statsData) ? (
-                  <div className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</div>
-                ) : (
-                  <LinksStats data={statsData} loading={statsLoading} />
-                )}
+                <LinksStatistics guildId={guildId} data={statsData} loading={statsLoading} error={error} loadServer={fetchStats} />
               </TabsContent>
             </Tabs>
         </section>
@@ -459,6 +455,25 @@ function StatCard({ title, value, detail, loading }: Readonly<{ title: string; v
   );
 }
 
+function LinksStatistics({guildId,data,loading,error,loadServer}:Readonly<{guildId:string;data:ServerLinksResponse|null;loading:boolean;error:string|null;loadServer:()=>Promise<void>}>) {
+  const [scope,setScope]=useState<"family"|"server">("family");
+  const family=useQuery({queryKey:["clan-links",guildId],queryFn:({signal})=>executeSharedEndpoint(ServerClanLinksEndpoint,{path:{serverId:guildId},query:{},body:{}},{signal})});
+  const stats=family.data?.statistics;
+  const percent=(part:number,total:number)=>total?Math.round(part/total*100):0;
+  return <div className="space-y-4">
+    <div role="group" aria-label="Link statistics scope" className="inline-flex rounded-xl bg-muted/55 p-1">
+      {([['family','Family clans'],['server','Entire server']] as const).map(([value,label])=><Button key={value} variant="ghost" className="rounded-lg aria-pressed:bg-background aria-pressed:shadow-sm" aria-pressed={scope===value} onClick={()=>{setScope(value);if(value==="server")void loadServer();}}>{label}</Button>)}
+    </div>
+    {scope==="server" ? error&&!data ? <p role="alert" className="text-sm text-destructive">{error}<Button variant="secondary" className="ml-2" onClick={()=>void loadServer()}>Retry</Button></p> : <LinksStats data={data} loading={loading} /> :
+      family.isPending ? <div className="grid gap-3 md:grid-cols-2">{[1,2,3,4].map(i=><Skeleton key={i} className="h-40 rounded-3xl" />)}</div> : family.error||!stats ? <p role="alert" className="text-sm text-destructive">{family.error?.message??"Family statistics are not available yet."}<Button variant="secondary" className="ml-2" onClick={()=>void family.refetch()}>Retry</Button></p> : <div className="grid gap-3 md:grid-cols-2">
+        <Card className="border-0 shadow-sm shadow-black/5"><CardHeader><CardTitle className="text-sm">Family accounts linked</CardTitle></CardHeader><CardContent className="space-y-2"><MetricRow label="Linked players" value={`${stats.linked} / ${stats.players}`} /><MetricRow label="Without links" value={stats.players-stats.linked} /><div className="h-2.5 overflow-hidden rounded-full bg-secondary"><div className="h-full rounded-full bg-primary" style={{width:`${percent(stats.linked,stats.players)}%`}} /></div><p className="text-right text-xs text-muted-foreground">{percent(stats.linked,stats.players)}% linked</p></CardContent></Card>
+        <Card className="border-0 shadow-sm shadow-black/5"><CardHeader><CardTitle className="text-sm">Verification</CardTitle></CardHeader><CardContent className="space-y-2"><MetricRow label="Verified" value={`${stats.verified} / ${stats.linked}`} /><MetricRow label="Unverified" value={stats.linked-stats.verified} /><div className="h-2.5 overflow-hidden rounded-full bg-secondary"><div className="h-full rounded-full bg-emerald-600" style={{width:`${percent(stats.verified,stats.linked)}%`}} /></div><p className="text-right text-xs text-muted-foreground">{percent(stats.verified,stats.linked)}% verified</p></CardContent></Card>
+        <Card className="border-0 shadow-sm shadow-black/5"><CardHeader><CardTitle className="text-sm">Discord members</CardTitle></CardHeader><CardContent className="space-y-2"><MetricRow label="Linked to family accounts" value={stats.discordMembers} /><MetricRow label="In this server" value={`${stats.inServer} (${percent(stats.inServer,stats.discordMembers)}%)`} /><MetricRow label="1 family account" value={stats.accountDistribution.one} /><MetricRow label="2–3 accounts" value={stats.accountDistribution.twoOrThree} /><MetricRow label="4+ accounts" value={stats.accountDistribution.fourOrMore} /></CardContent></Card>
+        <Card className="border-0 shadow-sm shadow-black/5"><CardHeader><CardTitle className="text-sm">Town Hall levels</CardTitle></CardHeader><CardContent className="space-y-2">{stats.townHalls.map(({level,count})=><MetricRow key={level} label={level?`Town Hall ${level}`:"Unknown Town Hall"} value={`${count} (${percent(count,stats.players)}%)`} />)}</CardContent></Card>
+      </div>}
+  </div>;
+}
+
 function LinksStats({ data, loading }: Readonly<{ data: ServerLinksResponse | null; loading: boolean }>) {
   if (loading || !data) {
     return <div className="grid gap-3 md:grid-cols-2">{[1, 2, 3, 4].map(item => <Skeleton key={item} className="h-40 rounded-[24px]" />)}</div>;
@@ -471,10 +486,6 @@ function LinksStats({ data, loading }: Readonly<{ data: ServerLinksResponse | nu
 
   return (
     <div className="space-y-4">
-      <div>
-
-      </div>
-
       <div className="grid gap-3 md:grid-cols-2">
         <Card className="border-0 bg-card shadow-sm shadow-black/5">
           <CardHeader><CardTitle className="text-sm">Verification Rate</CardTitle></CardHeader>

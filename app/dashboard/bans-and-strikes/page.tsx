@@ -353,9 +353,29 @@ export default function BansAndStrikesPage() { // NOSONAR — page coordinates t
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="mx-auto max-w-7xl space-y-8">
-        <header>
-          <h1 className="text-2xl font-bold text-foreground md:text-3xl">{tSidebar("bans.name")}</h1>
-          <p className="mt-1 text-sm text-muted-foreground">{t("description")}</p>
+        <header className="flex items-start justify-between gap-3">
+          <div className="min-w-0 flex-1"><div className="flex items-center gap-2"><h1 className="text-2xl font-bold text-foreground md:text-3xl">{tSidebar("bans.name")}</h1><InfoPopover content={activeTab==="bans"?banExplanation:strikeExplanation} label={activeTab==="bans"?t("bans.howItWorks.title"):t("strikes.howItWorks.title")} /></div><p className="mt-1 hidden text-sm text-muted-foreground sm:block">{t("description")}</p></div>
+          <div className="shrink-0">{activeTab==="bans" ? <BanDialog
+                  open={isAddBanDialogOpen}
+                  onOpenChange={setIsAddBanDialogOpen}
+                  value={newBan}
+                  onChange={setNewBan}
+                  onSubmit={() => void handleAddBan()}
+                  submitting={isSubmittingBan}
+                  imageValid={optionalImageUrlIsValid(newBan.image)}
+                  t={t}
+                  tCommon={tCommon}
+                /> : <StrikeDialog
+                  open={isAddStrikeDialogOpen}
+                  onOpenChange={setIsAddStrikeDialogOpen}
+                  value={newStrike}
+                  onChange={setNewStrike}
+                  onSubmit={() => void handleAddStrike()}
+                  submitting={isSubmittingStrike}
+                  imageValid={optionalImageUrlIsValid(newStrike.image)}
+                  t={t}
+                  tCommon={tCommon}
+                />}</div>
         </header>
 
         <Tabs value={activeTab} onValueChange={(value) => {
@@ -372,23 +392,7 @@ export default function BansAndStrikesPage() { // NOSONAR — page coordinates t
 
           <TabsContent value="bans" className="mt-7 space-y-4">
             <section className="space-y-4">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-                <div>
-                  <div className="flex items-center gap-2"><h2 className="text-lg font-semibold">{t("bans.list.title")}</h2><InfoPopover content={banExplanation} label={t("bans.howItWorks.title")} /></div>
-                  <p className="mt-1 text-sm text-muted-foreground">{t("bans.list.count", { count: filteredBans.length })}</p>
-                </div>
-                <BanDialog
-                  open={isAddBanDialogOpen}
-                  onOpenChange={setIsAddBanDialogOpen}
-                  value={newBan}
-                  onChange={setNewBan}
-                  onSubmit={() => void handleAddBan()}
-                  submitting={isSubmittingBan}
-                  imageValid={optionalImageUrlIsValid(newBan.image)}
-                  t={t}
-                  tCommon={tCommon}
-                />
-              </div>
+
 
               <div className="flex flex-col gap-2 sm:flex-row">
                 <SearchControl value={searchQueryBans} onChange={setSearchQueryBans} placeholder={t("bans.list.searchPlaceholder")} className="sm:flex-1" />
@@ -420,23 +424,7 @@ export default function BansAndStrikesPage() { // NOSONAR — page coordinates t
 
           <TabsContent value="strikes" className="mt-7 space-y-4">
             <section className="space-y-4">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-                <div>
-                  <div className="flex items-center gap-2"><h2 className="text-lg font-semibold">{t("strikes.list.title")}</h2><InfoPopover content={strikeExplanation} label={t("strikes.howItWorks.title")} /></div>
-                  <p className="mt-1 text-sm text-muted-foreground">{t("strikes.list.count", { count: filteredStrikes.length })}</p>
-                </div>
-                <StrikeDialog
-                  open={isAddStrikeDialogOpen}
-                  onOpenChange={setIsAddStrikeDialogOpen}
-                  value={newStrike}
-                  onChange={setNewStrike}
-                  onSubmit={() => void handleAddStrike()}
-                  submitting={isSubmittingStrike}
-                  imageValid={optionalImageUrlIsValid(newStrike.image)}
-                  t={t}
-                  tCommon={tCommon}
-                />
-              </div>
+
 
               <div className="flex flex-col gap-2 sm:flex-row">
                 <div className="flex rounded-xl bg-muted/55 p-1 shadow-sm shadow-black/5">

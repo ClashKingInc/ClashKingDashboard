@@ -1,6 +1,5 @@
 "use client";
 
-import { WarEventSettings } from "./war-event-settings";
 
 import { ClanVerificationControl, ClanVerificationIcon } from "./clan-verification";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -461,10 +460,9 @@ export default function ClansPage() {
       <div className="mx-auto max-w-7xl space-y-7">
         <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-foreground md:text-3xl">{t("title")}</h1>
-            <p className="mt-1 text-muted-foreground">{t("description")}</p>
+            <div className="flex flex-wrap items-center gap-2"><h1 className="text-2xl font-bold text-foreground md:text-3xl">{t("listTitle")}</h1>{!loading && <span className="inline-flex items-center gap-1.5 rounded-full bg-muted/65 px-2.5 py-1 text-xs font-medium text-muted-foreground"><Users className="h-3.5 w-3.5" />{t("memberSummary", { count: totalMembers })}</span>}</div>
           </div>
-          <div className="flex flex-col gap-2 sm:flex-row">
+          <div className="grid grid-cols-2 gap-2 sm:flex">
             <Button type="button" variant="secondary" className="border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted" onClick={() => setIsCategoryDialogOpen(true)}>
               <FolderIcon size={16} />
               {t("categories.manage")}
@@ -478,15 +476,7 @@ export default function ClansPage() {
 
         <section className="space-y-4" aria-labelledby="clan-list-title">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-            <div className="flex items-center gap-2">
-              <h2 id="clan-list-title" className="text-lg font-semibold">{t("listTitle")}</h2>
-              {!loading && (
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-muted/65 px-2.5 py-1 text-xs font-medium text-muted-foreground">
-                  <Users className="h-3.5 w-3.5" />
-                  {t("memberSummary", { count: totalMembers })}
-                </span>
-              )}
-            </div>
+            <h2 id="clan-list-title" className="sr-only">{t("listTitle")}</h2>
             <div className="flex flex-col gap-2 sm:flex-row">
               <div className="flex h-10 min-w-0 items-center gap-2 rounded-xl bg-muted/55 px-3 shadow-sm shadow-black/5 focus-within:ring-2 focus-within:ring-ring/35 sm:w-72">
                 <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
@@ -626,7 +616,7 @@ export default function ClansPage() {
         </Dialog>
 
         <Dialog open={isCategoryDialogOpen} onOpenChange={setIsCategoryDialogOpen}>
-          <DialogContent variant="form" className="sm:max-w-2xl">
+          <DialogContent variant="form" className="sm:max-w-2xl" onOpenAutoFocus={event=>event.preventDefault()}>
             <DialogHeader>
               <DialogTitle>{t("categories.title")}</DialogTitle>
               <DialogDescription>{t("categories.description")}</DialogDescription>
@@ -746,7 +736,6 @@ export default function ClansPage() {
                   </div>
             </div>
 
-            {selectedClan && <WarEventSettings key={`war:${guildId}:${selectedClan.tag || selectedClan.clan_tag}`} serverId={guildId} clanTag={selectedClan.tag || selectedClan.clan_tag || ""} />}
 
 
             <DialogFooter>

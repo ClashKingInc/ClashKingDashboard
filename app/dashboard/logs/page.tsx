@@ -1,4 +1,5 @@
 "use client";
+import { WarEventSettings } from "../clans/war-event-settings";
 
 import { useGuildId } from "@/lib/dashboard-route";
 import { dashboardEndpoints, type EndpointResponse } from "@clashking/api-contracts";
@@ -915,7 +916,7 @@ export default function LogsPage() {
                   {clanLogTabs.map((tab) => (
                     <TabsContent key={tab.value} value={tab.value} className="mt-0">
                       {tab.value === "countdowns" ? (
-                        selectedClan && <CountdownsPanel serverId={guildId} clanTag={selectedClan} />
+                        selectedClan && <div className="space-y-3"><WarEventSettings key={`war:${guildId}:${selectedClan}`} serverId={guildId} clanTag={selectedClan} /><CountdownsPanel serverId={guildId} clanTag={selectedClan} /></div>
                       ) : (
                         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
                           {tab.definitions?.map((logDef) => renderLogCard({logDef,statusLoading:loading}))}

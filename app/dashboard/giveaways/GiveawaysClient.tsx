@@ -596,13 +596,9 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
   const [giveaways, setGiveaways] = useState<{ ongoing: Giveaway[]; upcoming: Giveaway[]; ended: Giveaway[]; total: number }>({ ongoing: [], upcoming: [], ended: [], total: 0 });
   const {
     dialogOpen: entriesDialogOpen,
-    target: entriesTarget, data: entriesData, loading: entriesLoading,
+    target: entriesTarget, data: entriesData, loading: entriesLoading, error: entriesError,
     openDialog: openEntriesDialog, closeDialog: closeEntries,
-  } = useGiveawayEntries(
-    guildId,
-    (gid, giveawayId) => apiClient.servers.getGiveawayEntries(gid, giveawayId),
-    (message) => toast({ title: t("toast.errorTitle"), description: message, variant: "destructive" }),
-  );
+  } = useGiveawayEntries(guildId,(gid,giveawayId)=>apiClient.servers.getGiveawayEntries(gid,giveawayId)  );
   const [channels, setChannels] = useState<Channel[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
   const [form, setForm] = useState<FormState>(buildEmptyState(t));
@@ -799,16 +795,16 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="mx-auto max-w-7xl space-y-6">
-        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          <div>
+        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 md:flex md:items-end md:justify-between">
+          <div className="min-w-0">
             <h1 className="text-2xl font-bold text-foreground md:text-3xl">{t("title")}</h1>
-            <p className="mt-1 text-muted-foreground">{t("description")}</p>
+            <p className="mt-1 hidden text-muted-foreground sm:block">{t("description")}</p>
           </div>
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="contents md:flex md:flex-wrap md:items-center md:gap-2">
             <div className="inline-flex items-center gap-2 rounded-full bg-muted/65 px-3 py-1.5 text-sm text-muted-foreground shadow-sm shadow-black/5">
-              <Users className="h-4 w-4" /><span>{t("stats.totalEntries")}</span><span className="font-semibold tabular-nums text-foreground">{totalEntries.toLocaleString()}</span>
+              <Users className="h-4 w-4" /><span className="hidden sm:inline">{t("stats.totalEntries")}</span><span className="font-semibold tabular-nums text-foreground">{totalEntries.toLocaleString()}</span>
             </div>
-            <Button onClick={openCreate}><Plus className="mr-2 h-4 w-4" />{t("create")}</Button>
+            <Button className="col-span-2 justify-self-end" onClick={openCreate}><Plus className="mr-2 h-4 w-4" />{t("create")}</Button>
           </div>
         </div>
         
@@ -1096,57 +1092,21 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
 
         {/* Entries Dialog */}
         <Dialog open={entriesDialogOpen} onOpenChange={(open) => { if (!open) closeEntries(); }}>
-          <DialogContent variant="form" className="sm:max-w-lg">
-            <DialogHeader>
-              <DialogTitle className="flex items-center gap-2"><Users className="h-5 w-5" />{entriesTarget?.prize}</DialogTitle>
-              <DialogDescription>{t("entries.description")}</DialogDescription>
-            </DialogHeader>
-            {entriesLoading && (
-              <div className="space-y-2 py-4">
-                {[1, 2, 3].map((i) => <Skeleton key={i} className="h-10 w-full animate-pulse" />)}
+          <DialogContent variant="form" className="flex max-h-[min(42rem,90dvh)] flex-col overflow-hidden border-0 bg-card sm:max-w-lg" onOpenAutoFocus={event=>event.preventDefault()}>
+            <DialogHeader className="pr-8 text-left"><DialogTitle className="truncate">{entriesTarget?.prize}</DialogTitle><DialogDescription className="sr-only">{t("entries.description")}</DialogDescription></DialogHeader>
+            {entriesLoading && <div className="space-y-2 py-2">{[1,2,3].map(i=><Skeleton key={i} className="h-16 rounded-2xl" />)}</div>}
+            {entriesError && <p role="alert" className="text-sm text-destructive">{entriesError}<Button variant="secondary" className="ml-2" onClick={()=>entriesTarget&&void openEntriesDialog(entriesTarget)}>{tCommon("retry")}</Button></p>}
+            {!entriesLoading && entriesData && <>
+              <div className="flex items-center justify-between gap-3 text-sm text-muted-foreground"><span>{entriesData.uniqueUsers.toLocaleString()} {t("entries.uniqueUsers")}</span><span className="rounded-full bg-muted/65 px-3 py-1.5"><strong className="text-foreground">{entriesData.totalEntries.toLocaleString()}</strong> {t("entries.totalEntries")}</span></div>
+              <div className="min-h-0 space-y-2 overflow-y-auto overscroll-contain">
+                {!entriesData.entrants.length && <p className="py-6 text-center text-sm text-muted-foreground">{t("entries.noEntrants")}</p>}
+                {entriesData.entrants.map(entry=><div key={entry.userId} className="flex items-center gap-3 rounded-2xl bg-muted/45 p-3">
+                  <div className="min-w-0 flex-1"><DiscordUserDisplay userId={entry.userId} username={entry.username} avatarUrl={entry.avatarUrl} isOnServer={entry.inServer} size="md" /><p className="mt-1 text-xs text-muted-foreground">{entry.entries.toLocaleString()} {t("entries.totalEntries")}</p></div>
+                  <div className="shrink-0 text-right"><p className="font-semibold tabular-nums">{entry.winChance.toFixed(2)}%</p><p className="text-xs text-muted-foreground">{t("entries.winChance")}</p></div>
+                </div>)}
               </div>
-            )}
-            {!entriesLoading && entriesData && (
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="rounded-lg border border-border bg-muted/30 px-4 py-3 text-center">
-                    <div className="text-2xl font-bold text-foreground">{entriesData.totalEntries}</div>
-                    <div className="text-xs text-muted-foreground mt-0.5">{t("entries.totalEntries")}</div>
-                  </div>
-                  <div className="rounded-lg border border-border bg-muted/30 px-4 py-3 text-center">
-                    <div className="text-2xl font-bold text-foreground">{entriesData.uniqueUsers}</div>
-                    <div className="text-xs text-muted-foreground mt-0.5">{t("entries.uniqueUsers")}</div>
-                  </div>
-                </div>
-                {entriesData.entrants.length === 0 ? (
-                  <p className="py-6 text-center text-sm text-muted-foreground">{t("entries.noEntrants")}</p>
-                ) : (
-                  <div className="max-h-72 overflow-y-auto rounded-lg border border-border">
-                    <table className="w-full text-sm">
-                      <thead className="sticky top-0 bg-muted/80 backdrop-blur-sm">
-                        <tr className="text-left text-xs font-medium text-muted-foreground">
-                          <th className="px-3 py-2">{t("entries.userId")}</th>
-                          <th className="px-3 py-2 text-center">{t("entries.entryCount")}</th>
-                          <th className="px-3 py-2 text-right">{t("entries.winChance")}</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {entriesData.entrants.map((e, i) => (
-                          <tr key={e.userId} className={cn("border-t border-border/60", i % 2 === 0 ? "bg-background" : "bg-muted/10")}>
-                            <td className="px-3 py-2 text-xs text-muted-foreground">{e.userId}</td>
-                            <td className="px-3 py-2 text-center tabular-nums">{e.entries}</td>
-                            <td className="px-3 py-2 text-right tabular-nums text-primary">{e.winChance.toFixed(2)}%</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
-              </div>
-            )}
-            <DialogFooter>
-              <Button variant="outline" onClick={closeEntries}>{tCommon("close")}</Button>
-            </DialogFooter>
+            </>}
+            <DialogFooter className="shrink-0"><Button variant="secondary" onClick={closeEntries}>{tCommon("close")}</Button></DialogFooter>
           </DialogContent>
         </Dialog>
 
