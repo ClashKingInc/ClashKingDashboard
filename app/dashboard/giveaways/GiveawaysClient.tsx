@@ -796,21 +796,21 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
-      <div className="mx-auto max-w-7xl space-y-6">
-        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 md:flex md:items-end md:justify-between">
-          <div className="min-w-0">
+      <div className="mx-auto max-w-7xl space-y-4 md:space-y-6">
+        <div className="flex items-center justify-between gap-3 md:items-end">
+          <div className="sr-only min-w-0 md:not-sr-only">
             <h1 className="text-2xl font-bold text-foreground md:text-3xl">{t("title")}</h1>
             <p className="mt-1 hidden text-muted-foreground sm:block">{t("description")}</p>
           </div>
-          <div className="contents md:flex md:flex-wrap md:items-center md:gap-2">
+          <div className="flex w-full items-center justify-between gap-2 md:w-auto md:flex-wrap">
             <div className="inline-flex items-center gap-2 rounded-full bg-muted/65 px-3 py-1.5 text-sm text-muted-foreground shadow-sm shadow-black/5">
-              <Users className="h-4 w-4" /><span className="hidden sm:inline">{t("stats.totalEntries")}</span><span className="font-semibold tabular-nums text-foreground">{totalEntries.toLocaleString()}</span>
+              <Users className="h-4 w-4 shrink-0" /><span className="font-semibold tabular-nums text-foreground">{totalEntries.toLocaleString()}</span><span>{t("entries.totalEntries")}</span>
             </div>
-            <Button className="col-span-2 justify-self-end" onClick={openCreate}><Plus className="mr-2 h-4 w-4" />{t("create")}</Button>
+            <Button className="shrink-0" onClick={openCreate}><Plus className="mr-2 h-4 w-4" />{t("create")}</Button>
           </div>
         </div>
         
-        <ActionFeedback notice={notices.list} reserve />
+        {notices.list && <ActionFeedback notice={notices.list} />}
         <GiveawaysMainContent
           loading={loading}
           t={t}
