@@ -805,8 +805,8 @@ export default function RemindersPage() { // NOSONAR — React page component: c
 
   return (
     <div className="min-h-[calc(100vh+1px)] bg-background p-4 md:p-6">
-      <div className="mx-auto max-w-7xl space-y-8">
-        <header>
+      <div className="mx-auto max-w-7xl space-y-4 md:space-y-8">
+        <header className="sr-only md:not-sr-only">
           <h1 className="text-2xl font-bold text-foreground md:text-3xl">{t('title')}</h1>
           <p className="mt-1 text-muted-foreground">{t('description')}</p>
         </header>
@@ -866,7 +866,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
           </Collapsible>
         )}
 
-        <section className="space-y-5">
+        <section className="space-y-4 md:space-y-5">
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div className="flex w-full flex-col gap-3 sm:flex-row md:w-auto md:items-end">
             {(loading || clans.length > 0) && (
@@ -901,7 +901,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
           </div>
           </div>
 
-          <ActionFeedback notice={notices.list} reserve />
+          {notices.list && <ActionFeedback notice={notices.list} />}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
             <DashboardTabsList className="grid-cols-2 lg:grid-cols-4">
               {tabDefinitions.map((tab) => (
