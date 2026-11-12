@@ -29,7 +29,7 @@ export function ClanLinks({guildId,onLinked}:{guildId:string;onLinked:()=>void})
     const categories=report.data?.categories ?? [];
     const byCategory=new Map(categories.map(category=>[category.name,[] as Clan[]]));
     const uncategorized:Clan[]=[];
-    // Keep the API's name/tag order within each category, just like Clans.
+    // Keep the API's saved clan order within each category, just like Clans.
     for(const clan of report.data?.clans ?? []) {
       const group=clan.category?.trim() ? byCategory.get(clan.category.trim()) : undefined;
       (group ?? uncategorized).push(clan);

@@ -313,14 +313,14 @@ export default function LinksManagementPage() {
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="mx-auto max-w-7xl space-y-6">
-        <div>
+        <div className="contents md:block">
           <h1 className="sr-only text-2xl font-bold text-foreground md:not-sr-only md:text-3xl">Links Management</h1>
           <p className="mt-1 hidden text-muted-foreground md:block">Manage Discord members and their Clash of Clans accounts.</p>
         </div>
 
         <div className="grid grid-cols-3 gap-2 sm:gap-3">
           <StatCard title="Members" value={data?.total_members} detail={serverMemberCount && serverMemberCount > (data?.total_members ?? 0) ? `of ${serverMemberCount.toLocaleString()}` : ""} loading={initialLoading} />
-          <StatCard title="Members with links" value={data?.members_with_links} detail={`${linkedPercent}% coverage`} loading={initialLoading} />
+          <StatCard title="Linked members" value={data?.members_with_links} detail={`${linkedPercent}% coverage`} percent={linkedPercent} loading={initialLoading} />
           <StatCard title="Linked accounts" value={data?.total_linked_accounts} detail="" loading={initialLoading} />
         </div>
 
@@ -445,12 +445,13 @@ export default function LinksManagementPage() {
   );
 }
 
-function StatCard({ title, value, detail, loading }: Readonly<{ title: string; value?: number; detail: string; loading: boolean }>) {
+function StatCard({ title, value, detail, percent, loading }: Readonly<{ title: string; value?: number; detail: string; percent?: number; loading: boolean }>) {
   return (
-    <div className="rounded-[24px] bg-card px-5 py-4 shadow-sm shadow-black/5">
-      <p className="text-sm font-medium text-muted-foreground">{title}</p>
-      {loading ? <Skeleton className="mt-2 h-8 w-16" /> : <p className="mt-1 text-3xl font-bold tracking-tight">{(value ?? 0).toLocaleString()}</p>}
-      <p className="mt-1 text-xs text-muted-foreground">{detail}</p>
+    <div className="relative min-w-0 overflow-hidden rounded-[20px] bg-card px-3 py-3 shadow-sm shadow-black/5 sm:px-5 sm:py-4">
+      <p className="min-h-8 text-[11px] font-medium leading-4 text-muted-foreground sm:min-h-5 sm:text-sm">{title}</p>
+      {loading ? <Skeleton className="mt-2 h-8 w-16" /> : <p className="mt-1 text-xl font-bold tabular-nums sm:text-3xl">{(value ?? 0).toLocaleString()}</p>}
+      <p className="mt-1 min-h-4 text-[10px] text-muted-foreground sm:text-xs">{detail}</p>
+      {percent!==undefined && !loading && <div role="progressbar" aria-label={title} aria-valuenow={percent} aria-valuemin={0} aria-valuemax={100} className="absolute inset-x-0 bottom-0 h-1 bg-muted"><div className="h-full bg-primary" style={{width:`${percent}%`}} /></div>}
     </div>
   );
 }

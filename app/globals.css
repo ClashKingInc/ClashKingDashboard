@@ -266,6 +266,9 @@ html:lang(zh) body,
 
   .dashboard-content {
     background: transparent;
+    /* Row saves/removals must not cause browser scroll anchoring to move the
+       viewport. Forms also retain their action/status row height while saving. */
+    overflow-anchor: none;
     container-name: dashboard;
     container-type: inline-size;
     scrollbar-color: hsl(var(--muted-foreground) / 0.38) transparent;

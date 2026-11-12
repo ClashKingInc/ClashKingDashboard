@@ -65,6 +65,8 @@ import { isClanCategoriesResponse, type ClanCategory } from "@/lib/api/types/cla
 import { normalizeDiscordRolesPayload } from "@/lib/dashboard-cache";
 import { dashboardQueryKeys } from "@/lib/dashboard-query";
 import { dashboardQueryOptions } from "@/lib/dashboard-query-options";
+import { ClanOrderManager } from "./clan-order-manager";
+import { useDashboardAccess } from "@/components/dashboard/dashboard-access-provider";
 import { ClanCategoryManager } from "./clan-category-manager";
 
 interface ClanSettings {
@@ -142,6 +144,8 @@ export default function ClansPage() {
   const [error, setError] = useState<string | null>(null);
   const [clanSearch, setClanSearch] = useState("");
   const [clanCategories, setClanCategories] = useState<ClanCategory[]>([]);
+  const {canManage}=useDashboardAccess();
+  const [ordering,setOrdering]=useState<{id:string;name:string}|null>(null);
   const [categoryRefreshVersion, setCategoryRefreshVersion] = useState(0);
   const [isCategoryDialogOpen, setIsCategoryDialogOpen] = useState(false);
 
@@ -516,6 +520,7 @@ export default function ClansPage() {
                       <h3 className="text-lg font-semibold text-foreground">{section.name}</h3>
                       <p className="text-sm text-muted-foreground">{t("categories.sectionCount", { count: section.clans.length })}</p>
                     </div>
+                    {canManage("clans") && section.clans.length>1 && <Button className="ml-auto" variant="secondary" onClick={()=>setOrdering({id:section.id,name:section.name})}>Order clans</Button>}
                   </div>
                   <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                     {section.clans.map((clan) => {
@@ -589,6 +594,15 @@ export default function ClansPage() {
             </div>
           )}
         </section>
+
+        <Dialog open={Boolean(ordering)} onOpenChange={open=>{if(!open)setOrdering(null);}}>
+          <DialogContent variant="form" className="flex max-h-[85dvh] flex-col overflow-hidden sm:max-w-xl" onOpenAutoFocus={event=>event.preventDefault()}>
+            <DialogHeader><DialogTitle>Order clans · {ordering?.name}</DialogTitle><DialogDescription className="sr-only">Choose each clan's position within its category.</DialogDescription></DialogHeader>
+            {ordering && <ClanOrderManager key={ordering.id} serverId={guildId} categoryId={ordering.id==="uncategorized"?null:ordering.id}
+              clans={clans.filter(clan=>(clan.settings?.category?.trim()||null)===(ordering.id==="uncategorized"?null:ordering.name)).map(clan=>({tag:clan.tag||clan.clan_tag||"",name:clan.name||clan.clan_name||t("unknownClan")}))}
+              onSaved={async()=>{await refreshClans("");await queryClient.invalidateQueries({queryKey:["clan-links",guildId]});}} />}
+          </DialogContent>
+        </Dialog>
 
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogContent variant="form" className="sm:max-w-lg">
