@@ -358,9 +358,9 @@ export default function BansAndStrikesPage() { // NOSONAR — page coordinates t
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
-      <div className="mx-auto max-w-7xl space-y-8">
-        <header className="flex items-start justify-between gap-3">
-          <div className="min-w-0 flex-1"><div className="flex items-center gap-2"><h1 className="text-2xl font-bold text-foreground md:text-3xl">{tSidebar("bans.name")}</h1><InfoPopover content={activeTab==="bans"?banExplanation:strikeExplanation} label={activeTab==="bans"?t("bans.howItWorks.title"):t("strikes.howItWorks.title")} /></div><p className="mt-1 hidden text-sm text-muted-foreground sm:block">{t("description")}</p></div>
+      <div className="mx-auto max-w-7xl space-y-4 md:space-y-8">
+        <header className="flex items-center justify-between gap-3 sm:items-start">
+          <div className="min-w-0 flex-1"><div className="flex items-center gap-1.5 sm:gap-2"><h1 className="text-xl font-bold text-foreground md:text-3xl">{tSidebar("bans.name")}</h1><InfoPopover content={activeTab==="bans"?banExplanation:strikeExplanation} label={activeTab==="bans"?t("bans.howItWorks.title"):t("strikes.howItWorks.title")} /></div><p className="mt-1 hidden text-sm text-muted-foreground sm:block">{t("description")}</p></div>
           <div className="shrink-0">{activeTab==="bans" ? <BanDialog
                   open={isAddBanDialogOpen}
                   feedback={<ActionFeedback notice={notices["ban-editor"]} reserve />}
@@ -398,8 +398,8 @@ export default function BansAndStrikesPage() { // NOSONAR — page coordinates t
             <DashboardTabTrigger value="strikes" artwork={<AlertTriangle />} count={strikes.length}>{t("tabs.strikes")}</DashboardTabTrigger>
           </DashboardTabsList>
 
-          <TabsContent value="bans" className="mt-7 space-y-4">
-            <ActionFeedback notice={notices.bans} reserve />
+          <TabsContent value="bans" className="mt-4 space-y-4 md:mt-7">
+            {notices.bans && <ActionFeedback notice={notices.bans} />}
             <section className="space-y-4">
 
 
@@ -432,8 +432,8 @@ export default function BansAndStrikesPage() { // NOSONAR — page coordinates t
             </section>
           </TabsContent>
 
-          <TabsContent value="strikes" className="mt-7 space-y-4">
-            <ActionFeedback notice={notices.strikes} reserve />
+          <TabsContent value="strikes" className="mt-4 space-y-4 md:mt-7">
+            {notices.strikes && <ActionFeedback notice={notices.strikes} />}
             <section className="space-y-4">
 
 
