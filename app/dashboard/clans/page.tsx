@@ -353,8 +353,9 @@ export default function ClansPage() {
       }
 
       const clanTag = selectedClan.tag || selectedClan.clan_tag || '';
+      let currentClanRoles=clanServerRoles;
       const syncClanRole = async (option: 'member' | 'leader', selection: ClanRoleSelection) => {
-        const current = clanServerRoles.find((role) => role.option === option);
+        const current = currentClanRoles.find((role) => role.option === option);
         if (current && selection.role_id) {
           const result = await apiClient.roles.updateServerRole(guildId, current.id, {
             role_id: selection.role_id,
@@ -375,7 +376,12 @@ export default function ClansPage() {
       };
       // Unavailable role metadata must never be interpreted as empty roles.
       // Clans-only managers may save clan settings without a separate Roles grant.
-      if(canManage("roles")&&roleDataReady)await Promise.all([syncClanRole('member', memberRole), syncClanRole('leader', leaderRole)]);
+      if(canManage("roles")&&roleDataReady){
+        const roles=await apiClient.roles.getServerRoles(guildId,{type:'clan_role',clan_tag:clanTag});
+        if(roles.error||!roles.data)throw new Error(roles.error||"Could not reload clan role settings. Your draft is kept; retry saving.");
+        currentClanRoles=[...roles.data.roles];setClanServerRoles(currentClanRoles);
+        await Promise.all([syncClanRole('member', memberRole), syncClanRole('leader', leaderRole)]);
+      }
 
       report("list",{
         title: tCommon("success"),
@@ -388,7 +394,8 @@ export default function ClansPage() {
       setIsSettingsDialogOpen(false);
       setSelectedClan(null);
     } catch (err) {
-      setSettingsReady(false);
+      // Keep the loaded draft editable and retryable; partial role writes are
+      // reconciled from current server roles on the next save.
       report("settings",{
         title: tCommon("error"),
         description: err instanceof Error ? err.message : t("toast.errorSavingSettings"),
@@ -531,7 +538,9 @@ export default function ClansPage() {
                       <h3 className="text-lg font-semibold text-foreground">{section.name}</h3>
                       <p className="text-sm text-muted-foreground">{t("categories.sectionCount", { count: section.clans.length })}</p>
                     </div>
-                    {canManage("clans") && section.clans.length>1 && <Button className="ml-auto" variant="secondary" onClick={()=>setOrdering({id:section.id,name:section.name})}>Order clans</Button>}
+                    {canManage("clans") && section.clans.length>1 && (section.id==="uncategorized"&&section.clans.some(clan=>clan.settings?.category?.trim())
+                      ? <Button className="ml-auto" variant="secondary" onClick={async()=>{const result=await apiClient.clanCategories.list(guildId);if(result.error||!isClanCategoriesResponse(result.data))report("list",{description:result.error||"Could not load categories. Try again.",variant:"destructive"});else{setClanCategories([...result.data.items]);clear("list");}}}>Reload categories</Button>
+                      : <Button className="ml-auto" variant="secondary" onClick={()=>setOrdering({id:section.id,name:section.name})}>Order clans</Button>)}
                   </div>
                   <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                     {section.clans.map((clan) => {

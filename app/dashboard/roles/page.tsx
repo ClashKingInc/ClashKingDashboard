@@ -8,6 +8,7 @@ import { FamilyNicknameSettings } from "./family-nickname-settings";
 import { loadRoleMaxLevels } from "./role-max-levels";
 import Image from "@/components/app-image";
 import { useState, useEffect, useEffectEvent, useRef } from "react";
+import { useBlocker } from "@tanstack/react-router";
 import { useTranslations, useLocale } from "use-intl";
 import { useQueryClient } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -158,7 +159,9 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
   const loadedGuild = useRef<string | null>(null);
   const settingsDirty = useRef(false);
-  const settingsSaveInFlight = useRef(false);
+  const settingsSavePromise = useRef<Promise<boolean> | null>(null);
+  const currentSettings = useRef(roleSettings);currentSettings.current=roleSettings;
+  const saveSettingsRef=useRef<()=>Promise<boolean>>(()=>Promise.resolve(false));
 
   const [allRoles, setAllRoles] = useState<Record<string, any[]>>({
     townhall: [],
@@ -325,10 +328,11 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
 
   useEffect(() => { loadInitialData(); }, [guildId, locale]);
 
-  const handleSaveSettings = async () => {
-    if (!canEdit || settingsSaveInFlight.current) return;
-    settingsSaveInFlight.current = true;
-    try {
+  const handleSaveSettings = ():Promise<boolean> => {
+    if (!canEdit) return Promise.resolve(false);
+    if (settingsSavePromise.current) return settingsSavePromise.current;
+    const savedSettings={...roleSettings};
+    const save=(async()=>{try {
       setSaveStatus('saving');
       setError(null);
 
@@ -349,14 +353,20 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
       if (result.error) throw new Error(result.error);
       await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.route("role-settings", guildId), exact: true });
 
-      setOriginalRoleSettings({ ...roleSettings });
+      setOriginalRoleSettings(savedSettings);
+      if(JSON.stringify(currentSettings.current)===JSON.stringify(savedSettings))settingsDirty.current=false;
       setSaveStatus('saved');
+      return true;
 
     } catch (err: any) {
       setError(err.message || "Failed to save settings");
-      setSaveStatus('idle');
-    } finally { settingsSaveInFlight.current = false; }
+      setSaveStatus('idle');return false;
+    }})();
+    settingsSavePromise.current=save;
+    void save.finally(()=>{settingsSavePromise.current=null;});
+    return save;
   };
+  saveSettingsRef.current=handleSaveSettings;
 
   const handleAddRole = async () => {
     try {
@@ -834,6 +844,13 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
     JSON.stringify(roleSettings.auto_eval_blacklist_roles ?? []) !== JSON.stringify(originalRoleSettings.auto_eval_blacklist_roles ?? []);
 
   settingsDirty.current = hasChanged;
+  // Flush the pending snapshot before SPA navigation or a server switch. A
+  // failed save keeps the form and draft visible instead of losing it during
+  // debounce cleanup. Tab close warns only while work remains unsaved.
+  useBlocker({
+    shouldBlockFn:async()=>{if(!canEdit)return false;while(settingsDirty.current){if(!await saveSettingsRef.current())return true;}return false;},
+    enableBeforeUnload:()=>settingsDirty.current||settingsSavePromise.current!==null,
+  });
   const saveLatestSettings = useEffectEvent(() => { void handleSaveSettings(); });
   // Serialize writes and coalesce quick changes. A failed draft waits for an
   // explicit retry or a new edit instead of continuously retrying the mutation.
