@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { InfoPopover } from "@/components/ui/info-popover";
-import { useToast } from "@/components/ui/use-toast";
+import { ActionFeedback, useActionFeedback } from "@/components/ui/action-feedback";
 import { nativePanelMessage } from "./ticket-panel-message";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from "@/components/ui/alert-dialog";
@@ -20,7 +20,7 @@ type Template = typeof TicketMessageTemplate.Type;
 const placeholders = ticketApprovalTokens;
 
 export function TicketMessageLibrary({ guildId }: { readonly guildId: string }) {
-  const t = useTranslations("TicketsSettingsPage"), common = useTranslations("Common"), { toast } = useToast(), client = useQueryClient();
+  const t = useTranslations("TicketsSettingsPage"), common = useTranslations("Common"), {notices,report} = useActionFeedback(guildId), client = useQueryClient();
   const queryKey = ["ticket-message-library", guildId];
   const query = useQuery({ queryKey, queryFn: async () => {
     const response = await apiClient.tickets.getMessageLibrary(guildId);
@@ -49,7 +49,7 @@ export function TicketMessageLibrary({ guildId }: { readonly guildId: string }) 
       if (response.error) throw new Error(response.error);
       setDraft(template);
       await client.invalidateQueries({ queryKey });
-      toast({ title: common("success"), description: t("messagesSaved") });
+      report("editor",{ title: common("success"), description: t("messagesSaved") });
     } catch (cause) { setError(cause instanceof Error ? cause.message : common("loadError")); throw cause; }
     finally { setBusy(false); }
   };
@@ -89,6 +89,7 @@ export function TicketMessageLibrary({ guildId }: { readonly guildId: string }) 
             <Input className="col-start-1 row-start-2 sm:col-auto sm:row-auto" aria-label={t("questionLabel")} placeholder={t("questionLabel")} value={question.label} maxLength={45} onChange={event => setDraft({ ...draft, questions: draft.questions.map((item, position) => position === index ? { ...item, label: event.target.value } : item) })} />
             <Button className="col-start-2 row-span-2 row-start-1 sm:col-auto sm:row-span-1 sm:row-auto" variant="ghost" size="icon" aria-label={common("delete")} onClick={() => setDraft({ ...draft, questions: draft.questions.filter((_, position) => position !== index) })}><Trash2 className="h-4 w-4" /></Button></div>)}
         </fieldset></>}
+        <ActionFeedback notice={notices.editor} reserve />
         {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
         <div className="min-w-0 rounded-3xl bg-card"><Suspense fallback={<Skeleton className="h-96" />}>
           <MessageEditor key={`${draft.id}:${editorVersion}`} variant="ticket-panel" serverId={guildId} placeholders={[...placeholders, ...draft.questions.map(question => question.key)]} initialData={draft.message} isSaving={busy} onSave={save} onDirtyChange={setEditorDirty} onFormatChosen={() => setFormatChosen(true)} onCancel={() => {

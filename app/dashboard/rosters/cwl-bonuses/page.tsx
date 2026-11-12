@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { ClanCombobox } from "@/components/ui/clan-combobox";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useToast } from "@/components/ui/use-toast";
+import { ActionFeedback, useActionFeedback } from "@/components/ui/action-feedback";
 import { apiClient } from "@/lib/api/client";
 import { CwlWarLeaguesStaticResponse, type CwlGroupResponse, type CwlSeasonItem, type CwlWarLeagueStaticItem } from "@/lib/api/types/war";
 import { Schema } from "effect";
@@ -75,7 +75,7 @@ export default function CwlBonusesPage() {
   const router = useRouter();
   const locale = useLocale();
   const t = useTranslations("RostersPage.cwlBonuses");
-  const { toast } = useToast();
+  const {notices,report,clear}=useActionFeedback(guildId);
   const [clans, setClans] = useState<Clan[]>([]);
   const [clanTag, setClanTag] = useState("");
   const [seasons, setSeasons] = useState<CwlSeasonItem[]>([]);
@@ -110,7 +110,7 @@ export default function CwlBonusesPage() {
     apiClient.wars.getCwlSeasons(clanTag)
       .then((response) => {
         if (cancelled) return;
-        if (response.error) return setError(response.error);
+        if(response.error){report("save",{description:response.error,variant:"destructive"});return;}
         const items = selectableCwlSeasons(response.data?.items ?? []);
         setSeasons(items);
         setSeason(items[0]?.season ?? "");
@@ -171,7 +171,7 @@ export default function CwlBonusesPage() {
 
   const save = async () => {
     if (!ready || !rewards) return;
-    setSaving(true);
+    clear("save");setSaving(true);
     const response = await apiClient.wars.replaceCwlBonusRecipients(
       guildId,
       clanTag,
@@ -179,8 +179,8 @@ export default function CwlBonusesPage() {
       selected.map((playerTag) => ({ playerTag, medalCount: rewards.bonusMedals })),
     );
     setSaving(false);
-    if (response.error) return setError(response.error);
-    toast({ title: t("saved") });
+    if(response.error){report("save",{description:response.error,variant:"destructive"});return;}
+    report("save",{ title: t("saved") });
   };
 
   const summary = [
@@ -300,6 +300,7 @@ export default function CwlBonusesPage() {
                 </Button>
               </div>
 
+              <ActionFeedback notice={notices.save} reserve />
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {members.map((member) => {
                   const checked = selected.includes(member.tag);

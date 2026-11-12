@@ -29,7 +29,7 @@ import { ArrowLeft, Copy, GripVertical, Loader2, Users } from "lucide-react";
 import { DiscordUserDisplay } from "@/components/ui/discord-user-display";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useToast } from "@/components/ui/use-toast";
+import { ActionFeedback, useActionFeedback } from "@/components/ui/action-feedback";
 import { clanBadgeUrl } from "@/lib/clash-asset-urls";
 import { useGuildId } from "@/lib/dashboard-route";
 import { townHallImageUrl } from "@/lib/theme";
@@ -140,13 +140,14 @@ function DraggableMember({ member, roster, isDuplicate }: DraggableMemberProps) 
 }
 
 interface RosterColumnProps {
+  readonly feedback?:React.ReactNode;
   readonly roster: Roster;
   readonly members: RosterMember[];
   readonly isOver: boolean;
   readonly duplicateTags: Set<string>;
 }
 
-function RosterColumn({ roster, members, isOver, duplicateTags }: RosterColumnProps) {
+function RosterColumn({ feedback, roster, members, isOver, duplicateTags }: RosterColumnProps) {
   const t = useTranslations("RostersPage.compare");
   const { setNodeRef } = useDroppable({ id: roster.id });
   const badgeUrl = rosterBadgeUrl(roster);
@@ -174,6 +175,7 @@ function RosterColumn({ roster, members, isOver, duplicateTags }: RosterColumnPr
         </span>
       </header>
 
+      {feedback}
       <SortableContext items={members.map((member) => `${roster.id}:${member.tag}`)} strategy={verticalListSortingStrategy}>
         <div className="min-h-28 flex-1 space-y-2 overflow-y-auto pr-1">
           {members.map((member) => (
@@ -199,7 +201,7 @@ export default function CompareRostersPage() {
   const guildId = useGuildId();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { toast } = useToast();
+  const {notices,report}=useActionFeedback(guildId);
   const t = useTranslations("RostersPage.compare");
 
   const rosterIdsFromUrl = useMemo(() => {
@@ -241,7 +243,7 @@ export default function CompareRostersPage() {
       setRosters(Object.fromEntries(loadedRosters.map((roster) => [roster.id, roster])));
       setRosterIds(loadedRosters.map((roster) => roster.id));
     } catch (error) {
-      toast({
+      report("compare",{
         title: t("loadError"),
         description: error instanceof Error ? error.message : t("unknownError"),
         variant: "destructive",
@@ -249,7 +251,7 @@ export default function CompareRostersPage() {
     } finally {
       setLoading(false);
     }
-  }, [groupId, guildId, rosterIdsFromUrl, t, toast]);
+  }, [groupId, guildId, rosterIdsFromUrl, t, report]);
 
   useEffect(() => {
     void loadRosters();
@@ -309,7 +311,7 @@ export default function CompareRostersPage() {
           members: [...(current[destinationRosterId]?.members ?? []), sourceMember],
         },
       }));
-      toast({
+      report(`roster:${destinationRosterId}`,{
         title: t("memberMoved"),
         description: t("memberMovedDesc", {
           name: sourceMember.name,
@@ -318,7 +320,7 @@ export default function CompareRostersPage() {
         }),
       });
     } catch (error) {
-      toast({
+      report(`roster:${destinationRosterId}`,{
         title: t("moveError"),
         description: error instanceof Error ? error.message : t("unknownError"),
         variant: "destructive",
@@ -347,6 +349,7 @@ export default function CompareRostersPage() {
     return (
       <div className="min-h-screen bg-background p-4 md:p-6">
         <div className="mx-auto flex h-64 max-w-7xl flex-col items-center justify-center gap-4 rounded-[24px] bg-muted/35">
+          <ActionFeedback notice={notices.compare} />
           <p className="text-muted-foreground">{t("selectAtLeast2")}</p>
           <Button onClick={() => router.back()} variant="secondary" className="rounded-xl border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted">
             <ArrowLeft className="mr-2 h-4 w-4" />
@@ -360,6 +363,7 @@ export default function CompareRostersPage() {
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="mx-auto max-w-full space-y-4">
+        <ActionFeedback notice={notices.compare} reserve />
         <header className="flex items-start gap-3">
           <Button variant="ghost" size="icon" className="h-10 w-10 shrink-0 rounded-xl" aria-label={t("back")} onClick={() => router.back()}>
             <ArrowLeft className="h-5 w-5" />
@@ -395,6 +399,7 @@ export default function CompareRostersPage() {
               return (
                 <RosterColumn
                   key={rosterId}
+                  feedback={<ActionFeedback notice={notices[`roster:${rosterId}`]} className="pb-2" />}
                   roster={roster}
                   members={roster.members ?? []}
                   isOver={overRosterId === rosterId}

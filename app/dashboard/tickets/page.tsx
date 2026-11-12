@@ -49,7 +49,7 @@ import { ChannelCombobox } from "@/components/ui/channel-combobox";
 import { RoleCombobox } from "@/components/ui/role-combobox";
 import { DashboardTabsList, DashboardTabTrigger } from "@/components/ui/dashboard-tabs";
 import { InfoPopover } from "@/components/ui/info-popover";
-import { useToast } from "@/components/ui/use-toast";
+import { ActionFeedback, useActionFeedback } from "@/components/ui/action-feedback";
 import {
   extractEmbeds,
   extractMessageContent,
@@ -177,7 +177,7 @@ export function TicketPanelTab({ panel, guildId, embeds, previewButtons, onOpenB
   readonly channels?: DiscordChannel[]; readonly roles?: DiscordRole[];
 }) {
   const t = useTranslations("TicketsSettingsPage"), tCommon = useTranslations("Common");
-  const { toast } = useToast();
+  const {notices,report}=useActionFeedback(guildId);
   const queryClient = useQueryClient();
   const [isSaving, setIsSaving] = useState(false);
   const [revision, setRevision] = useState(0);
@@ -217,9 +217,9 @@ export function TicketPanelTab({ panel, guildId, embeds, previewButtons, onOpenB
       if (result.data.state !== "succeeded") throw new Error(t(result.data.state === "failed" ? "panelPublishFailed" : "panelPublishPending"));
       setPublishOpen(false);
       await reloadPanel();
-      toast({ title: tCommon("success"), description: t("panelPublished") });
+      report("form",{ title: tCommon("success"), description: t("panelPublished") });
     } catch (error) {
-      toast({ title: tCommon("error"), description: error instanceof Error ? error.message : tCommon("loadError"), variant: "destructive" });
+      report("form",{ title: tCommon("error"), description: error instanceof Error ? error.message : tCommon("loadError"), variant: "destructive" });
     } finally { setPublishing(false); }
   };
   const legacy = toEmbedDataRecord(embeds.find(embed => embed.name === panel.embed_name)?.data);
@@ -238,13 +238,14 @@ export function TicketPanelTab({ panel, guildId, embeds, previewButtons, onOpenB
       setSaved(message);
       await reloadPanel();
       setPublishOpen(true);
-      toast({ title: tCommon("success"), description: t("panelMessageSaved") });
+      report("form",{ title: tCommon("success"), description: t("panelMessageSaved") });
     } catch (error) {
-      toast({ title: tCommon("error"), description: error instanceof Error ? error.message : tCommon("loadError"), variant: "destructive" });
+      report("form",{ title: tCommon("error"), description: error instanceof Error ? error.message : tCommon("loadError"), variant: "destructive" });
       throw error;
     } finally { setIsSaving(false); }
   };
   return <div className="space-y-4">
+    <ActionFeedback notice={notices.form} reserve />
     <div className="flex items-center justify-between gap-3"><p className="text-sm text-muted-foreground">{t("panelActionHint")}</p>
       <Button size="sm" variant="secondary" onClick={onOpenButtonsTab}>{t("manageTicketActions")}</Button></div>
     <div className="flex flex-wrap items-center justify-between gap-3">
@@ -258,7 +259,7 @@ export function TicketPanelTab({ panel, guildId, embeds, previewButtons, onOpenB
       <DialogContent variant="form">
         <DialogHeader><DialogTitle>{t("panelPublishTitle")}</DialogTitle><DialogDescription>{t(savedPanel.publication ? "panelPublishUpdateDescription" : "panelPublishFirstDescription")}</DialogDescription></DialogHeader>
         {!savedPanel.publication && <ChannelCombobox channels={publishChannels} value={channelId ?? ""} onValueChange={setChannelId} placeholder={t("selectChannel")} showDisabled={false} />}
-        <DialogFooter><Button variant="outline" disabled={publishing} onClick={() => setPublishOpen(false)}>{t("panelPublishLater")}</Button><Button disabled={publishing || (!savedPanel.publication && !hasPublishChannel)} onClick={publish}>{publishing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}{t("panelPublishNow")}</Button></DialogFooter>
+        <ActionFeedback notice={notices.form} reserve /><DialogFooter><Button variant="outline" disabled={publishing} onClick={() => setPublishOpen(false)}>{t("panelPublishLater")}</Button><Button disabled={publishing || (!savedPanel.publication && !hasPublishChannel)} onClick={publish}>{publishing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}{t("panelPublishNow")}</Button></DialogFooter>
       </DialogContent>
     </Dialog>
     <div className="min-w-0 rounded-3xl bg-card">
@@ -280,7 +281,7 @@ function PanelSettingsTab({
 }) {
   const t = useTranslations("TicketsSettingsPage");
   const tCommon = useTranslations("Common");
-  const { toast } = useToast();
+  const {notices,report}=useActionFeedback(guildId);
   type PanelSettingsForm = {
     applicant_can_close: string;
     transcripts_enabled: string;
@@ -390,23 +391,24 @@ function PanelSettingsTab({
           .map((field) => `${t(field)}: ${describeSavedValue(field, nextForm[field])}`)
           .join(" • ");
 
-        toast({
+        report("form",{
           title: tCommon("success"),
           description: `${t("savedSuccess", { panel: panel.name })} • ${changedDetails}`,
         });
       } catch (err) {
-        toast({ title: t("autoSaveErrorTitle"), description: err instanceof Error ? err.message : t("autoSaveErrorDescription"), variant: "destructive" });
+        report("form",{ title: t("autoSaveErrorTitle"), description: err instanceof Error ? err.message : t("autoSaveErrorDescription"), variant: "destructive" });
       }
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [form, guildId, panel.name, t, tCommon, toast, categories, textChannels]);
+  }, [form, guildId, panel.name, t, tCommon, report, categories, textChannels]);
 
   const catChannels = categories.map((c) => ({ id: c.id, name: c.name }));
   const txtChannels = textChannels.map((c) => ({ id: c.id, name: c.name, parent_name: c.parent_name }));
 
   return (
     <div className="space-y-6">
+      <ActionFeedback notice={notices.form} reserve />
       <section className="flex items-center justify-between gap-4">
         <div className="space-y-1"><Label htmlFor="applicant-close">{t("applicant_can_close")}</Label><p className="text-sm text-muted-foreground">{t("applicantCanCloseHint")}</p></div>
         <Switch id="applicant-close" checked={form.applicant_can_close === "enabled"} onCheckedChange={value => set("applicant_can_close")(value ? "enabled" : "disabled")} />
@@ -526,7 +528,7 @@ export function ButtonCard({
 }) {
   const t = useTranslations("TicketsSettingsPage");
   const tCommon = useTranslations("Common");
-  const { toast } = useToast();
+  const {notices,report}=useActionFeedback(guildId);
   const queryClient = useQueryClient();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const namingInputId = useId();
@@ -544,11 +546,11 @@ export function ButtonCard({
     try {
       const res = await apiClient.tickets.deleteButton(guildId, panelName, customId);
       if (res.error) throw new Error(res.error);
-      toast({ title: tCommon("success"), description: t("actionDeleted") });
+      report("form",{ title: tCommon("success"), description: t("actionDeleted") });
       await queryClient.invalidateQueries({ queryKey: ticketPanelsQuery(guildId).queryKey, exact: true });
       onDeleted();
     } catch (err) {
-      toast({ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
+      report("form",{ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
     } finally {
       setIsDeleting(false);
       setConfirmDeleteOpen(false);
@@ -644,11 +646,11 @@ export function ButtonCard({
       setLatestSettings(createButtonSettingsFromForm(payloadForm));
       syncAppearanceIfNeeded(didChangeAppearance);
       await queryClient.invalidateQueries({ queryKey: ticketPanelsQuery(guildId).queryKey, exact: true });
-      toast({ title: tCommon("success"), description: t("actionSaved", { label: editLabel }) });
+      report("form",{ title: tCommon("success"), description: t("actionSaved", { label: editLabel }) });
       setSettingsOpen(false);
     } catch (err) {
       await rollbackAppearanceIfNeeded(appearanceUpdated);
-      toast({ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
+      report("form",{ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
       if (propagateError) throw err;
     } finally {
       setIsSaving(false);
@@ -671,6 +673,7 @@ export function ButtonCard({
 
   const settingsEditor = (
       <section className="min-w-0 space-y-5" aria-label={t("editTicketAction")}>
+          <ActionFeedback notice={notices.form} reserve />
           <Tabs
             value={settingsSection}
             onValueChange={(value) => setSettingsSection(value as "general" | "questions" | "embeds")}
@@ -839,6 +842,7 @@ export function ButtonCard({
             <DialogTitle>{t("deleteTicketAction", { label })}</DialogTitle>
             <DialogDescription>{t("deleteTicketActionHint")}</DialogDescription>
           </DialogHeader>
+          <ActionFeedback notice={notices.form} reserve />
           <DialogFooter>
             <Button className={CANCEL_BUTTON_CLASS} onClick={() => setConfirmDeleteOpen(false)}>{tCommon("cancel")}</Button>
             <Button variant="destructive" onClick={handleDeleteButton} disabled={isDeleting}>
@@ -850,6 +854,7 @@ export function ButtonCard({
       </Dialog>
 
       <article className="min-w-0 rounded-3xl bg-card p-5 shadow-sm shadow-black/5">
+        {!settingsOpen&&<ActionFeedback notice={notices.form} reserve />}
         <div className="flex w-full flex-wrap items-center gap-3">
           <div className="flex flex-1 min-w-0 flex-wrap items-center gap-3">
           <button type="button" aria-expanded={settingsOpen} onClick={() => setSettingsOpen(open => !open)} className="flex min-w-0 flex-1 items-center gap-2 rounded-lg text-left font-semibold focus-visible:ring-2 focus-visible:ring-ring"><ChevronDown className={cn("h-4 w-4 text-muted-foreground transition-transform", settingsOpen && "rotate-180")} />{label}</button>
@@ -883,7 +888,7 @@ function createLocalMessageId(): string {
 export function MessagesTab({ panel, guildId, inline = false }: { readonly panel: TicketPanel; readonly guildId: string; readonly inline?: boolean }) {
   const t = useTranslations("TicketsSettingsPage");
   const tCommon = useTranslations("Common");
-  const { toast } = useToast();
+  const {notices,report}=useActionFeedback(guildId);
   type EditableApproveMessage = ApproveMessage & { localId: string };
   const [messages, setMessages] = useState<EditableApproveMessage[]>(
     () => (panel.approve_messages ?? []).map((message, index) => ({ ...message, localId: `saved-${index}` })),
@@ -965,7 +970,7 @@ export function MessagesTab({ panel, guildId, inline = false }: { readonly panel
   const handleSave = async () => {
     if (isSaving) return;
     if (draftMessages.some((message) => !message.name.trim())) {
-      toast({ title: tCommon("error"), description: t("messageNameRequired"), variant: "destructive" });
+      report("form",{ title: tCommon("error"), description: t("messageNameRequired"), variant: "destructive" });
       return;
     }
     const payload = { messages: draftMessages.map(({ name, message }) => ({ name, message })) };
@@ -979,9 +984,9 @@ export function MessagesTab({ panel, guildId, inline = false }: { readonly panel
       setExpandedPreviewIds(new Set());
       setExpandedEditorIds(new Set());
       setEditOpen(false);
-      toast({ title: tCommon("success"), description: t("messagesSaved") });
+      report("form",{ title: tCommon("success"), description: t("messagesSaved") });
     } catch (err) {
-      toast({ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
+      report("form",{ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
     } finally {
       setIsSaving(false);
     }
@@ -1000,6 +1005,7 @@ export function MessagesTab({ panel, guildId, inline = false }: { readonly panel
         setDraftMessages(cloneMessages(messages));
         setExpandedEditorIds(new Set());
       }}>
+          <ActionFeedback notice={notices.form} className="shrink-0 px-5" reserve />
           <fieldset disabled={isSaving} className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain px-5 py-5 pb-8 sm:px-7">
             <div className="flex items-center justify-between gap-3">
               <p className="text-xs text-muted-foreground">{t("messagesMaxHint")}</p>
@@ -1174,7 +1180,7 @@ function PanelCard({
 }) {
   const t = useTranslations("TicketsSettingsPage");
   const tCommon = useTranslations("Common");
-  const { toast } = useToast();
+  const {notices,report}=useActionFeedback(guildId);
   const [components, setComponents] = useState(panel.components);
   useEffect(() => setComponents(panel.components), [panel.components]);
   const [confirmDeletePanelOpen, setConfirmDeletePanelOpen] = useState(false);
@@ -1193,10 +1199,10 @@ function PanelCard({
       const res = await apiClient.tickets.deletePanel(guildId, panel.name);
       if (res.error) throw new Error(res.error);
       apiCache.invalidate(getTicketsPanelsCacheKey(guildId));
-      toast({ title: tCommon("success"), description: t("panelDeleted") });
+      report("form",{ title: tCommon("success"), description: t("panelDeleted") });
       onDeleted();
     } catch (err) {
-      toast({ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
+      report("form",{ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
     } finally {
       setIsDeletingPanel(false);
       setConfirmDeletePanelOpen(false);
@@ -1213,7 +1219,7 @@ function PanelCard({
         emoji: { name: "📩" },
       });
       if (res.error) throw new Error(res.error);
-      toast({ title: tCommon("success"), description: t("actionAdded") });
+      report("form",{ title: tCommon("success"), description: t("actionAdded") });
       // Reload panel data by fetching fresh panels
       apiCache.invalidate(getTicketsPanelsCacheKey(guildId));
       const panelsRes = await apiCache.get(getTicketsPanelsCacheKey(guildId), () => apiClient.tickets.getPanels(guildId));
@@ -1222,7 +1228,7 @@ function PanelCard({
       setAddButtonOpen(false);
       setNewButtonLabel("");
     } catch (err) {
-      toast({ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
+      report("form",{ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
     } finally {
       setIsAddingButton(false);
     }
@@ -1237,6 +1243,7 @@ function PanelCard({
             <DialogTitle>{t("confirmDeletePanel", { name: panel.name })}</DialogTitle>
             <DialogDescription>{t("confirmDeletePanelHint")}</DialogDescription>
           </DialogHeader>
+          <ActionFeedback notice={notices.form} reserve />
           <DialogFooter>
             <Button className={CANCEL_BUTTON_CLASS} onClick={() => setConfirmDeletePanelOpen(false)}>{tCommon("cancel")}</Button>
             <Button variant="destructive" onClick={handleDeletePanel} disabled={isDeletingPanel}>
@@ -1260,6 +1267,7 @@ function PanelCard({
               <Input id="new-ticket-action" className={TICKET_INPUT_CLASS} value={newButtonLabel} onChange={(e) => setNewButtonLabel(e.target.value)} placeholder={t("actionNamePlaceholder")} maxLength={80} />
             </div>
           </div>
+          <ActionFeedback notice={notices.form} reserve />
           <DialogFooter>
             <Button className={CANCEL_BUTTON_CLASS} onClick={() => setAddButtonOpen(false)}>{tCommon("cancel")}</Button>
             <Button className={CLASHKING_RED_BUTTON_CLASS} onClick={handleAddButton} disabled={isAddingButton || !newButtonLabel.trim()}>
@@ -1275,6 +1283,7 @@ function PanelCard({
         <h1 className="min-w-0 break-words text-2xl font-semibold">{panel.name}</h1>
         <Button variant="ghost" size="sm" className="ml-auto text-destructive hover:text-destructive" onClick={() => setConfirmDeletePanelOpen(true)}><Trash2 className="h-4 w-4" />{tCommon("delete")}</Button>
       </div>}>
+            <ActionFeedback notice={notices.form} reserve />
             <Tabs value={activeConfigTab} onValueChange={setActiveConfigTab} className="min-w-0 space-y-5">
               <DashboardTabsList className="w-fit max-w-full">
                 <DashboardTabTrigger value="activity" artwork={<Ticket className="text-blue-500" />}>{t("ticketHistory")}</DashboardTabTrigger>
@@ -1371,7 +1380,7 @@ function PanelCard({
 function ConfigTab({ guildId, panelName }: { readonly guildId: string; readonly panelName?: string }) {
   const t = useTranslations("TicketsSettingsPage");
   const tCommon = useTranslations("Common");
-  const { toast } = useToast();
+  const {notices,report}=useActionFeedback(guildId);
   const queryClient = useQueryClient();
   const panelQuery = useQuery({ ...ticketPanelsQuery(guildId), enabled: Boolean(guildId), refetchInterval: panelName ? 30_000 : false });
 
@@ -1429,7 +1438,7 @@ function ConfigTab({ guildId, panelName }: { readonly guildId: string; readonly 
         setAvailableEmbeds([...(panelsRes.data?.available_embeds ?? [])]);
         setEmbeds(normalizeTicketEmbeds(embedsRes.data));
       } catch (err) {
-        toast({
+        report("form",{
           title: tCommon("error"),
           description: err instanceof Error ? err.message : tCommon("loadError"),
           variant: "destructive",
@@ -1449,7 +1458,7 @@ function ConfigTab({ guildId, panelName }: { readonly guildId: string; readonly 
     try {
       const res = await apiClient.tickets.createPanel(guildId, { name: newPanelName.trim() });
       if (res.error) throw new Error(res.error);
-      toast({ title: tCommon("success"), description: t("panelCreated", { name: newPanelName.trim() }) });
+      report("form",{ title: tCommon("success"), description: t("panelCreated", { name: newPanelName.trim() }) });
       // Fetch fresh panel list
       await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.route("ticket-panels", guildId), exact: true });
       const panelsRes = await queryClient.fetchQuery(ticketPanelsQuery(guildId));
@@ -1458,7 +1467,7 @@ function ConfigTab({ guildId, panelName }: { readonly guildId: string; readonly 
       setCreatePanelOpen(false);
       setNewPanelName("");
     } catch (err) {
-      toast({ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
+      report("form",{ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
     } finally {
       setIsCreatingPanel(false);
     }
@@ -1482,6 +1491,7 @@ function ConfigTab({ guildId, panelName }: { readonly guildId: string; readonly 
 
   return (
     <>
+      <ActionFeedback notice={notices.form} reserve />
       {/* Create panel dialog */}
       <Dialog open={createPanelOpen} onOpenChange={setCreatePanelOpen}>
         <DialogContent className="sm:max-w-sm">
@@ -1498,6 +1508,7 @@ function ConfigTab({ guildId, panelName }: { readonly guildId: string; readonly 
               onKeyDown={(e) => { if (e.key === "Enter") handleCreatePanel(); }}
             />
           </div>
+          <ActionFeedback notice={notices.form} reserve />
           <DialogFooter>
             <Button className={CANCEL_BUTTON_CLASS} onClick={() => setCreatePanelOpen(false)}>{tCommon("cancel")}</Button>
             <Button className={CLASHKING_RED_BUTTON_CLASS} onClick={handleCreatePanel} disabled={isCreatingPanel || !newPanelName.trim()}>

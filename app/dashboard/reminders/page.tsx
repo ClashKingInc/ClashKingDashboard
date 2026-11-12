@@ -63,7 +63,7 @@ import {
   Ellipsis,
   Send,
 } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
+import { ActionFeedback, useActionFeedback } from "@/components/ui/action-feedback";
 import { useDashboardAccess } from "@/components/dashboard/dashboard-access-provider";
 import { getStandaloneImageUrl, getStandaloneTenorUrl, reminderTimeMinutes } from "./reminder-utils";
 import { TenorMedia } from "@/components/tenor-media";
@@ -181,7 +181,7 @@ function getClanBadgeUrl(clanTag: string | undefined): string | null {
 export default function RemindersPage() { // NOSONAR — React page component: complexity is aggregate state/handler management, not a single logic unit
   const guildId = useGuildId();
   const locale = useLocale();
-  const { toast } = useToast();
+  const {notices,report,clear}=useActionFeedback(guildId);
   const { canManage } = useDashboardAccess();
   const t = useTranslations("RemindersPage");
   const tCommon = useTranslations("Common");
@@ -226,6 +226,8 @@ export default function RemindersPage() { // NOSONAR — React page component: c
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingReminder, setEditingReminder] = useState<ReminderConfig | null>(null);
   const [dialogReminder, setDialogReminder] = useState<Partial<ReminderConfig>>({});
+  const [pointThresholdCustom,setPointThresholdCustom]=useState(false);
+  const pointPresets=[0,500,1000,1500,2000,3000,4000,5000,7500,10000];
   const [pointThresholdTouched, setPointThresholdTouched] = useState(false);
   const [attackThresholdTouched, setAttackThresholdTouched] = useState(false);
   const [cloningReminder, setCloningReminder] = useState<ReminderConfig | null>(null);
@@ -263,7 +265,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
           // Report validation paths, never reminder payloads or credentials.
           if (err instanceof ResponseDecodeError) console.error("Reminder validation fields:", JSON.stringify(err.cause, ["_tag", "issue", "issues", "path", "key"]));
           setError(authorizedReminderError(err) ?? t('toast.errorLoadingReminders'));
-          toast({ title: t('toast.errorTitle'), description: t('toast.errorLoadingReminders'), variant: "destructive" });
+
         }
       } finally {
         if (active) setLoading(false);
@@ -296,7 +298,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
     }
     // Old navigation/session requests must not overwrite the active page.
     return () => { active = false; };
-  }, [guildId, locale, queryClient, t, toast]);
+  }, [guildId, locale, queryClient, t, report]);
 
   // Get reminders for current tab
   const getCurrentReminders = (): ReminderConfig[] => {
@@ -360,7 +362,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
 
     setDialogReminder(newReminder);
     setEditingReminder(null);
-    setPointThresholdTouched(false);
+    setPointThresholdTouched(false);setPointThresholdCustom(false);
     setAttackThresholdTouched(false);
     setIsDialogOpen(true);
   };
@@ -375,7 +377,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
       ? String(reminderTimeMinutes(reminder.time) / 60) : reminder.time;
 
     setDialogReminder({ ...reminder, time: displayTime });
-    setPointThresholdTouched(reminder.point_threshold !== undefined);
+    setPointThresholdTouched(reminder.point_threshold !== undefined);setPointThresholdCustom(false);
     setAttackThresholdTouched(reminder.attack_threshold !== undefined);
     setIsDialogOpen(true);
   };
@@ -414,6 +416,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
   };
 
   const cloneReminder = async () => {
+    clear("clone");
     if (!cloningReminder || !cloneClanTag || !isTimeValid(cloneTime, cloningReminder.type) || cloneHasDuplicate) return;
 
     try {
@@ -442,7 +445,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
 
       await refreshRemindersAfterMutation();
 
-      toast({
+      report("list",{
         title: t('toast.successTitle'),
         description: t('toast.reminderCloned'),
       });
@@ -451,7 +454,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
       setCloneTime("");
     } catch (err) {
       console.error("Error cloning reminder:", err);
-      toast({
+      report("clone",{
         title: t('toast.errorTitle'),
         description: err instanceof Error ? err.message : t('toast.failedToClone'),
         variant: "destructive",
@@ -463,14 +466,15 @@ export default function RemindersPage() { // NOSONAR — React page component: c
 
   const sendReminderNow = async (reminder: ReminderConfig) => {
     if (!canManage("reminders") || reminder.disabled || sendingReminderId || saving) return;
+    clear(`reminder:${reminder.id}`);
     setSendingReminderId(reminder.id);
     try {
       await executeSharedEndpoint(dashboardEndpoints.sendServerReminder, {
         path: { serverId: guildId, reminderId: reminder.id }, query: {}, body: {},
       });
-      toast({ title: t('toast.successTitle'), description: t('toast.sendAccepted') });
+      report(`reminder:${reminder.id}`,{ title: t('toast.successTitle'), description: t('toast.sendAccepted') });
     } catch (error) {
-      toast({ title: t('toast.errorTitle'), description: error instanceof Error ? error.message : t('toast.failedToSend'), variant: "destructive" });
+      report(`reminder:${reminder.id}`,{ title: t('toast.errorTitle'), description: error instanceof Error ? error.message : t('toast.failedToSend'), variant: "destructive" });
     } finally {
       setSendingReminderId(null);
     }
@@ -542,13 +546,10 @@ export default function RemindersPage() { // NOSONAR — React page component: c
           body: {},
         });
 
-        toast({
-          title: t('toast.successTitle'),
-          description: t('toast.reminderDeleted'),
-        });
+
       } catch (err) {
         console.error("Error deleting reminder:", err);
-        toast({
+        report(`reminder:${reminder.id}`,{
           title: t('toast.errorTitle'),
           description: t('toast.failedToDelete'),
           variant: "destructive",
@@ -569,11 +570,12 @@ export default function RemindersPage() { // NOSONAR — React page component: c
   };
 
   // Save a single reminder from dialog
-  const handleSaveReminder = async () => { // NOSONAR — complexity comes from multi-type reminder validation, not a single logic unit
+  const handleSaveReminder = async () => {
+    clear("dialog"); // NOSONAR — complexity comes from multi-type reminder validation, not a single logic unit
     try {
       // Validate time based on reminder type
       if (!validateTime(dialogReminder.time || "", dialogReminder.type || "")) {
-        toast({
+        report("dialog",{
           title: t('toast.errorTitle'),
           description: t('toast.timeExceedsLimit', {
             limit: getTimeLimit(dialogReminder.type),
@@ -590,7 +592,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
         channels,
         threads,
       )) {
-        toast({
+        report("dialog",{
           title: t('toast.errorTitle'),
           description: destinationNeedsThread(dialogReminder.channel_id, channels)
             ? t('toast.forumPostRequired')
@@ -609,7 +611,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
             points < POINT_THRESHOLD_MIN ||
             points > POINT_THRESHOLD_MAX
         ) {
-          toast({
+          report("dialog",{
             title: t('toast.errorTitle'),
             description: t('toast.pointThresholdInvalid', {
               min: POINT_THRESHOLD_MIN,
@@ -629,7 +631,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
             attacks < ATTACK_THRESHOLD_MIN ||
             attacks > ATTACK_THRESHOLD_MAX
         ) {
-          toast({
+          report("dialog",{
             title: t('toast.errorTitle'),
             description: t('toast.attackThresholdInvalid', {
               min: ATTACK_THRESHOLD_MIN,
@@ -671,7 +673,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
           body: createRequest,
         });
 
-        toast({
+        report("list",{
           title: t('toast.successTitle'),
           description: t('toast.reminderAdded'),
         });
@@ -696,7 +698,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
           body: updateRequest,
         });
 
-        toast({
+        report("list",{
           title: t('toast.successTitle'),
           description: t('toast.reminderUpdated'),
         });
@@ -711,7 +713,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
       setEditingReminder(null);
     } catch (err) {
       console.error("Error saving reminder:", err);
-      toast({
+      report("dialog",{
         title: t('toast.errorTitle'),
         description: err instanceof Error ? err.message : t('toast.failedToSave'),
         variant: "destructive",
@@ -720,6 +722,8 @@ export default function RemindersPage() { // NOSONAR — React page component: c
       setSaving(false);
     }
   };
+
+  useEffect(()=>{if(isDialogOpen)clear("dialog");if(cloningReminder)clear("clone");},[isDialogOpen,cloningReminder,clear]);
 
   if (error) {
     return (
@@ -897,6 +901,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
           </div>
           </div>
 
+          <ActionFeedback notice={notices.list} reserve />
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
             <DashboardTabsList className="grid-cols-2 lg:grid-cols-4">
               {tabDefinitions.map((tab) => (
@@ -1012,6 +1017,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                                   </DropdownMenuContent>
                                 </DropdownMenu>
                               </div>
+                              <ActionFeedback notice={notices[`reminder:${reminder.id}`]} className="mb-2" />
                               <div className="flex h-full flex-col gap-4">
                                 <div className="flex min-w-0 flex-1 items-start gap-3.5 pr-7">
                                   {reminder.clan_tag && clanBadgeUrl ? (
@@ -1147,6 +1153,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                   </div>
                 </div>
               )}
+              <ActionFeedback notice={notices.clone} reserve />
               <DialogFooter>
                 <Button type="button" variant="secondary" className="border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted" onClick={closeCloneDialog} disabled={saving}>
                   {t('dialog.cancel')}
@@ -1318,8 +1325,11 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                 {dialogReminder.type === "Clan Games" && (
                     <div className="space-y-2">
                       <Label htmlFor="dialog-points">{t('card.pointThreshold')} <span className="text-destructive">*</span></Label>
-                      <Input
-                          id="dialog-points"
+                      <Select value={pointThresholdCustom||(dialogReminder.point_threshold!==undefined&&!pointPresets.includes(dialogReminder.point_threshold))?"custom":String(dialogReminder.point_threshold??"")} onValueChange={value=>{setPointThresholdTouched(true);setPointThresholdCustom(value==="custom");if(value!=="custom")updateDialogField("point_threshold",Number(value));}}>
+                        <SelectTrigger id="dialog-points"><SelectValue placeholder="Choose points" /></SelectTrigger><SelectContent>{pointPresets.map(points=><SelectItem key={points} value={String(points)}>{points.toLocaleString()}</SelectItem>)}<SelectItem value="custom">Custom</SelectItem></SelectContent>
+                      </Select>
+                      {(pointThresholdCustom||(dialogReminder.point_threshold!==undefined&&!pointPresets.includes(dialogReminder.point_threshold)))&&<Input
+                          id="dialog-custom-points" aria-label="Custom point threshold" inputMode="numeric"
                           type="number"
                           min="0"
                           max="10000"
@@ -1330,7 +1340,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                             setPointThresholdTouched(true);
                             updateDialogField("point_threshold", value);
                           }}
-                      />
+                      />}
                       {dialogReminder.point_threshold !== undefined && !isPointsValid(dialogReminder.point_threshold) ? (
                           <p className="text-xs text-destructive mt-1">
                             {t('toast.pointThresholdInvalid', {
@@ -1372,6 +1382,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                     </div>
                 )}
               </div>
+              <ActionFeedback notice={notices.dialog} reserve />
               <DialogFooter>
                 <Button
                     variant="outline"

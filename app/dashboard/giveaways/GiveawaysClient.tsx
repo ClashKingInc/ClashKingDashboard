@@ -23,7 +23,7 @@ import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { DashboardTabsList, DashboardTabTrigger } from "@/components/ui/dashboard-tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { useToast } from "@/components/ui/use-toast";
+import { ActionFeedback, useActionFeedback } from "@/components/ui/action-feedback";
 import { DiscordUserDisplay } from "@/components/ui/discord-user-display";
 import { DiscordOpenPopover } from "@/components/ui/discord-open-popover";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
@@ -568,7 +568,7 @@ function GiveawayWinnerList({ giveaway, t }: Readonly<{ giveaway: Giveaway; t: T
 export default function GiveawaysClient({ // NOSONAR — complexity comes from aggregate giveaway form state management, not a single logic unit
   guildId,
 }: Readonly<GiveawaysClientProps>) { // NOSONAR
-  const { toast } = useToast();
+  const {notices,report,clear}=useActionFeedback(guildId);
   const queryClient = useQueryClient();
   const t = useTranslations("GiveawaysPage");
   const tCommon = useTranslations("Common");
@@ -641,7 +641,7 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
         ended: [...gRes.data.ended],
       });
     } catch (error) {
-      toast({ title: t("toast.errorTitle"), description: error instanceof Error ? error.message : t("toast.loadError"), variant: "destructive" });
+      report("list",{ title: t("toast.errorTitle"), description: error instanceof Error ? error.message : t("toast.loadError"), variant: "destructive" });
     } finally {
       setLoading(false);
       setTableLoading(false);
@@ -758,10 +758,10 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
         ? await apiClient.servers.updateGiveaway(guildId, editingId, body)
         : await apiClient.servers.createGiveaway(guildId, body);
       if (res.error) throw new Error(res.error);
-      toast({ title: t("toast.successTitle"), description: editingId ? t("toast.updated") : t("toast.created") });
+      report("list",{ title: t("toast.successTitle"), description: editingId ? t("toast.updated") : t("toast.created") });
       reset(); await load(true);
     } catch (error) {
-      toast({ title: t("toast.errorTitle"), description: error instanceof Error ? error.message : t("toast.saveError"), variant: "destructive" });
+      report("editor",{ title: t("toast.errorTitle"), description: error instanceof Error ? error.message : t("toast.saveError"), variant: "destructive" });
     } finally { setSaving(false); }
   };
 
@@ -771,11 +771,11 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
     try {
       const res = await apiClient.servers.deleteGiveaway(guildId, deleteConfirmId);
       if (res.error) throw new Error(res.error);
-      toast({ title: t("toast.successTitle"), description: t("toast.deleted") });
-      await load(true);
+      report("list",{ title: t("toast.successTitle"), description: t("toast.deleted") });
+      setDeleteConfirmId(null);await load(true);
     } catch (error) {
-      toast({ title: t("toast.errorTitle"), description: error instanceof Error ? error.message : t("toast.deleteError"), variant: "destructive" });
-    } finally { setDeleting(false); setDeleteConfirmId(null); }
+      report("delete",{ title: t("toast.errorTitle"), description: error instanceof Error ? error.message : t("toast.deleteError"), variant: "destructive" });
+    } finally { setDeleting(false); }
   };
 
   const handleReroll = async () => {
@@ -784,13 +784,15 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
     try {
       const res = await apiClient.servers.rerollGiveaway(guildId, rerollTarget.id, rerollSelected);
       if (res.error) throw new Error(res.error);
-      toast({ title: t("toast.successTitle"), description: t("toast.rerolled") });
+      report("list",{ title: t("toast.successTitle"), description: t("toast.rerolled") });
       setRerollDialogOpen(false); setRerollTarget(null); setRerollSelected([]);
       await load(true);
     } catch (error) {
-      toast({ title: t("toast.errorTitle"), description: error instanceof Error ? error.message : t("toast.rerollError"), variant: "destructive" });
+      report("reroll",{ title: t("toast.errorTitle"), description: error instanceof Error ? error.message : t("toast.rerollError"), variant: "destructive" });
     } finally { setRerolling(false); }
   };
+
+  useEffect(()=>{if(dialogOpen)clear("editor");if(rerollDialogOpen)clear("reroll");if(deleteConfirmId)clear("delete");},[dialogOpen,rerollDialogOpen,deleteConfirmId,clear]);
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
@@ -808,6 +810,7 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
           </div>
         </div>
         
+        <ActionFeedback notice={notices.list} reserve />
         <GiveawaysMainContent
           loading={loading}
           t={t}
@@ -966,7 +969,7 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
                     label={t("form.image")} chooseLabel={form.imagePreview ? tCommon("edit") : tEmbed("addImage")} removeLabel={t("form.removeImage")} maxBytes={MAX_IMAGE_BYTES}
                     onChoose={file => updateForm(s => ({ ...s, imageFile: file, imagePreview: URL.createObjectURL(file), removeImage: false }))}
                     onRemove={() => updateForm(s => ({ ...s, removeImage: true, imageFile: null, imagePreview: null }))}
-                    onTooLarge={() => toast({ title: t("toast.errorTitle"), description: t("validation.imageTooLarge"), variant: "destructive" })} />
+                    onTooLarge={() => report("editor",{ title: t("toast.errorTitle"), description: t("validation.imageTooLarge"), variant: "destructive" })} />
                 </div>
 
                 <div className="space-y-3">
@@ -1014,6 +1017,7 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
               )}
             </Tabs>
 
+            <ActionFeedback notice={notices.editor} className="shrink-0 px-6" reserve />
             <DialogFooter className="shrink-0 flex-row gap-2 border-t border-border/50 bg-background px-5 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-7 sm:py-4 sm:space-x-0 [&>*]:w-auto">
               <Button variant="secondary" className="min-w-0 flex-1 border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted sm:flex-none" onClick={closeDialog} disabled={saving}>{readOnly ? tCommon("close") : tCommon("cancel")}</Button>
               {!readOnly && <Button className="min-w-0 flex-1 sm:flex-none" onClick={submit} disabled={saving || !hasRequiredFields}>
@@ -1031,9 +1035,10 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
               <AlertDialogTitle>{t("confirmDeleteTitle")}</AlertDialogTitle>
               <AlertDialogDescription>{t("confirmDelete")}</AlertDialogDescription>
             </AlertDialogHeader>
+            <ActionFeedback notice={notices.delete} reserve />
             <AlertDialogFooter>
               <AlertDialogCancel disabled={deleting}>{tCommon("cancel")}</AlertDialogCancel>
-              <AlertDialogAction onClick={confirmDelete} disabled={deleting} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              <AlertDialogAction onClick={event=>{event.preventDefault();clear("delete");void confirmDelete();}} disabled={deleting} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
                 {deleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}{tCommon("delete")}
               </AlertDialogAction>
             </AlertDialogFooter>
@@ -1080,6 +1085,7 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
                 </div>
               </div>
             )}
+            <ActionFeedback notice={notices.reroll} reserve />
             <DialogFooter>
               <Button variant="outline" onClick={() => { setRerollDialogOpen(false); setRerollTarget(null); setRerollSelected([]); }} disabled={rerolling}>{tCommon("cancel")}</Button>
               <Button onClick={handleReroll} disabled={rerolling || rerollSelected.length === 0}>

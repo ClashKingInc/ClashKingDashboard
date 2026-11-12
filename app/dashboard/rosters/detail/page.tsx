@@ -67,7 +67,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useToast } from "@/components/ui/use-toast";
+import { ActionFeedback, useActionFeedback } from "@/components/ui/action-feedback";
 
 // Local imports
 import { useRosterDetail, useGameConstants } from "../_hooks";
@@ -127,7 +127,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
   const serverSettings = useQuery(dashboardQueryOptions.settings(guildId));
   const serverEmbedColor = Number((serverSettings.data === undefined ? undefined : normalizeServerSettingsPayload(serverSettings.data))?.embed_color ?? 14223113);
   const router = useRouter();
-  const { toast } = useToast();
+  const {notices,report,clear}=useActionFeedback(guildId);
 
   const rosterId = useRosterId();
   const [confirmQuestionReset, setConfirmQuestionReset] = useState(false);
@@ -327,9 +327,9 @@ export default function RosterDetailPage() { // NOSONAR — React page component
     setRefreshing(true);
     try {
       await refreshRoster();
-      toast({ title: t("refreshSuccess") });
+      report("members",{ title: t("refreshSuccess") });
     } catch (err) {
-      toast({
+      report("members",{
         title: t("refreshError"),
         description: err instanceof Error ? err.message : "Unknown error",
         variant: "destructive",
@@ -378,9 +378,9 @@ export default function RosterDetailPage() { // NOSONAR — React page component
         signup_questions: editData.signup_questions,
         reset_answers: resetAnswers,
       });
-      toast({ title: t("saveSuccess") });
+      report("settings",{ title: t("saveSuccess") });
     } catch (err) {
-      toast({
+      report("settings",{
         title: t("saveError"),
         description: err instanceof Error ? err.message : "Unknown error",
         variant: "destructive",
@@ -393,12 +393,12 @@ export default function RosterDetailPage() { // NOSONAR — React page component
   const handleAddMembers = async (tags: string[]) => {
     try {
       await addMembers(tags);
-      toast({
+      report("add-members",{
         title: t("addMembersSuccess"),
         description: t("addMembersSuccessDesc", { count: tags.length }),
       });
     } catch (err) {
-      toast({
+      report("add-members",{
         title: t("addMembersError"),
         description: err instanceof Error ? err.message : "Unknown error",
         variant: "destructive",
@@ -411,9 +411,9 @@ export default function RosterDetailPage() { // NOSONAR — React page component
     setRemovingMember(tag);
     try {
       await removeMember(tag);
-      toast({ title: t("removeMemberSuccess") });
+      report(`member:${tag}`,{ title: t("removeMemberSuccess") });
     } catch (err) {
-      toast({
+      report(`member:${tag}`,{
         title: t("removeMemberError"),
         description: err instanceof Error ? err.message : "Unknown error",
         variant: "destructive",
@@ -427,9 +427,9 @@ export default function RosterDetailPage() { // NOSONAR — React page component
     setClearingMembers(true);
     try {
       await clearMembers();
-      toast({ title: t("clearMembersSuccess") });
+      report("members",{ title: t("clearMembersSuccess") });
     } catch (err) {
-      toast({
+      report("members",{
         title: t("clearMembersError"),
         description: err instanceof Error ? err.message : "Unknown error",
         variant: "destructive",
@@ -457,7 +457,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
         options: newAutomation.options,
         active: true,
       });
-      toast({ title: t("automationCreated") });
+      report("automation-create",{ title: t("automationCreated") });
       setCreateAutomationDialogOpen(false);
       setNewAutomation({
         action_type: "roster_ping",
@@ -467,7 +467,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
         target_type: 'roster',
       });
     } catch (err) {
-      toast({
+      report("automation-create",{
         title: t("automationError"),
         description: err instanceof Error ? err.message : "Unknown error",
         variant: "destructive",
@@ -483,9 +483,9 @@ export default function RosterDetailPage() { // NOSONAR — React page component
 
     try {
       await updateAutomation(automationId, { active: !automation.active });
-      toast({ title: t("automationUpdated") });
+      report("automations",{ title: t("automationUpdated") });
     } catch {
-      toast({
+      report("automations",{
         title: t("automationError"),
         variant: "destructive",
       });
@@ -495,9 +495,9 @@ export default function RosterDetailPage() { // NOSONAR — React page component
   const handleDeleteAutomation = async (automationId: string) => {
     try {
       await deleteAutomation(automationId);
-      toast({ title: t("automationDeleted") });
+      report("automations",{ title: t("automationDeleted") });
     } catch {
-      toast({
+      report("automations",{
         title: t("automationError"),
         variant: "destructive",
       });
@@ -512,11 +512,11 @@ export default function RosterDetailPage() { // NOSONAR — React page component
     if (!original) return;
     try {
       await updateAutomation(editingAutomation.automation_id, automationEditPayload(original, editingAutomation));
-      toast({ title: t("automationUpdated") });
+      report("automation-edit",{ title: t("automationUpdated") });
       setEditAutomationDialogOpen(false);
       setEditingAutomation(null);
     } catch {
-      toast({
+      report("automation-edit",{
         title: t("automationError"),
         variant: "destructive",
       });
@@ -524,6 +524,8 @@ export default function RosterDetailPage() { // NOSONAR — React page component
   };
 
   // Loading state
+  React.useEffect(()=>{if(addMembersDialogOpen)clear("add-members");if(createAutomationDialogOpen)clear("automation-create");if(editAutomationDialogOpen)clear("automation-edit");},[addMembersDialogOpen,createAutomationDialogOpen,editAutomationDialogOpen,clear]);
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background p-4 md:p-6">
@@ -717,6 +719,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
         {/* Members Tab */}
         <TabsContent value="answers" className="mt-5"><RosterAnswers roster={roster} onSaved={reloadRoster} /></TabsContent>
         <TabsContent value="members" className="mt-5 space-y-4">
+          <ActionFeedback notice={notices.members} reserve />
           <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
             <div className="flex items-center gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               <Popover open={columnPopoverOpen} onOpenChange={setColumnPopoverOpen}>
@@ -854,6 +857,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
             <CardContent className="p-0">
               <MembersTable
                 heroAnchors={[roster.hero_red_percent ?? 50, roster.hero_yellow_percent ?? 75, roster.hero_green_percent ?? 90]}
+                feedbackForMember={tag=><ActionFeedback notice={notices[`member:${tag}`]} />}
                 members={roster.members || []}
                 columns={localColumns}
                 rosterClanTag={roster.clan_tag}
@@ -872,6 +876,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
 
         {/* Automations Tab */}
         <TabsContent value="automations" className="mt-5 space-y-4">
+          <ActionFeedback notice={notices.automations} reserve />
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-muted-foreground">{t("automations.description")}</p>
             <Button onClick={() => setCreateAutomationDialogOpen(true)}>
@@ -1042,6 +1047,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
 
         {/* Settings Tab */}
         <TabsContent value="settings" className="mt-5 space-y-4">
+          <ActionFeedback notice={notices.settings} reserve />
           <div className="space-y-5">
 
               {/* Section: Identity */}
@@ -1099,7 +1105,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                       const body = new FormData(); body.append("file", file);
                       const result = await executeSharedEndpoint(dashboardEndpoints.dashboardRosterImage, { path: { serverId: guildId, rosterId }, query: {}, body });
                       setEditData(previous => ({ ...previous, image: result.url }));
-                    } catch (error) { toast({ title: error instanceof Error ? error.message : String(error), variant: "destructive" }); }
+                    } catch (error) { report("settings",{ title: error instanceof Error ? error.message : String(error), variant: "destructive" }); }
                     finally { setUploadingImage(false); }
                   }} />
               </div>
@@ -1290,6 +1296,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
 
       {/* Add Members Dialog */}
       <AddMembersDialog
+        feedback={<ActionFeedback notice={notices["add-members"]} reserve />}
         open={addMembersDialogOpen}
         onOpenChange={setAddMembersDialogOpen}
         onAddMembers={handleAddMembers}
@@ -1454,6 +1461,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
               <p className="text-xs text-muted-foreground">{t("automations.channelHint")}</p>
             </div>
           </div>
+          <ActionFeedback notice={notices["automation-create"]} reserve />
           <DialogFooter>
             <Button variant="outline" onClick={() => setCreateAutomationDialogOpen(false)}>
               {t("common.cancel")}
@@ -1625,6 +1633,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
               />
             </div>
           </div>
+          <ActionFeedback notice={notices["automation-edit"]} reserve />
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditAutomationDialogOpen(false)}>
               {t("common.cancel")}
@@ -1720,6 +1729,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
               ));
             })()}
           </div>
+          <ActionFeedback notice={notices["automations"]} reserve />
           <DialogFooter>
             <Button variant="outline" onClick={() => setGroupAutomationsDialogOpen(false)}>
               {t("common.close")}

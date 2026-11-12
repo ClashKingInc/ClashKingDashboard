@@ -12,7 +12,7 @@ import { executeSharedApiResult, executeSharedEndpoint } from "@/lib/api/shared-
 import { clanBadgeUrl } from "@/lib/clash-asset-urls";
 
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import Image from "@/components/app-image";
 import Link from "@/components/app-link";
@@ -58,7 +58,7 @@ import {
   ExternalLink,
   Info,
 } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
+import { ActionFeedback, useActionFeedback } from "@/components/ui/action-feedback";
 import { apiClient } from "@/lib/api/client";
 import type { ServerRole } from "@/lib/api/types/roles";
 import { isClanCategoriesResponse, type ClanCategory } from "@/lib/api/types/clan-categories";
@@ -129,7 +129,7 @@ const PREMADE_CLAN_CATEGORIES = [
 export default function ClansPage() {
   const guildId = useGuildId();
   const locale = useLocale();
-  const { toast } = useToast();
+  const {notices,report,clear}=useActionFeedback(guildId);
   const tLimits=useTranslations("ManualLimits");
   const t = useTranslations("ClansPage");
   const tCommon = useTranslations("Common");
@@ -144,7 +144,7 @@ export default function ClansPage() {
   const [error, setError] = useState<string | null>(null);
   const [clanSearch, setClanSearch] = useState("");
   const [clanCategories, setClanCategories] = useState<ClanCategory[]>([]);
-  const {canManage}=useDashboardAccess();
+  const {canManage,canView}=useDashboardAccess();
   const [ordering,setOrdering]=useState<{id:string;name:string}|null>(null);
   const [categoryRefreshVersion, setCategoryRefreshVersion] = useState(0);
   const [isCategoryDialogOpen, setIsCategoryDialogOpen] = useState(false);
@@ -156,6 +156,9 @@ export default function ClansPage() {
   const [verificationClanTag, setVerificationClanTag] = useState<string | null>(null);
   const [selectedClan, setSelectedClan] = useState<Clan | null>(null);
   const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false);
+  const settingsRequest=useRef(0);
+  const [roleDataReady,setRoleDataReady]=useState(false);
+  const [settingsReady,setSettingsReady]=useState(false);
   const [clanSettings, setClanSettings] = useState<ClanSettings>({});
   const [clanServerRoles, setClanServerRoles] = useState<ServerRole[]>([]);
   const [memberRole, setMemberRole] = useState<ClanRoleSelection>({ role_id: null });
@@ -199,7 +202,7 @@ export default function ClansPage() {
       } catch (err) {
         console.error("Error fetching data:", err);
         setError(err instanceof Error ? err.message : "Failed to load clans");
-        toast({
+        report("list",{
           title: tCommon("error"),
           description: t("toast.errorLoadingClans"),
           variant: "destructive",
@@ -215,10 +218,11 @@ export default function ClansPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [guildId]);
 
+  const refreshConfirmedClanWrite=async(token:string)=>{try{await refreshClans(token);}catch{report("list",{description:"Saved, but the clan list could not refresh. Reload the page to see the update.",variant:"destructive"});}};
   // Add clan
   const handleAddClan = async () => {
     if (!newClanTag.trim()) {
-      toast({
+      report("add",{
         title: tCommon("error"),
         description: t("toast.errorEmptyClanTag"),
         variant: "destructive",
@@ -240,19 +244,19 @@ export default function ClansPage() {
       if (response.error || !response.data) throw new Error(response.error || t("toast.errorAddingClan"));
       const added = response.data;
 
-      toast({
+      report("list",{
         title: tCommon("success"),
         description: t("toast.clanAdded"),
       });
 
-      await refreshClans(accessToken || "");
+      await refreshConfirmedClanWrite(accessToken || "");
 
       setNewClanTag("");
       setIsAddDialogOpen(false);
       if (verifyOnAdd) setVerificationClanTag(added.clan_tag);
     } catch (err) {
       console.error("Error adding clan:", err);
-      toast({
+      report("add",{
         title: tCommon("error"),
         description: err instanceof Error ? err.message : t("toast.errorAddingClan"),
         variant: "destructive",
@@ -273,17 +277,17 @@ export default function ClansPage() {
         body: {},
       });
 
-      toast({
+      report("list",{
         title: tCommon("success"),
         description: t("toast.clanRemoved"),
       });
 
-      await refreshClans(accessToken || "");
+      await refreshConfirmedClanWrite(accessToken || "");
       setIsSettingsDialogOpen(false);
-      setSelectedClan(null);
+      setSelectedClan(null);setClanToDelete(null);
     } catch (err) {
       console.error("Error deleting clan:", err);
-      toast({
+      report("delete",{
         title: tCommon("error"),
         description: t("toast.errorRemovingClan"),
         variant: "destructive",
@@ -295,36 +299,37 @@ export default function ClansPage() {
 
   // Open settings dialog
   const handleOpenSettings = async (clan: Clan) => {
+    clear("settings");setSettingsReady(false);
     setSelectedClan(clan);
     setClanSettings(clan.settings || {});
     setIsSettingsDialogOpen(true);
 
+    const version=++settingsRequest.current;setRoleDataReady(false);
     try {
-      const clanTag = clan.tag || clan.clan_tag || '';
-      const rulesResponse = await apiClient.roles.getServerRoles(guildId, { type: 'clan_role', clan_tag: clanTag });
-      if (rulesResponse.error) throw new Error(rulesResponse.error);
-      const roles = rulesResponse.data?.roles || [];
-      setClanServerRoles([...roles]);
-      const member = roles.find((role) => role.option === 'member');
-      const leader = roles.find((role) => role.option === 'leader');
-      setMemberRole({ role_id: member?.role_id || null });
-      setLeaderRole({ role_id: leader?.role_id || null });
-    } catch (err) {
-      console.error("Error loading clan settings:", err);
-      setClanServerRoles([]);
-      setMemberRole({ role_id: null });
-      setLeaderRole({ role_id: null });
-      toast({
-        title: tCommon("error"),
-        description: t("toast.errorLoadingSettings"),
-        variant: "destructive",
-      });
+      const clanTag=clan.tag||clan.clan_tag||"";
+      const [settingsResult,rolesResult]=await Promise.allSettled([
+        executeSharedEndpoint(dashboardEndpoints.serverClanSettings,{path:{serverId:guildId,clanTag},query:{},body:{}}),
+        canView("roles")?apiClient.roles.getServerRoles(guildId,{type:"clan_role",clan_tag:clanTag}):Promise.resolve(null),
+      ]);
+      if(version!==settingsRequest.current)return;
+      if(settingsResult.status!=="fulfilled")throw settingsResult.reason;
+      setClanSettings({category:settingsResult.value.category??null,abbreviation:settingsResult.value.abbreviation??""});setSettingsReady(true);
+      if(!canView("roles"))return;
+      if(rolesResult.status!=="fulfilled"||!rolesResult.value?.data){
+        report("role-fields",{description:"Could not load clan role settings. Other clan settings can still be saved.",variant:"destructive"});return;
+      }
+      const roles=rolesResult.value.data.roles;setClanServerRoles([...roles]);setRoleDataReady(true);clear("role-fields");
+      setMemberRole({role_id:roles.find(role=>role.option==="member")?.role_id??null});
+      setLeaderRole({role_id:roles.find(role=>role.option==="leader")?.role_id??null});
+    }catch(cause){
+      if(version!==settingsRequest.current)return;
+      report("settings",{description:cause instanceof Error?cause.message:t("toast.errorLoadingSettings"),variant:"destructive"});
     }
   };
 
   // Save settings
   const handleSaveSettings = async () => {
-    if (!selectedClan) return;
+    if (!selectedClan||!settingsReady||saving) return;clear("settings");
 
     try {
       setSaving(true);
@@ -368,20 +373,23 @@ export default function ClansPage() {
           if (result.error) throw new Error(result.error);
         }
       };
-      await Promise.all([syncClanRole('member', memberRole), syncClanRole('leader', leaderRole)]);
+      // Unavailable role metadata must never be interpreted as empty roles.
+      // Clans-only managers may save clan settings without a separate Roles grant.
+      if(canManage("roles")&&roleDataReady)await Promise.all([syncClanRole('member', memberRole), syncClanRole('leader', leaderRole)]);
 
-      toast({
+      report("list",{
         title: tCommon("success"),
         description: t("toast.settingsSaved"),
       });
 
-      await refreshClans(accessToken || "");
+      await refreshConfirmedClanWrite(accessToken || "");
       setCategoryRefreshVersion((current) => current + 1);
 
       setIsSettingsDialogOpen(false);
       setSelectedClan(null);
     } catch (err) {
-      toast({
+      setSettingsReady(false);
+      report("settings",{
         title: tCommon("error"),
         description: err instanceof Error ? err.message : t("toast.errorSavingSettings"),
         variant: "destructive",
@@ -438,6 +446,8 @@ export default function ClansPage() {
     return { premade, custom };
   }, [clanCategories, clanSettings.category]);
 
+  useEffect(()=>{if(isAddDialogOpen)clear("add");},[isAddDialogOpen,clear]);
+
   if (error) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-6">
@@ -478,6 +488,7 @@ export default function ClansPage() {
           </div>
         </header>
 
+        <ActionFeedback notice={notices.list} reserve />
         <section className="space-y-4" aria-labelledby="clan-list-title">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
             <h2 id="clan-list-title" className="sr-only">{t("listTitle")}</h2>
@@ -616,6 +627,7 @@ export default function ClansPage() {
             </div>
             <label className="flex items-center gap-2 text-sm"><Checkbox checked={verifyOnAdd} onCheckedChange={value => setVerifyOnAdd(value === true)} />Verify this clan after adding</label>
             <p className="text-sm text-muted-foreground">{tLimits("raise")} <a href="https://discord.gg/clashking" target="_blank" rel="noopener noreferrer" className="text-primary underline">{tLimits("discord")}</a></p>
+            <ActionFeedback notice={notices.add} reserve />
             <DialogFooter>
               <Button variant="secondary" onClick={() => setIsAddDialogOpen(false)}>{tCommon("cancel")}</Button>
               <Button onClick={() => void handleAddClan()} disabled={saving}>{saving ? <Loader2 className="h-4 w-4 animate-spin" /> : t("addClan")}</Button>
@@ -656,13 +668,14 @@ export default function ClansPage() {
             </DialogHeader>
             <div className="grid gap-4 py-1">
               {selectedClan && <ClanVerificationControl key={`${guildId}:${selectedClan.tag}`} guildId={guildId} clanTag={selectedClan.tag || selectedClan.clan_tag || ""} />}
+                  {canView("roles")&&<>
                   <div className="space-y-2">
                     <div className="min-w-0 space-y-1.5">
                       <div className="flex items-center gap-1.5">
                         <Label>{t("memberRole")}</Label>
                         <InfoPopover content={t("fieldHelp.memberRole")} label={t("fieldHelp.infoButtonLabel")} />
                       </div>
-                      <RoleCombobox
+                      <RoleCombobox disabled={!canManage("roles")||!roleDataReady}
                         roles={discordRoles}
                         value={memberRole.role_id || 'disabled'}
                         onValueChange={(value) => setMemberRole({ ...memberRole, role_id: value === 'disabled' ? null : value })}
@@ -677,7 +690,7 @@ export default function ClansPage() {
                         <Label>{t("leaderRole")}</Label>
                         <InfoPopover content={t("fieldHelp.leaderRole")} label={t("fieldHelp.infoButtonLabel")} />
                       </div>
-                      <RoleCombobox
+                      <RoleCombobox disabled={!canManage("roles")||!roleDataReady}
                         roles={discordRoles}
                         value={leaderRole.role_id || 'disabled'}
                         onValueChange={(value) => setLeaderRole({ ...leaderRole, role_id: value === 'disabled' ? null : value })}
@@ -687,6 +700,9 @@ export default function ClansPage() {
                   </div>
 
 
+                  <ActionFeedback notice={notices["role-fields"]} />
+                  {!roleDataReady&&notices["role-fields"]&&selectedClan&&<Button variant="secondary" onClick={()=>void handleOpenSettings(selectedClan)}>Retry loading roles</Button>}
+                  </>}
                   <div className="space-y-2">
                     <div className="flex items-center gap-1.5">
                       <Label>{t("category")}</Label>
@@ -752,6 +768,8 @@ export default function ClansPage() {
 
 
 
+            <ActionFeedback notice={notices.settings} reserve />
+            {!settingsReady&&notices.settings&&selectedClan&&<Button variant="secondary" onClick={()=>void handleOpenSettings(selectedClan)}>Retry loading settings</Button>}
             <DialogFooter>
               <Button
                 variant="destructive"
@@ -771,7 +789,7 @@ export default function ClansPage() {
               <Button variant="secondary" onClick={() => setIsSettingsDialogOpen(false)}>
                 {tCommon("cancel")}
               </Button>
-              <Button onClick={handleSaveSettings} disabled={saving} className="gap-2 bg-emerald-600 text-white hover:bg-emerald-700">
+              <Button onClick={handleSaveSettings} disabled={saving||!settingsReady||!canManage("clans")} className="gap-2 bg-emerald-600 text-white hover:bg-emerald-700">
                 {saving ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -797,14 +815,14 @@ export default function ClansPage() {
               {t("deleteConfirm", { tag: clanToDelete?.tag ?? "" })}
             </AlertDialogDescription>
           </AlertDialogHeader>
+          <ActionFeedback notice={notices.delete} reserve />
           <AlertDialogFooter>
             <AlertDialogCancel>{tCommon("cancel")}</AlertDialogCancel>
             <AlertDialogAction
               className="bg-destructive hover:bg-destructive/90"
-              onClick={() => {
-                if (!clanToDelete) return;
-                void handleDeleteClan(clanToDelete.tag);
-                setClanToDelete(null);
+              disabled={saving}
+              onClick={event => {
+                event.preventDefault();if(!clanToDelete)return;clear("delete");void handleDeleteClan(clanToDelete.tag);
               }}
             >
               {tCommon("delete")}

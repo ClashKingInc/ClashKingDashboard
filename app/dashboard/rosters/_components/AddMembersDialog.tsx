@@ -32,6 +32,7 @@ import type { ClanMember, RosterMember } from "../_lib/types";
 import { parseBulkTags } from "../_lib/utils";
 
 interface AddMembersDialogProps {
+  readonly feedback?:React.ReactNode;
   readonly open: boolean;
   readonly onOpenChange: (open: boolean) => void;
   readonly onAddMembers: (tags: string[]) => Promise<void>;
@@ -44,6 +45,7 @@ interface AddMembersDialogProps {
 }
 
 export function AddMembersDialog({
+  feedback,
   open,
   onOpenChange,
   onAddMembers,
@@ -114,6 +116,7 @@ export function AddMembersDialog({
     try {
       await onAddMembers(Array.from(tagsToAdd));
       onOpenChange(false);
+    } catch { // The caller owns the local error message; keep this draft open for retry.
     } finally {
       setSaving(false);
     }
@@ -321,6 +324,7 @@ export function AddMembersDialog({
           )}
         </div>
 
+        {feedback}
         <DialogFooter>
           <Button
             variant="outline"

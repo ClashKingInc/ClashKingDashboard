@@ -16,7 +16,6 @@ import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { DocumentMetadata } from "@/components/document-metadata";
 import { LocaleProvider } from "@/components/locale-provider";
 import { ThemeProvider } from "@/components/theme-provider";
-import { Toaster } from "@/components/ui/toaster";
 
 type PageModule = { default: ComponentType };
 type PageImporter = () => Promise<PageModule>;
@@ -32,7 +31,6 @@ function RootLayout() {
         <AuthSessionProvider>
           <DocumentMetadata />
           <Outlet />
-          <Toaster />
         </AuthSessionProvider>
       </LocaleProvider>
     </ThemeProvider>
