@@ -48,7 +48,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/components/ui/use-toast";
+import { ActionFeedback, useActionFeedback } from "@/components/ui/action-feedback";
 
 type StrikeViewMode = "grouped" | "all";
 type BanSort = "newest" | "oldest" | "player" | "reason" | "moderator";
@@ -89,7 +89,7 @@ export default function BansAndStrikesPage() { // NOSONAR — page coordinates t
   const t = useTranslations("BansPage");
   const tSidebar = useTranslations("Sidebar");
   const tCommon = useTranslations("Common");
-  const { toast } = useToast();
+  const {notices,report,clear}=useActionFeedback(guildId);
   const queryClient = useQueryClient();
   const strikesRequested = useRef(false);
 
@@ -121,7 +121,7 @@ export default function BansAndStrikesPage() { // NOSONAR — page coordinates t
 
   const fetchBans = async () => {
     try {
-      setIsLoadingBans(true);
+      if(!bans.length)setIsLoadingBans(true);
       const response = await queryClient.fetchQuery({
         queryKey: dashboardQueryKeys.route("bans", guildId),
         queryFn: () => apiClient.servers.getBans(guildId),
@@ -130,7 +130,7 @@ export default function BansAndStrikesPage() { // NOSONAR — page coordinates t
       setBans((response.data?.items ?? []).map((ban) => ({ ...ban, added_by: String(ban.added_by) })));
     } catch (error) {
       console.error("Error fetching bans:", error);
-      toast({ title: tCommon("error"), description: t("toast.errorLoadingBans"), variant: "destructive" });
+      report("bans",{ title: tCommon("error"), description: t("toast.errorLoadingBans"), variant: "destructive" });
     } finally {
       setIsLoadingBans(false);
     }
@@ -138,7 +138,7 @@ export default function BansAndStrikesPage() { // NOSONAR — page coordinates t
 
   const fetchStrikes = async () => {
     try {
-      setIsLoadingStrikes(true);
+      if(!strikes.length)setIsLoadingStrikes(true);
       const response = await queryClient.fetchQuery({
         queryKey: dashboardQueryKeys.route("strikes", guildId),
         queryFn: () => apiClient.servers.getStrikes(guildId),
@@ -148,7 +148,7 @@ export default function BansAndStrikesPage() { // NOSONAR — page coordinates t
     } catch (error) {
       strikesRequested.current = false;
       console.error("Error fetching strikes:", error);
-      toast({ title: tCommon("error"), description: t("toast.errorLoadingStrikes"), variant: "destructive" });
+      report("strikes",{ title: tCommon("error"), description: t("toast.errorLoadingStrikes"), variant: "destructive" });
     } finally {
       setIsLoadingStrikes(false);
     }
@@ -265,6 +265,7 @@ export default function BansAndStrikesPage() { // NOSONAR — page coordinates t
 
   const handleAddBan = async () => {
     if (!newBan.player_tag.trim() || !newBan.reason.trim() || !optionalImageUrlIsValid(newBan.image)) return;
+    clear("ban-editor");
     try {
       setIsSubmittingBan(true);
       const response = await apiClient.servers.addBan(guildId, newBan.player_tag.replace(/^#/, ""), {
@@ -277,9 +278,9 @@ export default function BansAndStrikesPage() { // NOSONAR — page coordinates t
       await fetchBans();
       setNewBan({ player_tag: "", reason: "", image: "" });
       setIsAddBanDialogOpen(false);
-      toast({ title: tCommon("success"), description: t("toast.banAdded") });
+      report("bans",{ title: tCommon("success"), description: t("toast.banAdded") });
     } catch (error) {
-      toast({ title: tCommon("error"), description: error instanceof Error ? error.message : t("toast.errorAddingBan"), variant: "destructive" });
+      report("ban-editor",{ title: tCommon("error"), description: error instanceof Error ? error.message : t("toast.errorAddingBan"), variant: "destructive" });
     } finally {
       setIsSubmittingBan(false);
     }
@@ -287,6 +288,7 @@ export default function BansAndStrikesPage() { // NOSONAR — page coordinates t
 
   const handleAddStrike = async () => {
     if (!newStrike.player_tag.trim() || !newStrike.reason.trim() || !optionalImageUrlIsValid(newStrike.image)) return;
+    clear("strike-editor");
     try {
       setIsSubmittingStrike(true);
       const response = await apiClient.servers.addStrike(guildId, newStrike.player_tag.replace(/^#/, ""), {
@@ -301,38 +303,42 @@ export default function BansAndStrikesPage() { // NOSONAR — page coordinates t
       await fetchStrikes();
       setNewStrike({ player_tag: "", reason: "", strike_weight: 1, rollover_days: undefined, image: "" });
       setIsAddStrikeDialogOpen(false);
-      toast({ title: tCommon("success"), description: t("toast.strikeAdded") });
+      report("strikes",{ title: tCommon("success"), description: t("toast.strikeAdded") });
     } catch (error) {
-      toast({ title: tCommon("error"), description: error instanceof Error ? error.message : t("toast.errorAddingStrike"), variant: "destructive" });
+      report("strike-editor",{ title: tCommon("error"), description: error instanceof Error ? error.message : t("toast.errorAddingStrike"), variant: "destructive" });
     } finally {
       setIsSubmittingStrike(false);
     }
   };
 
   const handleRemoveBan = async (playerTag: string) => {
+    clear(`ban:${playerTag}`);
     try {
       const response = await apiClient.servers.removeBan(guildId, playerTag.replace(/^#/, ""));
       if (response.error) throw new Error(mutationError(response.error, t("toast.errorRemovingBan")));
       await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.route("bans", guildId), exact: true });
       await fetchBans();
-      toast({ title: tCommon("success"), description: t("toast.banRemoved") });
+      report(`ban:${playerTag}`,{ title: tCommon("success"), description: t("toast.banRemoved") });
     } catch (error) {
-      toast({ title: tCommon("error"), description: error instanceof Error ? error.message : t("toast.errorRemovingBan"), variant: "destructive" });
+      report(`ban:${playerTag}`,{ title: tCommon("error"), description: error instanceof Error ? error.message : t("toast.errorRemovingBan"), variant: "destructive" });
     }
   };
 
   const handleRemoveStrike = async (strikeId: string) => {
+    clear(`strike:${strikeId}`);
     try {
       const response = await apiClient.servers.removeStrike(guildId, strikeId);
       if (response.error) throw new Error(mutationError(response.error, t("toast.errorRemovingStrike")));
       await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.route("strikes", guildId), exact: true });
       await fetchStrikes();
-      toast({ title: tCommon("success"), description: t("toast.strikeRemoved") });
+      report(`strike:${strikeId}`,{ title: tCommon("success"), description: t("toast.strikeRemoved") });
     } catch (error) {
-      toast({ title: tCommon("error"), description: error instanceof Error ? error.message : t("toast.errorRemovingStrike"), variant: "destructive" });
+      report(`strike:${strikeId}`,{ title: tCommon("error"), description: error instanceof Error ? error.message : t("toast.errorRemovingStrike"), variant: "destructive" });
     }
   };
 
+
+  useEffect(()=>{if(isAddBanDialogOpen)clear("ban-editor");if(isAddStrikeDialogOpen)clear("strike-editor");},[isAddBanDialogOpen,isAddStrikeDialogOpen,clear]);
   const banExplanation = (
     <div className="space-y-2">
       <p className="font-medium text-foreground">{t("bans.howItWorks.title")}</p>
@@ -353,9 +359,31 @@ export default function BansAndStrikesPage() { // NOSONAR — page coordinates t
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="mx-auto max-w-7xl space-y-8">
-        <header>
-          <h1 className="text-2xl font-bold text-foreground md:text-3xl">{tSidebar("bans.name")}</h1>
-          <p className="mt-1 text-sm text-muted-foreground">{t("description")}</p>
+        <header className="flex items-start justify-between gap-3">
+          <div className="min-w-0 flex-1"><div className="flex items-center gap-2"><h1 className="text-2xl font-bold text-foreground md:text-3xl">{tSidebar("bans.name")}</h1><InfoPopover content={activeTab==="bans"?banExplanation:strikeExplanation} label={activeTab==="bans"?t("bans.howItWorks.title"):t("strikes.howItWorks.title")} /></div><p className="mt-1 hidden text-sm text-muted-foreground sm:block">{t("description")}</p></div>
+          <div className="shrink-0">{activeTab==="bans" ? <BanDialog
+                  open={isAddBanDialogOpen}
+                  feedback={<ActionFeedback notice={notices["ban-editor"]} reserve />}
+                  onOpenChange={setIsAddBanDialogOpen}
+                  value={newBan}
+                  onChange={setNewBan}
+                  onSubmit={() => void handleAddBan()}
+                  submitting={isSubmittingBan}
+                  imageValid={optionalImageUrlIsValid(newBan.image)}
+                  t={t}
+                  tCommon={tCommon}
+                /> : <StrikeDialog
+                  open={isAddStrikeDialogOpen}
+                  feedback={<ActionFeedback notice={notices["strike-editor"]} reserve />}
+                  onOpenChange={setIsAddStrikeDialogOpen}
+                  value={newStrike}
+                  onChange={setNewStrike}
+                  onSubmit={() => void handleAddStrike()}
+                  submitting={isSubmittingStrike}
+                  imageValid={optionalImageUrlIsValid(newStrike.image)}
+                  t={t}
+                  tCommon={tCommon}
+                />}</div>
         </header>
 
         <Tabs value={activeTab} onValueChange={(value) => {
@@ -371,24 +399,9 @@ export default function BansAndStrikesPage() { // NOSONAR — page coordinates t
           </DashboardTabsList>
 
           <TabsContent value="bans" className="mt-7 space-y-4">
+            <ActionFeedback notice={notices.bans} reserve />
             <section className="space-y-4">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-                <div>
-                  <div className="flex items-center gap-2"><h2 className="text-lg font-semibold">{t("bans.list.title")}</h2><InfoPopover content={banExplanation} label={t("bans.howItWorks.title")} /></div>
-                  <p className="mt-1 text-sm text-muted-foreground">{t("bans.list.count", { count: filteredBans.length })}</p>
-                </div>
-                <BanDialog
-                  open={isAddBanDialogOpen}
-                  onOpenChange={setIsAddBanDialogOpen}
-                  value={newBan}
-                  onChange={setNewBan}
-                  onSubmit={() => void handleAddBan()}
-                  submitting={isSubmittingBan}
-                  imageValid={optionalImageUrlIsValid(newBan.image)}
-                  t={t}
-                  tCommon={tCommon}
-                />
-              </div>
+
 
               <div className="flex flex-col gap-2 sm:flex-row">
                 <SearchControl value={searchQueryBans} onChange={setSearchQueryBans} placeholder={t("bans.list.searchPlaceholder")} className="sm:flex-1" />
@@ -406,6 +419,7 @@ export default function BansAndStrikesPage() { // NOSONAR — page coordinates t
                     <BanRow
                       key={ban.VillageTag}
                       ban={ban}
+                      feedback={<ActionFeedback notice={notices[`ban:${ban.VillageTag}`]} />}
                       locale={locale}
                       clanName={resolveClanName(ban.clan_name, ban.clan_tag)}
                       onRemove={() => void handleRemoveBan(ban.VillageTag)}
@@ -419,24 +433,9 @@ export default function BansAndStrikesPage() { // NOSONAR — page coordinates t
           </TabsContent>
 
           <TabsContent value="strikes" className="mt-7 space-y-4">
+            <ActionFeedback notice={notices.strikes} reserve />
             <section className="space-y-4">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-                <div>
-                  <div className="flex items-center gap-2"><h2 className="text-lg font-semibold">{t("strikes.list.title")}</h2><InfoPopover content={strikeExplanation} label={t("strikes.howItWorks.title")} /></div>
-                  <p className="mt-1 text-sm text-muted-foreground">{t("strikes.list.count", { count: filteredStrikes.length })}</p>
-                </div>
-                <StrikeDialog
-                  open={isAddStrikeDialogOpen}
-                  onOpenChange={setIsAddStrikeDialogOpen}
-                  value={newStrike}
-                  onChange={setNewStrike}
-                  onSubmit={() => void handleAddStrike()}
-                  submitting={isSubmittingStrike}
-                  imageValid={optionalImageUrlIsValid(newStrike.image)}
-                  t={t}
-                  tCommon={tCommon}
-                />
-              </div>
+
 
               <div className="flex flex-col gap-2 sm:flex-row">
                 <div className="flex rounded-xl bg-muted/55 p-1 shadow-sm shadow-black/5">
@@ -539,7 +538,7 @@ function EvidenceLink({ image, label }: Readonly<{ image?: string | null; label:
   return <HoverCard openDelay={150}><HoverCardTrigger asChild><a href={image} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><ImageIcon className="h-3.5 w-3.5" />{label}<ExternalLink className="h-3 w-3" /></a></HoverCardTrigger><HoverCardContent className="w-80 p-2" side="top"><img src={image} alt={label} className="max-h-80 w-full rounded-lg object-contain" /></HoverCardContent></HoverCard>;
 }
 
-function BanRow({ ban, locale, clanName, onRemove, t, tCommon }: Readonly<{ ban: BannedPlayer; locale: string; clanName: string | null; onRemove: () => void; t: Translator; tCommon: CommonTranslator }>) {
+function BanRow({ feedback, ban, locale, clanName, onRemove, t, tCommon }: Readonly<{ feedback?:ReactNode; ban: BannedPlayer; locale: string; clanName: string | null; onRemove: () => void; t: Translator; tCommon: CommonTranslator }>) {
   return (
     <article className="rounded-[22px] bg-card p-4 shadow-sm shadow-black/5 sm:p-5">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
@@ -547,11 +546,12 @@ function BanRow({ ban, locale, clanName, onRemove, t, tCommon }: Readonly<{ ban:
         <div className="min-w-0 flex-1"><p className="text-sm text-foreground">{ban.Notes && ban.Notes !== "No Notes" ? ban.Notes : t("bans.table.noReason")}</p><div className="mt-2 flex flex-wrap items-center gap-2"><EvidenceLink image={ban.image} label={t("image.view")} /><span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground"><CalendarDays className="h-3.5 w-3.5" />{new Date(ban.DateCreated).toLocaleDateString(locale)}</span></div></div>
         <div className="flex items-center justify-between gap-3 lg:justify-end"><DiscordUserDisplay userId={String(ban.added_by)} username={ban.added_by_username} avatarUrl={ban.added_by_avatar_url} size="sm" /><Button type="button" variant="ghost" size="icon" onClick={onRemove} className="h-9 w-9 shrink-0 text-destructive hover:bg-destructive/10 hover:text-destructive" aria-label={t("bans.removeBan")}><Trash2 className="h-4 w-4" /></Button></div>
       </div>
+      {feedback}
     </article>
   );
 }
 
-function StrikeRow({ strike, locale, clanName, compact = false, onRemove, t, tCommon }: Readonly<{ strike: Strike; locale: string; clanName?: string | null; compact?: boolean; onRemove: () => void; t: Translator; tCommon: CommonTranslator }>) {
+function StrikeRow({ feedback, strike, locale, clanName, compact = false, onRemove, t, tCommon }: Readonly<{ feedback?:ReactNode; strike: Strike; locale: string; clanName?: string | null; compact?: boolean; onRemove: () => void; t: Translator; tCommon: CommonTranslator }>) {
   return (
     <article className={cn("rounded-[22px] bg-card p-4 shadow-sm shadow-black/5 sm:p-5", compact && "rounded-2xl bg-card/80 p-3 sm:p-3") }>
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
@@ -559,6 +559,7 @@ function StrikeRow({ strike, locale, clanName, compact = false, onRemove, t, tCo
         <div className="min-w-0 flex-1"><p className="text-sm text-foreground">{strike.reason && strike.reason !== "No Notes" ? strike.reason : t("bans.table.noReason")}</p><div className="mt-2 flex flex-wrap items-center gap-2"><DataPill label={t("strikes.table.weight")} value={strike.strike_weight} accent /><EvidenceLink image={strike.image} label={t("image.view")} /><span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground"><CalendarDays className="h-3.5 w-3.5" />{new Date(strike.date_created).toLocaleDateString(locale)}</span><span className="text-xs text-muted-foreground">{t("strikes.table.expires")}: {strike.rollover_date ? new Date(strike.rollover_date * 1000).toLocaleDateString(locale) : t("strikes.table.never")}</span></div></div>
         <div className="flex items-center justify-between gap-3 lg:justify-end"><DiscordUserDisplay userId={String(strike.added_by)} username={strike.added_by_username} avatarUrl={strike.added_by_avatar_url} size="sm" /><Button type="button" variant="ghost" size="icon" onClick={onRemove} className="h-9 w-9 shrink-0 text-destructive hover:bg-destructive/10 hover:text-destructive" aria-label={t("strikes.removeStrike")}><Trash2 className="h-4 w-4" /></Button></div>
       </div>
+      {feedback}
     </article>
   );
 }
@@ -567,11 +568,11 @@ function ImageUrlField({ id, value, onChange, valid, t }: Readonly<{ id: string;
   return <div className="space-y-2"><Label htmlFor={id}>{t("image.label")}</Label><div className="relative"><ImageIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" /><Input id={id} type="url" inputMode="url" value={value} onChange={(event) => onChange(event.target.value)} placeholder={t("image.placeholder")} aria-invalid={!valid} className="pl-9" /></div><p className={cn("text-xs text-muted-foreground", !valid && "text-destructive")}>{valid ? t("image.help") : t("image.invalid")}</p></div>;
 }
 
-function BanDialog({ open, onOpenChange, value, onChange, onSubmit, submitting, imageValid, t, tCommon }: Readonly<{ open: boolean; onOpenChange: (open: boolean) => void; value: { player_tag: string; reason: string; image: string }; onChange: (value: { player_tag: string; reason: string; image: string }) => void; onSubmit: () => void; submitting: boolean; imageValid: boolean; t: Translator; tCommon: CommonTranslator }>) {
-  return <Dialog open={open} onOpenChange={onOpenChange}><DialogTrigger asChild><Button><Plus className="mr-2 h-4 w-4" />{t("bans.addBan")}</Button></DialogTrigger><DialogContent className="border-0 bg-card shadow-xl sm:max-w-lg"><DialogHeader><DialogTitle>{t("bans.addDialog.title")}</DialogTitle><DialogDescription>{t("bans.addDialog.description")}</DialogDescription></DialogHeader><div className="space-y-4 py-2"><div className="space-y-2"><Label htmlFor="ban-player-tag">{t("bans.addDialog.playerTagLabel")}</Label><Input id="ban-player-tag" value={value.player_tag} onChange={(event) => onChange({ ...value, player_tag: event.target.value })} placeholder={t("bans.addDialog.playerTagPlaceholder")} /></div><div className="space-y-2"><Label htmlFor="ban-reason">{t("bans.addDialog.reasonLabel")}</Label><Textarea id="ban-reason" value={value.reason} onChange={(event) => onChange({ ...value, reason: event.target.value })} placeholder={t("bans.addDialog.reasonPlaceholder")} /></div><ImageUrlField id="ban-image" value={value.image} onChange={(image) => onChange({ ...value, image })} valid={imageValid} t={t} /></div><DialogFooter><Button variant="secondary" onClick={() => onOpenChange(false)}>{tCommon("cancel")}</Button><Button onClick={onSubmit} disabled={submitting || !value.player_tag.trim() || !value.reason.trim() || !imageValid}>{submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}{t("bans.addDialog.submit")}</Button></DialogFooter></DialogContent></Dialog>;
+function BanDialog({ feedback, open, onOpenChange, value, onChange, onSubmit, submitting, imageValid, t, tCommon }: Readonly<{ feedback?:ReactNode; open: boolean; onOpenChange: (open: boolean) => void; value: { player_tag: string; reason: string; image: string }; onChange: (value: { player_tag: string; reason: string; image: string }) => void; onSubmit: () => void; submitting: boolean; imageValid: boolean; t: Translator; tCommon: CommonTranslator }>) {
+  return <Dialog open={open} onOpenChange={onOpenChange}><DialogTrigger asChild><Button><Plus className="mr-2 h-4 w-4" />{t("bans.addBan")}</Button></DialogTrigger><DialogContent className="border-0 bg-card shadow-xl sm:max-w-lg"><DialogHeader><DialogTitle>{t("bans.addDialog.title")}</DialogTitle><DialogDescription>{t("bans.addDialog.description")}</DialogDescription></DialogHeader><div className="space-y-4 py-2"><div className="space-y-2"><Label htmlFor="ban-player-tag">{t("bans.addDialog.playerTagLabel")}</Label><Input id="ban-player-tag" value={value.player_tag} onChange={(event) => onChange({ ...value, player_tag: event.target.value })} placeholder={t("bans.addDialog.playerTagPlaceholder")} /></div><div className="space-y-2"><Label htmlFor="ban-reason">{t("bans.addDialog.reasonLabel")}</Label><Textarea id="ban-reason" value={value.reason} onChange={(event) => onChange({ ...value, reason: event.target.value })} placeholder={t("bans.addDialog.reasonPlaceholder")} /></div><ImageUrlField id="ban-image" value={value.image} onChange={(image) => onChange({ ...value, image })} valid={imageValid} t={t} /></div>{feedback}<DialogFooter><Button variant="secondary" onClick={() => onOpenChange(false)}>{tCommon("cancel")}</Button><Button onClick={onSubmit} disabled={submitting || !value.player_tag.trim() || !value.reason.trim() || !imageValid}>{submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}{t("bans.addDialog.submit")}</Button></DialogFooter></DialogContent></Dialog>;
 }
 
-function StrikeDialog({ open, onOpenChange, value, onChange, onSubmit, submitting, imageValid, t, tCommon }: Readonly<{ open: boolean; onOpenChange: (open: boolean) => void; value: NewStrike; onChange: (value: NewStrike) => void; onSubmit: () => void; submitting: boolean; imageValid: boolean; t: Translator; tCommon: CommonTranslator }>) {
+function StrikeDialog({ feedback, open, onOpenChange, value, onChange, onSubmit, submitting, imageValid, t, tCommon }: Readonly<{ feedback?:ReactNode; open: boolean; onOpenChange: (open: boolean) => void; value: NewStrike; onChange: (value: NewStrike) => void; onSubmit: () => void; submitting: boolean; imageValid: boolean; t: Translator; tCommon: CommonTranslator }>) {
   const info = <div className="space-y-3"><div><p className="font-medium text-foreground">{t("strikes.guidelines.weights.title")}</p><p className="mt-1">{t("strikes.guidelines.weights.desc")}</p></div><div><p className="font-medium text-foreground">{t("strikes.guidelines.expiration.title")}</p><p className="mt-1">{t("strikes.guidelines.expiration.desc")}</p></div></div>;
-  return <Dialog open={open} onOpenChange={onOpenChange}><DialogTrigger asChild><Button><Plus className="mr-2 h-4 w-4" />{t("strikes.addStrike")}</Button></DialogTrigger><DialogContent className="border-0 bg-card shadow-xl sm:max-w-lg"><DialogHeader><DialogTitle>{t("strikes.addDialog.title")}</DialogTitle><DialogDescription>{t("strikes.addDialog.description")}</DialogDescription></DialogHeader><div className="space-y-4 py-2"><div className="space-y-2"><Label htmlFor="strike-player-tag">{t("strikes.addDialog.playerTagLabel")}</Label><Input id="strike-player-tag" value={value.player_tag} onChange={(event) => onChange({ ...value, player_tag: event.target.value })} placeholder={t("strikes.addDialog.playerTagPlaceholder")} /></div><div className="space-y-2"><Label htmlFor="strike-reason">{t("strikes.addDialog.reasonLabel")}</Label><Textarea id="strike-reason" value={value.reason} onChange={(event) => onChange({ ...value, reason: event.target.value })} placeholder={t("strikes.addDialog.reasonPlaceholder")} /></div><div className="grid gap-4 sm:grid-cols-2"><div className="space-y-2"><div className="flex items-center gap-2"><Label htmlFor="strike-weight">{t("strikes.addDialog.weightLabel")}</Label><InfoPopover content={info} label={t("strikes.howItWorks.title")} /></div><Input id="strike-weight" type="number" min={1} value={value.strike_weight} onChange={(event) => onChange({ ...value, strike_weight: Math.max(1, Number.parseInt(event.target.value, 10) || 1) })} /></div><div className="space-y-2"><Label htmlFor="rollover-days">{t("strikes.addDialog.rolloverLabel")}</Label><Input id="rollover-days" type="number" min={1} value={value.rollover_days ?? ""} onChange={(event) => onChange({ ...value, rollover_days: event.target.value ? Math.max(1, Number.parseInt(event.target.value, 10) || 1) : undefined })} placeholder={t("strikes.addDialog.rolloverPlaceholder")} /></div></div><ImageUrlField id="strike-image" value={value.image} onChange={(image) => onChange({ ...value, image })} valid={imageValid} t={t} /></div><DialogFooter><Button variant="secondary" onClick={() => onOpenChange(false)}>{tCommon("cancel")}</Button><Button onClick={onSubmit} disabled={submitting || !value.player_tag.trim() || !value.reason.trim() || !imageValid}>{submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}{t("strikes.addDialog.submit")}</Button></DialogFooter></DialogContent></Dialog>;
+  return <Dialog open={open} onOpenChange={onOpenChange}><DialogTrigger asChild><Button><Plus className="mr-2 h-4 w-4" />{t("strikes.addStrike")}</Button></DialogTrigger><DialogContent className="border-0 bg-card shadow-xl sm:max-w-lg"><DialogHeader><DialogTitle>{t("strikes.addDialog.title")}</DialogTitle><DialogDescription>{t("strikes.addDialog.description")}</DialogDescription></DialogHeader><div className="space-y-4 py-2"><div className="space-y-2"><Label htmlFor="strike-player-tag">{t("strikes.addDialog.playerTagLabel")}</Label><Input id="strike-player-tag" value={value.player_tag} onChange={(event) => onChange({ ...value, player_tag: event.target.value })} placeholder={t("strikes.addDialog.playerTagPlaceholder")} /></div><div className="space-y-2"><Label htmlFor="strike-reason">{t("strikes.addDialog.reasonLabel")}</Label><Textarea id="strike-reason" value={value.reason} onChange={(event) => onChange({ ...value, reason: event.target.value })} placeholder={t("strikes.addDialog.reasonPlaceholder")} /></div><div className="grid gap-4 sm:grid-cols-2"><div className="space-y-2"><div className="flex items-center gap-2"><Label htmlFor="strike-weight">{t("strikes.addDialog.weightLabel")}</Label><InfoPopover content={info} label={t("strikes.howItWorks.title")} /></div><Input id="strike-weight" type="number" min={1} value={value.strike_weight} onChange={(event) => onChange({ ...value, strike_weight: Math.max(1, Number.parseInt(event.target.value, 10) || 1) })} /></div><div className="space-y-2"><Label htmlFor="rollover-days">{t("strikes.addDialog.rolloverLabel")}</Label><Input id="rollover-days" type="number" min={1} value={value.rollover_days ?? ""} onChange={(event) => onChange({ ...value, rollover_days: event.target.value ? Math.max(1, Number.parseInt(event.target.value, 10) || 1) : undefined })} placeholder={t("strikes.addDialog.rolloverPlaceholder")} /></div></div><ImageUrlField id="strike-image" value={value.image} onChange={(image) => onChange({ ...value, image })} valid={imageValid} t={t} /></div>{feedback}<DialogFooter><Button variant="secondary" onClick={() => onOpenChange(false)}>{tCommon("cancel")}</Button><Button onClick={onSubmit} disabled={submitting || !value.player_tag.trim() || !value.reason.trim() || !imageValid}>{submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}{t("strikes.addDialog.submit")}</Button></DialogFooter></DialogContent></Dialog>;
 }

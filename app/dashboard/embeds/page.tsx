@@ -26,7 +26,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useToast } from "@/components/ui/use-toast";
+import { ActionFeedback, useActionFeedback } from "@/components/ui/action-feedback";
 import { cn } from "@/lib/utils";
 import { DiscordMessagePreview, extractEmbeds, extractMessageContent, extractMessageProfile, isV2Payload, extractComponents, type PreviewDiscordChannel, type PreviewDiscordRole } from "@/components/dashboard/discord-embed-preview";
 import { normalizeChannelsPayload, normalizeDiscordRolesPayload } from "@/lib/dashboard-cache";
@@ -54,7 +54,7 @@ export default function EmbedsPage() {
   const t = useTranslations("TicketsSettingsPage");
   const tPage = useTranslations("EmbedsPage");
   const tCommon = useTranslations("Common");
-  const { toast } = useToast();
+  const {notices,report,clear}=useActionFeedback(guildId);
   const queryClient = useQueryClient();
 
   const [embeds, setEmbeds] = useState<ServerEmbed[]>([]);
@@ -110,11 +110,11 @@ export default function EmbedsPage() {
       });
       setEmbeds(normalizeEmbedsPayload(embedsData));
     } catch (err) {
-      toast({ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
+      report("list",{ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
     } finally {
       setIsLoading(false);
     }
-  }, [guildId, queryClient, toast, tCommon]);
+  }, [guildId, queryClient, report, tCommon]);
 
   useEffect(() => {
     if (loaded.current) return;
@@ -146,22 +146,22 @@ export default function EmbedsPage() {
 
   const handleSave = async (data: UpsertEmbedRequest["data"]) => {
     const name = editingEmbed ? editingEmbed.name : pendingName.trim();
-    setIsSaving(true);
+    clear("editor");setIsSaving(true);
     try {
       let res;
       if (editingEmbed) {
         res = await apiClient.tickets.updateEmbed(guildId, editingEmbed.name, { name, data });
         if (res.error) throw new Error(res.error);
-        toast({ title: tCommon("success"), description: t("embedSaved", { name }) });
+        report("list",{ title: tCommon("success"), description: t("embedSaved", { name }) });
       } else {
         res = await apiClient.tickets.createEmbed(guildId, { name, data });
         if (res.error) throw new Error(res.error);
-        toast({ title: tCommon("success"), description: t("embedCreated", { name }) });
+        report("list",{ title: tCommon("success"), description: t("embedCreated", { name }) });
       }
       setEditorOpen(false);
       await load(true);
     } catch (err) {
-      toast({ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
+      report("editor",{ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
     } finally {
       setIsSaving(false);
     }
@@ -173,15 +173,17 @@ export default function EmbedsPage() {
     try {
       const res = await apiClient.tickets.deleteEmbed(guildId, deleteTarget);
       if (res.error) throw new Error(res.error);
-      toast({ title: tCommon("success"), description: t("embedDeleted") });
+      report("list",{ title: tCommon("success"), description: t("embedDeleted") });
       setDeleteTarget(null);
       await load(true);
     } catch (err) {
-      toast({ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
+      report("delete",{ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
     } finally {
       setIsDeleting(false);
     }
   };
+
+  useEffect(()=>{if(editorOpen)clear("editor");if(deleteTarget)clear("delete");},[editorOpen,deleteTarget,clear]);
 
   return (
     <div className="min-h-screen flex-1 overflow-auto bg-background p-4 md:p-6">
@@ -196,6 +198,7 @@ export default function EmbedsPage() {
           </Button>
         </header>
 
+        <ActionFeedback notice={notices.list} reserve />
         {/* Embed list */}
         {isLoading ? (
           <div className="space-y-2">
@@ -303,6 +306,7 @@ export default function EmbedsPage() {
               {editingEmbed ? t("editEmbed") : t("newEmbed")}
             </DialogDescription>
           </DialogHeader>
+          <ActionFeedback notice={notices.editor} className="shrink-0 px-6 py-2" reserve />
           <div className="flex-1 min-h-0">
             <Suspense fallback={<Skeleton className="h-full w-full rounded-none" />}>
               <EmbedEditor
@@ -325,6 +329,7 @@ export default function EmbedsPage() {
             <DialogTitle>{t("confirmDeleteEmbed", { name: deleteTarget ?? "" })}</DialogTitle>
             <DialogDescription>{t("confirmDeleteEmbedHint")}</DialogDescription>
           </DialogHeader>
+          <ActionFeedback notice={notices.delete} reserve />
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeleteTarget(null)}>{tCommon("cancel")}</Button>
             <Button variant="destructive" onClick={handleDelete} disabled={isDeleting}>

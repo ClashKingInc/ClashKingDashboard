@@ -15,7 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { RoleCombobox } from "@/components/ui/role-combobox";
 import { AlertCircle, Plus, Trash2 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { useToast } from "@/components/ui/use-toast";
+import { ActionFeedback, useActionFeedback } from "@/components/ui/action-feedback";
 import { apiClient } from "@/lib/api/client";
 import {
   normalizeDiscordRolesPayload,
@@ -59,7 +59,7 @@ export default function GeneralSettingsPage() {
   const [hasLoadedSettings, setHasLoadedSettings] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { toast } = useToast();
+  const {notices,report,clear}=useActionFeedback(guildId);
 
   const [tenureRoles, setTenureRoles] = useState<Array<{ id: string; rule_id: string; months: number }>>([]);
   const [isLoadingTenureRoles, setIsLoadingTenureRoles] = useState(true);
@@ -102,9 +102,9 @@ export default function GeneralSettingsPage() {
     }
   }
 
-  async function loadTenureRoles() {
+  async function loadTenureRoles(refresh = false) {
     try {
-      setIsLoadingTenureRoles(true);
+      if (!refresh) setIsLoadingTenureRoles(true);
       const allRolesPayload = await queryClient.fetchQuery({
         queryKey: dashboardQueryKeys.route("server-roles", guildId, "status"),
         queryFn: async () => {
@@ -138,10 +138,10 @@ export default function GeneralSettingsPage() {
 
   const handleAddTenureRole = async () => {
     try {
-      setError(null);
+      clear("tenure");
 
       if (!newTenureRole.months || !newTenureRole.id) {
-        setError("Please fill in all fields");
+        report("tenure-editor",{description:"Please fill in all fields",variant:"destructive"});
         return;
       }
 
@@ -153,33 +153,33 @@ export default function GeneralSettingsPage() {
       if (response.error) throw new Error(response.error);
 
       await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.route("server-roles", guildId, "status"), exact: true });
-      await loadTenureRoles();
+      await loadTenureRoles(true);
       setIsTenureDialogOpen(false);
       setNewTenureRole({});
-      toast({
+      report("tenure",{
         title: tCommon("success"),
         description: t("settingsSaved"),
       });
     } catch (err: any) {
-      setError(err.message || "Failed to add tenure role");
+      report("tenure-editor",{description:err.message || "Failed to add tenure role",variant:"destructive"});
     }
   };
 
   const handleDeleteTenureRole = async (ruleId: string) => {
     try {
-      setError(null);
+      clear("tenure");
 
       const response = await apiClient.roles.deleteServerRole(guildId, ruleId);
       if (response.error) throw new Error(response.error);
 
       await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.route("server-roles", guildId, "status"), exact: true });
-      await loadTenureRoles();
-      toast({
+      await loadTenureRoles(true);
+      report("tenure",{
         title: tCommon("success"),
         description: t("settingsSaved"),
       });
     } catch (err: any) {
-      setError(err.message || "Failed to delete tenure role");
+      report("tenure",{description:err.message || "Failed to delete tenure role",variant:"destructive"});
     }
   };
 
@@ -188,6 +188,8 @@ export default function GeneralSettingsPage() {
     updatedFields: Partial<typeof settings>,
     previousSettings?: typeof settings
   ) => {
+    const scope=Object.hasOwn(updatedFields,"embed_color")?"appearance":Object.hasOwn(updatedFields,"full_whitelist_role")?"security":"links";
+    clear(scope);
     try {
       setIsSaving(true);
       setError(null);
@@ -197,7 +199,7 @@ export default function GeneralSettingsPage() {
 
       await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.settings(guildId), exact: true });
 
-      toast({
+      report(scope,{
         title: tCommon("success"),
         description: t("settingsSaved"),
       });
@@ -205,7 +207,7 @@ export default function GeneralSettingsPage() {
       if (previousSettings) {
         setSettings(previousSettings);
       }
-      setError(err.message || "Failed to save settings");
+      report(scope,{description:err.message || "Failed to save settings",variant:"destructive"});
       console.error("Failed to save settings:", err);
     } finally {
       setIsSaving(false);
@@ -254,6 +256,7 @@ export default function GeneralSettingsPage() {
               </div>
             </div>
           )}
+          <ActionFeedback notice={notices.appearance} reserve />
           </section>
         </div>
 
@@ -268,6 +271,7 @@ export default function GeneralSettingsPage() {
                 <SelectContent><SelectItem value="none">{t("security.noRole")}</SelectItem>{discordRoles.map((role) => <SelectItem key={role.id} value={role.id}><span style={{ color: role.color ? intToHex(role.color) : "#99AAB5" }}>@{role.name}</span></SelectItem>)}</SelectContent>
               </Select>
             </div>
+          <ActionFeedback notice={notices.security} reserve />
           </section>
           {fullAccess && <DashboardAccessSettings guildId={guildId} />}
         </div>
@@ -283,8 +287,8 @@ export default function GeneralSettingsPage() {
               </div>
             ))}
           </div>
+        <ActionFeedback notice={notices.links} reserve />
         </section>
-
         <section className="space-y-3">
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div><h2 className="text-lg font-semibold">{t("tenureRoles.title")}</h2><p className="mt-1 text-sm text-muted-foreground">{t("tenureRoles.description")}</p></div>
@@ -320,6 +324,7 @@ export default function GeneralSettingsPage() {
                     />
                   </div>
                 </div>
+                <ActionFeedback notice={notices["tenure-editor"]} reserve />
                 <DialogFooter>
                   <Button variant="outline" onClick={() => setIsTenureDialogOpen(false)}>
                     {tCommon("cancel")}
@@ -336,6 +341,7 @@ export default function GeneralSettingsPage() {
             </Dialog>}
           </div>
 
+          <ActionFeedback notice={notices.tenure} reserve />
           {isLoadingTenureRoles ? (
               <div className="space-y-2">
                 {[1, 2, 3].map((i) => (

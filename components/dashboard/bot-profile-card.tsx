@@ -4,7 +4,7 @@ import Image from "@/components/app-image";
 import { useTranslations } from "use-intl";
 import { SUPPORT_DISCORD_URL } from "@/lib/support";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { Camera, LockKeyhole, Pencil, RotateCcw } from "lucide-react";
+import { Camera, Check, Loader2, LockKeyhole, Pencil, RotateCcw } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import type { Components } from "react-markdown";
 import { apiClient } from "@/lib/api/client";
@@ -12,6 +12,7 @@ import { clashKingAssets } from "@/lib/theme";
 import { useDashboardAccess } from "./dashboard-access-provider";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -43,6 +44,8 @@ export function BotProfileCard({ guildId }: { guildId: string }) {
   const { canManage } = useDashboardAccess();
   const tGrant = useTranslations("BotCustomizationGrant");
   const canManageSettings = canManage("settings");
+  const scope=useRef(0);
+  const [loading,setLoading]=useState(true),[loadRetry,setLoadRetry]=useState(0),[saveRetry,setSaveRetry]=useState(0),[saved,setSaved]=useState(false);
   const [customizationEnabled, setCustomizationEnabled] = useState(false);
   const editable = canManageSettings && customizationEnabled;
   const [profile, setProfile] = useState<BotGuildProfile | null>(null);
@@ -55,19 +58,21 @@ export function BotProfileCard({ guildId }: { guildId: string }) {
   const failedDraftRef = useRef<string | null>(null);
 
   useEffect(() => {
-    let active = true;
+    let active = true;const version=++scope.current;
+    setLoading(true);setError(null);setProfile(null);setPreviewAvatar(null);setPreviewBanner(null);setSaving(false);setSaved(false);failedDraftRef.current=null;
     setCustomizationEnabled(false);
     setDraft({});
     setEditingField(null);
     void Promise.all([apiClient.servers.getBotGuildProfile(guildId), apiClient.servers.getResourceLimits(guildId)]).then(([profileResponse, limitsResponse]) => {
-      if (!active) return;
+      if (!active || scope.current!==version) return;
+      if(!profileResponse.data||!limitsResponse.data)throw new Error(profileResponse.error??limitsResponse.error??"Could not load profile settings");
       if (profileResponse.error) setError(profileResponse.error);
       else if (profileResponse.data) setProfile(profileResponse.data);
       setCustomizationEnabled(limitsResponse.data?.botCustomizationEnabled === true);
       if (limitsResponse.error) setError(limitsResponse.error);
-    });
-    return () => { active = false; };
-  }, [guildId]);
+    }).catch(cause=>{if(active&&scope.current===version)setError(cause instanceof Error?cause.message:"Could not load the bot profile");}).finally(()=>{if(active&&scope.current===version)setLoading(false);});
+    return () => { active = false;scope.current++; };
+  }, [guildId,loadRetry]);
 
   useEffect(() => {
     const draftKey = JSON.stringify(draft);
@@ -75,9 +80,11 @@ export function BotProfileCard({ guildId }: { guildId: string }) {
     const timeout = window.setTimeout(() => {
       const snapshot = draft;
       const snapshotKey = JSON.stringify(snapshot);
-      setSaving(true);
+      const version=scope.current;
+      setSaving(true);setSaved(false);
       setError(null);
       void apiClient.servers.updateBotGuildProfile(guildId, snapshot).then((response) => {
+        if(version!==scope.current)return;
         if (response.error || !response.data) {
           failedDraftRef.current = snapshotKey;
           setError(response.error ?? "Could not update the bot profile");
@@ -87,13 +94,15 @@ export function BotProfileCard({ guildId }: { guildId: string }) {
         failedDraftRef.current = null;
         setProfile(response.data);
         setDraft((current) => removeSavedDraft(current, snapshot));
-        if (snapshot.avatar !== undefined || snapshot.clear_avatar) setPreviewAvatar(null);
-        if (snapshot.banner !== undefined || snapshot.clear_banner) setPreviewBanner(null);
-        setSaving(false);
+        if (snapshot.avatar !== undefined || snapshot.clear_avatar) setPreviewAvatar(current=>current===snapshot.avatar||snapshot.clear_avatar&&!current?null:current);
+        if (snapshot.banner !== undefined || snapshot.clear_banner) setPreviewBanner(current=>current===snapshot.banner||snapshot.clear_banner&&!current?null:current);
+        setSaving(false);setSaved(true);
+      }).catch(cause=>{
+        if(version!==scope.current)return;failedDraftRef.current=snapshotKey;setError(cause instanceof Error?cause.message:"Could not update the bot profile");setSaving(false);
       });
     }, 800);
     return () => window.clearTimeout(timeout);
-  }, [draft, guildId, saving, editable]);
+  }, [draft, guildId, saving, editable,saveRetry]);
 
   const chooseImage = (field: "avatar" | "banner") => async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -102,7 +111,11 @@ export function BotProfileCard({ guildId }: { guildId: string }) {
       setError("Choose a PNG, JPEG, WebP, AVIF, or GIF no larger than 10 MB.");
       return;
     }
-    const data = await fileToDataUrl(file);
+    const version=scope.current;
+    let data:string;
+    try{data=await fileToDataUrl(file);}catch{if(version===scope.current)setError("Could not read the image. Choose the file again.");return;}
+    if(version!==scope.current)return;
+    setSaved(false);
     setDraft((current) => ({ ...current, [field]: data, [`clear_${field}`]: false }));
     if (field === "avatar") setPreviewAvatar(data); else setPreviewBanner(data);
   };
@@ -146,15 +159,17 @@ export function BotProfileCard({ guildId }: { guildId: string }) {
   const canResetBanner = !draft.clear_banner && (draft.banner !== undefined || profile?.banner_inherited === false);
   const canResetBio = !draft.clear_bio && (draft.bio !== undefined || profile?.bio_inherited === false);
 
+  if(loading)return <section aria-label="Loading bot profile" aria-busy="true" className="space-y-3"><Skeleton className="h-7 w-40" /><Skeleton className="h-64 rounded-3xl" /></section>;
+  if(!profile || error&&!customizationEnabled)return <section className="space-y-3"><h2 className="text-lg font-semibold">Bot server profile</h2><p role="alert" className="text-sm text-destructive">{error??"Could not load the bot profile"}<Button variant="secondary" className="ml-2" onClick={()=>setLoadRetry(value=>value+1)}>Retry</Button></p></section>;
   return <section className="min-w-0 max-w-full space-y-3">
     <div className="min-w-0">
       <div className="flex items-center gap-2"><h2 className="text-lg font-semibold">Bot server profile</h2>
         {canManageSettings && !customizationEnabled && <Dialog><DialogTrigger asChild><Button type="button" variant="ghost" size="touch-icon" className="text-muted-foreground" aria-label={tGrant("required")}><LockKeyhole className="h-4 w-4" /></Button></DialogTrigger><DialogContent><DialogHeader><DialogTitle>{tGrant("required")}</DialogTitle><DialogDescription>{tGrant("request")}</DialogDescription></DialogHeader><Button asChild><a href={SUPPORT_DISCORD_URL} target="_blank" rel="noopener noreferrer">{tGrant("action")}</a></Button></DialogContent></Dialog>}
       </div>
-      <p className="mt-1 break-words text-sm text-muted-foreground">Customize how ClashKing appears in this Discord server.</p>
+      {!canManageSettings && <p className="text-xs text-muted-foreground">Read only. Settings manage permission is required to edit this profile.</p>}
     </div>
     <div className="min-w-0 max-w-full space-y-4">
-      {error && <Alert variant="destructive"><AlertDescription>{error}</AlertDescription></Alert>}
+      {error && <Alert variant="destructive"><AlertDescription>{error}<Button size="sm" variant="secondary" className="ml-2" onClick={()=>{failedDraftRef.current=null;setSaveRetry(value=>value+1);}}>Retry</Button></AlertDescription></Alert>}
       <div data-slot="bot-profile-card" className="min-w-0 max-w-full overflow-hidden rounded-[24px] bg-card shadow-sm shadow-black/5">
         <div className="relative h-32 bg-cover bg-center bg-no-repeat bg-gradient-to-r from-primary/20 via-purple-500/15 to-blue-500/20 sm:h-40" style={banner ? { backgroundImage: `url(${JSON.stringify(banner)})` } : undefined}>
           {editable && <div className="absolute inset-x-3 top-3 flex min-w-0 justify-end gap-2">
@@ -194,7 +209,7 @@ export function BotProfileCard({ guildId }: { guildId: string }) {
         </div>
 
       </div>
-      {saving && <p className="text-right text-xs text-muted-foreground">Saving profile…</p>}
+      <div role="status" className="flex h-6 items-center justify-end gap-1.5 text-xs text-muted-foreground">{saving?<><Loader2 className="h-3.5 w-3.5 animate-spin" />Saving profile…</>:Object.keys(draft).length?"Changes pending…":saved?<><Check className="h-3.5 w-3.5 text-emerald-500" />Saved</>:null}</div>
     </div>
   </section>;
 }

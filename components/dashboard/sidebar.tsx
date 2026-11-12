@@ -94,7 +94,7 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, availableGuilds
           </div>
         ) : (
           <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
-            <DropdownMenuTrigger asChild>
+            <DropdownMenuTrigger asChild disabled={embedded}>
               <button className="group flex min-w-0 flex-1 items-center gap-3 rounded-xl p-2 text-left outline-none transition-colors hover:bg-accent/60 focus-visible:ring-2 focus-visible:ring-ring">
                 <Avatar className="h-10 w-10 shrink-0 rounded-xl border border-border">
                   <AvatarImage src={guildIcon} className="rounded-xl" />
@@ -103,10 +103,10 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, availableGuilds
                   </AvatarFallback>
                 </Avatar>
                 <span className="min-w-0 flex-1 truncate text-sm font-semibold text-foreground">{guildName}</span>
-                <ChevronDown className={cn(
+                {!embedded && <ChevronDown className={cn(
                   "h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200",
                   isDropdownOpen && "rotate-180"
-                )} />
+                )} />}
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" sideOffset={8} className="w-64">

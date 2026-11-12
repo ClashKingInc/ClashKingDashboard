@@ -35,7 +35,7 @@ import { Switch } from "@/components/ui/switch";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ChannelCombobox } from "@/components/ui/channel-combobox";
 import { ClanCombobox } from "@/components/ui/clan-combobox";
-import { useToast } from "@/components/ui/use-toast";
+import { ActionFeedback, useActionFeedback } from "@/components/ui/action-feedback";
 import { apiCache } from "@/lib/api-cache";
 import { useDashboardAccess } from "@/components/dashboard/dashboard-access-provider";
 import { clanBadgeUrl } from "@/lib/clash-asset-urls";
@@ -72,6 +72,7 @@ function getClanBadgeUrl(clanTag?: string | null): string | undefined {
 
 // Roster Card Component
 interface RosterCardProps {
+  readonly feedback?:React.ReactNode;
   readonly roster: Roster;
   readonly stats: RosterStats;
   readonly isSelected: boolean;
@@ -89,6 +90,7 @@ interface RosterCardProps {
 }
 
 function RosterCard({
+  feedback,
   roster,
   stats,
   isSelected,
@@ -321,6 +323,7 @@ function RosterCard({
             {t("rosterCard.view")}
           </Button>
         </div>
+        {feedback}
       </CardContent>
     </Card>
   );
@@ -331,7 +334,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
   const router = useRouter();
   const { canManage } = useDashboardAccess();
   const canUseRosterBuilder = canManage("rosters");
-  const { toast } = useToast();
+  const {notices,report,clear}=useActionFeedback(guildId);
   const t = useTranslations("RostersPage");
   const tCommon = useTranslations("Common");
   const tClans = useTranslations("ClansPage");
@@ -506,9 +509,9 @@ export default function RostersPage() { // NOSONAR — React page component: com
       refreshGroups(true);
       setCreateGroupDialogOpen(false);
       setNewGroupAlias("");
-      toast({ title: t("groupCreated") });
+      report("list",{ title: t("groupCreated") });
     } catch {
-      toast({ title: t("groupError"), variant: "destructive" });
+      report("group-create",{ title: t("groupError"), variant: "destructive" });
     } finally {
       setSavingGroup(false);
     }
@@ -527,9 +530,9 @@ export default function RostersPage() { // NOSONAR — React page component: com
       setGroups(prev => prev.map(g => g.group_id === updated.group_id ? updated : g));
       setEditGroupDialogOpen(false);
       setEditingGroup(null);
-      toast({ title: t("groupUpdated") });
+      report("list",{ title: t("groupUpdated") });
     } catch {
-      toast({ title: t("groupError"), variant: "destructive" });
+      report("group-edit",{ title: t("groupError"), variant: "destructive" });
     } finally {
       setSavingGroup(false);
     }
@@ -541,9 +544,9 @@ export default function RostersPage() { // NOSONAR — React page component: com
       await api.deleteGroup(groupId, guildId);
       apiCache.invalidate(getGroupsCacheKey(guildId));
       setGroups(prev => prev.filter(g => g.group_id !== groupId));
-      toast({ title: t("groupDeleted") });
+      report(`group:${groupId}`,{ title: t("groupDeleted") });
     } catch {
-      toast({ title: t("groupError"), variant: "destructive" });
+      report(`group:${groupId}`,{ title: t("groupError"), variant: "destructive" });
     } finally {
       setDeletingGroup(null);
     }
@@ -567,9 +570,9 @@ export default function RostersPage() { // NOSONAR — React page component: com
     try {
       const updated = await api.updateAutomation(automationId, guildId, { active: !automation.active });
       setGroupAutomations(prev => prev.map(a => a.automation_id === automationId ? updated : a));
-      toast({ title: t("automationUpdated") });
+      report("automations",{ title: t("automationUpdated") });
     } catch {
-      toast({ title: t("automationError"), variant: "destructive" });
+      report("automations",{ title: t("automationError"), variant: "destructive" });
     }
   };
 
@@ -577,9 +580,9 @@ export default function RostersPage() { // NOSONAR — React page component: com
     try {
       await api.deleteAutomation(automationId, guildId);
       setGroupAutomations(prev => prev.filter(a => a.automation_id !== automationId));
-      toast({ title: t("automationDeleted") });
+      report("automations",{ title: t("automationDeleted") });
     } catch {
-      toast({ title: t("automationError"), variant: "destructive" });
+      report("automations",{ title: t("automationError"), variant: "destructive" });
     }
   };
 
@@ -597,7 +600,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
         active: true,
       });
       setGroupAutomations(prev => [...prev, created]);
-      toast({ title: t("automationCreated") });
+      report("automation-create",{ title: t("automationCreated") });
       setCreateAutomationDialogOpen(false);
       setGroupAutomationsDialogOpen(true);
       setNewAutomation({
@@ -606,7 +609,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
         active: true,
       });
     } catch {
-      toast({ title: t("automationError"), variant: "destructive" });
+      report("automation-create",{ title: t("automationError"), variant: "destructive" });
     } finally {
       setSavingAutomation(false);
     }
@@ -624,12 +627,12 @@ export default function RostersPage() { // NOSONAR — React page component: com
         active: editingAutomation.active,
       });
       setGroupAutomations(prev => prev.map(a => a.automation_id === updated.automation_id ? updated : a));
-      toast({ title: t("automationUpdated") });
+      report("automation-edit",{ title: t("automationUpdated") });
       setEditAutomationDialogOpen(false);
       setEditingAutomation(null);
       setGroupAutomationsDialogOpen(true);
     } catch {
-      toast({ title: t("automationError"), variant: "destructive" });
+      report("automation-edit",{ title: t("automationError"), variant: "destructive" });
     }
   };
 
@@ -642,12 +645,12 @@ export default function RostersPage() { // NOSONAR — React page component: com
     setDeleting(roster.id);
     try {
       await deleteRoster(roster.id);
-      toast({
+      report(`roster:${roster.id}`,{
         title: tCommon("success"),
         description: t("deleteSuccessDesc", { name: roster.alias }),
       });
     } catch (err) {
-      toast({
+      report(`roster:${roster.id}`,{
         title: tCommon("error"),
         description: err instanceof Error ? err.message : "Unknown error",
         variant: "destructive",
@@ -662,16 +665,16 @@ export default function RostersPage() { // NOSONAR — React page component: com
       await api.updateRoster(roster.id, guildId, { group_id: groupId });
       refresh();
     } catch {
-      toast({ title: t("saveError"), variant: "destructive" });
+      report(`roster:${roster.id}`,{ title: t("saveError"), variant: "destructive" });
     }
   };
 
   const handleRenameRoster = async (roster: Roster, alias: string) => {
     try {
       await renameRoster(roster.id, alias);
-      toast({ title: t("rosterCard.renameSuccess", { name: alias }) });
+      report(`roster:${roster.id}`,{ title: t("rosterCard.renameSuccess", { name: alias }) });
     } catch (error) {
-      toast({
+      report(`roster:${roster.id}`,{
         title: t("saveError"),
         description: error instanceof Error ? error.message : undefined,
         variant: "destructive",
@@ -684,9 +687,9 @@ export default function RostersPage() { // NOSONAR — React page component: com
     setRefreshingRosterId(roster.id);
     try {
       await refreshRoster(roster.id);
-      toast({ title: t("refreshSuccess") });
+      report(`roster:${roster.id}`,{ title: t("refreshSuccess") });
     } catch (error) {
-      toast({
+      report(`roster:${roster.id}`,{
         title: t("refreshError"),
         description: error instanceof Error ? error.message : undefined,
         variant: "destructive",
@@ -706,12 +709,12 @@ export default function RostersPage() { // NOSONAR — React page component: com
 
     try {
       const cloned = await cloneRoster(rosterToClone.id, data);
-      toast({
+      report("list",{
         title: tCommon("success"),
         description: t("cloneDialog.successDesc", { name: cloned.alias }),
       });
     } catch (err) {
-      toast({
+      report("clone",{
         title: tCommon("error"),
         description: err instanceof Error ? err.message : "Unknown error",
         variant: "destructive",
@@ -722,7 +725,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
 
   const handleCreateRoster = async () => {
     if (!newRosterData.alias.trim()) {
-      toast({
+      report("create",{
         title: tCommon("error"),
         description: t("createErrorAlias"),
         variant: "destructive",
@@ -730,7 +733,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
       return;
     }
     if (newRosterData.roster_type === "clan" && !clans.some(clan => clan.tag === newRosterData.clan_tag)) {
-      toast({
+      report("create",{
         title: tCommon("error"),
         description: t("createErrorClan"),
         variant: "destructive",
@@ -742,7 +745,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
     try {
       const rosterName = newRosterData.alias;
       await createRoster(newRosterData);
-      toast({
+      report("list",{
         title: tCommon("success"),
         description: t("createSuccessDesc", { name: rosterName }),
       });
@@ -755,7 +758,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
       });
       refresh();
     } catch (err) {
-      toast({
+      report("create",{
         title: tCommon("error"),
         description: err instanceof Error ? err.message : "Unknown error",
         variant: "destructive",
@@ -770,6 +773,8 @@ export default function RostersPage() { // NOSONAR — React page component: com
     (newRosterData.roster_type === "family" || clans.some(clan => clan.tag === newRosterData.clan_tag));
 
   // Loading state
+  useEffect(()=>{if(createDialogOpen)clear("create");if(createGroupDialogOpen)clear("group-create");if(editGroupDialogOpen)clear("group-edit");if(cloneDialogOpen)clear("clone");if(createAutomationDialogOpen)clear("automation-create");if(editAutomationDialogOpen)clear("automation-edit");},[createDialogOpen,createGroupDialogOpen,editGroupDialogOpen,cloneDialogOpen,createAutomationDialogOpen,editAutomationDialogOpen,clear]);
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background p-4 md:p-6">
@@ -777,8 +782,8 @@ export default function RostersPage() { // NOSONAR — React page component: com
           <div className="space-y-4">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <h1 className="text-2xl font-bold text-foreground md:text-3xl">{t("title")}</h1>
-                <p className="mt-1 text-muted-foreground">{t("description")}</p>
+                <h1 className="sr-only text-2xl font-bold text-foreground md:not-sr-only md:text-3xl">{t("title")}</h1>
+                <p className="mt-1 hidden text-muted-foreground md:block">{t("description")}</p>
               </div>
               <Skeleton className="h-10 w-32 shrink-0 rounded-xl" />
             </div>
@@ -823,11 +828,25 @@ export default function RostersPage() { // NOSONAR — React page component: com
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="space-y-4">
-          <div className="flex items-start justify-between gap-4">
+          <div className="hidden items-start justify-between gap-4 md:flex">
             <div>
-              <h1 className="text-2xl font-bold text-foreground md:text-3xl">{t("title")}</h1>
-              <p className="mt-1 text-muted-foreground">{t("description")}</p>
+              <h1 className="sr-only text-2xl font-bold text-foreground md:not-sr-only md:text-3xl">{t("title")}</h1>
+              <p className="mt-1 hidden text-muted-foreground md:block">{t("description")}</p>
             </div>
+
+          </div>
+
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+            <div className="flex h-10 w-full items-center gap-2 rounded-xl bg-muted/55 px-3 shadow-sm shadow-black/5 transition-shadow focus-within:ring-2 focus-within:ring-ring/35 lg:max-w-sm">
+              <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
+              <Input
+                placeholder={t("searchPlaceholder")}
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
+                className="h-9 flex-1 border-0 bg-transparent px-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-2 md:flex md:flex-wrap lg:ml-auto">
             <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
               <DialogTrigger asChild>
                 <Button className="shrink-0 gap-2 rounded-xl bg-primary hover:bg-primary/90">
@@ -910,7 +929,8 @@ export default function RostersPage() { // NOSONAR — React page component: com
                   </div>
                 </div>
 
-                <DialogFooter>
+                <ActionFeedback notice={notices["create"]} reserve />
+              <DialogFooter>
                   <Button variant="outline" onClick={() => setCreateDialogOpen(false)} disabled={creating}>
                     {tCommon("cancel")}
                   </Button>
@@ -930,19 +950,10 @@ export default function RostersPage() { // NOSONAR — React page component: com
                 </DialogFooter>
               </DialogContent>
             </Dialog>
-          </div>
-
-          <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
-            <div className="flex h-10 w-full items-center gap-2 rounded-xl bg-muted/55 px-3 shadow-sm shadow-black/5 transition-shadow focus-within:ring-2 focus-within:ring-ring/35 lg:max-w-sm">
-              <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
-              <Input
-                placeholder={t("searchPlaceholder")}
-                value={searchQuery}
-                onChange={(event) => setSearchQuery(event.target.value)}
-                className="h-9 flex-1 border-0 bg-transparent px-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
-              />
-            </div>
-            <div className="flex flex-wrap gap-2 lg:ml-auto">
+              <Button variant="secondary" onClick={() => setCreateGroupDialogOpen(true)} className="gap-2 rounded-xl border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted">
+                <Layers className="h-4 w-4" />
+                {t("groups.create")}
+              </Button>
               {canUseRosterBuilder && (
                 <Button
                   variant="outline"
@@ -957,12 +968,9 @@ export default function RostersPage() { // NOSONAR — React page component: com
                 <Medal className="h-4 w-4 text-amber-500" />
                 <span>{t("cwlBonuses.button")}</span>
               </Button>
-              <Button variant="secondary" onClick={() => setCreateGroupDialogOpen(true)} className="gap-2 rounded-xl border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted">
-                <Layers className="h-4 w-4" />
-                {t("groups.create")}
-              </Button>
+
               {rosters.length >= 2 && !compareMode && (
-                <Button variant="secondary" onClick={() => setCompareMode(true)} className="gap-2 rounded-xl border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted">
+                <Button variant="secondary" onClick={() => setCompareMode(true)} className="col-span-2 gap-2 rounded-xl border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted">
                   <GitCompare className="h-4 w-4" />
                   {t("compare.enterMode")}
                 </Button>
@@ -971,6 +979,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
           </div>
         </div>
 
+        <ActionFeedback notice={notices.list} reserve />
         {/* Compare Mode Banner */}
         {compareMode && (
           <div className="rounded-2xl bg-primary/10 p-4 shadow-sm shadow-black/5">
@@ -1105,6 +1114,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
                     </div>
                   </div>
 
+                  <ActionFeedback notice={notices[`group:${group.group_id}`]} />
                   {/* Group Rosters Grid */}
                   {groupRosters.length === 0 ? (
                     <p className="text-sm text-muted-foreground italic px-1">{t("groups.emptyGroup")}</p>
@@ -1116,6 +1126,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
                       return (
                         <RosterCard
                           key={roster.id}
+                          feedback={<ActionFeedback notice={notices[`roster:${roster.id}`]} />}
                           roster={roster}
                           stats={stats}
                           isSelected={isSelected}
@@ -1170,6 +1181,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
                       return (
                         <RosterCard
                           key={roster.id}
+                          feedback={<ActionFeedback notice={notices[`roster:${roster.id}`]} />}
                           roster={roster}
                           stats={stats}
                           isSelected={isSelected}
@@ -1196,6 +1208,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
 
         {/* Clone Dialog */}
         <CloneDialog
+          feedback={<ActionFeedback notice={notices.clone} reserve />}
           open={cloneDialogOpen}
           onOpenChange={setCloneDialogOpen}
           roster={rosterToClone}
@@ -1219,7 +1232,8 @@ export default function RostersPage() { // NOSONAR — React page component: com
                 placeholder={t("groups.namePlaceholder")}
               />
             </div>
-            <DialogFooter>
+            <ActionFeedback notice={notices["group-create"]} reserve />
+              <DialogFooter>
               <Button variant="outline" onClick={() => setCreateGroupDialogOpen(false)} disabled={savingGroup}>
                 {tCommon("cancel")}
               </Button>
@@ -1286,7 +1300,8 @@ export default function RostersPage() { // NOSONAR — React page component: com
               </div>
 
             </div>
-            <DialogFooter>
+            <ActionFeedback notice={notices["group-edit"]} reserve />
+              <DialogFooter>
               <Button variant="outline" onClick={() => setEditGroupDialogOpen(false)} disabled={savingGroup}>
                 {tCommon("cancel")}
               </Button>
@@ -1406,7 +1421,8 @@ export default function RostersPage() { // NOSONAR — React page component: com
                 </div>
               ))}
             </div>
-            <DialogFooter>
+            <ActionFeedback notice={notices["automations"]} reserve />
+              <DialogFooter>
               <Button variant="outline" onClick={() => setGroupAutomationsDialogOpen(false)}>
                 {tCommon("close")}
               </Button>
@@ -1544,7 +1560,8 @@ export default function RostersPage() { // NOSONAR — React page component: com
                 <p className="text-xs text-muted-foreground">{t("automations.channelHint")}</p>
               </div>
             </div>
-            <DialogFooter>
+            <ActionFeedback notice={notices["automation-create"]} reserve />
+              <DialogFooter>
               <Button variant="outline" onClick={() => { setCreateAutomationDialogOpen(false); setGroupAutomationsDialogOpen(true); }}>
                 {tCommon("cancel")}
               </Button>
@@ -1702,7 +1719,8 @@ export default function RostersPage() { // NOSONAR — React page component: com
                 />
               </div>
             </div>
-            <DialogFooter>
+            <ActionFeedback notice={notices["automation-edit"]} reserve />
+              <DialogFooter>
               <Button variant="outline" onClick={() => { setEditAutomationDialogOpen(false); setGroupAutomationsDialogOpen(true); }}>
                 {tCommon("cancel")}
               </Button>

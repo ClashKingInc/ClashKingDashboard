@@ -1,7 +1,7 @@
 "use client";
 
 import { useGuildId } from "@/lib/dashboard-route";
-import { dashboardEndpoints, CreateServerLinkEndpoint, DeleteServerLinkEndpoint, ProxyPlayerEndpoint } from "@clashking/api-contracts";
+import { ServerClanLinksEndpoint, dashboardEndpoints, CreateServerLinkEndpoint, DeleteServerLinkEndpoint, ProxyPlayerEndpoint } from "@clashking/api-contracts";
 import { ApiResponseError } from "@clashking/api-client";
 import { Schema } from "effect";
 import { executeSharedEndpoint } from "@/lib/api/shared-client";
@@ -9,14 +9,13 @@ import { fetchAllServerLinks } from "@/lib/api/all-server-links";
 
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "@/components/app-image";
 import {
   BarChart3,
   Users,
   ChevronDown,
   ChevronUp,
-  Download,
   List as ListIcon,
   Loader2,
   Plus,
@@ -36,7 +35,6 @@ import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { DashboardTabsList, DashboardTabTrigger } from "@/components/ui/dashboard-tabs";
 import { townHallImageUrl } from "@/lib/theme";
 import { ClanLinks } from "./clan-links";
-import { loadedMembersDetail } from "./links-utils";
 import { dashboardQueryOptions } from "@/lib/dashboard-query-options";
 
 interface LinkedAccount {
@@ -108,11 +106,6 @@ function roleColor(role: LinkRole): string {
   return role.color === 0 ? "#b5bac1" : `#${role.color.toString(16).padStart(6, "0")}`;
 }
 
-function csvCell(value: unknown): string {
-  const text = value == null ? "" : String(value);
-  return `"${text.replaceAll('"', '""')}"`;
-}
-
 function useDebouncedValue(value: string, delay: number): string {
   const [debounced, setDebounced] = useState(value);
   useEffect(() => {
@@ -144,7 +137,6 @@ export default function LinksManagementPage() {
   const [addTag, setAddTag] = useState("");
   const [addApiToken, setAddApiToken] = useState("");
   const [adding, setAdding] = useState(false);
-  const [exporting, setExporting] = useState<"csv" | "json" | null>(null);
 
   const serverQuery = useMemo(() => {
     const mentions = selectedRoles.map(role => `<@&${role.id}>`).join(" ");
@@ -252,51 +244,6 @@ export default function LinksManagementPage() {
     }
   };
 
-  const exportLinks = async (format: "csv" | "json") => {
-    setExporting(format);
-    setError(null);
-    try {
-      const exportData = await fetchAllServerLinks(query => fetchServerLinks(guildId, query), {
-        ...(serverQuery ? { query: serverQuery } : {}),
-        ...(accountFilter === "none" ? { account_filter: accountFilter } : {}),
-      });
-
-      let contents: string;
-      let contentType: string;
-      if (format === "json") {
-        contents = JSON.stringify(exportData, null, 2);
-        contentType = "application/json";
-      } else {
-        const rows = exportData.members.flatMap(member => member.linked_accounts.map(account => [
-          member.user_id,
-          member.username,
-          member.display_name,
-          account.player_tag,
-          account.player_name,
-          account.town_hall,
-          account.is_verified,
-          account.added_at,
-        ]));
-        contents = [
-          ["user_id", "username", "display_name", "player_tag", "player_name", "town_hall", "is_verified", "added_at"],
-          ...rows,
-        ].map(row => row.map(csvCell).join(",")).join("\n");
-        contentType = "text/csv";
-      }
-
-      const url = URL.createObjectURL(new Blob([contents], { type: contentType }));
-      const anchor = document.createElement("a");
-      anchor.href = url;
-      anchor.download = `server-${guildId}-links.${format}`;
-      anchor.click();
-      URL.revokeObjectURL(url);
-    } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Failed to export links");
-    } finally {
-      setExporting(null);
-    }
-  };
-
   const loadPlayer = async (account: LinkedAccount, automatic = false) => {
     setPendingAccount(account.player_tag);
     setError(null);
@@ -309,7 +256,7 @@ export default function LinksManagementPage() {
     } catch (caught) {
       const notFoundSchema = ProxyPlayerEndpoint.errors?.find((error) => error.status === 404)?.body;
       if (!automatic && caught instanceof ApiResponseError && caught.status === 404 && notFoundSchema
-        && Schema.is(notFoundSchema)(caught.body) && caught.body.reason === "notFound") {
+        && Schema.is(notFoundSchema)(caught.body) && "reason" in caught.body && caught.body.reason === "notFound") {
         try {
           await executeSharedEndpoint(DeleteServerLinkEndpoint, {
             path: { serverId: guildId }, query: { playerTag: account.player_tag }, body: {},
@@ -366,23 +313,19 @@ export default function LinksManagementPage() {
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="mx-auto max-w-7xl space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground md:text-3xl">Links Management</h1>
-          <p className="mt-1 text-muted-foreground">Manage Discord members and their Clash of Clans accounts.</p>
+        <div className="contents md:block">
+          <h1 className="sr-only text-2xl font-bold text-foreground md:not-sr-only md:text-3xl">Links Management</h1>
+          <p className="mt-1 hidden text-muted-foreground md:block">Manage Discord members and their Clash of Clans accounts.</p>
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-3">
-          <StatCard title="Members loaded" value={data?.total_members} detail={loadedMembersDetail(data?.total_members ?? 0, serverMemberCount)} loading={initialLoading} />
-          <StatCard title="Members with links" value={data?.members_with_links} detail={`${linkedPercent}% coverage`} loading={initialLoading} />
-          <StatCard title="Linked accounts" value={data?.total_linked_accounts} detail="Across loaded members" loading={initialLoading} />
+        <div className="grid grid-cols-3 gap-2 sm:gap-3">
+          <StatCard title="Members" value={data?.total_members} detail={serverMemberCount && serverMemberCount > (data?.total_members ?? 0) ? `of ${serverMemberCount.toLocaleString()}` : ""} loading={initialLoading} />
+          <StatCard title="Linked members" value={data?.members_with_links} detail={`${linkedPercent}% coverage`} percent={linkedPercent} loading={initialLoading} />
+          <StatCard title="Linked accounts" value={data?.total_linked_accounts} detail="" loading={initialLoading} />
         </div>
 
         <section className="space-y-4">
-          <div>
-            <h2 className="text-lg font-semibold">Account links</h2>
-            <p className="mt-1 text-sm text-muted-foreground">Search members, player tags, or Discord roles, then expand a member to manage their accounts.</p>
-          </div>
-            <Tabs defaultValue="clans" onValueChange={value => { if (value === "stats") void fetchStats(); }}>
+            <Tabs defaultValue="clans">
               <DashboardTabsList className="grid-cols-3">
                 <DashboardTabTrigger value="clans" artwork={<Users />}>Clans</DashboardTabTrigger>
                 <DashboardTabTrigger value="accounts" artwork={<ListIcon />}>Accounts</DashboardTabTrigger>
@@ -457,14 +400,6 @@ export default function LinksManagementPage() {
                 {initialLoading ? "Loading members…" : `${data?.filtered_members || 0} matching members`}
                 {loading && !initialLoading && <Loader2 className="h-3.5 w-3.5 animate-spin" aria-label="Updating members" />}
               </span>
-              <div className="flex gap-2">
-                <Button variant="secondary" size="sm" className="border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted" onClick={() => void exportLinks("csv")} disabled={Boolean(exporting)}>
-                  {exporting === "csv" ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Download className="mr-2 h-4 w-4" />}Export CSV
-                </Button>
-                <Button variant="secondary" size="sm" className="border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted" onClick={() => void exportLinks("json")} disabled={Boolean(exporting)}>
-                  {exporting === "json" ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Download className="mr-2 h-4 w-4" />}Export JSON
-                </Button>
-              </div>
             </div>
 
             {initialLoading ? <MemberSkeleton /> : memberResults}
@@ -480,11 +415,7 @@ export default function LinksManagementPage() {
             )}
               </TabsContent>
               <TabsContent value="stats" className="mt-5">
-                {(error && !statsData) ? (
-                  <div className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</div>
-                ) : (
-                  <LinksStats data={statsData} loading={statsLoading} />
-                )}
+                <LinksStatistics guildId={guildId} data={statsData} loading={statsLoading} error={error} loadServer={fetchStats} />
               </TabsContent>
             </Tabs>
         </section>
@@ -514,14 +445,34 @@ export default function LinksManagementPage() {
   );
 }
 
-function StatCard({ title, value, detail, loading }: Readonly<{ title: string; value?: number; detail: string; loading: boolean }>) {
+function StatCard({ title, value, detail, percent, loading }: Readonly<{ title: string; value?: number; detail: string; percent?: number; loading: boolean }>) {
   return (
-    <div className="rounded-[24px] bg-card px-5 py-4 shadow-sm shadow-black/5">
-      <p className="text-sm font-medium text-muted-foreground">{title}</p>
-      {loading ? <Skeleton className="mt-2 h-8 w-16" /> : <p className="mt-1 text-3xl font-bold tracking-tight">{(value ?? 0).toLocaleString()}</p>}
-      <p className="mt-1 text-xs text-muted-foreground">{detail}</p>
+    <div className="relative min-w-0 overflow-hidden rounded-[20px] bg-card px-3 py-3 shadow-sm shadow-black/5 sm:px-5 sm:py-4">
+      <p className="min-h-8 text-[11px] font-medium leading-4 text-muted-foreground sm:min-h-5 sm:text-sm">{title}</p>
+      {loading ? <Skeleton className="mt-2 h-8 w-16" /> : <p className="mt-1 text-xl font-bold tabular-nums sm:text-3xl">{(value ?? 0).toLocaleString()}</p>}
+      <p className="mt-1 min-h-4 text-[10px] text-muted-foreground sm:text-xs">{detail}</p>
+      {percent!==undefined && !loading && <div role="progressbar" aria-label={title} aria-valuenow={percent} aria-valuemin={0} aria-valuemax={100} className="absolute inset-x-0 bottom-0 h-1 bg-muted"><div className="h-full bg-primary" style={{width:`${percent}%`}} /></div>}
     </div>
   );
+}
+
+function LinksStatistics({guildId,data,loading,error,loadServer}:Readonly<{guildId:string;data:ServerLinksResponse|null;loading:boolean;error:string|null;loadServer:()=>Promise<void>}>) {
+  const [scope,setScope]=useState<"family"|"server">("family");
+  const family=useQuery({queryKey:["clan-links",guildId],queryFn:({signal})=>executeSharedEndpoint(ServerClanLinksEndpoint,{path:{serverId:guildId},query:{},body:{}},{signal})});
+  const stats=family.data?.statistics;
+  const percent=(part:number,total:number)=>total?Math.round(part/total*100):0;
+  return <div className="space-y-4">
+    <div role="group" aria-label="Link statistics scope" className="inline-flex rounded-xl bg-muted/55 p-1">
+      {([['family','Family clans'],['server','Entire server']] as const).map(([value,label])=><Button key={value} variant="ghost" className="rounded-lg aria-pressed:bg-background aria-pressed:shadow-sm" aria-pressed={scope===value} onClick={()=>{setScope(value);if(value==="server")void loadServer();}}>{label}</Button>)}
+    </div>
+    {scope==="server" ? error&&!data ? <p role="alert" className="text-sm text-destructive">{error}<Button variant="secondary" className="ml-2" onClick={()=>void loadServer()}>Retry</Button></p> : <LinksStats data={data} loading={loading} /> :
+      family.isPending ? <div className="grid gap-3 md:grid-cols-2">{[1,2,3,4].map(i=><Skeleton key={i} className="h-40 rounded-3xl" />)}</div> : family.error||!stats ? <p role="alert" className="text-sm text-destructive">{family.error?.message??"Family statistics are not available yet."}<Button variant="secondary" className="ml-2" onClick={()=>void family.refetch()}>Retry</Button></p> : <div className="grid gap-3 md:grid-cols-2">
+        <Card className="border-0 shadow-sm shadow-black/5"><CardHeader><CardTitle className="text-sm">Family accounts linked</CardTitle></CardHeader><CardContent className="space-y-2"><MetricRow label="Linked players" value={`${stats.linked} / ${stats.players}`} /><MetricRow label="Without links" value={stats.players-stats.linked} /><div className="h-2.5 overflow-hidden rounded-full bg-secondary"><div className="h-full rounded-full bg-primary" style={{width:`${percent(stats.linked,stats.players)}%`}} /></div><p className="text-right text-xs text-muted-foreground">{percent(stats.linked,stats.players)}% linked</p></CardContent></Card>
+        <Card className="border-0 shadow-sm shadow-black/5"><CardHeader><CardTitle className="text-sm">Verification</CardTitle></CardHeader><CardContent className="space-y-2"><MetricRow label="Verified" value={`${stats.verified} / ${stats.linked}`} /><MetricRow label="Unverified" value={stats.linked-stats.verified} /><div className="h-2.5 overflow-hidden rounded-full bg-secondary"><div className="h-full rounded-full bg-emerald-600" style={{width:`${percent(stats.verified,stats.linked)}%`}} /></div><p className="text-right text-xs text-muted-foreground">{percent(stats.verified,stats.linked)}% verified</p></CardContent></Card>
+        <Card className="border-0 shadow-sm shadow-black/5"><CardHeader><CardTitle className="text-sm">Discord members</CardTitle></CardHeader><CardContent className="space-y-2"><MetricRow label="Linked to family accounts" value={stats.discordMembers} /><MetricRow label="In this server" value={`${stats.inServer} (${percent(stats.inServer,stats.discordMembers)}%)`} /><MetricRow label="1 family account" value={stats.accountDistribution.one} /><MetricRow label="2–3 accounts" value={stats.accountDistribution.twoOrThree} /><MetricRow label="4+ accounts" value={stats.accountDistribution.fourOrMore} /></CardContent></Card>
+        <Card className="border-0 shadow-sm shadow-black/5"><CardHeader><CardTitle className="text-sm">Town Hall levels</CardTitle></CardHeader><CardContent className="space-y-2">{stats.townHalls.map(({level,count})=><MetricRow key={level} label={level?`Town Hall ${level}`:"Unknown Town Hall"} value={`${count} (${percent(count,stats.players)}%)`} />)}</CardContent></Card>
+      </div>}
+  </div>;
 }
 
 function LinksStats({ data, loading }: Readonly<{ data: ServerLinksResponse | null; loading: boolean }>) {
@@ -536,11 +487,6 @@ function LinksStats({ data, loading }: Readonly<{ data: ServerLinksResponse | nu
 
   return (
     <div className="space-y-4">
-      <div>
-        <h3 className="text-lg font-semibold">Link Statistics</h3>
-        <p className="text-sm text-muted-foreground">Server-wide account coverage, verification, and player distribution.</p>
-      </div>
-
       <div className="grid gap-3 md:grid-cols-2">
         <Card className="border-0 bg-card shadow-sm shadow-black/5">
           <CardHeader><CardTitle className="text-sm">Verification Rate</CardTitle></CardHeader>

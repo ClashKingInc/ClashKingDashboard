@@ -23,7 +23,7 @@ import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { DashboardTabsList, DashboardTabTrigger } from "@/components/ui/dashboard-tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { useToast } from "@/components/ui/use-toast";
+import { ActionFeedback, useActionFeedback } from "@/components/ui/action-feedback";
 import { DiscordUserDisplay } from "@/components/ui/discord-user-display";
 import { DiscordOpenPopover } from "@/components/ui/discord-open-popover";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
@@ -568,7 +568,7 @@ function GiveawayWinnerList({ giveaway, t }: Readonly<{ giveaway: Giveaway; t: T
 export default function GiveawaysClient({ // NOSONAR — complexity comes from aggregate giveaway form state management, not a single logic unit
   guildId,
 }: Readonly<GiveawaysClientProps>) { // NOSONAR
-  const { toast } = useToast();
+  const {notices,report,clear}=useActionFeedback(guildId);
   const queryClient = useQueryClient();
   const t = useTranslations("GiveawaysPage");
   const tCommon = useTranslations("Common");
@@ -596,13 +596,9 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
   const [giveaways, setGiveaways] = useState<{ ongoing: Giveaway[]; upcoming: Giveaway[]; ended: Giveaway[]; total: number }>({ ongoing: [], upcoming: [], ended: [], total: 0 });
   const {
     dialogOpen: entriesDialogOpen,
-    target: entriesTarget, data: entriesData, loading: entriesLoading,
+    target: entriesTarget, data: entriesData, loading: entriesLoading, error: entriesError,
     openDialog: openEntriesDialog, closeDialog: closeEntries,
-  } = useGiveawayEntries(
-    guildId,
-    (gid, giveawayId) => apiClient.servers.getGiveawayEntries(gid, giveawayId),
-    (message) => toast({ title: t("toast.errorTitle"), description: message, variant: "destructive" }),
-  );
+  } = useGiveawayEntries(guildId,(gid,giveawayId)=>apiClient.servers.getGiveawayEntries(gid,giveawayId)  );
   const [channels, setChannels] = useState<Channel[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
   const [form, setForm] = useState<FormState>(buildEmptyState(t));
@@ -645,7 +641,7 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
         ended: [...gRes.data.ended],
       });
     } catch (error) {
-      toast({ title: t("toast.errorTitle"), description: error instanceof Error ? error.message : t("toast.loadError"), variant: "destructive" });
+      report("list",{ title: t("toast.errorTitle"), description: error instanceof Error ? error.message : t("toast.loadError"), variant: "destructive" });
     } finally {
       setLoading(false);
       setTableLoading(false);
@@ -762,10 +758,10 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
         ? await apiClient.servers.updateGiveaway(guildId, editingId, body)
         : await apiClient.servers.createGiveaway(guildId, body);
       if (res.error) throw new Error(res.error);
-      toast({ title: t("toast.successTitle"), description: editingId ? t("toast.updated") : t("toast.created") });
+      report("list",{ title: t("toast.successTitle"), description: editingId ? t("toast.updated") : t("toast.created") });
       reset(); await load(true);
     } catch (error) {
-      toast({ title: t("toast.errorTitle"), description: error instanceof Error ? error.message : t("toast.saveError"), variant: "destructive" });
+      report("editor",{ title: t("toast.errorTitle"), description: error instanceof Error ? error.message : t("toast.saveError"), variant: "destructive" });
     } finally { setSaving(false); }
   };
 
@@ -775,11 +771,11 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
     try {
       const res = await apiClient.servers.deleteGiveaway(guildId, deleteConfirmId);
       if (res.error) throw new Error(res.error);
-      toast({ title: t("toast.successTitle"), description: t("toast.deleted") });
-      await load(true);
+      report("list",{ title: t("toast.successTitle"), description: t("toast.deleted") });
+      setDeleteConfirmId(null);await load(true);
     } catch (error) {
-      toast({ title: t("toast.errorTitle"), description: error instanceof Error ? error.message : t("toast.deleteError"), variant: "destructive" });
-    } finally { setDeleting(false); setDeleteConfirmId(null); }
+      report("delete",{ title: t("toast.errorTitle"), description: error instanceof Error ? error.message : t("toast.deleteError"), variant: "destructive" });
+    } finally { setDeleting(false); }
   };
 
   const handleReroll = async () => {
@@ -788,30 +784,33 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
     try {
       const res = await apiClient.servers.rerollGiveaway(guildId, rerollTarget.id, rerollSelected);
       if (res.error) throw new Error(res.error);
-      toast({ title: t("toast.successTitle"), description: t("toast.rerolled") });
+      report("list",{ title: t("toast.successTitle"), description: t("toast.rerolled") });
       setRerollDialogOpen(false); setRerollTarget(null); setRerollSelected([]);
       await load(true);
     } catch (error) {
-      toast({ title: t("toast.errorTitle"), description: error instanceof Error ? error.message : t("toast.rerollError"), variant: "destructive" });
+      report("reroll",{ title: t("toast.errorTitle"), description: error instanceof Error ? error.message : t("toast.rerollError"), variant: "destructive" });
     } finally { setRerolling(false); }
   };
+
+  useEffect(()=>{if(dialogOpen)clear("editor");if(rerollDialogOpen)clear("reroll");if(deleteConfirmId)clear("delete");},[dialogOpen,rerollDialogOpen,deleteConfirmId,clear]);
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="mx-auto max-w-7xl space-y-6">
-        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          <div>
+        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 md:flex md:items-end md:justify-between">
+          <div className="min-w-0">
             <h1 className="text-2xl font-bold text-foreground md:text-3xl">{t("title")}</h1>
-            <p className="mt-1 text-muted-foreground">{t("description")}</p>
+            <p className="mt-1 hidden text-muted-foreground sm:block">{t("description")}</p>
           </div>
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="contents md:flex md:flex-wrap md:items-center md:gap-2">
             <div className="inline-flex items-center gap-2 rounded-full bg-muted/65 px-3 py-1.5 text-sm text-muted-foreground shadow-sm shadow-black/5">
-              <Users className="h-4 w-4" /><span>{t("stats.totalEntries")}</span><span className="font-semibold tabular-nums text-foreground">{totalEntries.toLocaleString()}</span>
+              <Users className="h-4 w-4" /><span className="hidden sm:inline">{t("stats.totalEntries")}</span><span className="font-semibold tabular-nums text-foreground">{totalEntries.toLocaleString()}</span>
             </div>
-            <Button onClick={openCreate}><Plus className="mr-2 h-4 w-4" />{t("create")}</Button>
+            <Button className="col-span-2 justify-self-end" onClick={openCreate}><Plus className="mr-2 h-4 w-4" />{t("create")}</Button>
           </div>
         </div>
         
+        <ActionFeedback notice={notices.list} reserve />
         <GiveawaysMainContent
           loading={loading}
           t={t}
@@ -970,7 +969,7 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
                     label={t("form.image")} chooseLabel={form.imagePreview ? tCommon("edit") : tEmbed("addImage")} removeLabel={t("form.removeImage")} maxBytes={MAX_IMAGE_BYTES}
                     onChoose={file => updateForm(s => ({ ...s, imageFile: file, imagePreview: URL.createObjectURL(file), removeImage: false }))}
                     onRemove={() => updateForm(s => ({ ...s, removeImage: true, imageFile: null, imagePreview: null }))}
-                    onTooLarge={() => toast({ title: t("toast.errorTitle"), description: t("validation.imageTooLarge"), variant: "destructive" })} />
+                    onTooLarge={() => report("editor",{ title: t("toast.errorTitle"), description: t("validation.imageTooLarge"), variant: "destructive" })} />
                 </div>
 
                 <div className="space-y-3">
@@ -1018,6 +1017,7 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
               )}
             </Tabs>
 
+            <ActionFeedback notice={notices.editor} className="shrink-0 px-6" reserve />
             <DialogFooter className="shrink-0 flex-row gap-2 border-t border-border/50 bg-background px-5 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-7 sm:py-4 sm:space-x-0 [&>*]:w-auto">
               <Button variant="secondary" className="min-w-0 flex-1 border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted sm:flex-none" onClick={closeDialog} disabled={saving}>{readOnly ? tCommon("close") : tCommon("cancel")}</Button>
               {!readOnly && <Button className="min-w-0 flex-1 sm:flex-none" onClick={submit} disabled={saving || !hasRequiredFields}>
@@ -1035,9 +1035,10 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
               <AlertDialogTitle>{t("confirmDeleteTitle")}</AlertDialogTitle>
               <AlertDialogDescription>{t("confirmDelete")}</AlertDialogDescription>
             </AlertDialogHeader>
+            <ActionFeedback notice={notices.delete} reserve />
             <AlertDialogFooter>
               <AlertDialogCancel disabled={deleting}>{tCommon("cancel")}</AlertDialogCancel>
-              <AlertDialogAction onClick={confirmDelete} disabled={deleting} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              <AlertDialogAction onClick={event=>{event.preventDefault();clear("delete");void confirmDelete();}} disabled={deleting} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
                 {deleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}{tCommon("delete")}
               </AlertDialogAction>
             </AlertDialogFooter>
@@ -1084,6 +1085,7 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
                 </div>
               </div>
             )}
+            <ActionFeedback notice={notices.reroll} reserve />
             <DialogFooter>
               <Button variant="outline" onClick={() => { setRerollDialogOpen(false); setRerollTarget(null); setRerollSelected([]); }} disabled={rerolling}>{tCommon("cancel")}</Button>
               <Button onClick={handleReroll} disabled={rerolling || rerollSelected.length === 0}>
@@ -1096,57 +1098,21 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
 
         {/* Entries Dialog */}
         <Dialog open={entriesDialogOpen} onOpenChange={(open) => { if (!open) closeEntries(); }}>
-          <DialogContent variant="form" className="sm:max-w-lg">
-            <DialogHeader>
-              <DialogTitle className="flex items-center gap-2"><Users className="h-5 w-5" />{entriesTarget?.prize}</DialogTitle>
-              <DialogDescription>{t("entries.description")}</DialogDescription>
-            </DialogHeader>
-            {entriesLoading && (
-              <div className="space-y-2 py-4">
-                {[1, 2, 3].map((i) => <Skeleton key={i} className="h-10 w-full animate-pulse" />)}
+          <DialogContent variant="form" className="flex max-h-[min(42rem,90dvh)] flex-col overflow-hidden border-0 bg-card sm:max-w-lg" onOpenAutoFocus={event=>event.preventDefault()}>
+            <DialogHeader className="pr-8 text-left"><DialogTitle className="truncate">{entriesTarget?.prize}</DialogTitle><DialogDescription className="sr-only">{t("entries.description")}</DialogDescription></DialogHeader>
+            {entriesLoading && <div className="space-y-2 py-2">{[1,2,3].map(i=><Skeleton key={i} className="h-16 rounded-2xl" />)}</div>}
+            {entriesError && <p role="alert" className="text-sm text-destructive">{entriesError}<Button variant="secondary" className="ml-2" onClick={()=>entriesTarget&&void openEntriesDialog(entriesTarget)}>{tCommon("retry")}</Button></p>}
+            {!entriesLoading && entriesData && <>
+              <div className="flex items-center justify-between gap-3 text-sm text-muted-foreground"><span>{entriesData.uniqueUsers.toLocaleString()} {t("entries.uniqueUsers")}</span><span className="rounded-full bg-muted/65 px-3 py-1.5"><strong className="text-foreground">{entriesData.totalEntries.toLocaleString()}</strong> {t("entries.totalEntries")}</span></div>
+              <div className="min-h-0 space-y-2 overflow-y-auto overscroll-contain">
+                {!entriesData.entrants.length && <p className="py-6 text-center text-sm text-muted-foreground">{t("entries.noEntrants")}</p>}
+                {entriesData.entrants.map(entry=><div key={entry.userId} className="flex items-center gap-3 rounded-2xl bg-muted/45 p-3">
+                  <div className="min-w-0 flex-1"><DiscordUserDisplay userId={entry.userId} username={entry.username} avatarUrl={entry.avatarUrl} isOnServer={entry.inServer} size="md" /><p className="mt-1 text-xs text-muted-foreground">{entry.entries.toLocaleString()} {t("entries.totalEntries")}</p></div>
+                  <div className="shrink-0 text-right"><p className="font-semibold tabular-nums">{entry.winChance.toFixed(2)}%</p><p className="text-xs text-muted-foreground">{t("entries.winChance")}</p></div>
+                </div>)}
               </div>
-            )}
-            {!entriesLoading && entriesData && (
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="rounded-lg border border-border bg-muted/30 px-4 py-3 text-center">
-                    <div className="text-2xl font-bold text-foreground">{entriesData.totalEntries}</div>
-                    <div className="text-xs text-muted-foreground mt-0.5">{t("entries.totalEntries")}</div>
-                  </div>
-                  <div className="rounded-lg border border-border bg-muted/30 px-4 py-3 text-center">
-                    <div className="text-2xl font-bold text-foreground">{entriesData.uniqueUsers}</div>
-                    <div className="text-xs text-muted-foreground mt-0.5">{t("entries.uniqueUsers")}</div>
-                  </div>
-                </div>
-                {entriesData.entrants.length === 0 ? (
-                  <p className="py-6 text-center text-sm text-muted-foreground">{t("entries.noEntrants")}</p>
-                ) : (
-                  <div className="max-h-72 overflow-y-auto rounded-lg border border-border">
-                    <table className="w-full text-sm">
-                      <thead className="sticky top-0 bg-muted/80 backdrop-blur-sm">
-                        <tr className="text-left text-xs font-medium text-muted-foreground">
-                          <th className="px-3 py-2">{t("entries.userId")}</th>
-                          <th className="px-3 py-2 text-center">{t("entries.entryCount")}</th>
-                          <th className="px-3 py-2 text-right">{t("entries.winChance")}</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {entriesData.entrants.map((e, i) => (
-                          <tr key={e.userId} className={cn("border-t border-border/60", i % 2 === 0 ? "bg-background" : "bg-muted/10")}>
-                            <td className="px-3 py-2 text-xs text-muted-foreground">{e.userId}</td>
-                            <td className="px-3 py-2 text-center tabular-nums">{e.entries}</td>
-                            <td className="px-3 py-2 text-right tabular-nums text-primary">{e.winChance.toFixed(2)}%</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
-              </div>
-            )}
-            <DialogFooter>
-              <Button variant="outline" onClick={closeEntries}>{tCommon("close")}</Button>
-            </DialogFooter>
+            </>}
+            <DialogFooter className="shrink-0"><Button variant="secondary" onClick={closeEntries}>{tCommon("close")}</Button></DialogFooter>
           </DialogContent>
         </Dialog>
 

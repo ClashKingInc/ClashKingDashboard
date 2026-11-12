@@ -17,6 +17,7 @@ import { Loader2, Copy } from "lucide-react";
 import type { Roster, CloneRosterFormData } from "../_lib/types";
 
 interface CloneDialogProps {
+  readonly feedback?:React.ReactNode;
   readonly open: boolean;
   readonly onOpenChange: (open: boolean) => void;
   readonly roster: Roster | null;
@@ -25,6 +26,7 @@ interface CloneDialogProps {
 }
 
 export function CloneDialog({
+  feedback,
   open,
   onOpenChange,
   roster,
@@ -54,6 +56,7 @@ export function CloneDialog({
     try {
       await onClone(cloneData);
       onOpenChange(false);
+    } catch { // The caller owns the local error message; keep this draft open for retry.
     } finally {
       setCloning(false);
     }
@@ -108,6 +111,7 @@ export function CloneDialog({
           </p>
         </div>
 
+        {feedback}
         <DialogFooter>
           <Button
             variant="outline"

@@ -56,7 +56,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { Tabs } from "@/components/ui/tabs";
 import { DashboardTabsList, DashboardTabTrigger } from "@/components/ui/dashboard-tabs";
-import { useToast } from "@/components/ui/use-toast";
+import { ActionFeedback, useActionFeedback } from "@/components/ui/action-feedback";
 import {
   destinationNeedsThread,
   isDestinationValid,
@@ -122,7 +122,7 @@ export default function AutoboardsPage() {
   const locale = useLocale();
   const tLimits = useTranslations("ManualLimits");
   const t = useTranslations("AutoboardsPage");
-  const { toast } = useToast();
+  const {notices,report}=useActionFeedback(guildId);
   const queryClient = useQueryClient();
 
   const [customInterval, setCustomInterval] = useState(false);
@@ -316,7 +316,7 @@ export default function AutoboardsPage() {
         });
       }
       setDialogOpen(false);
-      toast({
+      report("list",{
         title: editing ? t("feedback.updated") : t("feedback.created"),
       });
       await load();
@@ -336,11 +336,10 @@ export default function AutoboardsPage() {
         query: {}, body: {},
       });
       setDeleteTarget(null);
-      toast({ title: t("feedback.deleted") });
+      report("list",{ title: t("feedback.deleted") });
       await load();
     } catch (deleteError) {
-      setDeleteTarget(null);
-      setError(deleteError instanceof Error ? deleteError.message : t("errors.delete"));
+      report("delete",{description:deleteError instanceof Error?deleteError.message:t("errors.delete"),variant:"destructive"});
     } finally {
       setDeleting(false);
     }
@@ -387,6 +386,7 @@ export default function AutoboardsPage() {
           </Button>
         </div>
 
+        <ActionFeedback notice={notices.list} reserve />
         {error && (
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
@@ -781,9 +781,10 @@ export default function AutoboardsPage() {
             <AlertDialogTitle>{t("delete.title")}</AlertDialogTitle>
             <AlertDialogDescription>{t("delete.description")}</AlertDialogDescription>
           </AlertDialogHeader>
+          <ActionFeedback notice={notices.delete} reserve />
           <AlertDialogFooter>
             <AlertDialogCancel>{t("actions.cancel")}</AlertDialogCancel>
-            <AlertDialogAction onClick={() => void remove()} disabled={deleting}>
+            <AlertDialogAction onClick={event=>{event.preventDefault();void remove();}} disabled={deleting}>
               {deleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {t("actions.delete")}
             </AlertDialogAction>

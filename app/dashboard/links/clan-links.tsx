@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { ServerClanLinksEndpoint, CreateClanRosterLinkEndpoint, dashboardEndpoints, type EndpointResponse } from "@clashking/api-contracts";
-import { Check, ChevronDown, Loader2, Plus, Search, ShieldCheck, TriangleAlert } from "lucide-react";
+import { ServerClanLinksEndpoint, CreateClanRosterLinkEndpoint, DeleteClanRosterLinkEndpoint, dashboardEndpoints, type EndpointResponse } from "@clashking/api-contracts";
+import { Check, ChevronDown, Loader2, Plus, Search, ShieldCheck, TriangleAlert, Unlink } from "lucide-react";
 import { useTranslations } from "use-intl";
 import { FolderIcon } from "@/components/ui/folder-icon";
 import Image from "@/components/app-image";
@@ -16,19 +16,20 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { ClanVerificationControl } from "@/app/dashboard/clans/clan-verification";
 
 type Clan = EndpointResponse<typeof ServerClanLinksEndpoint>["clans"][number];
 type Member = Clan["members"][number];
 const key=(guildId:string)=>["clan-links",guildId];
 export function ClanLinks({guildId,onLinked}:{guildId:string;onLinked:()=>void}) {
   const tCategories=useTranslations("ClansPage.categories");
-  const client=useQueryClient(),{canManage}=useDashboardAccess();
+  const client=useQueryClient(),{canManage,canView}=useDashboardAccess();
   const report=useQuery({queryKey:key(guildId),enabled:Boolean(guildId),queryFn:({signal})=>executeSharedEndpoint(ServerClanLinksEndpoint,{path:{serverId:guildId},query:{},body:{}},{signal})});
   const sections=useMemo(()=>{
     const categories=report.data?.categories ?? [];
     const byCategory=new Map(categories.map(category=>[category.name,[] as Clan[]]));
     const uncategorized:Clan[]=[];
-    // Keep the API's name/tag order within each category, just like Clans.
+    // Keep the API's saved clan order within each category, just like Clans.
     for(const clan of report.data?.clans ?? []) {
       const group=clan.category?.trim() ? byCategory.get(clan.category.trim()) : undefined;
       (group ?? uncategorized).push(clan);
@@ -38,6 +39,9 @@ export function ClanLinks({guildId,onLinked}:{guildId:string;onLinked:()=>void})
     return groups;
   },[report.data,tCategories]);
   const [target,setTarget]=useState<{clan:Clan;member:Member}|null>(null);
+  const [removing,setRemoving]=useState<{clan:Clan;member:Member}|null>(null);
+  const [verification,setVerification]=useState<Clan|null>(null);
+  const [changed,setChanged]=useState("");
   const [query,setQuery]=useState(""),[search,setSearch]=useState(""),[userId,setUserId]=useState("");
   const [saving,setSaving]=useState(false),[error,setError]=useState("");
   const pickerRef=useRef<HTMLDivElement>(null),searchRef=useRef<HTMLInputElement>(null);
@@ -49,9 +53,24 @@ export function ClanLinks({guildId,onLinked}:{guildId:string;onLinked:()=>void})
     setSaving(true);setError("");
     try {
       await executeSharedEndpoint(CreateClanRosterLinkEndpoint,{path:{serverId:guildId,clanTag:target.clan.tag,playerTag:target.member.tag},query:{},body:{userId}});
-      await client.invalidateQueries({queryKey:key(guildId)});onLinked();close();
+      setChanged(target.member.tag);await client.invalidateQueries({queryKey:key(guildId)});onLinked();close();
     }catch(cause){setError(cause instanceof Error ? cause.message : "Could not link the account");}
     finally{setSaving(false);}
+  };
+  const remove=async()=>{
+    if(!removing || saving)return;
+    setSaving(true);setError("");
+    try {
+      await executeSharedEndpoint(DeleteClanRosterLinkEndpoint,{path:{serverId:guildId,clanTag:removing.clan.tag,playerTag:removing.member.tag},query:{},body:{}});
+      setChanged(removing.member.tag);await client.invalidateQueries({queryKey:key(guildId)});onLinked();setRemoving(null);
+    }catch(cause){setError(cause instanceof Error ? cause.message : "Could not remove the link");}
+    finally{setSaving(false);}
+  };
+  useEffect(()=>{if(!changed)return;const timer=setTimeout(()=>setChanged(""),4000);return()=>clearTimeout(timer);},[changed]);
+  const begin=(clan:Clan,member:Member,action:"add"|"remove")=>{
+    setError("");
+    if(!clan.verified){setVerification(clan);return;}
+    if(action==="remove")setRemoving({clan,member});else setTarget({clan,member});
   };
   if(report.isPending)return <div className="space-y-3">{[1,2,3].map(i=><Skeleton key={i} className="h-24 rounded-3xl" />)}</div>;
   if(report.error)return <div role="alert" className="rounded-3xl bg-card p-5 text-destructive">{report.error.message}<Button variant="secondary" className="ml-3" onClick={()=>void report.refetch()}>Retry</Button></div>;
@@ -66,14 +85,14 @@ export function ClanLinks({guildId,onLinked}:{guildId:string;onLinked:()=>void})
           {clan.badge && <Image src={clan.badge} alt="" width={48} height={48} unoptimized className="h-12 w-12 shrink-0 object-contain" />}
           <span className="min-w-0 flex-1">
             <span className="flex items-center gap-2"><span className="truncate font-semibold">{clan.name}</span>{clan.verified && <span role="img" aria-label="Verified clan" title="Verified clan"><ShieldCheck aria-hidden="true" className="h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" /></span>}</span>
-            <span className="block text-xs text-muted-foreground">{clan.tag} · Level {clan.level}</span>
+            <span className="block text-xs text-muted-foreground">{clan.tag}</span>
             <span className="mt-1 flex flex-wrap gap-2 text-xs text-muted-foreground"><span>{clan.members.length} members</span><span>·</span><span>{linked} linked</span></span>
           </span>
           <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground group-data-[state=open]:rotate-180" />
         </CollapsibleTrigger>
         <CollapsibleContent className="px-4 pb-4 md:px-5 md:pb-5">
           <div className="space-y-1 rounded-2xl bg-muted/45 p-2">
-            {clan.members.map(member=><div key={member.tag} className="flex min-w-0 items-center gap-3 rounded-xl px-1 py-2 sm:px-2">
+            {clan.members.map(member=><div key={member.tag} className={`flex min-w-0 items-center gap-3 rounded-xl px-1 py-2 transition-colors sm:px-2 ${changed===member.tag ? "bg-emerald-500/10 ring-1 ring-inset ring-emerald-500/25" : ""}`}>
               {/* Center the Town Hall beside the complete two-line player identity. */}
               <div className="flex min-w-0 flex-1 items-center gap-1.5">
                 {member.townHall ? <Image src={townHallImageUrl(member.townHall)} alt={`Town Hall ${member.townHall}`} width={20} height={20} unoptimized className="h-5 w-5 shrink-0 object-contain" /> : <span className="flex h-5 w-5 shrink-0 items-center justify-center text-xs text-muted-foreground" title="Town Hall unavailable">—</span>}
@@ -91,7 +110,8 @@ export function ClanLinks({guildId,onLinked}:{guildId:string;onLinked:()=>void})
                 {member.link?.inServer && <span role="img" aria-label={member.link.verified ? "Verified" : "Unverified"} title={member.link.verified ? "Verified" : "Unverified"} className="shrink-0">
                   {member.link.verified ? <ShieldCheck aria-hidden="true" className="h-4 w-4 text-emerald-600 dark:text-emerald-400" /> : <TriangleAlert aria-hidden="true" className="h-4 w-4 text-muted-foreground" />}
                 </span>}
-                {!member.link && !member.hidden && canManage("links") && <Button size="sm" variant="secondary" className="h-7 shrink-0 gap-1 border-0 bg-muted/65 px-2 shadow-sm shadow-black/5 hover:bg-muted [&_svg]:size-3.5" aria-label={`Link ${member.name}`} onClick={()=>{setTarget({clan,member});setError("");}}><Plus />Link</Button>}
+                {member.link && !member.link.verified && canManage("links") && <Button size="icon" variant="ghost" className="h-9 w-9 shrink-0 text-muted-foreground hover:text-destructive" aria-label={`Remove unverified link for ${member.name}`} onClick={()=>begin(clan,member,"remove")}><Unlink className="h-4 w-4" /></Button>}
+                {!member.link && !member.hidden && canManage("links") && <Button size="sm" variant="secondary" className="h-9 shrink-0 gap-1 border-0 bg-muted/65 px-2 shadow-sm shadow-black/5 hover:bg-muted [&_svg]:size-3.5" aria-label={`Link ${member.name}`} onClick={()=>begin(clan,member,"add")}><Plus />Link</Button>}
               </div>
             </div>)}
             {!clan.members.length && <p className="p-3 text-sm text-muted-foreground">No roster members are available yet.</p>}
@@ -149,5 +169,21 @@ export function ClanLinks({guildId,onLinked}:{guildId:string;onLinked:()=>void})
         </DialogFooter>
       </DialogContent>
     </Dialog>
+    <Dialog open={Boolean(removing)} onOpenChange={open=>{if(!open&&!saving){setRemoving(null);setError("");}}}>
+      <DialogContent variant="form" onOpenAutoFocus={event=>event.preventDefault()}>
+        <DialogHeader><DialogTitle>Remove unverified link?</DialogTitle><DialogDescription>{removing?.member.name} will no longer be linked to this Discord account. Verified account links cannot be removed here.</DialogDescription></DialogHeader>
+        {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
+        <DialogFooter><Button variant="secondary" disabled={saving} onClick={()=>setRemoving(null)}>Cancel</Button><Button variant="destructive" disabled={saving} onClick={()=>void remove()}>{saving && <Loader2 className="h-4 w-4 animate-spin" />}Remove link</Button></DialogFooter>
+      </DialogContent>
+    </Dialog>
+    <Dialog open={Boolean(verification)} onOpenChange={open=>{if(!open)setVerification(null);}}>
+      <DialogContent variant="form" onOpenAutoFocus={event=>event.preventDefault()}>
+        <DialogHeader><DialogTitle>Verify {verification?.name}</DialogTitle><DialogDescription>Only verified family clans can add or remove unverified account links. Verified player links remain protected.</DialogDescription></DialogHeader>
+        {verification && canView("clans") ? <ClanVerificationControl guildId={guildId} clanTag={verification.tag} /> : <p className="text-sm text-muted-foreground">Ask a server manager with Clans access to verify this clan from the Clans page.</p>}
+        {canView("clans") && !canManage("clans") && <p className="text-sm text-muted-foreground">A manager with Clans manage permission must start verification.</p>}
+        <DialogFooter><Button variant="secondary" onClick={()=>setVerification(null)}>Done</Button></DialogFooter>
+      </DialogContent>
+    </Dialog>
+    <span className="sr-only" role="status">{changed ? "Account link updated" : ""}</span>
   </div>;
 }

@@ -19,7 +19,7 @@ import { dashboardQueryKeys } from "@/lib/dashboard-query";
 import { dashboardQueryOptions } from "@/lib/dashboard-query-options";
 import { Skeleton } from "@/components/ui/skeleton";
 import { RoleCombobox } from "@/components/ui/role-combobox";
-import { useToast } from "@/components/ui/use-toast";
+import { ActionFeedback, useActionFeedback, type ActionNotice } from "@/components/ui/action-feedback";
 import type { FamilyRole, FamilyRolesResponse, FamilyRoleType } from "@/lib/api/types/family-roles";
 import { NicknameFormatInput } from "../family-settings/nickname-format-input";
 import type { PlaceholderOption } from "../family-settings/nickname-format";
@@ -49,6 +49,7 @@ const colorClasses: Record<string, { bg: string; text: string }> = {
 
 // FamilyRoleCard component - supports multiple roles per type
 interface FamilyRoleCardProps {
+  readonly notice?:ActionNotice;
   readonly label: string;
   readonly description: string;
   readonly roles: FamilyRole[];
@@ -76,6 +77,7 @@ function FamilyRoleCard({
   color,
   discordRoles,
   isRoleDataLoading,
+  notice,
   isLoading,
   removeLabel,
   onAdd,
@@ -114,11 +116,12 @@ function FamilyRoleCard({
             <p className="text-xs text-muted-foreground">{description}</p>
           </div>
         </div>
-        {isLoading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
+        <div className="h-4 w-4 shrink-0">{isLoading?<Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />:notice?.variant!=="destructive"?<ActionFeedback notice={notice} compact />:null}</div>
       </div>
 
       {/* Content */}
       <div className="space-y-3 px-4 pb-4">
+        {notice?.variant==="destructive"&&<ActionFeedback notice={notice} />}
         {isRoleDataLoading ? (
           <div className="space-y-2">
             <Skeleton className="h-10 w-full" />
@@ -194,7 +197,7 @@ export function FamilyNicknameSettings({ section }: { readonly section: "family"
   const queryClient = useQueryClient();
   const t = useTranslations("FamilySettingsPage");
   const tCommon = useTranslations("Common");
-  const { toast } = useToast();
+  const {notices,report,clear}=useActionFeedback(guildId);
   const activeNicknameInput = useRef<HTMLInputElement | null>(null);
 
   const placeholders: PlaceholderOption[] = [
@@ -281,7 +284,7 @@ export function FamilyNicknameSettings({ section }: { readonly section: "family"
 
   async function loadFamilyRoles(forceRefresh = false) {
     try {
-      setIsLoadingFamilyRoles(true);
+      if(!forceRefresh)setIsLoadingFamilyRoles(true);
       if (forceRefresh) {
         await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.route("family-roles", guildId), exact: true });
       }
@@ -324,7 +327,7 @@ export function FamilyNicknameSettings({ section }: { readonly section: "family"
 
     try {
       setFamilyRolesLoading(true);
-      setError(null);
+      clear(roleType);
 
       const response = await apiClient.familyRoles.addFamilyRole(guildId, {
         role: roleId,
@@ -332,19 +335,19 @@ export function FamilyNicknameSettings({ section }: { readonly section: "family"
       });
 
       if (response.error) {
-        setError(response.error);
+        report(roleType,{description:response.error,variant:"destructive"});
         return;
       }
 
       // Refresh family roles after update
       await loadFamilyRoles(true);
 
-      toast({
+      report(roleType,{
         title: tCommon("success"),
         description: t("settingsSaved"),
       });
     } catch (err: any) {
-      setError(err.message || "Failed to add family role");
+      report(roleType,{description:err.message || "Failed to add family role",variant:"destructive"});
     } finally {
       setFamilyRolesLoading(false);
     }
@@ -353,24 +356,24 @@ export function FamilyNicknameSettings({ section }: { readonly section: "family"
   const handleRemoveFamilyRole = async (roleType: FamilyRoleType, id: string, roleId: string) => {
     try {
       setFamilyRolesLoading(true);
-      setError(null);
+      clear(roleType);
 
       const response = await apiClient.familyRoles.removeFamilyRole(guildId, roleType, id, roleId);
 
       if (response.error) {
-        setError(response.error);
+        report(roleType,{description:response.error,variant:"destructive"});
         return;
       }
 
       // Refresh family roles after update
       await loadFamilyRoles(true);
 
-      toast({
+      report(roleType,{
         title: tCommon("success"),
         description: t("settingsSaved"),
       });
     } catch (err: any) {
-      setError(err.message || "Failed to remove family role");
+      report(roleType,{description:err.message || "Failed to remove family role",variant:"destructive"});
     } finally {
       setFamilyRolesLoading(false);
     }
@@ -617,6 +620,7 @@ export function FamilyNicknameSettings({ section }: { readonly section: "family"
                 icon={roleType.icon}
                 color={roleType.color}
                 discordRoles={discordRoles}
+                notice={notices[roleType.key]}
                 isRoleDataLoading={isLoadingFamilyRoles}
                 isLoading={familyRolesLoading}
                 removeLabel={tCommon("remove")}

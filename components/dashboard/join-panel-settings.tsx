@@ -20,7 +20,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
-import { useToast } from "@/components/ui/use-toast";
+import { ActionFeedback, useActionFeedback } from "@/components/ui/action-feedback";
 import { ChannelCombobox } from "@/components/ui/channel-combobox";
 import { DiscordMessagePreview, extractEmbeds, extractMessageContent, extractMessageProfile } from "@/components/dashboard/discord-embed-preview";
 import { cn } from "@/lib/utils";
@@ -181,7 +181,7 @@ export function JoinPanelSettings({ embedded = false }: Readonly<{ embedded?: bo
   const guildId = useGuildId();
   const t = useTranslations("PanelsPage");
   const tCommon = useTranslations("Common");
-  const { toast } = useToast();
+  const {notices,report,clear}=useActionFeedback(guildId);
 
   const [isPanelLoading, setIsPanelLoading] = useState(true);
   const [isPanelSnapshotInitialized, setIsPanelSnapshotInitialized] = useState(false);
@@ -218,8 +218,8 @@ export function JoinPanelSettings({ embedded = false }: Readonly<{ embedded?: bo
   const channelsCacheKey = dashboardCacheKeys.channels(guildId);
 
   const showLoadError = useCallback(() => {
-    toast({ title: tCommon("error"), description: tCommon("loadError"), variant: "destructive" });
-  }, [toast, tCommon]);
+    report("panel",{ title: tCommon("error"), description: tCommon("loadError"), variant: "destructive" });
+  }, [report, tCommon]);
 
   const applyPanelData = useCallback((panel: ServerPanel) => {
     const nextPayload: PanelUpdatePayload = {
@@ -331,6 +331,7 @@ export function JoinPanelSettings({ embedded = false }: Readonly<{ embedded?: bo
     setDraftEmbedName(embedName);
     setDraftButtons(buttons);
     setDraftButtonColor(buttonColor);
+    clear("editor");
     setIsEditDialogOpen(true);
   };
 
@@ -354,14 +355,14 @@ export function JoinPanelSettings({ embedded = false }: Readonly<{ embedded?: bo
       const autosaveDescription = !nextChannel || nextChannel === "disabled"
         ? t("welcomeAutosaveDisabled")
         : t("welcomeAutosaveSuccess");
-      toast({
+      report("panel",{
         title: tCommon("success"),
         description: autosaveDescription,
       });
     } catch (err) {
       setWelcomeChannel(previousChannel);
       setIsPanelEnabled(previousEnabled);
-      toast({
+      report("panel",{
         title: tCommon("error"),
         description: err instanceof Error ? err.message : tCommon("loadError"),
         variant: "destructive",
@@ -383,11 +384,11 @@ export function JoinPanelSettings({ embedded = false }: Readonly<{ embedded?: bo
     setIsSavingWelcomeChannel(true);
     try {
       await queuePanelUpdate((snapshot) => ({ ...snapshot, welcome_channel: null }));
-      toast({ title: tCommon("success"), description: t("welcomeAutosaveDisabled") });
+      report("panel",{ title: tCommon("success"), description: t("welcomeAutosaveDisabled") });
     } catch (err) {
       setIsPanelEnabled(Boolean(previousChannel));
       setWelcomeChannel(previousChannel);
-      toast({
+      report("panel",{
         title: tCommon("error"),
         description: err instanceof Error ? err.message : tCommon("loadError"),
         variant: "destructive",
@@ -398,6 +399,7 @@ export function JoinPanelSettings({ embedded = false }: Readonly<{ embedded?: bo
   };
 
   const handleSave = async () => {
+    clear("editor");
     setIsSaving(true);
     try {
       await queuePanelUpdate((snapshot) => ({
@@ -410,10 +412,10 @@ export function JoinPanelSettings({ embedded = false }: Readonly<{ embedded?: bo
       setEmbedName(draftEmbedName);
       setButtons(draftButtons);
       setButtonColor(draftButtonColor);
-      toast({ title: tCommon("success"), description: t("saved") });
+      report("panel",{ title: tCommon("success"), description: t("saved") });
       setIsEditDialogOpen(false);
     } catch (err) {
-      toast({ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
+      report("editor",{ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
     } finally {
       setIsSaving(false);
     }
@@ -510,6 +512,7 @@ export function JoinPanelSettings({ embedded = false }: Readonly<{ embedded?: bo
           </div>
         </div>
 
+        <ActionFeedback notice={notices.panel} reserve />
         <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
           <DialogContent variant="workspace" className="overflow-hidden bg-card shadow-2xl sm:max-w-6xl">
             <DialogHeader className="bg-muted/35 px-6 pb-5 pt-6 sm:px-7">
@@ -655,6 +658,7 @@ export function JoinPanelSettings({ embedded = false }: Readonly<{ embedded?: bo
               </div>
             </div>
 
+            <ActionFeedback notice={notices.editor} className="px-6" reserve />
             <DialogFooter className="bg-muted/35 px-6 py-4 sm:px-7">
               <Button variant="secondary" className="border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted" onClick={() => setIsEditDialogOpen(false)} disabled={isSaving}>
                 {tCommon("cancel")}

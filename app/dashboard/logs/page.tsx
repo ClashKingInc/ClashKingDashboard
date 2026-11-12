@@ -1,4 +1,5 @@
 "use client";
+import { WarEventSettings } from "../clans/war-event-settings";
 
 import { useGuildId } from "@/lib/dashboard-route";
 import { dashboardEndpoints, type EndpointResponse } from "@clashking/api-contracts";
@@ -35,6 +36,7 @@ import { ChannelCombobox } from "@/components/ui/channel-combobox";
 import { ClanCombobox } from "@/components/ui/clan-combobox";
 import { JoinPanelSettings } from "@/components/dashboard/join-panel-settings";
 import {
+  Check,
   Users,
   Swords,
   Castle,
@@ -240,6 +242,7 @@ export default function LogsPage() {
   const t = useTranslations("LogsPage");
   const common = useTranslations("Common");
   const CLAN_LOGS: LogTypeDefinition[] = [
+    { keys: ['donation_log'], label: t('clanLogs.donationLog.label'), description: t('clanLogs.donationLog.description'), icon: TrendingUp, color: 'green' },
     { keys: ['join_log'], label: t('clanLogs.joinLog.label'), description: t('clanLogs.joinLog.description'), icon: Users, color: 'green', exampleLink: 'https://discord.com/channels/923764211845312533/1128182552121839648' },
     { keys: ['leave_log'], label: t('clanLogs.leaveLog.label'), description: t('clanLogs.leaveLog.description'), icon: Users, color: 'red', exampleLink: 'https://discord.com/channels/923764211845312533/1128182846218055722' },
     { keys: ['clan_achievement_log'], label: t('clanLogs.clanAchievementLog.label'), description: t('clanLogs.clanAchievementLog.description'), icon: Award, color: 'yellow' },
@@ -284,7 +287,7 @@ export default function LogsPage() {
   const [dataError,setDataError]=useState<string|null>(null);
   const [saveErrors,setSaveErrors]=useState<Record<string,string>>({});
   const [reload,setReload]=useState(0);
-  type LogDraft={channel:string;thread:string;show:boolean;redditRole:string;redditAccounts:string;redditMin:string;redditComments:boolean};
+  type LogDraft={saved?:boolean;channel:string;thread:string;show:boolean;redditRole:string;redditAccounts:string;redditMin:string;redditComments:boolean};
   const [logDrafts,setLogDrafts]=useState<Record<string,LogDraft>>({});
   const [channels, setChannels] = useState<Channel[]>([]);
   const [threads, setThreads] = useState<Thread[]>([]);
@@ -541,7 +544,7 @@ export default function LogsPage() {
     const draftKey=`${guildId}:${serverScoped?"server":selectedClan}:${logDef.keys[0]}`;
     const defaults:LogDraft={channel:selectedChannel,thread:selectedThread,show:false,redditRole:selectedLog?.reddit_role_id??"",redditAccounts:(selectedLog?.reddit_accounts??[]).join(", "),redditMin:String(selectedLog?.reddit_min_townhall??"any"),redditComments:selectedLog?.reddit_include_comments??false};
     const draft=logDrafts[draftKey]??defaults;
-    const updateDraft=(changes:Partial<LogDraft>)=>setLogDrafts(current=>({...current,[draftKey]:{...defaults,...current[draftKey],...changes}}));
+    const updateDraft=(changes:Partial<LogDraft>)=>setLogDrafts(current=>({...current,[draftKey]:{...defaults,...current[draftKey],saved:false,...changes}}));
     const showEnableForm=draft.show,setShowEnableForm=(show:boolean)=>updateDraft({show});
     const pendingChannel=draft.channel,setPendingChannel=(channel:string)=>updateDraft({channel});
     const pendingThread=draft.thread,setPendingThread=(thread:string)=>updateDraft({thread});
@@ -581,7 +584,7 @@ export default function LogsPage() {
         serverScoped,
         isReddit ? { reddit_role_id: redditRole || null, ...(isUserReddit ? {reddit_accounts:parsedAccounts,reddit_include_comments:redditComments} : {reddit_min_townhall:redditMin==="any"?null:Number(redditMin)}) } : undefined,
       );
-      if(saved)setShowEnableForm(false);
+      if(saved)updateDraft({show:false,saved:true});
     };
 
     return (
@@ -778,7 +781,7 @@ export default function LogsPage() {
                   <p className="text-xs text-muted-foreground">{t("redditOptions.userHelp")}</p>
                 </div><div className="flex items-center justify-between gap-3"><Label htmlFor="reddit-comments">{t("redditOptions.includeComments")}</Label><Switch id="reddit-comments" checked={redditComments} onCheckedChange={value=>updateDraft({redditComments:value})} disabled={isSaving || (isConfigured && !isEnabled)} /></div></> : <div className="space-y-1.5"><Label>{t("redditOptions.minimumTownHall")}</Label><Select value={redditMin} onValueChange={value=>updateDraft({redditMin:value})} disabled={isSaving || (isConfigured && !isEnabled)}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="any">{t("redditOptions.anyTownHall")}</SelectItem>{Array.from({length:12},(_,i)=>18-i).map(level=><SelectItem key={level} value={String(level)}><span className="flex items-center gap-2"><Image src={townHallImageUrl(level)} alt="" width={24} height={24} className="size-6 object-contain" />TH{level}+</span></SelectItem>)}</SelectContent></Select><p className="text-xs text-muted-foreground">{t("redditOptions.minimumHelp")}</p></div>}
               </div>}
-              {destinationChanged && <Button
+              <div className="flex h-9 items-center gap-2">{destinationChanged ? <Button
                 type="button"
                 size="sm"
                 onClick={saveDestination}
@@ -786,7 +789,7 @@ export default function LogsPage() {
               >
                 {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {t('logCard.saveDestination')}
-              </Button>}
+              </Button> : draft.saved ? <span role="status" className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400"><Check className="h-4 w-4" />Saved</span> : null}</div>
               {saveErrors[draftKey]&&<p role="alert" className="text-sm text-destructive">{saveErrors[draftKey]}</p>}
             </div>
           )}
@@ -867,10 +870,6 @@ export default function LogsPage() {
 
         <section className="space-y-6">
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-            <div>
-              <h2 className="text-lg font-semibold text-foreground">{t("source.title")}</h2>
-              <p className="mt-1 text-sm text-muted-foreground">{t("source.description")}</p>
-            </div>
             {loading ? (
               <Skeleton className="h-12 w-full rounded-xl md:w-[340px]" />
             ) : (
@@ -919,7 +918,7 @@ export default function LogsPage() {
                   {clanLogTabs.map((tab) => (
                     <TabsContent key={tab.value} value={tab.value} className="mt-0">
                       {tab.value === "countdowns" ? (
-                        selectedClan && <CountdownsPanel serverId={guildId} clanTag={selectedClan} />
+                        selectedClan && <div className="space-y-3"><WarEventSettings key={`war:${guildId}:${selectedClan}`} serverId={guildId} clanTag={selectedClan} /><CountdownsPanel serverId={guildId} clanTag={selectedClan} /></div>
                       ) : (
                         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
                           {tab.definitions?.map((logDef) => renderLogCard({logDef,statusLoading:loading}))}

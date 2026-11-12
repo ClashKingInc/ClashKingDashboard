@@ -17,6 +17,7 @@ import { useTranslations } from "use-intl";
 const STALE_THRESHOLD_SECONDS = 2 * 24 * 60 * 60; // 2 days
 
 interface MembersTableProps {
+  readonly feedbackForMember?:(tag:string)=>React.ReactNode;
   readonly heroAnchors?: readonly [number, number, number];
   readonly members: RosterMember[];
   readonly columns: string[];
@@ -33,6 +34,7 @@ interface MembersTableProps {
 }
 
 export function MembersTable({
+  feedbackForMember,
   heroAnchors = [50, 75, 90],
   members,
   columns,
@@ -390,6 +392,7 @@ export function MembersTable({
                     <Trash2 className="w-4 h-4" />
                   </Button>
                 </div>
+                {feedbackForMember?.(member.tag)}
               </td>
             </tr>
           ))}

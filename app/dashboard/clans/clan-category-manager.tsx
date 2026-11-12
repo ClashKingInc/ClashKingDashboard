@@ -52,7 +52,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useToast } from "@/components/ui/use-toast";
+import { ActionFeedback, useActionFeedback } from "@/components/ui/action-feedback";
 import { cn } from "@/lib/utils";
 import { apiClient } from "@/lib/api/client";
 import {
@@ -181,7 +181,7 @@ export function ClanCategoryManager({
 }: Readonly<ClanCategoryManagerProps>) {
   const t = useTranslations("ClansPage.categories");
   const tCommon = useTranslations("Common");
-  const { toast } = useToast();
+  const {notices,report,clear}=useActionFeedback(serverId);
   const [categories, setCategories] = useState<ClanCategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -201,7 +201,7 @@ export function ClanCategoryManager({
   );
 
   const loadCategories = async () => {
-    setLoading(true);
+    if(!categories.length)setLoading(true);
     setError(null);
     const response = await apiClient.clanCategories.list(serverId);
     if (!isClanCategoriesResponse(response.data)) {
@@ -224,8 +224,8 @@ export function ClanCategoryManager({
     await Promise.all([loadCategories(), onRefreshClans()]);
   };
 
-  const showError = (message: string) => {
-    toast({
+  const showError = (message: string,scope="categories") => {
+    report(scope,{
       title: tCommon("error"),
       description: message,
       variant: "destructive",
@@ -235,20 +235,20 @@ export function ClanCategoryManager({
   const createCategory = async () => {
     if (creating) return;
     if (!validateClanCategoryName(createName)) {
-      showError(t("errors.invalidName"));
+      showError(t("errors.invalidName"),"create");
       return;
     }
-    setCreating(true);
+    clear("create");setCreating(true);
     const response = await apiClient.clanCategories.create(serverId, createName);
     if (!isClanCategoryMutationResponse(response.data)) {
-      showError(response.error || t("errors.create"));
+      showError(response.error || t("errors.create"),"create");
       setCreating(false);
       return;
     }
     setCreateName("");
     try {
       await refreshAfterMutation();
-      toast({
+      report("create",{
         title: tCommon("success"),
         description: t("created", { name: response.data.category.name }),
       });
@@ -260,6 +260,7 @@ export function ClanCategoryManager({
   };
 
   const openRename = (category: ClanCategory) => {
+    clear("rename");
     setRenameTarget(category);
     setRenameName(category.name);
   };
@@ -267,7 +268,7 @@ export function ClanCategoryManager({
   const renameCategory = async () => {
     if (renaming) return;
     if (!renameTarget || !validateClanCategoryName(renameName)) {
-      showError(t("errors.invalidName"));
+      showError(t("errors.invalidName"),"rename");
       return;
     }
     setRenaming(true);
@@ -277,14 +278,14 @@ export function ClanCategoryManager({
       renameName,
     );
     if (!isClanCategoryMutationResponse(response.data)) {
-      showError(response.error || t("errors.rename"));
+      showError(response.error || t("errors.rename"),"rename");
       setRenaming(false);
       return;
     }
     setRenameTarget(null);
     try {
       await refreshAfterMutation();
-      toast({
+      report("categories",{
         title: tCommon("success"),
         description: t("renamed", { name: response.data.category.name }),
       });
@@ -352,13 +353,15 @@ export function ClanCategoryManager({
     }
     setCategories([...response.data.items]);
     onCategoriesChange([...response.data.items]);
-    toast({ title: tCommon("success"), description: t("reordered") });
+    report("categories",{ title: tCommon("success"), description: t("reordered") });
     setReordering(false);
   };
 
   return (
     <>
       <div className="space-y-4">
+        <ActionFeedback notice={notices.categories} reserve />
+        <ActionFeedback notice={notices.create} />
         <div className="flex flex-col gap-2 sm:flex-row">
           <div className="flex-1 space-y-1.5">
             <Label htmlFor="new-clan-category">{t("createLabel")}</Label>
@@ -460,6 +463,7 @@ export function ClanCategoryManager({
               }}
             />
           </div>
+          <ActionFeedback notice={notices.rename} reserve />
           <DialogFooter>
             <Button variant="outline" onClick={() => setRenameTarget(null)} disabled={renaming}>
               {tCommon("cancel")}

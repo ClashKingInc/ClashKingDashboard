@@ -156,7 +156,7 @@ export function DashboardLayoutWrapper({
           )}
         </div>}
 
-        <main ref={mainContentRef} className={usesEditorShell ? "min-h-0 flex-1 overflow-hidden" : `dashboard-content @container/dashboard min-h-0 flex-1 overflow-y-auto [scrollbar-gutter:stable] ${embedded ? "overscroll-y-contain [scroll-behavior:auto]" : ""}`}>
+        <main ref={mainContentRef} className={usesEditorShell ? "min-h-0 flex-1 overflow-hidden" : `dashboard-content @container/dashboard min-h-0 flex-1 overflow-y-auto ${embedded ? "overscroll-y-contain [scroll-behavior:auto]" : ""}`}>
           {children}
         </main>
         {!embedded && <SupportBanner/>}
