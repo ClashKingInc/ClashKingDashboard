@@ -8,7 +8,7 @@ import { executeSharedEndpoint } from "@/lib/api/shared-client";
 import { fetchAllServerLinks } from "@/lib/api/all-server-links";
 
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "@/components/app-image";
 import {
@@ -470,7 +470,7 @@ function LinksStatistics({guildId,data,loading,error,loadServer}:Readonly<{guild
         <Card className="border-0 shadow-sm shadow-black/5"><CardHeader><CardTitle className="text-sm">Family accounts linked</CardTitle></CardHeader><CardContent className="space-y-2"><MetricRow label="Linked players" value={`${stats.linked} / ${stats.players}`} /><MetricRow label="Without links" value={stats.players-stats.linked} /><div className="h-2.5 overflow-hidden rounded-full bg-secondary"><div className="h-full rounded-full bg-primary" style={{width:`${percent(stats.linked,stats.players)}%`}} /></div><p className="text-right text-xs text-muted-foreground">{percent(stats.linked,stats.players)}% linked</p></CardContent></Card>
         <Card className="border-0 shadow-sm shadow-black/5"><CardHeader><CardTitle className="text-sm">Verification</CardTitle></CardHeader><CardContent className="space-y-2"><MetricRow label="Verified" value={`${stats.verified} / ${stats.linked}`} /><MetricRow label="Unverified" value={stats.linked-stats.verified} /><div className="h-2.5 overflow-hidden rounded-full bg-secondary"><div className="h-full rounded-full bg-emerald-600" style={{width:`${percent(stats.verified,stats.linked)}%`}} /></div><p className="text-right text-xs text-muted-foreground">{percent(stats.verified,stats.linked)}% verified</p></CardContent></Card>
         <Card className="border-0 shadow-sm shadow-black/5"><CardHeader><CardTitle className="text-sm">Discord members</CardTitle></CardHeader><CardContent className="space-y-2"><MetricRow label="Linked to family accounts" value={stats.discordMembers} /><MetricRow label="In this server" value={`${stats.inServer} (${percent(stats.inServer,stats.discordMembers)}%)`} /><MetricRow label="1 family account" value={stats.accountDistribution.one} /><MetricRow label="2–3 accounts" value={stats.accountDistribution.twoOrThree} /><MetricRow label="4+ accounts" value={stats.accountDistribution.fourOrMore} /></CardContent></Card>
-        <Card className="border-0 shadow-sm shadow-black/5"><CardHeader><CardTitle className="text-sm">Town Hall levels</CardTitle></CardHeader><CardContent className="space-y-2">{stats.townHalls.map(({level,count})=><MetricRow key={level} label={level?`Town Hall ${level}`:"Unknown Town Hall"} value={`${count} (${percent(count,stats.players)}%)`} />)}</CardContent></Card>
+        <Card className="border-0 shadow-sm shadow-black/5"><CardHeader><CardTitle className="text-sm">Town Hall levels</CardTitle></CardHeader><CardContent className="space-y-2">{stats.townHalls.map(({level,count})=><MetricRow key={level} label={level?<span className="inline-flex items-center gap-2"><Image src={townHallImageUrl(level)} alt="" width={20} height={20} unoptimized className="h-5 w-5 shrink-0 object-contain" />TH {level}</span>:"Unknown TH"} value={`${count} (${percent(count,stats.players)}%)`} />)}</CardContent></Card>
       </div>}
   </div>;
 }
@@ -535,7 +535,7 @@ function LinksStats({ data, loading }: Readonly<{ data: ServerLinksResponse | nu
   );
 }
 
-function MetricRow({ label, value }: Readonly<{ label: string; value: string | number }>) {
+function MetricRow({ label, value }: Readonly<{ label: ReactNode; value: string | number }>) {
   return <div className="flex items-center justify-between gap-3 text-sm"><span className="text-muted-foreground">{label}</span><span className="font-medium">{value}</span></div>;
 }
 
