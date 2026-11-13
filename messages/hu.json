@@ -3390,7 +3390,8 @@
     "categoryCoverage": "{configured}/{total} categories",
     "logCoverage": "{configured}/{total} logs",
     "panelPreview": "Discord preview",
-    "panelPreviewHint": "This combines the selected panel embed and ticket buttons so you can review what members will see before configuring it."
+    "panelPreviewHint": "This combines the selected panel embed and ticket buttons so you can review what members will see before configuring it.",
+    "questionPaginationHint": "Legfeljebb 25 kérdést adhatsz hozzá. A Discord több párbeszédablakban jeleníti meg őket."
   },
   "EmbedsPage": {
     "title": "Beágyazások",
@@ -4047,6 +4048,16 @@
     }
   },
   "AccountSettings": {
+    "lab": {
+      "title": "Lab",
+      "description": "A kísérleti funkciók alapértelmezés szerint ki vannak kapcsolva, és változhatnak.",
+      "tenureBehavior": "A legmagasabb elérhető szerepkört a tag Discord-szerverhez való csatlakozásának dátuma határozza meg. Kapcsold be ezt a lehetőséget, majd állítsd be a hónapokban megadott küszöböket az Általános beállításoknál.",
+      "tenureRequirements": "A ClashKingnek szüksége van a Szerepkörök kezelése jogosultságra és egy botszerepkörre a beállított szerepkörök felett. A frissítések a Discord tagadataitól függenek, és időbe telhetnek.",
+      "tenureDisable": "A kikapcsolás megőrzi a mentett szabályokat és a kiosztott szerepköröket. Egy már folyamatban lévő frissítés még befejeződhet.",
+      "readOnly": "A kísérletek módosításához beállításkezelési jogosultság szükséges.",
+      "rolesAccess": "A tagsági idő szabályainak megtekintéséhez hozzáférés szükséges az irányítópult Szerepkörök részéhez.",
+      "profileMoved": "A bot szerverprofiljának szerkesztése"
+    },
     "title": "Account settings",
     "description": "Manage your ClashKing profile, preferences, usage, and subscription.",
     "retry": "Retry",

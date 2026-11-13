@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "use-intl";
 import { GripVertical, Plus, Trash2 } from "lucide-react";
 import Image from "@/components/app-image";
 import { townHallImageUrl } from "@/lib/clash-asset-urls";
@@ -49,8 +50,11 @@ function createQuestion(order: number): RosterSignupQuestion {
 }
 
 export function SignupQuestionsEditor({ questions, onChange, clans = [], context = "roster", accountEnabled = true }: SignupQuestionsEditorProps) {
+  const ticket = useTranslations("TicketsSettingsPage");
   const isTicket = context === "ticket";
-  const maxQuestions = isTicket && !accountEnabled ? 5 : 4;
+  // Ticket applications can continue across modals. Bound new forms to 25;
+  // older larger forms remain editable and can be reduced without data loss.
+  const maxQuestions = isTicket ? Math.max(25, questions.length) : 4;
   const inputClass = isTicket ? "rounded-xl border-0 bg-muted/55 shadow-sm shadow-black/5" : undefined;
   const [pendingRemoval, setPendingRemoval] = useState<RosterSignupQuestion>();
   const [dragged, setDragged] = useState<string>();
@@ -87,7 +91,7 @@ export function SignupQuestionsEditor({ questions, onChange, clans = [], context
             <Badge variant="secondary" className={isTicket ? "border-0" : undefined}>Discord modal</Badge>
           </div>
           <p className="mt-1 text-xs text-muted-foreground">
-            {accountEnabled ? "The account selector uses the first modal slot. Add up to four questions." : "Add up to five questions to the modal."}
+            {isTicket ? ticket("questionPaginationHint") : "The account selector uses the first modal slot. Add up to four questions."}
           </p>
         </div>
         <div className="flex flex-wrap gap-2">{(!isTicket || clans.length > 0) && <Button type="button" size="sm" variant="secondary" disabled={questions.length >= maxQuestions || clans.length === 0 || clans.length > 25}

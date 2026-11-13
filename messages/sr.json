@@ -3134,6 +3134,7 @@
     }
   },
   "TicketsSettingsPage": {
+    "questionPaginationHint": "Dodajte do 25 pitanja. Discord ih po potrebi prikazuje u više prozora.",
     "deleteTicket": "Delete ticket",
     "deleteTicketTitle": "Delete ticket #{number}?",
     "deleteTicketWithTranscript": "The Discord channel will be permanently deleted after its full transcript is saved. The ticket record and latest transcript will remain available.",
@@ -4047,6 +4048,16 @@
     }
   },
   "AccountSettings": {
+    "lab": {
+      "title": "Lab",
+      "description": "Eksperimentalne funkcije su podrazumevano isključene i mogu se promeniti.",
+      "tenureBehavior": "Najviša odgovarajuća uloga koristi datum pridruživanja člana Discord serveru. Uključite prekidač, zatim podesite mesečne pragove u Opštim podešavanjima.",
+      "tenureRequirements": "ClashKing mora imati dozvolu Upravljanje ulogama, a uloga bota mora biti iznad podešenih uloga. Ažuriranja zavise od Discord podataka o članovima i mogu potrajati.",
+      "tenureDisable": "Isključivanjem se čuvaju sačuvana pravila i dodeljene uloge. Ažuriranje koje je već u toku može se završiti.",
+      "readOnly": "Za promenu eksperimenata potrebna je dozvola za upravljanje Podešavanjima.",
+      "rolesAccess": "Za prikaz pravila staža potreban je pristup Ulogama na kontrolnoj tabli.",
+      "profileMoved": "Izmenite profil bota na serveru"
+    },
     "title": "Account settings",
     "description": "Manage your ClashKing profile, preferences, usage, and subscription.",
     "retry": "Retry",

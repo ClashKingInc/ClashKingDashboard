@@ -3134,6 +3134,7 @@
     }
   },
   "TicketsSettingsPage": {
+    "questionPaginationHint": "Adaugă până la 25 de întrebări. Discord le afișează în mai multe ferestre când este necesar.",
     "deleteTicket": "Delete ticket",
     "deleteTicketTitle": "Delete ticket #{number}?",
     "deleteTicketWithTranscript": "The Discord channel will be permanently deleted after its full transcript is saved. The ticket record and latest transcript will remain available.",
@@ -4047,6 +4048,16 @@
     }
   },
   "AccountSettings": {
+    "lab": {
+      "title": "Lab",
+      "description": "Funcțiile experimentale sunt dezactivate implicit și se pot schimba.",
+      "tenureBehavior": "Cel mai înalt rol eligibil folosește data la care membrul s-a alăturat serverului Discord. Activează comutatorul, apoi setează pragurile în luni în Setări generale.",
+      "tenureRequirements": "ClashKing are nevoie de permisiunea Gestionare roluri, iar rolul botului trebuie să fie deasupra rolurilor configurate. Actualizările depind de datele membrilor Discord și pot dura.",
+      "tenureDisable": "Dezactivarea păstrează regulile salvate și rolurile atribuite. O actualizare deja începută se poate încheia.",
+      "readOnly": "Este necesară permisiunea de gestionare a Setărilor pentru a modifica experimentele.",
+      "rolesAccess": "Este necesar accesul la Roluri în panou pentru a vedea regulile de vechime.",
+      "profileMoved": "Editează profilul botului pe server"
+    },
     "title": "Account settings",
     "description": "Manage your ClashKing profile, preferences, usage, and subscription.",
     "retry": "Retry",

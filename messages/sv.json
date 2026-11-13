@@ -3134,6 +3134,7 @@
     }
   },
   "TicketsSettingsPage": {
+    "questionPaginationHint": "Lägg till upp till 25 frågor. Discord visar dem i flera dialogrutor vid behov.",
     "deleteTicket": "Delete ticket",
     "deleteTicketTitle": "Delete ticket #{number}?",
     "deleteTicketWithTranscript": "The Discord channel will be permanently deleted after its full transcript is saved. The ticket record and latest transcript will remain available.",
@@ -4047,6 +4048,16 @@
     }
   },
   "AccountSettings": {
+    "lab": {
+      "title": "Lab",
+      "description": "Experimentella funktioner är avstängda som standard och kan ändras.",
+      "tenureBehavior": "Den högsta kvalificerade rollen utgår från medlemmens anslutningsdatum på Discord. Slå på reglaget och ange månadsgränser i Allmänna inställningar.",
+      "tenureRequirements": "ClashKing behöver Hantera roller och botrollen måste ligga över de konfigurerade rollerna. Uppdateringar beror på Discords medlemsdata och kan ta tid.",
+      "tenureDisable": "När funktionen stängs av behålls sparade regler och tilldelade roller. En pågående uppdatering kan fortfarande slutföras.",
+      "readOnly": "Du behöver hanteringsbehörighet för Inställningar för att ändra experiment.",
+      "rolesAccess": "Du behöver åtkomst till Roller i instrumentpanelen för att se reglerna.",
+      "profileMoved": "Redigera botens serverprofil"
+    },
     "title": "Account settings",
     "description": "Manage your ClashKing profile, preferences, usage, and subscription.",
     "retry": "Retry",

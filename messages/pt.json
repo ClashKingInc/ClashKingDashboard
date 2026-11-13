@@ -3134,6 +3134,7 @@
     }
   },
   "TicketsSettingsPage": {
+    "questionPaginationHint": "Adicione até 25 perguntas. O Discord as mostra em várias janelas quando necessário.",
     "deleteTicket": "Delete ticket",
     "deleteTicketTitle": "Delete ticket #{number}?",
     "deleteTicketWithTranscript": "The Discord channel will be permanently deleted after its full transcript is saved. The ticket record and latest transcript will remain available.",
@@ -4047,6 +4048,16 @@
     }
   },
   "AccountSettings": {
+    "lab": {
+      "title": "Lab",
+      "description": "Os recursos experimentais começam desativados e podem mudar.",
+      "tenureBehavior": "O cargo mais alto elegível usa a data de entrada do membro no Discord. Ative o botão e defina os limites em meses nas Configurações gerais.",
+      "tenureRequirements": "O ClashKing precisa de Gerenciar cargos e o cargo do bot deve estar acima dos cargos configurados. As atualizações dependem dos dados de membros do Discord e podem demorar.",
+      "tenureDisable": "Desativar mantém as regras salvas e os cargos atribuídos. Uma atualização em andamento ainda pode terminar.",
+      "readOnly": "É necessário ter permissão para gerenciar Configurações para alterar experimentos.",
+      "rolesAccess": "É necessário ter acesso a Cargos no painel para ver as regras de tempo no servidor.",
+      "profileMoved": "Editar o perfil do bot no servidor"
+    },
     "title": "Account settings",
     "description": "Manage your ClashKing profile, preferences, usage, and subscription.",
     "retry": "Retry",

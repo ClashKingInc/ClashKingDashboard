@@ -3390,7 +3390,8 @@
     "categoryCoverage": "{configured}/{total} categories",
     "logCoverage": "{configured}/{total} logs",
     "panelPreview": "Discord preview",
-    "panelPreviewHint": "This combines the selected panel embed and ticket buttons so you can review what members will see before configuring it."
+    "panelPreviewHint": "This combines the selected panel embed and ticket buttons so you can review what members will see before configuring it.",
+    "questionPaginationHint": "Afegeix fins a 25 preguntes. Discord les mostra en diversos diàlegs."
   },
   "EmbedsPage": {
     "title": "Incrustacions",
@@ -4047,6 +4048,16 @@
     }
   },
   "AccountSettings": {
+    "lab": {
+      "title": "Lab",
+      "description": "Les funcions experimentals estan desactivades inicialment i poden canviar.",
+      "tenureBehavior": "El rol més alt al qual es té dret es determina segons la data d’entrada del membre al servidor de Discord. Activa aquesta opció i configura els llindars de mesos a Configuració general.",
+      "tenureRequirements": "ClashKing necessita el permís Gestiona els rols i un rol de bot per sobre dels rols configurats. Les actualitzacions depenen de les dades dels membres de Discord i poden trigar.",
+      "tenureDisable": "Desactivar aquesta opció conserva les regles desades i els rols assignats. Una actualització en curs encara es pot completar.",
+      "readOnly": "Cal permís per gestionar la configuració per canviar els experiments.",
+      "rolesAccess": "Cal accés a Rols al tauler per veure les regles d’antiguitat.",
+      "profileMoved": "Edita el perfil del bot al servidor"
+    },
     "title": "Account settings",
     "description": "Manage your ClashKing profile, preferences, usage, and subscription.",
     "retry": "Retry",

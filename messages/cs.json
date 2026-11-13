@@ -3390,7 +3390,8 @@
     "categoryCoverage": "{configured}/{total} categories",
     "logCoverage": "{configured}/{total} logs",
     "panelPreview": "Discord preview",
-    "panelPreviewHint": "This combines the selected panel embed and ticket buttons so you can review what members will see before configuring it."
+    "panelPreviewHint": "This combines the selected panel embed and ticket buttons so you can review what members will see before configuring it.",
+    "questionPaginationHint": "Přidejte až 25 otázek. Discord je zobrazí v několika dialogových oknech."
   },
   "EmbedsPage": {
     "title": "Embedy",
@@ -4047,6 +4048,16 @@
     }
   },
   "AccountSettings": {
+    "lab": {
+      "title": "Lab",
+      "description": "Experimentální funkce jsou ve výchozím stavu vypnuté a mohou se měnit.",
+      "tenureBehavior": "Nejvyšší dosažená role se určuje podle data připojení člena k serveru Discord. Zapněte tuto možnost a potom v Obecných nastaveních nastavte hranice v měsících.",
+      "tenureRequirements": "ClashKing potřebuje oprávnění Spravovat role a roli bota umístěnou nad nastavenými rolemi. Aktualizace závisí na údajích členů Discordu a mohou chvíli trvat.",
+      "tenureDisable": "Vypnutí zachová uložená pravidla i přiřazené role. Již probíhající aktualizace se může dokončit.",
+      "readOnly": "Ke změně experimentů potřebujete oprávnění spravovat nastavení.",
+      "rolesAccess": "K zobrazení pravidel délky členství potřebujete přístup k sekci Role na ovládacím panelu.",
+      "profileMoved": "Upravit profil bota na serveru"
+    },
     "title": "Account settings",
     "description": "Manage your ClashKing profile, preferences, usage, and subscription.",
     "retry": "Retry",

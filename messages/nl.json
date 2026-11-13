@@ -3134,6 +3134,7 @@
     }
   },
   "TicketsSettingsPage": {
+    "questionPaginationHint": "Voeg maximaal 25 vragen toe. Discord toont ze zo nodig in meerdere vensters.",
     "deleteTicket": "Delete ticket",
     "deleteTicketTitle": "Delete ticket #{number}?",
     "deleteTicketWithTranscript": "The Discord channel will be permanently deleted after its full transcript is saved. The ticket record and latest transcript will remain available.",
@@ -4047,6 +4048,16 @@
     }
   },
   "AccountSettings": {
+    "lab": {
+      "title": "Lab",
+      "description": "Experimentele functies staan standaard uit en kunnen veranderen.",
+      "tenureBehavior": "De hoogste toepasselijke rol gebruikt de Discord-lidmaatschapsdatum. Schakel dit in en stel de maandgrenzen in bij Algemene instellingen.",
+      "tenureRequirements": "ClashKing heeft Rollen beheren nodig en de botrol moet boven de ingestelde rollen staan. Updates zijn afhankelijk van Discord-lidgegevens en kunnen even duren.",
+      "tenureDisable": "Uitschakelen behoudt opgeslagen regels en toegewezen rollen. Een lopende verversing kan nog worden voltooid.",
+      "readOnly": "Voor het wijzigen van experimenten is beheerrechten voor Instellingen nodig.",
+      "rolesAccess": "Toegang tot Dashboard-rollen is nodig om lidmaatschapsregels te bekijken.",
+      "profileMoved": "Botserverprofiel bewerken"
+    },
     "title": "Accountinstellingen",
     "description": "Beheer je ClashKing-profiel, voorkeuren, gebruik en abonnement.",
     "retry": "Opnieuw proberen",

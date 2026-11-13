@@ -3134,6 +3134,7 @@
     }
   },
   "TicketsSettingsPage": {
+    "questionPaginationHint": "En fazla 25 soru ekleyin. Discord gerektiğinde soruları birden fazla pencerede gösterir.",
     "deleteTicket": "Delete ticket",
     "deleteTicketTitle": "Delete ticket #{number}?",
     "deleteTicketWithTranscript": "The Discord channel will be permanently deleted after its full transcript is saved. The ticket record and latest transcript will remain available.",
@@ -4047,6 +4048,16 @@
     }
   },
   "AccountSettings": {
+    "lab": {
+      "title": "Lab",
+      "description": "Deneysel özellikler varsayılan olarak kapalıdır ve değişebilir.",
+      "tenureBehavior": "Uygun olan en yüksek rol, üyenin Discord sunucusuna katılma tarihine göre belirlenir. Bu anahtarı açın ve Genel Ayarlar bölümünde ay eşiklerini belirleyin.",
+      "tenureRequirements": "ClashKing’in Rolleri Yönet izni olmalı ve bot rolü yapılandırılan rollerin üzerinde bulunmalıdır. Güncellemeler Discord üye verilerine bağlıdır ve zaman alabilir.",
+      "tenureDisable": "Kapatmak, kaydedilen kuralları ve atanmış rolleri korur. Devam eden bir yenileme tamamlanabilir.",
+      "readOnly": "Deneyleri değiştirmek için Ayarları yönetme izni gerekir.",
+      "rolesAccess": "Kıdem kurallarını görmek için kontrol panelinde Rollere erişim gerekir.",
+      "profileMoved": "Botun sunucu profilini düzenle"
+    },
     "title": "Account settings",
     "description": "Manage your ClashKing profile, preferences, usage, and subscription.",
     "retry": "Retry",

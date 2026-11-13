@@ -3390,7 +3390,8 @@
     "categoryCoverage": "{configured}/{total} categories",
     "logCoverage": "{configured}/{total} logs",
     "panelPreview": "Discord preview",
-    "panelPreviewHint": "This combines the selected panel embed and ticket buttons so you can review what members will see before configuring it."
+    "panelPreviewHint": "This combines the selected panel embed and ticket buttons so you can review what members will see before configuring it.",
+    "questionPaginationHint": "Προσθέστε έως 25 ερωτήσεις. Το Discord τις εμφανίζει σε πολλά παράθυρα διαλόγου."
   },
   "EmbedsPage": {
     "title": "Embed",
@@ -4047,6 +4048,16 @@
     }
   },
   "AccountSettings": {
+    "lab": {
+      "title": "Lab",
+      "description": "Οι πειραματικές λειτουργίες είναι αρχικά απενεργοποιημένες και ενδέχεται να αλλάξουν.",
+      "tenureBehavior": "Ο υψηλότερος διαθέσιμος ρόλος καθορίζεται από την ημερομηνία εισόδου του μέλους στον διακομιστή Discord. Ενεργοποιήστε αυτήν την επιλογή και ορίστε τα όρια μηνών στις Γενικές ρυθμίσεις.",
+      "tenureRequirements": "Το ClashKing χρειάζεται την άδεια Διαχείριση ρόλων και έναν ρόλο bot πάνω από τους καθορισμένους ρόλους. Οι ενημερώσεις εξαρτώνται από τα δεδομένα μελών του Discord και μπορεί να χρειαστούν χρόνο.",
+      "tenureDisable": "Η απενεργοποίηση διατηρεί τους αποθηκευμένους κανόνες και τους εκχωρημένους ρόλους. Μια ενημέρωση που βρίσκεται ήδη σε εξέλιξη μπορεί να ολοκληρωθεί.",
+      "readOnly": "Απαιτείται άδεια διαχείρισης ρυθμίσεων για την αλλαγή πειραματικών λειτουργιών.",
+      "rolesAccess": "Απαιτείται πρόσβαση στην ενότητα Ρόλοι του πίνακα ελέγχου για την προβολή κανόνων διάρκειας συμμετοχής.",
+      "profileMoved": "Επεξεργασία του προφίλ διακομιστή του bot"
+    },
     "title": "Account settings",
     "description": "Manage your ClashKing profile, preferences, usage, and subscription.",
     "retry": "Retry",

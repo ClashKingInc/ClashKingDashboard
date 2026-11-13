@@ -3390,7 +3390,8 @@
     "categoryCoverage": "{configured}/{total} categories",
     "logCoverage": "{configured}/{total} logs",
     "panelPreview": "Discord preview",
-    "panelPreviewHint": "This combines the selected panel embed and ticket buttons so you can review what members will see before configuring it."
+    "panelPreviewHint": "This combines the selected panel embed and ticket buttons so you can review what members will see before configuring it.",
+    "questionPaginationHint": "Füge bis zu 25 Fragen hinzu. Discord zeigt sie in mehreren Dialogfenstern an."
   },
   "EmbedsPage": {
     "title": "Embeds",
@@ -4047,6 +4048,16 @@
     }
   },
   "AccountSettings": {
+    "lab": {
+      "title": "Lab",
+      "description": "Experimentelle Funktionen sind zunächst deaktiviert und können sich ändern.",
+      "tenureBehavior": "Die höchste erreichte Rolle richtet sich nach dem Beitrittsdatum des Mitglieds auf dem Discord-Server. Aktiviere diese Option und lege anschließend unter Allgemeine Einstellungen die Monatsgrenzen fest.",
+      "tenureRequirements": "ClashKing benötigt die Berechtigung Rollen verwalten und eine Bot-Rolle oberhalb der konfigurierten Rollen. Aktualisierungen hängen von den Discord-Mitgliedsdaten ab und können einige Zeit dauern.",
+      "tenureDisable": "Beim Deaktivieren bleiben gespeicherte Regeln und zugewiesene Rollen erhalten. Eine bereits laufende Aktualisierung kann noch abgeschlossen werden.",
+      "readOnly": "Zum Ändern von Experimenten ist die Berechtigung zum Verwalten der Einstellungen erforderlich.",
+      "rolesAccess": "Zum Anzeigen der Regeln für die Mitgliedschaftsdauer ist Zugriff auf Rollen im Dashboard erforderlich.",
+      "profileMoved": "Serverprofil des Bots bearbeiten"
+    },
     "title": "Account settings",
     "description": "Manage your ClashKing profile, preferences, usage, and subscription.",
     "retry": "Retry",

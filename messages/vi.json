@@ -3134,6 +3134,7 @@
     }
   },
   "TicketsSettingsPage": {
+    "questionPaginationHint": "Thêm tối đa 25 câu hỏi. Discord sẽ hiển thị chúng trong nhiều hộp thoại khi cần.",
     "deleteTicket": "Delete ticket",
     "deleteTicketTitle": "Delete ticket #{number}?",
     "deleteTicketWithTranscript": "The Discord channel will be permanently deleted after its full transcript is saved. The ticket record and latest transcript will remain available.",
@@ -4047,6 +4048,16 @@
     }
   },
   "AccountSettings": {
+    "lab": {
+      "title": "Lab",
+      "description": "Các tính năng thử nghiệm mặc định tắt và có thể thay đổi.",
+      "tenureBehavior": "Vai trò đủ điều kiện cao nhất dựa trên ngày thành viên tham gia máy chủ Discord. Bật công tắc rồi đặt ngưỡng số tháng trong Cài đặt chung.",
+      "tenureRequirements": "ClashKing cần quyền Quản lý vai trò và vai trò của bot phải cao hơn các vai trò đã cấu hình. Việc cập nhật phụ thuộc vào dữ liệu thành viên Discord và có thể mất thời gian.",
+      "tenureDisable": "Tắt tính năng vẫn giữ các quy tắc đã lưu và vai trò đã cấp. Lượt làm mới đang diễn ra vẫn có thể hoàn tất.",
+      "readOnly": "Cần quyền quản lý Cài đặt để thay đổi thử nghiệm.",
+      "rolesAccess": "Cần quyền truy cập Vai trò trên bảng điều khiển để xem quy tắc thâm niên.",
+      "profileMoved": "Chỉnh sửa hồ sơ bot trên máy chủ"
+    },
     "title": "Account settings",
     "description": "Manage your ClashKing profile, preferences, usage, and subscription.",
     "retry": "Retry",
