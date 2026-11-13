@@ -65,7 +65,8 @@ export function DocumentMetadata() {
         document.title = metadata.title;
         setMeta("description", metadata.description);
         setMeta("robots", "index, follow");
-        document.documentElement.lang = route.locale;
+        // LocaleProvider owns the rendered document language. Route-neutral
+        // info pages can display a saved language even when their SEO is English.
         appendManagedLink("canonical", metadata.canonical);
         for (const [locale, href] of Object.entries(metadata.languageAlternates)) {
           appendManagedLink("alternate", href, locale);

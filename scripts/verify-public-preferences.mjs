@@ -85,6 +85,12 @@ try {
   await waitLocale(other, "en"); // Public URL wins for manual mode; saved preference remains French.
   assert.equal(await other.evaluate(() => localStorage.getItem("clashking_locale")), "fr");
   await other.waitForFunction(() => document.documentElement.classList.contains("dark"));
+  await other.goto(`${dash}/features`);
+  await waitLocale(other, "fr");
+  await other.waitForFunction(() => document.querySelector('link[rel="canonical"]')?.href === "https://clashk.ing/features");
+  assert.equal(await other.locator("html").getAttribute("lang"), "fr", "English SEO must not overwrite translated UI language");
+  await other.goto(`${dash}/privacy`);
+  await waitLocale(other, "en");
   await openPreferences(other);
   await other.locator(".ck-theme-options button").nth(0).click();
   await other.waitForFunction(() => document.documentElement.classList.contains("light"));
