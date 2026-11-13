@@ -3,13 +3,18 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { IntlProvider } from "use-intl";
 import englishMessages from "@/messages/en.json";
+import { useRouter } from "@/lib/navigation";
 import { embeddedServerId } from '@/lib/auth/embedded';
 import {
   DASHBOARD_LOCALE_MODE_STORAGE_KEY,
   DASHBOARD_LOCALE_STORAGE_KEY,
   getPublicRoute,
   resolveBrowserLocale,
-  resolveDashboardLocalePreference,
+  initialLocalePreference,
+  preferredPublicPath,
+  type LocalePreference,
+  readSavedLocalePreference,
+  saveLocalePreference,
   type LocaleMode,
   type SupportedLocale,
 } from "@/lib/locale-preference";
@@ -54,9 +59,6 @@ const messageLoaders: Record<SupportedLocale, () => Promise<Messages>> = {
 
 const RTL_LOCALES = new Set<SupportedLocale>(["ar", "he", "ur"]);
 
-const getFixedPublicRoute = (pathname: string) =>
-  pathname === "/" ? undefined : getPublicRoute(pathname);
-
 type LocaleContextValue = {
   locale: SupportedLocale;
   mode: LocaleMode;
@@ -72,18 +74,19 @@ type DashboardLocaleChangeDetail = {
 };
 
 export function updateDashboardLocale(locale: SupportedLocale, mode: LocaleMode): void {
-  localStorage.setItem(DASHBOARD_LOCALE_STORAGE_KEY, locale);
-  localStorage.setItem(DASHBOARD_LOCALE_MODE_STORAGE_KEY, mode);
+  saveLocalePreference(locale, mode);
   globalThis.dispatchEvent(new CustomEvent<DashboardLocaleChangeDetail>(DASHBOARD_LOCALE_CHANGE_EVENT, {
     detail: { locale, mode },
   }));
 }
 
 export function LocaleProvider({ children, pathname = globalThis.location.pathname }: { readonly children: React.ReactNode; readonly pathname?: string }) {
-  const [locale, setLocale] = useState<SupportedLocale>("en");
+  const [locale, setLocale] = useState<SupportedLocale>(() => getPublicRoute(pathname)?.locale ?? "en");
+  const [loadedLocale, setLoadedLocale] = useState<SupportedLocale | null>(null);
   const [messages, setMessages] = useState<Messages>(englishMessages);
   const [mode, setMode] = useState<LocaleMode>("manual");
   const localeRequestId = useRef(0);
+  const router = useRouter();
 
   const applyLocale = useCallback(async (nextLocale: SupportedLocale) => {
     const requestId = ++localeRequestId.current;
@@ -91,18 +94,25 @@ export function LocaleProvider({ children, pathname = globalThis.location.pathna
     if (requestId !== localeRequestId.current) return;
     setMessages(nextMessages);
     setLocale(nextLocale);
+    setLoadedLocale(nextLocale);
     document.documentElement.lang = nextLocale;
     document.documentElement.dir = RTL_LOCALES.has(nextLocale) ? "rtl" : "ltr";
   }, []);
 
+  const applyPreference = useCallback((preference: LocalePreference) => {
+    setMode(preference.mode);
+    const redirectPath = preferredPublicPath(pathname, preference);
+    if (redirectPath) router.replace(`${redirectPath}${globalThis.location.search}${globalThis.location.hash}`);
+    const publicLocale = getPublicRoute(pathname)?.locale;
+    void applyLocale(preference.mode === "browser" ? preference.locale : publicLocale ?? preference.locale);
+  }, [applyLocale, pathname, router]);
+
   const setDashboardLocale = useCallback(
     (nextLocale: SupportedLocale, nextMode: LocaleMode) => {
-      localStorage.setItem(DASHBOARD_LOCALE_STORAGE_KEY, nextLocale);
-      localStorage.setItem(DASHBOARD_LOCALE_MODE_STORAGE_KEY, nextMode);
-      setMode(nextMode);
-      void applyLocale(nextLocale);
+      saveLocalePreference(nextLocale, nextMode);
+      applyPreference({ locale: nextLocale, mode: nextMode });
     },
-    [applyLocale],
+    [applyPreference],
   );
 
   useEffect(() => {
@@ -110,87 +120,89 @@ export function LocaleProvider({ children, pathname = globalThis.location.pathna
       const candidate=(new URLSearchParams(window.location.search).get('locale')??sessionStorage.getItem('ck_embedded_locale')??'en').split(/[-_]/)[0];
       if(candidate && candidate in messageLoaders){sessionStorage.setItem('ck_embedded_locale',candidate);void applyLocale(candidate as SupportedLocale);return;}
     }
-    const publicRoute = getFixedPublicRoute(pathname);
-    if (publicRoute) {
-      void applyLocale(publicRoute.locale);
-      return;
-    }
     if (pathname === "/concepts/clan-signal") {
       void applyLocale("en");
       return;
     }
 
-    const preference = resolveDashboardLocalePreference(
-      localStorage.getItem(DASHBOARD_LOCALE_MODE_STORAGE_KEY),
-      localStorage.getItem(DASHBOARD_LOCALE_STORAGE_KEY),
-      navigator.languages,
-    );
-
-    setMode(preference.mode);
-    void applyLocale(preference.locale);
-  }, [applyLocale, pathname]);
+    const preference = initialLocalePreference(pathname, readSavedLocalePreference(), navigator.languages);
+    saveLocalePreference(preference.locale, preference.mode);
+    applyPreference(preference);
+  }, [applyLocale, applyPreference, pathname]);
 
   useEffect(() => {
+    const refreshPreference = () => {
+      if (embeddedServerId() || pathname === "/concepts/clan-signal") return;
+      const preference = initialLocalePreference(pathname, readSavedLocalePreference(), navigator.languages);
+      // Reconcile this origin's local storage with the cross-origin cookie too,
+      // so language settings and future navigation use the same preference.
+      saveLocalePreference(preference.locale, preference.mode);
+      applyPreference(preference);
+    };
     const handleStorage = (event: StorageEvent) => {
-      if (
-        getFixedPublicRoute(globalThis.location.pathname) ||
-        globalThis.location.pathname === "/concepts/clan-signal" ||
-        (event.key !== DASHBOARD_LOCALE_STORAGE_KEY &&
-          event.key !== DASHBOARD_LOCALE_MODE_STORAGE_KEY)
-      ) {
-        return;
-      }
-
-      const preference = resolveDashboardLocalePreference(
-        localStorage.getItem(DASHBOARD_LOCALE_MODE_STORAGE_KEY),
-        localStorage.getItem(DASHBOARD_LOCALE_STORAGE_KEY),
-        navigator.languages,
-      );
-      setMode(preference.mode);
-      void applyLocale(preference.locale);
+      if (event.key !== null && event.key !== DASHBOARD_LOCALE_STORAGE_KEY && event.key !== DASHBOARD_LOCALE_MODE_STORAGE_KEY) return;
+      refreshPreference();
+    };
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible") refreshPreference();
     };
 
+    // Storage events do not cross website/dashboard origins. Refresh on return
+    // to an existing tab without requiring navigation or a reload.
     globalThis.addEventListener("storage", handleStorage);
-    return () => globalThis.removeEventListener("storage", handleStorage);
-  }, [applyLocale]);
+    globalThis.addEventListener("focus", refreshPreference);
+    globalThis.addEventListener("pageshow", refreshPreference);
+    document.addEventListener("visibilitychange", handleVisibility);
+    return () => {
+      globalThis.removeEventListener("storage", handleStorage);
+      globalThis.removeEventListener("focus", refreshPreference);
+      globalThis.removeEventListener("pageshow", refreshPreference);
+      document.removeEventListener("visibilitychange", handleVisibility);
+    };
+  }, [applyPreference, pathname]);
 
   useEffect(() => {
     const handleLocaleChange = (event: Event) => {
       const { locale: nextLocale, mode: nextMode } = (event as CustomEvent<DashboardLocaleChangeDetail>).detail;
-      setMode(nextMode);
-      void applyLocale(nextLocale);
+      applyPreference({ locale: nextLocale, mode: nextMode });
     };
 
     globalThis.addEventListener(DASHBOARD_LOCALE_CHANGE_EVENT, handleLocaleChange);
     return () => globalThis.removeEventListener(DASHBOARD_LOCALE_CHANGE_EVENT, handleLocaleChange);
-  }, [applyLocale]);
+  }, [applyPreference]);
 
   useEffect(() => {
     if (
       mode !== "browser" ||
-      getFixedPublicRoute(globalThis.location.pathname) ||
-      globalThis.location.pathname === "/concepts/clan-signal"
+      pathname === "/concepts/clan-signal"
     ) {
       return;
     }
 
     const handleLanguageChange = () => {
-      void applyLocale(resolveBrowserLocale(navigator.languages));
+      setDashboardLocale(resolveBrowserLocale(navigator.languages), "browser");
     };
 
     globalThis.addEventListener("languagechange", handleLanguageChange);
     return () => globalThis.removeEventListener("languagechange", handleLanguageChange);
-  }, [applyLocale, mode]);
+  }, [setDashboardLocale, mode, pathname]);
 
   const value = useMemo(
     () => ({ locale, mode, setDashboardLocale }),
     [locale, mode, setDashboardLocale],
   );
 
+  // A public URL can change before its lazy catalog arrives. Keep English (or
+  // the previous route's messages) off-screen until the correct catalog is ready.
+  // The initial locale alone is not enough: it must match the loaded messages.
+  const publicLocale = getPublicRoute(pathname)?.locale;
+  const ready = loadedLocale !== null &&
+    (mode === "browser" || !publicLocale || loadedLocale === publicLocale);
+
   return (
     <LocaleContext.Provider value={value}>
       <IntlProvider locale={locale} messages={messages}>
-        {children}
+        {ready ? children : <div aria-busy="true" data-locale-loading="true" />}
       </IntlProvider>
     </LocaleContext.Provider>
   );

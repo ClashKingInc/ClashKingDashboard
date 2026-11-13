@@ -14,7 +14,18 @@ The edge Worker in `workers/dashboard-edge` owns hostname redirects and then del
 
 Browser access tokens exist only in memory. The rotating refresh credential is a host-only `Secure`, `HttpOnly`, `SameSite=Strict` cookie set by `/v2/auth/web/*`. Startup restores the session through `/v2/auth/web/refresh`; `device_id` and non-authoritative user display data may remain in browser storage.
 
-Public language variants use `/`, `/fr`, `/nl`, and their `/privacy` and `/terms` pages. Dashboard and authentication URLs stay locale-neutral; their locale preference is stored in `localStorage`, and the matching catalog is loaded in the browser.
+English uses `/`, `/privacy`, and `/terms`. Other public language variants use `/{locale}`, `/{locale}/privacy`, and `/{locale}/terms` for all locales in `lib/locale-preference.ts`. The URL determines the page language for first visits. After a visitor explicitly enables Browser Language, shared links open the corresponding browser-language URL while keeping the same page, query, and fragment; a dismissible browser-language suggestion lets visitors explicitly enable Browser Language and open that localized URL. A first visit uses the URL language as the initial preference, without overwriting an existing preference. Returning to an open tab refreshes the shared language preference without requiring navigation or reload. Old `/en` links redirect to their unprefixed equivalents. The build generates localized HTML metadata and `sitemap.xml` from the same locale list. The navigation and headings are localized; legal document bodies remain English and are marked with `lang="en"`. Dashboard and authentication URLs stay locale-neutral; their locale preference is stored in `localStorage` and a shared preference cookie between `clashk.ing` and `dash.clashk.ing`, and the matching catalog is loaded in the browser.
+
+The marketing site and dashboard share the `CK_WEB_THEME` preference cookie: Day maps to Light, Sunset to Dark, and System follows the device setting. Each origin also keeps the preference in the dashboard theme storage. Returning to a tab refreshes its shared preference; browsers with Cookie Store events also pick up changes immediately. Existing landing and dashboard choices are migrated on first use. A theme forced by the native embedded dashboard does not overwrite the saved preference.
+
+## Public preference verification
+
+Run `npx playwright install chromium`, then `npm run test:public-preferences`.
+The check builds the application and starts its real local edge Worker. It checks
+all localized HTML routes and uses headless Chromium for language controls,
+cross-origin preference cookies, system themes and slow translation loading.
+Production API and CDN requests are blocked; no screenshots are taken. Browser
+coverage is explicit opt-in and is not added to CI by this change.
 
 ## Development
 

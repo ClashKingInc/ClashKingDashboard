@@ -3869,6 +3869,12 @@
     "goHome": "Ana sayfaya git"
   },
   "ClanSignal": {
+    "languageSuggestion": {
+      "title": "ClashKing sizin dilinizi konuşuyor",
+      "description": "ClashKing, tarayıcınızın dilinde de kullanılabilir.",
+      "stay": "Burada kal",
+      "change": "Tarayıcı dilini kullan"
+    },
     "metadata": {
       "title": "ClashKing | Discord botu, mobil uygulama ve klan kontrol paneli",
       "description": "Savaşları, listeleri, hesapları, hatırlatıcıları ve klan ayarlarını ClashKing ile Discord, mobil ve web üzerinden yönetin.",

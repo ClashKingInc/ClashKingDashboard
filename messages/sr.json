@@ -3869,6 +3869,12 @@
     "goHome": "Idi na početnu"
   },
   "ClanSignal": {
+    "languageSuggestion": {
+      "title": "ClashKing говори ваш језик",
+      "description": "ClashKing је доступан и на језику вашег прегледача.",
+      "stay": "Остани овде",
+      "change": "Користи језик прегледача"
+    },
     "metadata": {
       "title": "ClashKing | Discord bot, mobilna aplikacija i kontrolna tabla klana",
       "description": "Upravljajte ratovima, sastavima, nalozima, podsetnicima i podešavanjima klana uz ClashKing na Discordu, mobilnim uređajima i vebu.",

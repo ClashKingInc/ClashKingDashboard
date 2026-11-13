@@ -3869,6 +3869,12 @@
     "goHome": "Gå til startsiden"
   },
   "ClanSignal": {
+    "languageSuggestion": {
+      "title": "ClashKing snakker ditt språk",
+      "description": "ClashKing er også tilgjengelig på nettleserens språk.",
+      "stay": "Bli her",
+      "change": "Bruk nettleserens språk"
+    },
     "metadata": {
       "title": "ClashKing | Discord-bot, mobilapp og klandashbord",
       "description": "Administrer kriger, spillerlister, kontoer, påminnelser og klaninnstillinger med ClashKing på Discord, mobil og web.",

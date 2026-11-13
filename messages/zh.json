@@ -3869,6 +3869,12 @@
     "goHome": "返回首页"
   },
   "ClanSignal": {
+    "languageSuggestion": {
+      "title": "ClashKing支持你的语言",
+      "description": "ClashKing也支持你的浏览器语言。",
+      "stay": "留在此页",
+      "change": "使用浏览器语言"
+    },
     "metadata": {
       "title": "ClashKing | Discord机器人、移动应用和部落控制面板",
       "description": "通过ClashKing在Discord、移动端和网页端管理部落战、阵容、账号、提醒和部落设置。",

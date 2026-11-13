@@ -3869,6 +3869,12 @@
     "goHome": "Mergi la pagina principală"
   },
   "ClanSignal": {
+    "languageSuggestion": {
+      "title": "ClashKing vorbește limba ta",
+      "description": "ClashKing este disponibil și în limba browserului tău.",
+      "stay": "Rămâi aici",
+      "change": "Folosește limba browserului"
+    },
     "metadata": {
       "title": "ClashKing | Bot Discord, aplicație mobilă și panou pentru clan",
       "description": "Gestionează războaie, liste, conturi, mementouri și clanuri cu ClashKing pe Discord, mobil și web.",

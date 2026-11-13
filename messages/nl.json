@@ -3869,6 +3869,12 @@
     "goHome": "Naar de startpagina"
   },
   "ClanSignal": {
+    "languageSuggestion": {
+      "title": "ClashKing spreekt jouw taal",
+      "description": "ClashKing is ook beschikbaar in je browsertaal.",
+      "stay": "Hier blijven",
+      "change": "Browsertaal gebruiken"
+    },
     "metadata": {
       "title": "ClashKing | Discord-bot, mobiele app en clandashboard",
       "description": "Beheer oorlogen, rosters, accounts, herinneringen en claninstellingen met ClashKing in Discord, op mobiel en op het web.",

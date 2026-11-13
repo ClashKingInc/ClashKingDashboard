@@ -8,6 +8,7 @@ import {
   type RouteComponent,
 } from "@tanstack/react-router";
 import type { ComponentType } from "react";
+import { PUBLIC_LOCALES, publicPath } from "@/lib/locale-preference";
 
 import DashboardRouteLoading from "@/app/dashboard/loading";
 import GiveawaysLoadingPage from "@/app/dashboard/giveaways/loading";
@@ -85,12 +86,11 @@ const publicRoutes = [
   rootPage("support", () => import("@/app/support/page")),
   rootPage("privacy", () => import("@/app/privacy/page")),
   rootPage("terms", () => import("@/app/terms/page")),
-  rootPage("fr", () => import("@/app/fr/page")),
-  rootPage("fr/privacy", () => import("@/app/fr/privacy/page")),
-  rootPage("fr/terms", () => import("@/app/fr/terms/page")),
-  rootPage("nl", () => import("@/app/nl/page")),
-  rootPage("nl/privacy", () => import("@/app/nl/privacy/page")),
-  rootPage("nl/terms", () => import("@/app/nl/terms/page")),
+  ...PUBLIC_LOCALES.filter(locale => locale !== "en").flatMap(locale =>
+    (["/", "/privacy", "/terms"] as const).map(page =>
+      rootPage(publicPath(locale, page), () => import("@/app/localized-public-page")),
+    ),
+  ),
   rootPage("concepts/clan-signal", () => import("@/app/concepts/clan-signal/page")),
 ] as const;
 

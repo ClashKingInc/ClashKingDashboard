@@ -1,21 +1,18 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { BookOpen, Code2, ArrowUpRight } from "lucide-react";
 import Image from "@/components/app-image";
 import Link from "@/components/app-link";
 import { useLocale, useTranslations } from "use-intl";
 import { ClanSignalHeroModel } from "./clan-signal/hero-model";
-import { ClanSignalWordmark } from "./clan-signal/brand";
 import { ClanSignalFooter } from "./clan-signal/footer";
-import { LandingLanguageSwitcher } from "./clan-signal/language-switcher";
 import { RotatingHeadline, SectionTitle, Scribble } from "./clan-signal/rotating-headline";
-import { LandingSessionAction } from "./clan-signal/session-action";
 import { HeroActions, PlatformMark } from "./clan-signal/hero-actions";
 import { LandingCounts } from "./clan-signal/counts";
 import { useLandingMotion } from "./clan-signal/motion";
-import { readLandingTheme } from "./clan-signal/language-switcher";
-import { isPublicLocale, publicPath, type SupportedLocale } from "@/lib/locale-preference";
+import { useLandingTheme } from "./clan-signal/use-landing-theme";
+import { ClanSignalHeader } from "./clan-signal/header";
 import { IOS_APP_STORE_URL } from "@/lib/constants";
 import "../../../app/explorations/clan-signal.css";
 import "../../../app/explorations/clan-signal-rally.css";
@@ -70,12 +67,11 @@ function FeatureList({ features }: { features: readonly Feature[] }) {
 }
 
 export function ClanSignal() {
-  const locale = useLocale() as SupportedLocale;
+  const locale = useLocale();
   const t = useTranslations("ClanSignal");
-  const [landingTheme, setLandingTheme] = useState(readLandingTheme);
+  const { theme: landingTheme, preference: themePreference, changeTheme } = useLandingTheme();
   const motion = useLandingMotion();
   const rootRef = useRef<HTMLElement>(null);
-  const homePath = isPublicLocale(locale) ? publicPath(locale, "/") : "/";
   const headlinePhrases = ['clan', 'stats', 'game'].map(key => [t(`rally.${key}.first`), t(`rally.${key}.prefix`), t(`rally.${key}.word`)]);
   useEffect(() => {
     const root = rootRef.current;
@@ -132,29 +128,7 @@ export function ClanSignal() {
   return (
     <main ref={rootRef} className="clan-signal ck-home" data-cs-theme={landingTheme} data-motion={motion.enabled ? "enabled" : "paused"}>
       <div className="ck-sky">
-      <header className="ck-nav-shell">
-        <nav className="cs-nav ck-wrap" aria-label={t("navigation.ariaLabel")}>
-          <Link href={homePath} aria-label={t("navigation.homeLabel")} className="cs-nav-brand">
-            <ClanSignalWordmark priority />
-          </Link>
-          <div className="cs-nav-links">
-            <a href="#app">{t("navigation.mobileApp")}</a>
-            <a href="#bot">{t("navigation.discordBot")}</a>
-            <a href="#dashboard">{t("navigation.dashboard")}</a>
-          </div>
-          <div className="cs-nav-actions">
-            <LandingLanguageSwitcher
-              label={t("language.label")}
-              appearanceLabel={t("appearance.label")}
-              dayLabel={t("appearance.day")}
-              sunsetLabel={t("appearance.sunset")}
-              initialTheme={landingTheme}
-              onThemeChange={setLandingTheme}
-            />
-            <LandingSessionAction loginLabel={t("actions.login")} dashboardLabel={t("actions.dashboard")} />
-          </div>
-        </nav>
-      </header>
+      <ClanSignalHeader landingTheme={landingTheme} themePreference={themePreference} onThemeChange={changeTheme} />
 
       <section className="ck-hero ck-wrap" aria-label={t('rally.label')}>
         <div className="ck-hero-copy">

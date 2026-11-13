@@ -1,5 +1,5 @@
 import messages from "virtual:public-seo-copy";
-import { publicPath, type PublicLocale, type PublicPagePath } from "@/lib/locale-preference";
+import { PUBLIC_LOCALES, publicPath, type PublicLocale, type PublicPagePath } from "@/lib/locale-preference";
 
 export type PublicPage = "home" | "features" | "help" | "open-source" | "privacy" | "support" | "terms";
 
@@ -30,11 +30,9 @@ const pagePaths = {
 
 const localizedPages = new Set<PublicPage>(["home", "privacy", "terms"]);
 
-const openGraphLocales: Record<PublicLocale, string> = {
-  en: "en_US",
-  fr: "fr_FR",
-  nl: "nl_NL",
-};
+const openGraphLocales = Object.fromEntries(
+  PUBLIC_LOCALES.map(locale => [locale, `${locale}_${new Intl.Locale(locale).maximize().region}`]),
+) as Record<PublicLocale, string>;
 
 export function getPublicPageCopy(locale: PublicLocale, page: PublicPage) {
   const localized = messages[locale];
@@ -82,9 +80,9 @@ export function getPublicMetadata(locale: PublicLocale, page: PublicPage): Publi
   const canonical = `${SITE_ORIGIN}${localizedPath === "/" ? "/" : localizedPath}`;
   const languageAlternates: Readonly<Record<string, string>> = isLocalized
     ? {
-        en: `${SITE_ORIGIN}${publicPath("en", pagePath as PublicPagePath)}`,
-        fr: `${SITE_ORIGIN}${publicPath("fr", pagePath as PublicPagePath)}`,
-        nl: `${SITE_ORIGIN}${publicPath("nl", pagePath as PublicPagePath)}`,
+        ...Object.fromEntries(PUBLIC_LOCALES.map(alternate => [
+          alternate, `${SITE_ORIGIN}${publicPath(alternate, pagePath as PublicPagePath)}`,
+        ])),
         "x-default": `${SITE_ORIGIN}${publicPath("en", pagePath as PublicPagePath)}`,
       }
     : { en: canonical, "x-default": canonical };

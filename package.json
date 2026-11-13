@@ -27,7 +27,8 @@
     "api:manifest": "node scripts/generate-api-migration-manifest.mjs",
     "deploy:dashboard": "npm run build:production && wrangler deploy --config dist/clashking_dashboard/wrangler.json",
     "deploy:assistant": "npm run assistant:check && npm run assistant:config && wrangler deploy --config .wrangler/wrangler.assistant.generated.jsonc",
-    "deploy": "npm run deploy:assistant && npm run deploy:dashboard"
+    "deploy": "npm run deploy:assistant && npm run deploy:dashboard",
+    "test:public-preferences": "npm run build:production && node scripts/verify-public-preferences.mjs"
   },
   "dependencies": {
     "@ai-sdk/openai": "^4.0.60",
@@ -99,8 +100,8 @@
     "@vitejs/plugin-react": "^6.1.1",
     "autoprefixer": "^10.5.5",
     "baseline-browser-mapping": "^2.11.18",
-    "jsdom": "^29.1.1",
     "oxlint": "^1.82.0",
+    "playwright": "1.62.1",
     "postcss": "^8.5.28",
     "tailwindcss": "^4.3.3",
     "typescript": "7.0.2",

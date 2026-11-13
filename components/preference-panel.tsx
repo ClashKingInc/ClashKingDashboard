@@ -39,7 +39,7 @@ export function PreferencePanel({
   </>;
 
   return <>
-    <button type="button" className="ck-language-open" onClick={() => setLanguages(true)}><span><small>{languageLabel}</small><strong>{current.name}</strong></span><ChevronRight size={16} /></button>
+    <button type="button" className="ck-language-open" onClick={() => setLanguages(true)}><span><small>{languageLabel}</small><strong>{mode === "browser" ? navigation("browserLanguage") : current.name}</strong></span><ChevronRight size={16} /></button>
     <fieldset><legend>{appearanceLabel}</legend><div className="ck-theme-options" style={{ gridTemplateColumns: `repeat(${themes.length}, minmax(0, 1fr))` }}>{themes.map(option => <button key={option.value} type="button" aria-pressed={theme === option.value} onClick={() => onThemeChange(option.value)}><span className={`ck-theme-preview ck-theme-${option.value}`} aria-hidden="true" />{option.label}{theme === option.value && <Check size={14} aria-hidden="true" />}</button>)}</div></fieldset>
   </>;
 }

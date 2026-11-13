@@ -1,5 +1,4 @@
 import { ClanSignal } from "@/components/landing/explorations/clan-signal";
-import { PublicLocaleProvider } from "@/components/public-locale-provider";
 
 export const metadata = {
   title: "ClashKing landing page concepts",
@@ -9,8 +8,6 @@ export const metadata = {
 
 export default function ConceptPage() {
   return (
-    <PublicLocaleProvider locale="en">
-      <ClanSignal />
-    </PublicLocaleProvider>
+    <ClanSignal />
   );
 }

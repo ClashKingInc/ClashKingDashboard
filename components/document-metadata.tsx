@@ -1,22 +1,20 @@
 import { useEffect } from "react";
 import { useLocation } from "@tanstack/react-router";
 
-import { getPublicMetadata, type PublicPage } from "@/lib/public-seo";
-import type { PublicLocale } from "@/lib/locale-preference";
+import type { PublicPage } from "@/lib/public-seo";
+import { getPublicRoute, type PublicLocale } from "@/lib/locale-preference";
 
 type PublicRoute = { readonly locale: PublicLocale; readonly page: PublicPage };
 
 function publicRoute(pathname: string): PublicRoute | null {
-  const segments = pathname.split("/").filter(Boolean);
-  const locale: PublicLocale = segments[0] === "fr" || segments[0] === "nl" ? segments.shift() as PublicLocale : "en";
-  const path = `/${segments.join("/")}`;
-  if (path === "/") return { locale, page: "home" };
-  if (locale === "en" && path === "/features") return { locale, page: "features" };
-  if (locale === "en" && path === "/help") return { locale, page: "help" };
-  if (locale === "en" && path === "/open-source") return { locale, page: "open-source" };
-  if (path === "/privacy") return { locale, page: "privacy" };
-  if (locale === "en" && path === "/support") return { locale, page: "support" };
-  if (path === "/terms") return { locale, page: "terms" };
+  const localized = getPublicRoute(pathname);
+  if (localized) {
+    return { locale: localized.locale, page: localized.page === "/" ? "home" : localized.page === "/privacy" ? "privacy" : "terms" };
+  }
+  const path = pathname.replace(/\/$/, "");
+  if (path === "/features" || path === "/help" || path === "/open-source" || path === "/support") {
+    return { locale: "en", page: path.slice(1) as PublicPage };
+  }
   return null;
 }
 
@@ -60,29 +58,34 @@ export function DocumentMetadata() {
     clearManagedHead();
     const route = publicRoute(pathname);
     if (route) {
-      const metadata = getPublicMetadata(route.locale, route.page);
-      document.title = metadata.title;
-      setMeta("description", metadata.description);
-      setMeta("robots", "index, follow");
-      document.documentElement.lang = route.locale;
-      appendManagedLink("canonical", metadata.canonical);
-      for (const [locale, href] of Object.entries(metadata.languageAlternates)) {
-        appendManagedLink("alternate", href, locale);
-      }
-      appendManagedMeta("property", "og:type", "website");
-      appendManagedMeta("property", "og:title", metadata.openGraphTitle);
-      appendManagedMeta("property", "og:description", metadata.description);
-      appendManagedMeta("property", "og:url", metadata.canonical);
-      appendManagedMeta("property", "og:locale", metadata.openGraphLocale);
-      metadata.alternateOpenGraphLocales.forEach((locale) =>
-        appendManagedMeta("property", "og:locale:alternate", locale));
-      appendManagedMeta("property", "og:image", metadata.socialImage);
-      appendManagedMeta("property", "og:image:alt", metadata.socialImageAlt);
-      appendManagedMeta("name", "twitter:card", "summary_large_image");
-      appendManagedMeta("name", "twitter:title", metadata.openGraphTitle);
-      appendManagedMeta("name", "twitter:description", metadata.description);
-      appendManagedMeta("name", "twitter:image", metadata.socialImage);
-      return;
+      let active = true;
+      void import("@/lib/public-seo").then(({ getPublicMetadata }) => {
+        if (!active) return;
+        const metadata = getPublicMetadata(route.locale, route.page);
+        document.title = metadata.title;
+        setMeta("description", metadata.description);
+        setMeta("robots", "index, follow");
+        // LocaleProvider owns the rendered document language. Route-neutral
+        // info pages can display a saved language even when their SEO is English.
+        appendManagedLink("canonical", metadata.canonical);
+        for (const [locale, href] of Object.entries(metadata.languageAlternates)) {
+          appendManagedLink("alternate", href, locale);
+        }
+        appendManagedMeta("property", "og:type", "website");
+        appendManagedMeta("property", "og:title", metadata.openGraphTitle);
+        appendManagedMeta("property", "og:description", metadata.description);
+        appendManagedMeta("property", "og:url", metadata.canonical);
+        appendManagedMeta("property", "og:locale", metadata.openGraphLocale);
+        metadata.alternateOpenGraphLocales.forEach((locale) =>
+          appendManagedMeta("property", "og:locale:alternate", locale));
+        appendManagedMeta("property", "og:image", metadata.socialImage);
+        appendManagedMeta("property", "og:image:alt", metadata.socialImageAlt);
+        appendManagedMeta("name", "twitter:card", "summary_large_image");
+        appendManagedMeta("name", "twitter:title", metadata.openGraphTitle);
+        appendManagedMeta("name", "twitter:description", metadata.description);
+        appendManagedMeta("name", "twitter:image", metadata.socialImage);
+      });
+      return () => { active = false; };
     }
 
     document.title = pathname.startsWith("/dashboard")

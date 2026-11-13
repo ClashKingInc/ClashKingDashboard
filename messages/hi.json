@@ -3869,6 +3869,12 @@
     "goHome": "होम पर जाएँ"
   },
   "ClanSignal": {
+    "languageSuggestion": {
+      "title": "ClashKing आपकी भाषा बोलता है",
+      "description": "ClashKing आपके ब्राउज़र की भाषा में भी उपलब्ध है।",
+      "stay": "यहीं रहें",
+      "change": "ब्राउज़र की भाषा इस्तेमाल करें"
+    },
     "metadata": {
       "title": "ClashKing | Discord बॉट, मोबाइल ऐप और क्लैन डैशबोर्ड",
       "description": "ClashKing से Discord, मोबाइल और वेब पर वॉर, रोस्टर, खाते, रिमाइंडर और क्लैन सेटिंग्स प्रबंधित करें।",

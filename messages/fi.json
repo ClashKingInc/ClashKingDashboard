@@ -3869,6 +3869,12 @@
     "goHome": "Siirry etusivulle"
   },
   "ClanSignal": {
+    "languageSuggestion": {
+      "title": "ClashKing puhuu kieltäsi",
+      "description": "ClashKing on saatavilla myös selaimesi kielellä.",
+      "stay": "Pysy täällä",
+      "change": "Käytä selaimen kieltä"
+    },
     "metadata": {
       "title": "ClashKing | Discord-botti, mobiilisovellus ja klaanien hallintapaneeli",
       "description": "Hallitse sotia, kokoonpanoja, tilejä, muistutuksia ja klaaniasetuksia ClashKingillä Discordissa, mobiilisovelluksessa ja verkossa.",

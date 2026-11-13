@@ -3869,6 +3869,12 @@
     "goHome": "Ugrás a kezdőlapra"
   },
   "ClanSignal": {
+    "languageSuggestion": {
+      "title": "A ClashKing beszéli a nyelvedet",
+      "description": "A ClashKing a böngésződ nyelvén is elérhető.",
+      "stay": "Maradok itt",
+      "change": "A böngésző nyelvének használata"
+    },
     "metadata": {
       "title": "ClashKing | Discord-bot, mobilalkalmazás és klánvezérlőpult",
       "description": "Kezeld a háborúkat, kereteket, fiókokat, emlékeztetőket és klánbeállításokat a ClashKinggel Discordon, mobilon és weben.",
