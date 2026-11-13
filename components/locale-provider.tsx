@@ -129,15 +129,34 @@ export function LocaleProvider({ children, pathname = globalThis.location.pathna
   }, [applyLocale, applyPreference, pathname]);
 
   useEffect(() => {
-    const handleStorage = (event: StorageEvent) => {
-      if (pathname === "/concepts/clan-signal" ||
-        (event.key !== null && event.key !== DASHBOARD_LOCALE_STORAGE_KEY && event.key !== DASHBOARD_LOCALE_MODE_STORAGE_KEY)) return;
+    const refreshPreference = () => {
+      if (embeddedServerId() || pathname === "/concepts/clan-signal") return;
       const preference = initialLocalePreference(pathname, readSavedLocalePreference(), navigator.languages);
+      // Reconcile this origin's local storage with the cross-origin cookie too,
+      // so language settings and future navigation use the same preference.
+      saveLocalePreference(preference.locale, preference.mode);
       applyPreference(preference);
     };
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key !== null && event.key !== DASHBOARD_LOCALE_STORAGE_KEY && event.key !== DASHBOARD_LOCALE_MODE_STORAGE_KEY) return;
+      refreshPreference();
+    };
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible") refreshPreference();
+    };
 
+    // Storage events do not cross website/dashboard origins. Refresh on return
+    // to an existing tab without requiring navigation or a reload.
     globalThis.addEventListener("storage", handleStorage);
-    return () => globalThis.removeEventListener("storage", handleStorage);
+    globalThis.addEventListener("focus", refreshPreference);
+    globalThis.addEventListener("pageshow", refreshPreference);
+    document.addEventListener("visibilitychange", handleVisibility);
+    return () => {
+      globalThis.removeEventListener("storage", handleStorage);
+      globalThis.removeEventListener("focus", refreshPreference);
+      globalThis.removeEventListener("pageshow", refreshPreference);
+      document.removeEventListener("visibilitychange", handleVisibility);
+    };
   }, [applyPreference, pathname]);
 
   useEffect(() => {

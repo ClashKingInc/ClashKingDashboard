@@ -99,6 +99,38 @@ test("public language choices persist through popup, shared links, and dashboard
     await until(() => document.documentElement.lang === "de");
     await React.act(async () => updateDashboardLocale("it", "manual"));
     await until(() => document.documentElement.lang === "it");
+    // The other origin changes only the shared cookie: no storage/custom event
+    // is delivered to this already-open dashboard tab.
+    document.cookie = "CK_WEB_LOCALE=manual:nl; path=/";
+    assert.equal(document.documentElement.lang, "it");
+    await React.act(async () => window.dispatchEvent(new Event("focus")));
+    await until(() => document.documentElement.lang === "nl");
+    assert.equal(router.state.location.pathname, "/login");
+    assert.equal(localStorage.getItem("clashking_locale"), "nl");
+    assert.equal(localStorage.getItem("clashking_locale_mode"), "manual");
+
+    document.cookie = "CK_WEB_LOCALE=manual:fr; path=/";
+    await React.act(async () => window.dispatchEvent(new Event("pageshow")));
+    await until(() => document.documentElement.lang === "fr");
+
+    Object.defineProperty(document, "visibilityState", {configurable:true, value:"hidden"});
+    document.cookie = "CK_WEB_LOCALE=browser:nl; path=/";
+    await React.act(async () => document.dispatchEvent(new Event("visibilitychange")));
+    assert.equal(document.documentElement.lang, "fr");
+    Object.defineProperty(document, "visibilityState", {configurable:true, value:"visible"});
+    await React.act(async () => document.dispatchEvent(new Event("visibilitychange")));
+    await until(() => document.documentElement.lang === "de");
+    assert.equal(localStorage.getItem("clashking_locale_mode"), "browser");
+    assert.equal(localStorage.getItem("clashking_locale"), "de");
+
+    // Native-embedded sessions keep the locale supplied by the native app.
+    sessionStorage.setItem("ck_scoped_server", "123");
+    document.cookie = "CK_WEB_LOCALE=manual:nl; path=/";
+    await React.act(async () => window.dispatchEvent(new Event("focus")));
+    assert.equal(document.documentElement.lang, "de");
+    sessionStorage.removeItem("ck_scoped_server");
+    await React.act(async () => updateDashboardLocale("it", "manual"));
+    await until(() => document.documentElement.lang === "it");
     await navigate("/fr/terms");
     await until(() => document.documentElement.lang === "fr");
     assert.equal(localStorage.getItem("clashking_locale"), "it");

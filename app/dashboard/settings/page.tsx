@@ -11,8 +11,8 @@ import { DashboardTabsList, DashboardTabTrigger } from "@/components/ui/dashboar
 import { useAuthSession } from "@/components/auth-session-provider";
 import { useDashboardAccess } from "@/components/dashboard/dashboard-access-provider";
 import { LabSettings } from "@/components/dashboard/lab-settings";
-import { updateDashboardLocale } from "@/components/locale-provider";
-import { DASHBOARD_LOCALE_MODE_STORAGE_KEY, LANGUAGE_OPTIONS, getLocaleModeFromStorage, resolveBrowserLocale, type LocaleMode, type SupportedLocale } from "@/lib/locale-preference";
+import { updateDashboardLocale, useAppLocale } from "@/components/locale-provider";
+import { LANGUAGE_OPTIONS, resolveBrowserLocale, type SupportedLocale } from "@/lib/locale-preference";
 import { useGuildId } from "@/lib/dashboard-route";
 import { useRouter, useSearchParams } from "@/lib/navigation";
 import { ResourceLimits } from "@/components/support/resource-limits";
@@ -38,9 +38,9 @@ export default function AccountSettingsPage() {
   const { theme = "system", setTheme } = useTheme();
   const [hideSupport, setHideSupport] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [localeMode, setLocaleMode] = useState<LocaleMode>("manual");
-  useEffect(() => { setMounted(true); setHideSupport(localStorage.getItem(SUPPORT_HIDDEN_KEY) === "1"); setLocaleMode(getLocaleModeFromStorage(localStorage.getItem(DASHBOARD_LOCALE_MODE_STORAGE_KEY))); }, []);
-  const applyLanguage = (value: string) => { const mode = value === "browser" ? "browser" : "manual"; setLocaleMode(mode); updateDashboardLocale(value === "browser" ? resolveBrowserLocale(navigator.languages) : value as SupportedLocale, mode); };
+  const { mode: localeMode } = useAppLocale();
+  useEffect(() => { setMounted(true); setHideSupport(localStorage.getItem(SUPPORT_HIDDEN_KEY) === "1"); }, []);
+  const applyLanguage = (value: string) => { const mode = value === "browser" ? "browser" : "manual"; updateDashboardLocale(value === "browser" ? resolveBrowserLocale(navigator.languages) : value as SupportedLocale, mode); };
   const languageValue = localeMode === "browser" ? "browser" : locale;
   const requestedTab = params.get("tab");
   const tab = requestedTab === "server" && serverId ? "server" : requestedTab === "lab" && serverId && canView("settings") ? "lab" : "profile";
