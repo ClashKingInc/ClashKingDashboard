@@ -10,7 +10,6 @@ import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { DashboardTabsList, DashboardTabTrigger } from "@/components/ui/dashboard-tabs";
 import { useAuthSession } from "@/components/auth-session-provider";
 import { useDashboardAccess } from "@/components/dashboard/dashboard-access-provider";
-import { BotProfileCard } from "@/components/dashboard/bot-profile-card";
 import { LabSettings } from "@/components/dashboard/lab-settings";
 import { updateDashboardLocale } from "@/components/locale-provider";
 import { DASHBOARD_LOCALE_MODE_STORAGE_KEY, LANGUAGE_OPTIONS, getLocaleModeFromStorage, resolveBrowserLocale, type LocaleMode, type SupportedLocale } from "@/lib/locale-preference";
@@ -65,7 +64,7 @@ export default function AccountSettingsPage() {
         </section>
         <section className="flex items-center justify-between gap-4 rounded-3xl bg-card p-5"><label htmlFor="hide-support" className="text-sm font-medium">{t("hideSupport")}</label><Switch id="hide-support" checked={hideSupport} onCheckedChange={value => { setHideSupport(value); localStorage.setItem(SUPPORT_HIDDEN_KEY, value ? "1" : "0"); window.dispatchEvent(new Event(SUPPORT_PREFERENCE_EVENT)); }} /></section>
       </TabsContent>
-      {serverId && <TabsContent value="server" className="space-y-8"><ResourceLimits serverId={serverId} />{canView("settings") && <BotProfileCard guildId={serverId} />}</TabsContent>}
+      {serverId && <TabsContent value="server" className="space-y-8"><ResourceLimits serverId={serverId} /></TabsContent>}
       {serverId && canView("settings") && <TabsContent value="lab"><LabSettings key={serverId} serverId={serverId} canManage={canManage("settings")} /></TabsContent>}
     </Tabs>
   </div>;

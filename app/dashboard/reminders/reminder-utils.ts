@@ -43,3 +43,10 @@ export function reminderTimeMinutes(value: string): number {
   const minutes = Number(match[1]) * (match[2]?.toLowerCase().startsWith("h") ? 60 : 1);
   return Number.isFinite(minutes) ? Math.trunc(minutes) : 0;
 }
+
+export const ALL_WAR_TYPES = ["Random", "Friendly", "CWL"] as const;
+
+// Empty/absent is the persisted wildcard, not an instruction to send no reminders.
+export function selectedWarTypes(types: readonly string[] | undefined): string[] {
+  return types?.length ? [...types] : [...ALL_WAR_TYPES];
+}
