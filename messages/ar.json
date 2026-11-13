@@ -3869,6 +3869,12 @@
     "goHome": "الذهاب إلى الرئيسية"
   },
   "ClanSignal": {
+    "languageSuggestion": {
+      "title": "ClashKing يتحدث لغتك",
+      "description": "يتوفر ClashKing أيضًا بلغة متصفحك.",
+      "stay": "البقاء هنا",
+      "change": "استخدام لغة المتصفح"
+    },
     "metadata": {
       "title": "ClashKing | بوت Discord وتطبيق جوال ولوحة تحكم للقبيلة",
       "description": "أدر الحروب والقوائم والحسابات والتذكيرات وإعدادات القبيلة باستخدام ClashKing على Discord والجوال والويب.",

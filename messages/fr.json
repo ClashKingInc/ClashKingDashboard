@@ -3869,6 +3869,12 @@
     "goHome": "Retour à l’Accueil"
   },
   "ClanSignal": {
+    "languageSuggestion": {
+      "title": "ClashKing parle votre langue",
+      "description": "ClashKing est aussi disponible dans la langue de votre navigateur.",
+      "stay": "Rester ici",
+      "change": "Utiliser la langue du navigateur"
+    },
     "metadata": {
       "title": "ClashKing | Bot Discord, application mobile et tableau de bord",
       "description": "Gérez les guerres, les compositions, les comptes, les rappels et les réglages de votre clan avec ClashKing sur Discord, mobile et le web.",

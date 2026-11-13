@@ -39,7 +39,7 @@ export const SUPPORTED_LOCALES = [
 
 export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
 
-export const PUBLIC_LOCALES = ["en", "fr", "nl"] as const;
+export const PUBLIC_LOCALES = SUPPORTED_LOCALES;
 export type PublicLocale = (typeof PUBLIC_LOCALES)[number];
 
 export const LANGUAGE_OPTIONS: ReadonlyArray<{ code: SupportedLocale; name: string; flagCode: string }> = [
@@ -88,7 +88,7 @@ export function isPublicLocale(value: string | null | undefined): value is Publi
   return PUBLIC_LOCALES.includes(value as PublicLocale);
 }
 
-export function resolveBrowserLocale(browserLanguages: readonly string[] = []): SupportedLocale {
+export function matchBrowserLocale(browserLanguages: readonly string[] = []): SupportedLocale | undefined {
   for (const rawLocale of browserLanguages) {
     const normalizedLocale = rawLocale.toLowerCase();
 
@@ -99,7 +99,11 @@ export function resolveBrowserLocale(browserLanguages: readonly string[] = []): 
     if (isSupportedLocale(baseLocale)) return baseLocale;
   }
 
-  return "en";
+  return undefined;
+}
+
+export function resolveBrowserLocale(browserLanguages: readonly string[] = []): SupportedLocale {
+  return matchBrowserLocale(browserLanguages) ?? "en";
 }
 
 export function getLocaleModeFromStorage(
@@ -137,7 +141,7 @@ export function getPublicRoute(pathname: string): {
   page: PublicPagePath;
 } | undefined {
   const normalizedPath = pathname !== "/" ? pathname.replace(/\/$/, "") : pathname;
-  const match = normalizedPath.match(/^\/(?:(fr|nl)(?=\/|$))?(\/privacy|\/terms)?$/);
+  const match = normalizedPath.match(new RegExp(`^/?(?:(${PUBLIC_LOCALES.join("|")})(?=/|$))?(/privacy|/terms)?$`));
   if (!match) return undefined;
 
   return {
@@ -149,4 +153,74 @@ export function getPublicRoute(pathname: string): {
 export function publicPath(locale: PublicLocale, page: PublicPagePath): string {
   const prefix = locale === "en" ? "" : `/${locale}`;
   return page === "/" ? prefix || "/" : `${prefix}${page}`;
+}
+
+export const PUBLIC_LANGUAGE_SUGGESTION_STORAGE_KEY = "clashking_public_language_suggestion";
+export const PUBLIC_LANGUAGE_CHOICE_EVENT = "clashking:public-language-choice";
+
+export function getPublicLanguageSuggestion(
+  pathname: string,
+  browserLanguages: readonly string[],
+  dismissedLocale: string | null,
+): PublicLocale | undefined {
+  const route = getPublicRoute(pathname);
+  const browserLocale = matchBrowserLocale(browserLanguages);
+  if (!route || !browserLocale || route.locale === browserLocale || dismissedLocale === browserLocale) return undefined;
+  return browserLocale;
+}
+
+export function dismissPublicLanguageSuggestion(): void {
+  const browserLocale = matchBrowserLocale(navigator.languages);
+  try {
+    if (browserLocale) localStorage.setItem(PUBLIC_LANGUAGE_SUGGESTION_STORAGE_KEY, browserLocale);
+  } catch { /* The choice still applies when browser storage is unavailable. */ }
+  globalThis.dispatchEvent(new Event(PUBLIC_LANGUAGE_CHOICE_EVENT));
+}
+
+export type LocalePreference = { locale: SupportedLocale; mode: LocaleMode };
+const WEB_LOCALE_COOKIE = "CK_WEB_LOCALE";
+
+export function initialLocalePreference(
+  pathname: string,
+  savedPreference: LocalePreference | undefined,
+  browserLanguages: readonly string[],
+): LocalePreference {
+  if (savedPreference) return savedPreference;
+  const publicRoute = getPublicRoute(pathname);
+  return publicRoute ? { locale: publicRoute.locale, mode: "manual" }
+    : { locale: resolveBrowserLocale(browserLanguages), mode: "browser" };
+}
+
+export function readSavedLocalePreference(browserLanguages: readonly string[] = navigator.languages): LocalePreference | undefined {
+  // This preference cookie carries explicit choices between the website and dashboard.
+  const cookie = document.cookie.split(";").map(part => part.trim()).find(part => part.startsWith(`${WEB_LOCALE_COOKIE}=`));
+  const [cookieMode, cookieLocale] = cookie?.slice(WEB_LOCALE_COOKIE.length + 1).split(":") ?? [];
+  if ((cookieMode === "manual" || cookieMode === "browser") && isSupportedLocale(cookieLocale)) {
+    return resolveDashboardLocalePreference(cookieMode, cookieLocale, browserLanguages);
+  }
+  try {
+    const storedMode = localStorage.getItem(DASHBOARD_LOCALE_MODE_STORAGE_KEY);
+    const storedLocale = localStorage.getItem(DASHBOARD_LOCALE_STORAGE_KEY);
+    if (storedMode === "browser" || isSupportedLocale(storedLocale)) {
+      return resolveDashboardLocalePreference(storedMode, storedLocale, browserLanguages);
+    }
+  } catch { /* Cookies can still preserve the preference when local storage is unavailable. */ }
+  return undefined;
+}
+
+export function saveLocalePreference(locale: SupportedLocale, mode: LocaleMode): void {
+  try {
+    localStorage.setItem(DASHBOARD_LOCALE_STORAGE_KEY, locale);
+    localStorage.setItem(DASHBOARD_LOCALE_MODE_STORAGE_KEY, mode);
+  } catch { /* The preference cookie is also usable without local storage. */ }
+  const sharedDomain = ["clashk.ing", "www.clashk.ing", "dash.clashk.ing"].includes(location.hostname)
+    ? "; Domain=clashk.ing" : "";
+  const secure = location.protocol === "https:" ? "; Secure" : "";
+  document.cookie = `${WEB_LOCALE_COOKIE}=${mode}:${locale}; Path=/; Max-Age=31536000; SameSite=Lax${sharedDomain}${secure}`;
+}
+
+export function preferredPublicPath(pathname: string, preference: LocalePreference): string | undefined {
+  const route = getPublicRoute(pathname);
+  if (!route || preference.mode !== "browser" || route.locale === preference.locale) return undefined;
+  return publicPath(preference.locale, route.page);
 }

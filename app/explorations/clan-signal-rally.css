@@ -120,3 +120,15 @@
   .ck-home .ck-hero-actions{display:grid;grid-template-columns:minmax(0,1fr);gap:8px}
   .ck-home .ck-discord,.ck-home .ck-get-app{min-width:0;min-height:44px;text-align:center;overflow-wrap:anywhere}
 }
+
+/* A language suggestion never blocks the page or changes its URL automatically. */
+.ck-home .ck-language-suggestion{position:fixed;z-index:45;inset-inline-end:20px;bottom:20px;width:min(390px,calc(100vw - 40px));padding:22px;border:1px solid #b8cdc3;border-radius:20px;background:#f8fcf9;color:#17352a;box-shadow:0 12px 40px #17352a26}
+.ck-home .ck-language-suggestion h2{font:700 20px/1.3 ClashKing,sans-serif;margin:0 0 9px}
+.ck-home .ck-language-suggestion p{font-size:14px;line-height:1.5;color:inherit;margin:0 0 18px}
+.ck-language-suggestion-actions{display:flex;flex-wrap:wrap;gap:10px}
+.ck-language-suggestion-actions button,.ck-language-suggestion-actions a{display:inline-flex;align-items:center;justify-content:center;flex:1;min-height:44px;padding:10px 14px;border:1px solid #b8cdc3;border-radius:11px;font:600 14px/1.3 ClashKing,sans-serif;text-align:center;cursor:pointer;background:transparent;color:inherit}
+.ck-language-suggestion-actions a{text-decoration:none;background:#17352a;color:#fff;border-color:#17352a}
+.ck-language-suggestion-actions :focus-visible{outline:3px solid #b78c20;outline-offset:3px}
+.ck-home[data-cs-theme=sunset] .ck-language-suggestion{background:#332b48;color:#fff2d5;border-color:#645570}
+.ck-home[data-cs-theme=sunset] .ck-language-suggestion-actions a{background:#f2e3c9;color:#302637;border-color:#f2e3c9}
+@media(prefers-reduced-motion:no-preference){.ck-language-suggestion{animation:ck-language-appear .18s ease-out}@keyframes ck-language-appear{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}}

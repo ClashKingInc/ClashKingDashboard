@@ -1,3 +1,4 @@
+import { PUBLIC_LOCALES } from "../lib/locale-preference.ts";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 
@@ -39,11 +40,10 @@ const discordEmbed = JSON.stringify({
 });
 
 
-const locales = {
-  en: { prefix: "", openGraph: "en_US" },
-  fr: { prefix: "/fr", openGraph: "fr_FR" },
-  nl: { prefix: "/nl", openGraph: "nl_NL" },
-};
+const locales = Object.fromEntries(PUBLIC_LOCALES.map(locale => [locale, {
+  prefix: locale === "en" ? "" : `/${locale}`,
+  openGraph: `${locale}_${new Intl.Locale(locale).maximize().region}`,
+}]));
 
 const pagePaths = {
   home: "",
@@ -91,7 +91,7 @@ function pageCopy(messages, page) {
 }
 
 function localizedPath(locale, page) {
-  return `${locales[locale].prefix}${pagePaths[page]}` || "/";
+  return `${localizedPages.has(page) ? locales[locale].prefix : ""}${pagePaths[page]}` || "/";
 }
 
 for (const [locale, localeConfig] of Object.entries(locales)) {
@@ -133,7 +133,7 @@ for (const [locale, localeConfig] of Object.entries(locales)) {
     <meta name="twitter:image" content="${socialImage}" />
     <script id="discord:component-embed" type="application/json">${discordEmbed}</script>`;
     const shell = baseShell
-      .replace('<html lang="en"', `<html lang="${locale}"`)
+      .replace('<html lang="en"', `<html lang="${locale}" dir="${["ar", "he", "ur"].includes(locale) ? "rtl" : "ltr"}"`)
       .replace(/<title>.*?<\/title>/u, `<title>${escapeHtml(copy.title)}</title>`)
       .replace(/<meta name="description" content=".*?" \/>/u, `<meta name="description" content="${escapeHtml(copy.description)}" />`)
       .replace("  </head>", `${head}\n  </head>`);
@@ -142,7 +142,19 @@ for (const [locale, localeConfig] of Object.entries(locales)) {
       : join(clientRoot, `${pathname.slice(1)}.html`);
     await mkdir(dirname(output), { recursive: true });
     await writeFile(output, shell);
+
   }
 }
 
 console.log("Generated public HTML shells for landing, information, privacy, and terms pages.");
+
+const entries = [];
+for (const page of Object.keys(pagePaths)) {
+  const languages = localizedPages.has(page) ? PUBLIC_LOCALES : ["en"];
+  const alternates = [...languages, "x-default"].map(locale =>
+    `<xhtml:link rel="alternate" hreflang="${locale}" href="${siteOrigin}${localizedPath(locale === "x-default" ? "en" : locale, page)}" />`
+  ).join("");
+  for (const locale of languages) entries.push(`<url><loc>${siteOrigin}${localizedPath(locale, page)}</loc>${alternates}</url>`);
+}
+await writeFile(join(clientRoot, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">${entries.join("\n")}</urlset>`);

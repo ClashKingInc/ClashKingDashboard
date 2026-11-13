@@ -3869,6 +3869,12 @@
     "goHome": "Về trang chủ"
   },
   "ClanSignal": {
+    "languageSuggestion": {
+      "title": "ClashKing hỗ trợ ngôn ngữ của bạn",
+      "description": "ClashKing cũng có sẵn bằng ngôn ngữ trình duyệt của bạn.",
+      "stay": "Ở lại đây",
+      "change": "Dùng ngôn ngữ trình duyệt"
+    },
     "metadata": {
       "title": "ClashKing | Bot Discord, ứng dụng di động và bảng điều khiển bang hội",
       "description": "Quản lý hội chiến, đội hình, tài khoản, lời nhắc và cài đặt bang hội bằng ClashKing trên Discord, di động và web.",

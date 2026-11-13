@@ -7,14 +7,10 @@ import { ChevronDown } from 'lucide-react';
 import { PreferencePanel } from '@/components/preference-panel';
 import { useAppLocale } from '@/components/locale-provider';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { getPublicRoute, isPublicLocale, LANGUAGE_OPTIONS, PUBLIC_LANGUAGE_OPTIONS, publicPath, type LocaleMode, type PublicPagePath, type SupportedLocale } from '@/lib/locale-preference';
+import { dismissPublicLanguageSuggestion, getPublicRoute, LANGUAGE_OPTIONS, publicPath, type LocaleMode, type SupportedLocale } from '@/lib/locale-preference';
 export type LandingTheme = 'day' | 'sunset';
 export function readLandingTheme(): LandingTheme {
   return typeof document !== 'undefined' && document.cookie.split(';').some(part => part.trim() === 'CK_LANDING_THEME=sunset') ? 'sunset' : 'day';
-}
-function destination(locale: SupportedLocale, mode: LocaleMode, page: PublicPagePath) {
-  if (page !== '/') return publicPath(isPublicLocale(locale) ? locale : 'en', page);
-  return mode === 'manual' && isPublicLocale(locale) ? publicPath(locale, page) : '/';
 }
 export function LandingLanguageSwitcher({ label, appearanceLabel, dayLabel, sunsetLabel, initialTheme, onThemeChange }: Readonly<{
   label: string; appearanceLabel: string; dayLabel: string; sunsetLabel: string; initialTheme: LandingTheme; onThemeChange?: (theme: LandingTheme) => void;
@@ -28,12 +24,13 @@ export function LandingLanguageSwitcher({ label, appearanceLabel, dayLabel, suns
   const [pending, startTransition] = useTransition();
   const current = LANGUAGE_OPTIONS.find(option => option.code === locale) ?? LANGUAGE_OPTIONS[0];
   const page = getPublicRoute(pathname)?.page ?? '/';
-  const options = page === '/' ? LANGUAGE_OPTIONS : PUBLIC_LANGUAGE_OPTIONS;
+  const options = LANGUAGE_OPTIONS;
   useEffect(() => { const saved = readLandingTheme(); setTheme(saved); trigger.current?.closest('.clan-signal')?.setAttribute('data-cs-theme', saved); }, []);
   const changeLocale = (next: SupportedLocale, nextMode: LocaleMode) => {
-    const path = destination(next, nextMode, page);
+    dismissPublicLanguageSuggestion();
+    const path = publicPath(next, page);
     const href = `${path}${page === '/' ? globalThis.location.hash : ''}`;
-    startTransition(() => { setDashboardLocale(next, nextMode); if (path !== pathname) router.push(href); });
+    startTransition(() => { setDashboardLocale(next, nextMode); if (nextMode !== 'browser' && path !== pathname) router.push(href); });
     setOpen(false);
   };
   const changeTheme = (next: LandingTheme) => {

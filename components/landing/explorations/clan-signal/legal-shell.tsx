@@ -1,9 +1,8 @@
-import Link from "@/components/app-link";
-import { useTranslations } from "use-intl";
-import { ClanSignalWordmark } from "./brand";
+import { useState } from "react";
+import { readLandingTheme } from "./language-switcher";
 import { ClanSignalFooter } from "./footer";
-import { LandingLanguageSwitcher } from "./language-switcher";
-import { publicPath, type PublicLocale } from "@/lib/locale-preference";
+import { ClanSignalHeader } from "./header";
+import { type PublicLocale } from "@/lib/locale-preference";
 import "../../../../app/explorations/clan-signal.css";
 
 
@@ -12,7 +11,6 @@ export function ClanSignalPageShell({
   eyebrow,
   description,
   contentClassName,
-  locale = "en",
   children,
 }: Readonly<{
   title: string;
@@ -22,32 +20,12 @@ export function ClanSignalPageShell({
   locale?: PublicLocale;
   children: React.ReactNode;
 }>) {
-  const t = useTranslations("ClanSignal");
-  const landingTheme = "day";
+  const [landingTheme, setLandingTheme] = useState(readLandingTheme);
 
   return (
-    <main className="clan-signal cs-legal-page" data-cs-theme={landingTheme}>
-      <header className="cs-nav-shell">
-        <nav className="cs-nav" aria-label={t("navigation.ariaLabel")}>
-          <Link href={publicPath(locale, "/")} aria-label={t("navigation.homeLabel")} className="cs-nav-brand">
-            <ClanSignalWordmark priority />
-          </Link>
-          <div className="cs-nav-links">
-            <Link href={`${publicPath(locale, "/")}#app`}>{t("navigation.mobileApp")}</Link>
-            <Link href={`${publicPath(locale, "/")}#bot`}>{t("navigation.discordBot")}</Link>
-            <Link href={`${publicPath(locale, "/")}#dashboard`}>{t("navigation.dashboard")}</Link>
-          </div>
-          <div className="cs-nav-actions">
-            <LandingLanguageSwitcher
-              label={t("language.label")}
-              appearanceLabel={t("appearance.label")}
-              dayLabel={t("appearance.day")}
-              sunsetLabel={t("appearance.sunset")}
-              initialTheme={landingTheme}
-            />
-          </div>
-        </nav>
-      </header>
+    <main className="clan-signal ck-home cs-legal-page" data-cs-theme={landingTheme}>
+      <div className="ck-sky">
+      <ClanSignalHeader landingTheme={landingTheme} onThemeChange={setLandingTheme} />
 
       <section className="cs-legal-hero">
         <div>
@@ -56,8 +34,9 @@ export function ClanSignalPageShell({
           {description && <p className="cs-page-description">{description}</p>}
         </div>
       </section>
+      </div>
 
-      <article className={contentClassName}>{children}</article>
+      <article className={contentClassName} lang={contentClassName === "cs-legal-document" ? "en" : undefined}>{children}</article>
       <ClanSignalFooter />
     </main>
   );

@@ -3869,6 +3869,12 @@
     "goHome": "מעבר לדף הבית"
   },
   "ClanSignal": {
+    "languageSuggestion": {
+      "title": "ClashKing מדבר בשפה שלך",
+      "description": "ClashKing זמין גם בשפת הדפדפן שלך.",
+      "stay": "להישאר כאן",
+      "change": "שימוש בשפת הדפדפן"
+    },
     "metadata": {
       "title": "ClashKing | בוט Discord, אפליקציה ולוח בקרת שבט",
       "description": "נהלו מלחמות, סגלים, חשבונות, תזכורות והגדרות שבט באמצעות ClashKing ב-Discord, בנייד ובאינטרנט.",

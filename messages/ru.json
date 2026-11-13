@@ -3869,6 +3869,12 @@
     "goHome": "На главную"
   },
   "ClanSignal": {
+    "languageSuggestion": {
+      "title": "ClashKing говорит на вашем языке",
+      "description": "ClashKing также доступен на языке вашего браузера.",
+      "stay": "Остаться здесь",
+      "change": "Использовать язык браузера"
+    },
     "metadata": {
       "title": "ClashKing | Бот Discord, мобильное приложение и панель клана",
       "description": "Управляйте войнами, составами, аккаунтами, напоминаниями и настройками клана с ClashKing в Discord, приложении и браузере.",
