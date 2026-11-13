@@ -3134,7 +3134,7 @@
     }
   },
   "TicketsSettingsPage": {
-    "questionPaginationHint": "Adaugă până la 25 de întrebări. Discord le afișează în mai multe ferestre când este necesar.",
+    "questionPaginationHint": "Adaugă până la {limit} de întrebări. Discord le afișează în mai multe ferestre când este necesar.",
     "deleteTicket": "Delete ticket",
     "deleteTicketTitle": "Delete ticket #{number}?",
     "deleteTicketWithTranscript": "The Discord channel will be permanently deleted after its full transcript is saved. The ticket record and latest transcript will remain available.",

@@ -3134,7 +3134,7 @@
     }
   },
   "TicketsSettingsPage": {
-    "questionPaginationHint": "Add up to 25 questions. Discord shows them across multiple modals.",
+    "questionPaginationHint": "Add up to {limit} questions. Discord shows them across multiple modals.",
     "deleteTicket": "Delete ticket",
     "deleteTicketTitle": "Delete ticket #{number}?",
     "deleteTicketWithTranscript": "The Discord channel will be permanently deleted after its full transcript is saved. The ticket record and latest transcript will remain available.",

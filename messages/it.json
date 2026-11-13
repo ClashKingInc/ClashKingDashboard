@@ -3391,7 +3391,7 @@
     "logCoverage": "{configured}/{total} logs",
     "panelPreview": "Discord preview",
     "panelPreviewHint": "This combines the selected panel embed and ticket buttons so you can review what members will see before configuring it.",
-    "questionPaginationHint": "Aggiungi fino a 25 domande. Discord le mostra in più finestre di dialogo."
+    "questionPaginationHint": "Aggiungi fino a {limit} domande. Discord le mostra in più finestre di dialogo."
   },
   "EmbedsPage": {
     "title": "Embed",

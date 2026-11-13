@@ -3134,7 +3134,7 @@
     }
   },
   "TicketsSettingsPage": {
-    "questionPaginationHint": "질문을 최대 25개까지 추가할 수 있습니다. Discord에서 필요에 따라 여러 창에 나누어 표시합니다.",
+    "questionPaginationHint": "질문을 최대 {limit}개까지 추가할 수 있습니다. Discord에서 필요에 따라 여러 창에 나누어 표시합니다.",
     "deleteTicket": "Delete ticket",
     "deleteTicketTitle": "Delete ticket #{number}?",
     "deleteTicketWithTranscript": "The Discord channel will be permanently deleted after its full transcript is saved. The ticket record and latest transcript will remain available.",
