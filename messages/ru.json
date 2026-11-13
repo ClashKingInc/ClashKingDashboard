@@ -3134,7 +3134,7 @@
     }
   },
   "TicketsSettingsPage": {
-    "questionPaginationHint": "Добавьте до {limit} вопросов. При необходимости Discord покажет их в нескольких окнах.",
+    "questionPaginationHint": "Добавьте до {limit} вопросов. Они поместятся в одной форме Discord.",
     "deleteTicket": "Delete ticket",
     "deleteTicketTitle": "Delete ticket #{number}?",
     "deleteTicketWithTranscript": "The Discord channel will be permanently deleted after its full transcript is saved. The ticket record and latest transcript will remain available.",

@@ -3134,7 +3134,7 @@
     }
   },
   "TicketsSettingsPage": {
-    "questionPaginationHint": "Voeg maximaal {limit} vragen toe. Discord toont ze zo nodig in meerdere vensters.",
+    "questionPaginationHint": "Voeg maximaal {limit} vragen toe. Ze passen in één Discord-formulier.",
     "deleteTicket": "Delete ticket",
     "deleteTicketTitle": "Delete ticket #{number}?",
     "deleteTicketWithTranscript": "The Discord channel will be permanently deleted after its full transcript is saved. The ticket record and latest transcript will remain available.",

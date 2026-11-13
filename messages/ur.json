@@ -3134,7 +3134,7 @@
     }
   },
   "TicketsSettingsPage": {
-    "questionPaginationHint": "زیادہ سے زیادہ {limit} سوالات شامل کریں۔ Discord ضرورت کے مطابق انہیں متعدد ونڈوز میں دکھاتا ہے۔",
+    "questionPaginationHint": "زیادہ سے زیادہ {limit} سوالات شامل کریں۔ یہ ایک Discord فارم میں سما جائیں گے۔",
     "deleteTicket": "Delete ticket",
     "deleteTicketTitle": "Delete ticket #{number}?",
     "deleteTicketWithTranscript": "The Discord channel will be permanently deleted after its full transcript is saved. The ticket record and latest transcript will remain available.",

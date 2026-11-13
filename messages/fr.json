@@ -3391,7 +3391,7 @@
     "logCoverage": "{configured}/{total} journaux",
     "panelPreview": "Aperçu Discord",
     "panelPreviewHint": "Cet aperçu combine l'embed du panneau et les boutons de ticket afin de vérifier ce que les membres verront avant de le configurer.",
-    "questionPaginationHint": "Ajoutez jusqu’à {limit} questions. Discord les affiche dans plusieurs fenêtres de dialogue."
+    "questionPaginationHint": "Ajoutez jusqu’à {limit} questions. Elles tiennent dans un seul formulaire Discord."
   },
   "EmbedsPage": {
     "title": "Embeds Discord",

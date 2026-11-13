@@ -3134,7 +3134,7 @@
     }
   },
   "TicketsSettingsPage": {
-    "questionPaginationHint": "Legg til opptil {limit} spørsmål. Discord viser dem i flere dialoger ved behov.",
+    "questionPaginationHint": "Legg til opptil {limit} spørsmål. De får plass i ett Discord-skjema.",
     "deleteTicket": "Delete ticket",
     "deleteTicketTitle": "Delete ticket #{number}?",
     "deleteTicketWithTranscript": "The Discord channel will be permanently deleted after its full transcript is saved. The ticket record and latest transcript will remain available.",

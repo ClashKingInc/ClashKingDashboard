@@ -11,6 +11,7 @@ import { hasInvalidDropdownOptions } from "../rosters/_lib/signup-questions";
 import Link from "@/components/app-link";
 import { useTranslations } from "use-intl";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { ticketQuestionLimit } from "@clashking/api-contracts";
 import {
   ArrowDown,
   ArrowLeft,
@@ -624,12 +625,9 @@ export function ButtonCard({
     }
   };
 
-  // Existing text labels can exceed Discord's 45-character modal label limit.
-  // Keep them until edited; the runtime truncates the label in the modal.
   const invalidQuestions = (
-    form.application_questions.some(question => !question.label.trim() || question.label.length > 45 && !(
-      question.type === "text" && latestSettings.application_questions.some(saved => saved.id === question.id && saved.type === "text" && saved.label === question.label)
-    ))
+    form.application_questions.length > ticketQuestionLimit(form.account_apply)
+    || form.application_questions.some(question => !question.label.trim() || question.label.length > 45)
     || hasInvalidDropdownOptions(form.application_questions.map(question => ({ ...question, options: [...question.options] })))
   );
 

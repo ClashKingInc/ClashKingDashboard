@@ -3134,7 +3134,7 @@
     }
   },
   "TicketsSettingsPage": {
-    "questionPaginationHint": "En fazla {limit} soru ekleyin. Discord gerektiğinde soruları birden fazla pencerede gösterir.",
+    "questionPaginationHint": "En fazla {limit} soru ekleyin. Sorular tek bir Discord formuna sığar.",
     "deleteTicket": "Delete ticket",
     "deleteTicketTitle": "Delete ticket #{number}?",
     "deleteTicketWithTranscript": "The Discord channel will be permanently deleted after its full transcript is saved. The ticket record and latest transcript will remain available.",

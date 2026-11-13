@@ -3134,7 +3134,7 @@
     }
   },
   "TicketsSettingsPage": {
-    "questionPaginationHint": "最多添加 {limit} 个问题。需要时，Discord 会在多个弹窗中显示。",
+    "questionPaginationHint": "最多添加 {limit} 个问题。它们会显示在一个 Discord 表单中。",
     "deleteTicket": "Delete ticket",
     "deleteTicketTitle": "Delete ticket #{number}?",
     "deleteTicketWithTranscript": "The Discord channel will be permanently deleted after its full transcript is saved. The ticket record and latest transcript will remain available.",

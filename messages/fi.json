@@ -3391,7 +3391,7 @@
     "logCoverage": "{configured}/{total} logs",
     "panelPreview": "Discord preview",
     "panelPreviewHint": "This combines the selected panel embed and ticket buttons so you can review what members will see before configuring it.",
-    "questionPaginationHint": "Lisää enintään {limit} kysymystä. Discord näyttää ne useassa valintaikkunassa."
+    "questionPaginationHint": "Lisää enintään {limit} kysymystä. Ne mahtuvat yhteen Discord-lomakkeeseen."
   },
   "EmbedsPage": {
     "title": "Upotukset",
