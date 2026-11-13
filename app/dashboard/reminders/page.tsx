@@ -65,7 +65,7 @@ import {
 } from "lucide-react";
 import { ActionFeedback, useActionFeedback } from "@/components/ui/action-feedback";
 import { useDashboardAccess } from "@/components/dashboard/dashboard-access-provider";
-import { getStandaloneImageUrl, getStandaloneTenorUrl, reminderTimeMinutes } from "./reminder-utils";
+import { ALL_WAR_TYPES, selectedWarTypes, getStandaloneImageUrl, getStandaloneTenorUrl, reminderTimeMinutes } from "./reminder-utils";
 import { TenorMedia } from "@/components/tenor-media";
 
 // API types based on ClashKingAPI reminders endpoints
@@ -105,7 +105,7 @@ function mutableReminder(reminder: ContractReminder): ReminderConfig {
     ...reminder,
     townhall_filter: reminder.townhall_filter ? [...reminder.townhall_filter] : undefined,
     roles: reminder.roles ? [...reminder.roles] : undefined,
-    war_types: reminder.war_types ? [...reminder.war_types] : undefined,
+    war_types: reminder.type === "War" ? selectedWarTypes(reminder.war_types) : undefined,
   };
 }
 
@@ -180,6 +180,7 @@ function getClanBadgeUrl(clanTag: string | undefined): string | null {
 
 export default function RemindersPage() { // NOSONAR — React page component: complexity is aggregate state/handler management, not a single logic unit
   const guildId = useGuildId();
+  const reminderTitleRef = useRef<HTMLHeadingElement>(null);
   const locale = useLocale();
   const {notices,report,clear}=useActionFeedback(guildId);
   const { canManage } = useDashboardAccess();
@@ -376,7 +377,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
     const displayTime = /^\s*\d+(?:\.\d+)?\s*(?:hr|h|min|m)?\s*$/iu.test(reminder.time)
       ? String(reminderTimeMinutes(reminder.time) / 60) : reminder.time;
 
-    setDialogReminder({ ...reminder, time: displayTime });
+    setDialogReminder({ ...reminder, time: displayTime, war_types: reminder.type === "War" ? selectedWarTypes(reminder.war_types) : undefined });
     setPointThresholdTouched(reminder.point_threshold !== undefined);setPointThresholdCustom(false);
     setAttackThresholdTouched(reminder.attack_threshold !== undefined);
     setIsDialogOpen(true);
@@ -1168,9 +1169,13 @@ export default function RemindersPage() { // NOSONAR — React page component: c
 
           {/* Add/Edit Reminder Dialog */}
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogContent variant="form" className="sm:max-w-[600px]">
+            <DialogContent variant="form" className="sm:max-w-[600px]" onOpenAutoFocus={event => {
+              // Focusing a native select on touch devices opens its wheel picker.
+              // Start at the heading; controls open only after deliberate input.
+              event.preventDefault(); reminderTitleRef.current?.focus({ preventScroll: true });
+            }}>
               <DialogHeader>
-                <DialogTitle>
+                <DialogTitle ref={reminderTitleRef} tabIndex={-1} className="outline-none">
                   {editingReminder ? t('dialog.editTitle') : t('dialog.addTitle')}
                 </DialogTitle>
                 <DialogDescription>
@@ -1300,21 +1305,23 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                     <div className="space-y-2">
                       <Label>{t('card.warTypes')} <span className="text-destructive">*</span></Label>
                       <div className="grid grid-cols-3 gap-2 md:flex md:flex-wrap">
-                        {["Random", "Friendly", "CWL"].map((type) => (
+                        {ALL_WAR_TYPES.map((type) => (
                             <button
                                 key={type}
                                 type="button"
-                                aria-pressed={Boolean(dialogReminder.war_types?.includes(type))}
-                                className={`flex min-h-10 items-center justify-center gap-1.5 rounded-lg px-3 text-sm font-medium transition-colors md:min-h-9 ${dialogReminder.war_types?.includes(type) ? "bg-primary/15 text-primary ring-1 ring-primary shadow-sm" : "bg-muted/65 text-muted-foreground hover:bg-muted"}`}
+                                aria-pressed={selectedWarTypes(dialogReminder.war_types).includes(type)}
+                                aria-disabled={selectedWarTypes(dialogReminder.war_types).length === 1 && selectedWarTypes(dialogReminder.war_types).includes(type)}
+                                className={`flex min-h-10 items-center justify-center gap-1.5 rounded-lg px-3 text-sm font-medium transition-colors md:min-h-9 ${selectedWarTypes(dialogReminder.war_types).includes(type) ? "bg-primary/15 text-primary ring-1 ring-primary shadow-sm" : "bg-muted/65 text-muted-foreground hover:bg-muted"}`}
                                 onClick={() => {
-                                  const current = dialogReminder.war_types || [];
+                                  const current = selectedWarTypes(dialogReminder.war_types);
+                                  if (current.length === 1 && current.includes(type)) return;
                                   const updated = current.includes(type)
                                       ? current.filter((t) => t !== type)
                                       : [...current, type];
                                   updateDialogField("war_types", updated);
                                 }}
                             >
-                              <span aria-hidden="true" className="w-4">{dialogReminder.war_types?.includes(type) ? "✓" : ""}</span>
+                              <span aria-hidden="true" className="w-4">{selectedWarTypes(dialogReminder.war_types).includes(type) ? "✓" : ""}</span>
                               {type === "Random" ? t('card.random') : type === "Friendly" ? t('card.friendly') : t('card.cwl') /* NOSONAR — JSX nested ternary for multi-branch display state */}
                             </button>
                         ))}
@@ -1402,7 +1409,6 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                       !dialogReminder.time || 
                       !dialogDestinationValid ||
                       !isTimeValid(dialogReminder.time, dialogReminder.type || "") ||
-                      (dialogReminder.type === "War" && (!dialogReminder.war_types || dialogReminder.war_types.length === 0)) ||
                       (dialogReminder.type === "Clan Games" && !isPointsValid(dialogReminder.point_threshold)) ||
                       (dialogReminder.type === "Clan Capital" && !isAttacksValid(dialogReminder.attack_threshold))
                     }

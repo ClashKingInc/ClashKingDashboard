@@ -1,7 +1,6 @@
 "use client";
 
-import { dashboardHref, useGuildId } from "@/lib/dashboard-route";
-import Link from "@/components/app-link";
+import { useGuildId } from "@/lib/dashboard-route";
 
 
 import React, { useState, useEffect, useEffectEvent } from "react";
@@ -36,6 +35,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { EmbedColorPicker, embedColorHex as intToHex } from "@/components/dashboard/embed-color-picker";
+import { BotProfileCard } from "@/components/dashboard/bot-profile-card";
 import { DashboardAccessSettings } from "@/components/dashboard/dashboard-access-settings";
 import { useDashboardAccess } from "@/components/dashboard/dashboard-access-provider";
 
@@ -213,12 +213,13 @@ export default function GeneralSettingsPage() {
 
         {error && <Alert variant="destructive"><AlertCircle className="h-4 w-4" /><AlertDescription>{error}</AlertDescription></Alert>}
 
+        <BotProfileCard guildId={guildId} />
+
         <div className="grid min-w-0 items-start gap-6 lg:grid-cols-2">
           <section className="min-w-0 space-y-3">
           <div>
             <h2 className="text-lg font-semibold">{t("appearance.title")}</h2>
             <p className="mt-1 text-sm text-muted-foreground">{t("appearance.description")}</p>
-            <Link className="mt-1 inline-block text-sm font-medium text-primary underline underline-offset-4" href={dashboardHref("settings", guildId, new URLSearchParams({ tab: "server" }))}>{tLab("profileMoved")}</Link>
           </div>
           {isLoading ? <Skeleton className="h-24 rounded-[24px]" /> : (
             <div className="space-y-4 rounded-[24px] bg-card p-4 shadow-sm shadow-black/5 sm:p-5">
