@@ -3134,6 +3134,7 @@
     }
   },
   "TicketsSettingsPage": {
+    "questionPaginationHint": "Додайте до {limit} запитань. Вони помістяться в одній формі Discord.",
     "deleteTicket": "Delete ticket",
     "deleteTicketTitle": "Delete ticket #{number}?",
     "deleteTicketWithTranscript": "The Discord channel will be permanently deleted after its full transcript is saved. The ticket record and latest transcript will remain available.",
@@ -4047,6 +4048,16 @@
     }
   },
   "AccountSettings": {
+    "lab": {
+      "title": "Lab",
+      "description": "Експериментальні функції типово вимкнені та можуть змінитися.",
+      "tenureBehavior": "Найвища відповідна роль залежить від дати вступу учасника на сервер Discord. Увімкніть перемикач і встановіть пороги в місяцях у загальних налаштуваннях.",
+      "tenureRequirements": "ClashKing потрібен дозвіл керувати ролями, а роль бота має бути вищою за налаштовані ролі. Оновлення залежать від даних учасників Discord і можуть тривати певний час.",
+      "tenureDisable": "Вимкнення зберігає налаштовані правила та призначені ролі. Уже розпочате оновлення може завершитися.",
+      "readOnly": "Для зміни експериментів потрібен дозвіл керувати налаштуваннями.",
+      "rolesAccess": "Для перегляду правил стажу потрібен доступ до розділу «Ролі» панелі.",
+      "profileMoved": "Редагувати профіль бота на сервері"
+    },
     "title": "Account settings",
     "description": "Manage your ClashKing profile, preferences, usage, and subscription.",
     "retry": "Retry",

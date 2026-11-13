@@ -3134,6 +3134,7 @@
     }
   },
   "TicketsSettingsPage": {
+    "questionPaginationHint": "زیادہ سے زیادہ {limit} سوالات شامل کریں۔ یہ ایک Discord فارم میں سما جائیں گے۔",
     "deleteTicket": "Delete ticket",
     "deleteTicketTitle": "Delete ticket #{number}?",
     "deleteTicketWithTranscript": "The Discord channel will be permanently deleted after its full transcript is saved. The ticket record and latest transcript will remain available.",
@@ -4047,6 +4048,16 @@
     }
   },
   "AccountSettings": {
+    "lab": {
+      "title": "Lab",
+      "description": "تجرباتی خصوصیات ابتدا میں بند ہوتی ہیں اور تبدیل ہو سکتی ہیں۔",
+      "tenureBehavior": "سب سے اعلیٰ اہل کردار کے لیے رکن کی Discord سرور میں شمولیت کی تاریخ استعمال ہوتی ہے۔ یہ سوئچ آن کریں، پھر عمومی ترتیبات میں مہینوں کی حدیں مقرر کریں۔",
+      "tenureRequirements": "ClashKing کو کرداروں کے انتظام کی اجازت چاہیے اور بوٹ کا کردار مقررہ کرداروں سے اوپر ہونا چاہیے۔ اپ ڈیٹس Discord کے رکن ڈیٹا پر منحصر ہیں اور وقت لے سکتی ہیں۔",
+      "tenureDisable": "بند کرنے سے محفوظ قواعد اور دیے گئے کردار برقرار رہتے ہیں۔ جاری ریفریش مکمل ہو سکتا ہے۔",
+      "readOnly": "تجربات بدلنے کے لیے ترتیبات کے انتظام کی اجازت درکار ہے۔",
+      "rolesAccess": "مدت کے قواعد دیکھنے کے لیے ڈیش بورڈ میں کرداروں تک رسائی درکار ہے۔",
+      "profileMoved": "بوٹ کا سرور پروفائل تبدیل کریں"
+    },
     "title": "Account settings",
     "description": "Manage your ClashKing profile, preferences, usage, and subscription.",
     "retry": "Retry",

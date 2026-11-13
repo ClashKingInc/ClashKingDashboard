@@ -3390,7 +3390,8 @@
     "categoryCoverage": "{configured}/{total} categories",
     "logCoverage": "{configured}/{total} logs",
     "panelPreview": "Discord preview",
-    "panelPreviewHint": "This combines the selected panel embed and ticket buttons so you can review what members will see before configuring it."
+    "panelPreviewHint": "This combines the selected panel embed and ticket buttons so you can review what members will see before configuring it.",
+    "questionPaginationHint": "אפשר להוסיף עד {limit} שאלות. הן נכנסות לטופס Discord אחד."
   },
   "EmbedsPage": {
     "title": "הודעות מוטמעות",
@@ -4047,6 +4048,16 @@
     }
   },
   "AccountSettings": {
+    "lab": {
+      "title": "Lab",
+      "description": "תכונות ניסיוניות מושבתות כברירת מחדל ועשויות להשתנות.",
+      "tenureBehavior": "התפקיד הגבוה ביותר שהחבר זכאי לו נקבע לפי תאריך ההצטרפות שלו לשרת Discord. יש להפעיל אפשרות זו ואז להגדיר את ספי החודשים בהגדרות הכלליות.",
+      "tenureRequirements": "ClashKing זקוק להרשאת ניהול תפקידים ולתפקיד בוט שנמצא מעל התפקידים שהוגדרו. העדכונים תלויים בנתוני החברים של Discord ועשויים להימשך זמן.",
+      "tenureDisable": "השבתת האפשרות שומרת על הכללים השמורים ועל התפקידים שהוקצו. רענון שכבר מתבצע עשוי עדיין להסתיים.",
+      "readOnly": "נדרשת הרשאה לניהול הגדרות כדי לשנות תכונות ניסיוניות.",
+      "rolesAccess": "נדרשת גישה לקטע התפקידים בלוח הבקרה כדי לצפות בכללי הוותק.",
+      "profileMoved": "עריכת פרופיל הבוט בשרת"
+    },
     "title": "Account settings",
     "description": "Manage your ClashKing profile, preferences, usage, and subscription.",
     "retry": "Retry",

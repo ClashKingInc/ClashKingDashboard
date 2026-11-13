@@ -3390,7 +3390,8 @@
     "categoryCoverage": "{configured}/{total} categories",
     "logCoverage": "{configured}/{total} logs",
     "panelPreview": "Discord preview",
-    "panelPreviewHint": "This combines the selected panel embed and ticket buttons so you can review what members will see before configuring it."
+    "panelPreviewHint": "This combines the selected panel embed and ticket buttons so you can review what members will see before configuring it.",
+    "questionPaginationHint": "Voeg tot {limit} vrae by. Hulle pas in een Discord-vorm."
   },
   "EmbedsPage": {
     "title": "Inbedboodskappe",
@@ -4047,6 +4048,16 @@
     }
   },
   "AccountSettings": {
+    "lab": {
+      "title": "Lab",
+      "description": "Eksperimentele kenmerke is aanvanklik af en kan verander.",
+      "tenureBehavior": "Die hoogste kwalifiserende rol word volgens die lid se aansluitingsdatum by die Discord-bediener bepaal. Skakel dit aan en stel dan die maanddrempels in Algemene instellings.",
+      "tenureRequirements": "ClashKing benodig die Bestuur rolle-toestemming en ’n botrol bo die ingestelde rolle. Opdaterings hang van Discord-liddata af en kan tyd neem.",
+      "tenureDisable": "As jy dit afskakel, bly gestoorde reëls en toegewysde rolle behoue. ’n Herlaai wat reeds aan die gang is, kan steeds voltooi word.",
+      "readOnly": "Jy benodig bestuurtoegang tot Instellings om eksperimente te verander.",
+      "rolesAccess": "Jy benodig toegang tot Rolle in die kontroleskerm om reëls vir lidmaatskapduur te sien.",
+      "profileMoved": "Wysig die bot se bedienerprofiel"
+    },
     "title": "Account settings",
     "description": "Manage your ClashKing profile, preferences, usage, and subscription.",
     "retry": "Retry",

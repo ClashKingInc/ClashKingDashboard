@@ -3390,7 +3390,8 @@
     "categoryCoverage": "{configured}/{total} categories",
     "logCoverage": "{configured}/{total} logs",
     "panelPreview": "Discord preview",
-    "panelPreviewHint": "This combines the selected panel embed and ticket buttons so you can review what members will see before configuring it."
+    "panelPreviewHint": "This combines the selected panel embed and ticket buttons so you can review what members will see before configuring it.",
+    "questionPaginationHint": "Aggiungi fino a {limit} domande. Entrano in un unico modulo Discord."
   },
   "EmbedsPage": {
     "title": "Embed",
@@ -4047,6 +4048,16 @@
     }
   },
   "AccountSettings": {
+    "lab": {
+      "title": "Lab",
+      "description": "Le funzionalità sperimentali sono inizialmente disattivate e possono cambiare.",
+      "tenureBehavior": "Il ruolo più alto spettante a un membro dipende dalla data di ingresso nel server Discord. Attiva questa opzione, poi imposta le soglie in mesi nelle Impostazioni generali.",
+      "tenureRequirements": "ClashKing richiede il permesso Gestisci ruoli e un ruolo del bot superiore ai ruoli configurati. Gli aggiornamenti dipendono dai dati dei membri di Discord e possono richiedere tempo.",
+      "tenureDisable": "Disattivando questa opzione, le regole salvate e i ruoli assegnati vengono mantenuti. Un aggiornamento già in corso può comunque essere completato.",
+      "readOnly": "Per modificare gli esperimenti è necessario il permesso di gestire le impostazioni.",
+      "rolesAccess": "Per visualizzare le regole di anzianità è necessario accedere alla sezione Ruoli della dashboard.",
+      "profileMoved": "Modifica il profilo del bot nel server"
+    },
     "title": "Account settings",
     "description": "Manage your ClashKing profile, preferences, usage, and subscription.",
     "retry": "Retry",

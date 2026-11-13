@@ -3390,7 +3390,8 @@
     "categoryCoverage": "{configured}/{total} catégories",
     "logCoverage": "{configured}/{total} journaux",
     "panelPreview": "Aperçu Discord",
-    "panelPreviewHint": "Cet aperçu combine l'embed du panneau et les boutons de ticket afin de vérifier ce que les membres verront avant de le configurer."
+    "panelPreviewHint": "Cet aperçu combine l'embed du panneau et les boutons de ticket afin de vérifier ce que les membres verront avant de le configurer.",
+    "questionPaginationHint": "Ajoutez jusqu’à {limit} questions. Elles tiennent dans un seul formulaire Discord."
   },
   "EmbedsPage": {
     "title": "Embeds Discord",
@@ -4047,6 +4048,16 @@
     }
   },
   "AccountSettings": {
+    "lab": {
+      "title": "Lab",
+      "description": "Les fonctionnalités expérimentales sont désactivées par défaut et peuvent évoluer.",
+      "tenureBehavior": "Le rôle le plus élevé auquel un membre a droit dépend de sa date d’arrivée sur le serveur Discord. Activez cette option, puis définissez les seuils en mois dans les paramètres généraux.",
+      "tenureRequirements": "ClashKing a besoin de la permission Gérer les rôles et d’un rôle de bot placé au-dessus des rôles configurés. Les mises à jour dépendent des données des membres Discord et peuvent prendre du temps.",
+      "tenureDisable": "La désactivation conserve les règles enregistrées et les rôles attribués. Une actualisation déjà en cours peut encore se terminer.",
+      "readOnly": "La permission de gérer les paramètres est nécessaire pour modifier les fonctionnalités expérimentales.",
+      "rolesAccess": "L’accès à la section Rôles du tableau de bord est nécessaire pour consulter les règles d’ancienneté.",
+      "profileMoved": "Modifier le profil du bot sur le serveur"
+    },
     "title": "Paramètres du compte",
     "description": "Gérez votre profil ClashKing, vos préférences, votre utilisation et votre abonnement.",
     "retry": "Réessayer",

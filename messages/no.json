@@ -3134,6 +3134,7 @@
     }
   },
   "TicketsSettingsPage": {
+    "questionPaginationHint": "Legg til opptil {limit} spørsmål. De får plass i ett Discord-skjema.",
     "deleteTicket": "Delete ticket",
     "deleteTicketTitle": "Delete ticket #{number}?",
     "deleteTicketWithTranscript": "The Discord channel will be permanently deleted after its full transcript is saved. The ticket record and latest transcript will remain available.",
@@ -4047,6 +4048,16 @@
     }
   },
   "AccountSettings": {
+    "lab": {
+      "title": "Lab",
+      "description": "Eksperimentelle funksjoner er av som standard og kan endres.",
+      "tenureBehavior": "Den høyeste kvalifiserte rollen bruker medlemmets innmeldingsdato i Discord. Slå på bryteren og angi månedsgrenser i Generelle innstillinger.",
+      "tenureRequirements": "ClashKing trenger Administrer roller, og botrollen må være over de konfigurerte rollene. Oppdateringer avhenger av Discords medlemsdata og kan ta tid.",
+      "tenureDisable": "Når du slår av funksjonen, beholdes lagrede regler og tildelte roller. En pågående oppdatering kan fortsatt fullføres.",
+      "readOnly": "Du trenger administrasjonstilgang til Innstillinger for å endre eksperimenter.",
+      "rolesAccess": "Du trenger tilgang til Roller i dashbordet for å se medlemskapsreglene.",
+      "profileMoved": "Rediger botens serverprofil"
+    },
     "title": "Account settings",
     "description": "Manage your ClashKing profile, preferences, usage, and subscription.",
     "retry": "Retry",

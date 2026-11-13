@@ -11,6 +11,7 @@ import { hasInvalidDropdownOptions } from "../rosters/_lib/signup-questions";
 import Link from "@/components/app-link";
 import { useTranslations } from "use-intl";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { ticketQuestionLimit } from "@clashking/api-contracts";
 import {
   ArrowDown,
   ArrowLeft,
@@ -143,7 +144,6 @@ const toEmbedDataRecord = (data: unknown): Record<string, unknown> | null => {
 };
 const CANCEL_BUTTON_CLASS = "!bg-black !text-white hover:!bg-zinc-900";
 const CLASHKING_RED_BUTTON_CLASS = "bg-red-600 hover:bg-red-700 text-white";
-const LEGACY_DISABLED_EMBED_TOKEN = "disabled";
 const TICKET_INPUT_CLASS = "rounded-xl border-0 bg-muted/55 shadow-sm shadow-black/5";
 const TICKET_WORKSPACE_TAB_CLASS = "mt-0 min-w-0 space-y-5";
 const NativeMessageEditor = lazy(() => import("@/components/dashboard/embed-editor").then(module => ({ default: module.EmbedEditor })));
@@ -451,67 +451,49 @@ function PanelSettingsTab({
 }
 
 const createDefaultButtonSettings = (): TicketButtonSettings => ({
-  questions: [],
   mod_role: [],
   no_ping_mod_role: [],
   private_thread: false,
   th_min: 0,
-  num_apply: 1,
   naming: "{ticket_count}-{user}",
   account_apply: false,
-  player_info: false,
-  apply_clans: [],
   roles_to_add: [],
   roles_to_remove: [],
-  townhall_requirements: {},
-  new_message: null,
   opening_message: null,
   application_questions: [],
 });
 
 const createSettingsForm = (settings: TicketButtonSettings): UpdateButtonSettingsRequest => ({
-  questions: [...settings.questions],
-  application_questions: settings.application_questions ? [...settings.application_questions] : settings.questions.filter(question => question.trim()).map((label, order) => ({ id: `legacy-${order}`, label, type: "text" as const, required: true, options: [], order })),
+  application_questions: [...settings.application_questions],
   opening_message: settings.opening_message ?? null,
   mod_role: [...settings.mod_role],
   no_ping_mod_role: [...settings.no_ping_mod_role],
   private_thread: settings.private_thread,
   th_min: settings.th_min,
   hero_min_percent: settings.hero_min_percent ?? 0,
-  num_apply: settings.num_apply,
   naming: settings.naming || "{ticket_count}-{user}",
   account_apply: settings.account_apply,
-  player_info: settings.player_info,
-  apply_clans: [...settings.apply_clans],
   roles_to_add: [...(settings.roles_to_add ?? [])],
   roles_to_remove: [...(settings.roles_to_remove ?? [])],
-  townhall_requirements: { ...settings.townhall_requirements },
-  new_message: settings.new_message ?? null,
 });
 
 const createButtonSettingsFromForm = (form: UpdateButtonSettingsRequest): TicketButtonSettings => ({
   ...createDefaultButtonSettings(),
-  questions: form.questions.filter((question) => question.trim().length > 0),
   mod_role: [...form.mod_role],
   no_ping_mod_role: [...form.no_ping_mod_role],
   private_thread: form.private_thread,
   th_min: form.th_min,
   hero_min_percent: form.hero_min_percent ?? 0,
-  num_apply: form.num_apply,
   naming: form.naming,
   account_apply: form.account_apply,
-  player_info: form.player_info,
-  apply_clans: [...form.apply_clans],
   roles_to_add: [...form.roles_to_add],
   roles_to_remove: [...form.roles_to_remove],
-  townhall_requirements: { ...form.townhall_requirements },
-  new_message: form.new_message ?? null,
   opening_message: form.opening_message ?? null,
   application_questions: form.application_questions ?? [],
 });
 
 export function ButtonCard({
-  customId, label, style, emoji, settings, panelName, guildId, roles, embeds, onDeleted, onAppearanceUpdated,
+  customId, label, style, emoji, settings, panelName, guildId, roles, onDeleted, onAppearanceUpdated,
 }: {
   readonly customId: string;
   readonly label: string;
@@ -521,8 +503,6 @@ export function ButtonCard({
   readonly panelName: string;
   readonly guildId: string;
   readonly roles: DiscordRole[];
-  readonly availableEmbeds: string[];
-  readonly embeds: ServerEmbed[];
   readonly onDeleted: () => void;
   readonly onAppearanceUpdated: (label: string, style: number) => void;
 }) {
@@ -578,22 +558,10 @@ export function ButtonCard({
     setForm((p) => ({ ...p, [type]: p[type].filter((r) => r !== id) }));
 
   const buildButtonSettingsPayload = (sourceForm: UpdateButtonSettingsRequest): UpdateButtonSettingsRequest => {
-    const normalizedNewMessage = sourceForm.new_message === LEGACY_DISABLED_EMBED_TOKEN
-      ? null
-      : (sourceForm.new_message ?? null);
-
     return {
       ...sourceForm,
-      // Hidden legacy eligibility is still authoritative. An unrelated label,
-      // question or role edit must not clear existing applicant restrictions.
-      num_apply: sourceForm.num_apply,
-      apply_clans: [...sourceForm.apply_clans],
-      townhall_requirements: { ...sourceForm.townhall_requirements },
       th_min: sourceForm.account_apply ? sourceForm.th_min : 0,
       hero_min_percent: sourceForm.account_apply ? sourceForm.hero_min_percent ?? 0 : 0,
-      player_info: sourceForm.account_apply && sourceForm.player_info,
-      new_message: normalizedNewMessage,
-      questions: sourceForm.questions.filter(Boolean),
     };
   };
 
@@ -657,9 +625,11 @@ export function ButtonCard({
     }
   };
 
-  const invalidQuestions = (form.application_questions?.length ?? 0) > (form.account_apply ? 4 : 5)
-    || (form.application_questions ?? []).some(question => !question.label.trim() || question.label.length > 45)
-    || hasInvalidDropdownOptions((form.application_questions ?? []).map(question => ({ ...question, options: [...question.options] })));
+  const invalidQuestions = (
+    form.application_questions.length > ticketQuestionLimit(form.account_apply)
+    || form.application_questions.some(question => !question.label.trim() || question.label.length > 45)
+    || hasInvalidDropdownOptions(form.application_questions.map(question => ({ ...question, options: [...question.options] })))
+  );
 
   const roleOptions = roles.filter((r) => r.name !== "@everyone");
   const namingPlaceholders = [
@@ -811,9 +781,9 @@ export function ButtonCard({
                 <div className="flex items-center gap-2"><h3 className="text-sm font-semibold">{t("openingMessage")}</h3><InfoPopover content={t("openingMessageHint")} /></div>
                 <Suspense fallback={<Skeleton className="h-48 w-full rounded-2xl" />}>
                   <NativeMessageEditor variant="ticket-panel" serverId={guildId} roles={roles}
-                    initialData={form.opening_message ? form.opening_message as Record<string, unknown> : toEmbedDataRecord(embeds.find(embed => embed.name === form.new_message)?.data)}
+                    initialData={form.opening_message ? form.opening_message as Record<string, unknown> : null}
                     isSaving={isSaving} onDirtyChange={setOpeningDirty} onCancel={() => setSettingsOpen(false)}
-                    onSave={async payload => { const message = nativePanelMessage(payload); await handleSave({ ...form, new_message: null, opening_message: message }, true); }} />
+                    onSave={async payload => { const message = nativePanelMessage(payload); await handleSave({ ...form, opening_message: message }, true); }} />
                 </Suspense>
               </section>
             </TabsContent>
@@ -1166,14 +1136,13 @@ export function MessagesTab({ panel, guildId, inline = false }: { readonly panel
 }
 
 function PanelCard({
-  panel, categories, textChannels, roles, guildId, availableEmbeds, embeds, onDeleted, detail = false,
+  panel, categories, textChannels, roles, guildId, embeds, onDeleted, detail = false,
 }: {
   readonly panel: TicketPanel;
   readonly categories: DiscordChannel[];
   readonly textChannels: DiscordChannel[];
   readonly roles: DiscordRole[];
   readonly guildId: string;
-  readonly availableEmbeds: string[];
   readonly embeds: ServerEmbed[];
   readonly onDeleted: () => void;
   readonly detail?: boolean;
@@ -1344,7 +1313,7 @@ function PanelCard({
                       {components.map((btn) => (
                         <ButtonCard key={btn.custom_id} customId={btn.custom_id} label={btn.label} style={btn.style} emoji={btn.emoji}
                           settings={panel.button_settings[btn.custom_id] ?? createDefaultButtonSettings()}
-                          panelName={panel.name} guildId={guildId} roles={roles} availableEmbeds={availableEmbeds} embeds={embeds}
+                          panelName={panel.name} guildId={guildId} roles={roles}
                           onDeleted={() => setComponents((prev) => prev.filter(c => c.custom_id !== btn.custom_id))} // NOSONAR — structural JSX complexity from framework nesting
                           onAppearanceUpdated={(newLabel, newStyle) => setComponents((prev) => prev.map(c => c.custom_id === btn.custom_id ? { ...c, label: newLabel, style: newStyle } : c))} // NOSONAR — JSX inline handler nesting is structural, not logic complexity
                         />
@@ -1386,7 +1355,6 @@ function ConfigTab({ guildId, panelName }: { readonly guildId: string; readonly 
 
   const [panels, setPanels] = useState<TicketPanel[]>([]);
   const [embeds, setEmbeds] = useState<ServerEmbed[]>([]);
-  const [availableEmbeds, setAvailableEmbeds] = useState<string[]>([]);
   const [categories, setCategories] = useState<DiscordChannel[]>([]);
   const [textChannels, setTextChannels] = useState<DiscordChannel[]>([]);
   const [roles, setRoles] = useState<DiscordRole[]>([]);
@@ -1399,7 +1367,6 @@ function ConfigTab({ guildId, panelName }: { readonly guildId: string; readonly 
   useEffect(() => {
     if (!panelQuery.data?.data) return;
     setPanels([...panelQuery.data.data.items]);
-    setAvailableEmbeds([...panelQuery.data.data.available_embeds]);
   }, [panelQuery.data]);
 
   const loadDiscordMetadata = useCallback(async () => {
@@ -1435,7 +1402,6 @@ function ConfigTab({ guildId, panelName }: { readonly guildId: string; readonly 
         if (embedsRes.error || !embedsRes.data) throw new Error(embedsRes.error || "Failed to load server embeds");
 
         setPanels([...(panelsRes.data?.items ?? [])]);
-        setAvailableEmbeds([...(panelsRes.data?.available_embeds ?? [])]);
         setEmbeds(normalizeTicketEmbeds(embedsRes.data));
       } catch (err) {
         report("form",{
@@ -1463,7 +1429,6 @@ function ConfigTab({ guildId, panelName }: { readonly guildId: string; readonly 
       await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.route("ticket-panels", guildId), exact: true });
       const panelsRes = await queryClient.fetchQuery(ticketPanelsQuery(guildId));
       setPanels([...(panelsRes.data?.items ?? [])]);
-      setAvailableEmbeds([...(panelsRes.data?.available_embeds ?? [])]);
       setCreatePanelOpen(false);
       setNewPanelName("");
     } catch (err) {
@@ -1484,7 +1449,7 @@ function ConfigTab({ guildId, panelName }: { readonly guildId: string; readonly 
   if (panelName) {
     const panel = panels.find(item => item.name === panelName);
     return panel ? <PanelCard panel={panel} categories={categories} textChannels={textChannels} roles={roles} guildId={guildId}
-      availableEmbeds={availableEmbeds} embeds={embeds} detail
+      embeds={embeds} detail
       onDeleted={() => setPanels(previous => previous.filter(item => item.name !== panel.name))} />
       : <p className="rounded-3xl bg-card p-8 text-muted-foreground">{t("panelNotFound")}</p>;
   }
@@ -1537,7 +1502,7 @@ function ConfigTab({ guildId, panelName }: { readonly guildId: string; readonly 
           </div>
         ) : (
           panels.map((panel) => (
-            <PanelCard key={panel.name} panel={panel} categories={categories} textChannels={textChannels} roles={roles} guildId={guildId} availableEmbeds={availableEmbeds} embeds={embeds}
+            <PanelCard key={panel.name} panel={panel} categories={categories} textChannels={textChannels} roles={roles} guildId={guildId} embeds={embeds}
               onDeleted={() => setPanels((prev) => prev.filter(p => p.name !== panel.name))} // NOSONAR — JSX inline handler nesting is structural, not logic complexity
             />
           ))

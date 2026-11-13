@@ -3390,7 +3390,8 @@
     "categoryCoverage": "{configured}/{total} categories",
     "logCoverage": "{configured}/{total} logs",
     "panelPreview": "Discord preview",
-    "panelPreviewHint": "This combines the selected panel embed and ticket buttons so you can review what members will see before configuring it."
+    "panelPreviewHint": "This combines the selected panel embed and ticket buttons so you can review what members will see before configuring it.",
+    "questionPaginationHint": "أضف ما يصل إلى {limit} أسئلة. تتسع لها استمارة Discord واحدة."
   },
   "EmbedsPage": {
     "title": "التضمينات",
@@ -4047,6 +4048,16 @@
     }
   },
   "AccountSettings": {
+    "lab": {
+      "title": "Lab",
+      "description": "تكون الميزات التجريبية معطلة افتراضيًا وقد تتغير.",
+      "tenureBehavior": "تُحدد أعلى رتبة مستحقة حسب تاريخ انضمام العضو إلى خادم Discord. فعّل هذا الخيار، ثم حدد عدد الأشهر المطلوب في الإعدادات العامة.",
+      "tenureRequirements": "يحتاج ClashKing إلى إذن إدارة الرتب، وأن تكون رتبة البوت أعلى من الرتب المحددة. تعتمد التحديثات على بيانات أعضاء Discord وقد تستغرق بعض الوقت.",
+      "tenureDisable": "يؤدي تعطيل هذا الخيار إلى الاحتفاظ بالقواعد المحفوظة والرتب الممنوحة. قد تكتمل عملية تحديث بدأت بالفعل.",
+      "readOnly": "يلزم إذن إدارة الإعدادات لتغيير الميزات التجريبية.",
+      "rolesAccess": "يلزم الوصول إلى قسم الرتب في لوحة التحكم لعرض قواعد مدة العضوية.",
+      "profileMoved": "تعديل ملف البوت الشخصي في الخادم"
+    },
     "title": "Account settings",
     "description": "Manage your ClashKing profile, preferences, usage, and subscription.",
     "retry": "Retry",

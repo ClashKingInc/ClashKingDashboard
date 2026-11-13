@@ -3390,7 +3390,8 @@
     "categoryCoverage": "{configured}/{total} categories",
     "logCoverage": "{configured}/{total} logs",
     "panelPreview": "Discord preview",
-    "panelPreviewHint": "This combines the selected panel embed and ticket buttons so you can review what members will see before configuring it."
+    "panelPreviewHint": "This combines the selected panel embed and ticket buttons so you can review what members will see before configuring it.",
+    "questionPaginationHint": "अधिकतम {limit} प्रश्न जोड़ें। वे एक ही Discord फ़ॉर्म में समा जाते हैं।"
   },
   "EmbedsPage": {
     "title": "एम्बेड",
@@ -4047,6 +4048,16 @@
     }
   },
   "AccountSettings": {
+    "lab": {
+      "title": "Lab",
+      "description": "प्रयोगात्मक सुविधाएँ शुरुआत में बंद रहती हैं और बदल सकती हैं।",
+      "tenureBehavior": "सदस्य को मिलने वाली सबसे ऊँची भूमिका, Discord सर्वर में उसके शामिल होने की तारीख पर निर्भर करती है। यह विकल्प चालू करें, फिर सामान्य सेटिंग में महीनों की सीमाएँ तय करें।",
+      "tenureRequirements": "ClashKing को भूमिकाएँ प्रबंधित करने की अनुमति चाहिए और बॉट की भूमिका, तय की गई भूमिकाओं से ऊपर होनी चाहिए। अपडेट Discord के सदस्य डेटा पर निर्भर करते हैं और इनमें समय लग सकता है।",
+      "tenureDisable": "इसे बंद करने पर सहेजे गए नियम और दी गई भूमिकाएँ बनी रहती हैं। पहले से चल रहा रीफ़्रेश फिर भी पूरा हो सकता है।",
+      "readOnly": "प्रयोगात्मक सुविधाएँ बदलने के लिए सेटिंग प्रबंधित करने की अनुमति चाहिए।",
+      "rolesAccess": "सदस्यता की अवधि के नियम देखने के लिए डैशबोर्ड के भूमिका अनुभाग का ऐक्सेस चाहिए।",
+      "profileMoved": "सर्वर पर बॉट की प्रोफ़ाइल संपादित करें"
+    },
     "title": "Account settings",
     "description": "Manage your ClashKing profile, preferences, usage, and subscription.",
     "retry": "Retry",

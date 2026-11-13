@@ -3134,6 +3134,7 @@
     }
   },
   "TicketsSettingsPage": {
+    "questionPaginationHint": "Dodaj maksymalnie {limit} pytań. Zmieszczą się w jednym formularzu Discord.",
     "deleteTicket": "Delete ticket",
     "deleteTicketTitle": "Delete ticket #{number}?",
     "deleteTicketWithTranscript": "The Discord channel will be permanently deleted after its full transcript is saved. The ticket record and latest transcript will remain available.",
@@ -4047,6 +4048,16 @@
     }
   },
   "AccountSettings": {
+    "lab": {
+      "title": "Lab",
+      "description": "Funkcje eksperymentalne są domyślnie wyłączone i mogą się zmienić.",
+      "tenureBehavior": "Najwyższa kwalifikująca się rola zależy od daty dołączenia do serwera Discord. Włącz przełącznik i ustaw progi miesięcy w Ustawieniach ogólnych.",
+      "tenureRequirements": "ClashKing potrzebuje uprawnienia Zarządzanie rolami, a rola bota musi znajdować się ponad skonfigurowanymi rolami. Aktualizacje zależą od danych członków Discord i mogą potrwać.",
+      "tenureDisable": "Wyłączenie zachowuje zapisane reguły i przypisane role. Trwające odświeżanie może się jeszcze zakończyć.",
+      "readOnly": "Do zmiany eksperymentów potrzebne jest uprawnienie zarządzania Ustawieniami.",
+      "rolesAccess": "Do wyświetlania reguł stażu potrzebny jest dostęp do Rol w panelu.",
+      "profileMoved": "Edytuj profil bota na serwerze"
+    },
     "title": "Account settings",
     "description": "Manage your ClashKing profile, preferences, usage, and subscription.",
     "retry": "Retry",

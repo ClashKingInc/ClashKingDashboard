@@ -3134,6 +3134,7 @@
     }
   },
   "TicketsSettingsPage": {
+    "questionPaginationHint": "Add up to {limit} questions. They fit in one Discord form.",
     "deleteTicket": "Delete ticket",
     "deleteTicketTitle": "Delete ticket #{number}?",
     "deleteTicketWithTranscript": "The Discord channel will be permanently deleted after its full transcript is saved. The ticket record and latest transcript will remain available.",
@@ -4047,6 +4048,16 @@
     }
   },
   "AccountSettings": {
+    "lab": {
+      "title": "Lab",
+      "description": "Experimental features start off and may change.",
+      "tenureBehavior": "The highest qualifying role uses the member’s Discord join date. Enable this switch, then set month thresholds in General Settings.",
+      "tenureRequirements": "ClashKing needs Manage Roles and a bot role above the configured roles. Updates depend on Discord member data and may take time.",
+      "tenureDisable": "Turning this off keeps saved rules and assigned roles. An in-progress refresh may still finish.",
+      "readOnly": "Settings manage permission is required to change experiments.",
+      "rolesAccess": "Dashboard Roles access is required to view tenure rules.",
+      "profileMoved": "Edit the bot server profile"
+    },
     "title": "Account settings",
     "description": "Manage your ClashKing profile, preferences, usage, and subscription.",
     "retry": "Retry",

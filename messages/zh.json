@@ -3134,6 +3134,7 @@
     }
   },
   "TicketsSettingsPage": {
+    "questionPaginationHint": "最多添加 {limit} 个问题。它们会显示在一个 Discord 表单中。",
     "deleteTicket": "Delete ticket",
     "deleteTicketTitle": "Delete ticket #{number}?",
     "deleteTicketWithTranscript": "The Discord channel will be permanently deleted after its full transcript is saved. The ticket record and latest transcript will remain available.",
@@ -4047,6 +4048,16 @@
     }
   },
   "AccountSettings": {
+    "lab": {
+      "title": "Lab",
+      "description": "实验性功能默认关闭，且可能发生变化。",
+      "tenureBehavior": "最高符合条件的身份组依据成员加入 Discord 服务器的日期确定。打开此开关，然后在常规设置中设置月数门槛。",
+      "tenureRequirements": "ClashKing 需要管理身份组权限，且机器人的身份组必须高于所配置的身份组。更新依赖 Discord 成员数据，可能需要一些时间。",
+      "tenureDisable": "关闭后会保留已保存的规则和已分配的身份组。正在进行的刷新仍可能完成。",
+      "readOnly": "更改实验功能需要设置管理权限。",
+      "rolesAccess": "查看任期规则需要仪表板的身份组访问权限。",
+      "profileMoved": "编辑机器人服务器资料"
+    },
     "title": "Account settings",
     "description": "Manage your ClashKing profile, preferences, usage, and subscription.",
     "retry": "Retry",

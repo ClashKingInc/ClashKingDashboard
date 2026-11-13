@@ -3390,7 +3390,8 @@
     "categoryCoverage": "{configured}/{total} categories",
     "logCoverage": "{configured}/{total} logs",
     "panelPreview": "Discord preview",
-    "panelPreviewHint": "This combines the selected panel embed and ticket buttons so you can review what members will see before configuring it."
+    "panelPreviewHint": "This combines the selected panel embed and ticket buttons so you can review what members will see before configuring it.",
+    "questionPaginationHint": "質問は最大{limit}個まで追加できます。1つのDiscordフォームに収まります。"
   },
   "EmbedsPage": {
     "title": "埋め込み",
@@ -4047,6 +4048,16 @@
     }
   },
   "AccountSettings": {
+    "lab": {
+      "title": "Lab",
+      "description": "試験的な機能は初期状態では無効になっており、内容が変更される場合があります。",
+      "tenureBehavior": "メンバーのDiscordサーバーへの参加日に基づき、条件を満たす最上位のロールを付与します。この設定を有効にしてから、一般設定で必要な月数を設定してください。",
+      "tenureRequirements": "ClashKingには「ロールの管理」権限と、設定したロールより上位のボットロールが必要です。更新はDiscordのメンバーデータに依存し、時間がかかる場合があります。",
+      "tenureDisable": "無効にしても、保存済みのルールと付与済みのロールは保持されます。実行中の更新はそのまま完了する場合があります。",
+      "readOnly": "試験的な機能を変更するには、設定を管理する権限が必要です。",
+      "rolesAccess": "在籍期間のルールを表示するには、ダッシュボードの「ロール」へのアクセス権限が必要です。",
+      "profileMoved": "サーバー上のボットプロフィールを編集"
+    },
     "title": "Account settings",
     "description": "Manage your ClashKing profile, preferences, usage, and subscription.",
     "retry": "Retry",

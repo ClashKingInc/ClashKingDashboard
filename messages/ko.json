@@ -3134,6 +3134,7 @@
     }
   },
   "TicketsSettingsPage": {
+    "questionPaginationHint": "질문을 최대 {limit}개까지 추가할 수 있습니다. 하나의 Discord 양식에 표시됩니다.",
     "deleteTicket": "Delete ticket",
     "deleteTicketTitle": "Delete ticket #{number}?",
     "deleteTicketWithTranscript": "The Discord channel will be permanently deleted after its full transcript is saved. The ticket record and latest transcript will remain available.",
@@ -4047,6 +4048,16 @@
     }
   },
   "AccountSettings": {
+    "lab": {
+      "title": "Lab",
+      "description": "실험 기능은 기본적으로 꺼져 있으며 변경될 수 있습니다.",
+      "tenureBehavior": "멤버의 Discord 가입일을 기준으로 충족한 가장 높은 역할을 부여합니다. 이 스위치를 켠 후 일반 설정에서 개월 수 기준을 설정하세요.",
+      "tenureRequirements": "ClashKing에 역할 관리 권한이 있어야 하며 봇 역할은 설정된 역할보다 높아야 합니다. 업데이트는 Discord 멤버 데이터에 따라 시간이 걸릴 수 있습니다.",
+      "tenureDisable": "끄더라도 저장된 규칙과 부여된 역할은 유지됩니다. 진행 중인 새로고침은 완료될 수 있습니다.",
+      "readOnly": "실험을 변경하려면 설정 관리 권한이 필요합니다.",
+      "rolesAccess": "가입 기간 규칙을 보려면 대시보드 역할 접근 권한이 필요합니다.",
+      "profileMoved": "봇 서버 프로필 편집"
+    },
     "title": "Account settings",
     "description": "Manage your ClashKing profile, preferences, usage, and subscription.",
     "retry": "Retry",
