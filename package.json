@@ -15,6 +15,7 @@
     "start": "vite preview --host 127.0.0.1 --port 3002",
     "lint": "oxlint --deny-warnings app components lib src workers tests",
     "typecheck": "tsc --noEmit && tsc --noEmit -p workers/dashboard-edge/tsconfig.json && npm run assistant:check",
+    "test:landing-theme": "node --test scripts/landing-theme.test.mjs",
     "test:public-locales": "node --test scripts/public-locales.test.mjs scripts/public-locale-provider.test.mjs",
     "validate:messages": "node scripts/validate-messages.mjs",
     "generate:public-shells": "node scripts/generate-public-shells.mjs",

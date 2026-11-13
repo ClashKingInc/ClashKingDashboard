@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { readLandingTheme } from "./language-switcher";
+import { useLandingTheme } from "./use-landing-theme";
 import { ClanSignalFooter } from "./footer";
 import { ClanSignalHeader } from "./header";
 import { type PublicLocale } from "@/lib/locale-preference";
@@ -20,12 +19,12 @@ export function ClanSignalPageShell({
   locale?: PublicLocale;
   children: React.ReactNode;
 }>) {
-  const [landingTheme, setLandingTheme] = useState(readLandingTheme);
+  const { theme: landingTheme, preference: themePreference, changeTheme } = useLandingTheme();
 
   return (
     <main className="clan-signal ck-home cs-legal-page" data-cs-theme={landingTheme}>
       <div className="ck-sky">
-      <ClanSignalHeader landingTheme={landingTheme} onThemeChange={setLandingTheme} />
+      <ClanSignalHeader landingTheme={landingTheme} themePreference={themePreference} onThemeChange={changeTheme} />
 
       <section className="cs-legal-hero">
         <div>

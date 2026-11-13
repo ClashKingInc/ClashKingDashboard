@@ -1,6 +1,6 @@
 import { useEffect, useId, useState } from "react";
 import { createPortal } from "react-dom";
-import type { LandingTheme } from "./language-switcher";
+import type { LandingTheme } from "@/lib/landing-theme";
 import copy from "virtual:public-seo-copy";
 import Link from "@/components/app-link";
 import { useAppLocale } from "@/components/locale-provider";

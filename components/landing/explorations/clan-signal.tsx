@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { BookOpen, Code2, ArrowUpRight } from "lucide-react";
 import Image from "@/components/app-image";
 import Link from "@/components/app-link";
@@ -11,7 +11,7 @@ import { RotatingHeadline, SectionTitle, Scribble } from "./clan-signal/rotating
 import { HeroActions, PlatformMark } from "./clan-signal/hero-actions";
 import { LandingCounts } from "./clan-signal/counts";
 import { useLandingMotion } from "./clan-signal/motion";
-import { readLandingTheme } from "./clan-signal/language-switcher";
+import { useLandingTheme } from "./clan-signal/use-landing-theme";
 import { ClanSignalHeader } from "./clan-signal/header";
 import { IOS_APP_STORE_URL } from "@/lib/constants";
 import "../../../app/explorations/clan-signal.css";
@@ -69,7 +69,7 @@ function FeatureList({ features }: { features: readonly Feature[] }) {
 export function ClanSignal() {
   const locale = useLocale();
   const t = useTranslations("ClanSignal");
-  const [landingTheme, setLandingTheme] = useState(readLandingTheme);
+  const { theme: landingTheme, preference: themePreference, changeTheme } = useLandingTheme();
   const motion = useLandingMotion();
   const rootRef = useRef<HTMLElement>(null);
   const headlinePhrases = ['clan', 'stats', 'game'].map(key => [t(`rally.${key}.first`), t(`rally.${key}.prefix`), t(`rally.${key}.word`)]);
@@ -128,7 +128,7 @@ export function ClanSignal() {
   return (
     <main ref={rootRef} className="clan-signal ck-home" data-cs-theme={landingTheme} data-motion={motion.enabled ? "enabled" : "paused"}>
       <div className="ck-sky">
-      <ClanSignalHeader landingTheme={landingTheme} onThemeChange={setLandingTheme} />
+      <ClanSignalHeader landingTheme={landingTheme} themePreference={themePreference} onThemeChange={changeTheme} />
 
       <section className="ck-hero ck-wrap" aria-label={t('rally.label')}>
         <div className="ck-hero-copy">

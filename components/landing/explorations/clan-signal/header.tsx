@@ -2,14 +2,16 @@ import Link from "@/components/app-link";
 import { useLocale, useTranslations } from "use-intl";
 import { publicPath, type PublicLocale } from "@/lib/locale-preference";
 import { ClanSignalWordmark } from "./brand";
-import { LandingLanguageSwitcher, type LandingTheme } from "./language-switcher";
+import type { LandingTheme, LandingThemePreference } from "@/lib/landing-theme";
+import { LandingLanguageSwitcher } from "./language-switcher";
 import { LandingLanguageSuggestion } from "./language-suggestion";
 import { LandingSessionAction } from "./session-action";
 import "../../../../app/explorations/clan-signal-rally.css";
 
-export function ClanSignalHeader({ landingTheme, onThemeChange }: {
+export function ClanSignalHeader({ landingTheme, themePreference = landingTheme, onThemeChange }: {
   readonly landingTheme: LandingTheme;
-  readonly onThemeChange?: (theme: LandingTheme) => void;
+  readonly themePreference?: LandingThemePreference;
+  readonly onThemeChange?: (theme: LandingThemePreference) => void;
 }) {
   const t = useTranslations("ClanSignal");
   const homePath = publicPath(useLocale() as PublicLocale, "/");
@@ -31,6 +33,7 @@ export function ClanSignalHeader({ landingTheme, onThemeChange }: {
               dayLabel={t("appearance.day")}
               sunsetLabel={t("appearance.sunset")}
               initialTheme={landingTheme}
+              themePreference={themePreference}
               onThemeChange={onThemeChange}
             />
             <LandingSessionAction loginLabel={t("actions.login")} dashboardLabel={t("actions.dashboard")} />
