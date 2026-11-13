@@ -18,6 +18,15 @@ English uses `/`, `/privacy`, and `/terms`. Other public language variants use `
 
 The marketing site and dashboard share the `CK_WEB_THEME` preference cookie: Day maps to Light, Sunset to Dark, and System follows the device setting. Each origin also keeps the preference in the dashboard theme storage. Returning to a tab refreshes its shared preference; browsers with Cookie Store events also pick up changes immediately. Existing landing and dashboard choices are migrated on first use. A theme forced by the native embedded dashboard does not overwrite the saved preference.
 
+## Public preference verification
+
+Run `npx playwright install chromium`, then `npm run test:public-preferences`.
+The check builds the application and starts its real local edge Worker. It checks
+all localized HTML routes and uses headless Chromium for language controls,
+cross-origin preference cookies, system themes and slow translation loading.
+Production API and CDN requests are blocked; no screenshots are taken. Browser
+coverage is explicit opt-in and is not added to CI by this change.
+
 ## Development
 
 Requirements: Node.js 26.1+ and npm 12+.

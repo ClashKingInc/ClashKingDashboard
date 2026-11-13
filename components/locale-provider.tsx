@@ -81,7 +81,8 @@ export function updateDashboardLocale(locale: SupportedLocale, mode: LocaleMode)
 }
 
 export function LocaleProvider({ children, pathname = globalThis.location.pathname }: { readonly children: React.ReactNode; readonly pathname?: string }) {
-  const [locale, setLocale] = useState<SupportedLocale>("en");
+  const [locale, setLocale] = useState<SupportedLocale>(() => getPublicRoute(pathname)?.locale ?? "en");
+  const [loadedLocale, setLoadedLocale] = useState<SupportedLocale | null>(null);
   const [messages, setMessages] = useState<Messages>(englishMessages);
   const [mode, setMode] = useState<LocaleMode>("manual");
   const localeRequestId = useRef(0);
@@ -93,6 +94,7 @@ export function LocaleProvider({ children, pathname = globalThis.location.pathna
     if (requestId !== localeRequestId.current) return;
     setMessages(nextMessages);
     setLocale(nextLocale);
+    setLoadedLocale(nextLocale);
     document.documentElement.lang = nextLocale;
     document.documentElement.dir = RTL_LOCALES.has(nextLocale) ? "rtl" : "ltr";
   }, []);
@@ -190,10 +192,17 @@ export function LocaleProvider({ children, pathname = globalThis.location.pathna
     [locale, mode, setDashboardLocale],
   );
 
+  // A public URL can change before its lazy catalog arrives. Keep English (or
+  // the previous route's messages) off-screen until the correct catalog is ready.
+  // The initial locale alone is not enough: it must match the loaded messages.
+  const publicLocale = getPublicRoute(pathname)?.locale;
+  const ready = loadedLocale !== null &&
+    (mode === "browser" || !publicLocale || loadedLocale === publicLocale);
+
   return (
     <LocaleContext.Provider value={value}>
       <IntlProvider locale={locale} messages={messages}>
-        {children}
+        {ready ? children : <div aria-busy="true" data-locale-loading="true" />}
       </IntlProvider>
     </LocaleContext.Provider>
   );
