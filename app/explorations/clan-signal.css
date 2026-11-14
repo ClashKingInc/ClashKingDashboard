@@ -363,23 +363,28 @@ html[data-mobile-platform="android"] .cs-mobile-app-link.is-android { display: i
 
 .cs-info-document { width: min(1080px, calc(100% - 48px)); margin: 0 auto; padding: 72px 0 40px; }
 .cs-not-found-actions { width: min(920px, calc(100% - 48px)); margin: 0 auto; padding: 40px 0; }
-.cs-info-stack { display: grid; gap: 22px; }
+.cs-info-stack { display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; }
 .cs-info-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
-.cs-info-panel { padding: 30px; border-radius: 24px; background: var(--cs-surface); box-shadow: 0 12px 34px rgb(23 53 42 / 0.08); }
+.cs-info-panel { min-width: 0; padding: 30px; border-radius: 24px; background: var(--cs-surface); box-shadow: 0 12px 34px rgb(23 53 42 / 0.08); overflow-wrap: anywhere; hyphens: auto; }
 .cs-info-panel-muted { background: var(--cs-surface-green); }
-.cs-info-panel h2 { margin-bottom: 12px; color: var(--cs-ink); font-size: clamp(1.8rem, 3vw, 2.4rem); line-height: 1.12; }
+.clan-signal .cs-info-panel h2 { margin-bottom: 12px; color: var(--cs-ink); font-size: clamp(1.8rem, 3vw, 2.4rem); line-height: 1.12; }
 .cs-info-panel h3 { color: var(--cs-ink); font-size: 1.15rem; line-height: 1.25; }
 .cs-info-panel p, .cs-info-panel li { color: var(--cs-muted); line-height: 1.68; }
 .cs-info-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 22px; margin-top: 24px; padding: 0; list-style: none; }
 .cs-info-list li { display: flex; align-items: flex-start; gap: 10px; }
 .cs-info-list svg { width: 18px; height: 18px; margin-top: 4px; flex: 0 0 auto; color: #b78c20; }
 .cs-info-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+.cs-info-actions > a { min-width: 0; max-width: 100%; height: auto; padding-block: 12px; white-space: normal; text-align: center; }
+.cs-info-actions > a > svg { flex-shrink: 0; }
 .cs-info-secondary { min-height: 50px; padding: 0 21px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: 14px; background: rgb(255 255 255 / 0.48); color: var(--cs-ink); font-size: 0.84rem; font-weight: 820; box-shadow: 0 8px 22px rgb(23 53 42 / 0.08); transition: background-color 160ms ease-out, transform 120ms ease-out; }
 .cs-info-secondary:hover { background: rgb(255 255 255 / 0.74); }
 .cs-info-secondary:active { transform: scale(0.98); }
 .cs-info-repos { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
-.cs-info-repos a { padding: 9px 12px; border-radius: 999px; background: var(--cs-surface-blue); color: var(--cs-ink); font-size: 0.76rem; font-weight: 780; }
+.cs-info-repos a { display: inline-flex; align-items: center; min-height: 44px; max-width: 100%; padding: 9px 12px; border-radius: 999px; background: var(--cs-surface-blue); color: var(--cs-ink); font-size: 0.76rem; font-weight: 780; }
 .cs-support-content h1, .cs-support-content h2, .cs-support-content li { color: var(--cs-ink) !important; }
+.clan-signal .cs-support-content h2 { min-width: 0; font-size: clamp(1.5rem, 3vw, 2rem); line-height: 1.2; overflow-wrap: anywhere; hyphens: auto; }
+.cs-support-content section, .cs-support-content section > div { min-width: 0; }
+.cs-support-content a { max-width: 100%; height: auto; padding-block: 12px; white-space: normal; overflow-wrap: anywhere; }
 .cs-support-content p { color: var(--cs-muted) !important; }
 .cs-support-content > div > section:first-child { background: var(--cs-surface) !important; }
 .cs-support-content > div > section:nth-child(2) { background: var(--cs-surface-green) !important; }
@@ -536,6 +541,8 @@ html[data-mobile-platform="android"] .cs-mobile-app-link.is-android { display: i
   .cs-resources h2 { font-size: clamp(2.8rem, 12vw, 3.7rem); }
   .cs-footer { padding-top: 30px; grid-template-columns: 1fr; align-items: start; }
   .cs-footer-links { justify-content: flex-start; }
+  .cs-footer-links a { display: inline-flex; align-items: center; min-height: 44px; }
+  .cs-footer-links { gap: 4px 20px; }
   .cs-legal { text-align: left; }
   .cs-footer-scene { min-height: 390px; margin-top: 0; }
   .cs-footer-scene::after { inset-block-start: 28%; }

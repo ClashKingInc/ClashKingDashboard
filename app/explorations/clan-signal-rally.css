@@ -116,7 +116,7 @@
   .ck-home .cs-nav{grid-template-columns:minmax(0,1fr) minmax(0,1.7fr)}
   .ck-home .cs-nav-brand{width:min(124px,100%);min-width:0}
   .ck-home .cs-nav-actions{min-width:0;max-width:100%;justify-content:flex-end}
-  .ck-home .cs-language-trigger{flex-shrink:0}
+  .ck-home .cs-nav-actions .cs-language-trigger{display:inline-flex;flex-shrink:0}
   .ck-home .cs-session-action{min-width:0;white-space:normal;overflow-wrap:anywhere;text-align:center;line-height:1.25}
   .ck-home .ck-discord>svg{flex-shrink:0}
 }
