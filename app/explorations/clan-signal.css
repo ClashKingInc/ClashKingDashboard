@@ -362,6 +362,7 @@ html[data-mobile-platform="android"] .cs-mobile-app-link.is-android { display: i
 .cs-legal-notice a { font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
 
 .cs-info-document { width: min(1080px, calc(100% - 48px)); margin: 0 auto; padding: 72px 0 40px; }
+.cs-not-found-actions { width: min(920px, calc(100% - 48px)); margin: 0 auto; padding: 40px 0; }
 .cs-info-stack { display: grid; gap: 22px; }
 .cs-info-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
 .cs-info-panel { padding: 30px; border-radius: 24px; background: var(--cs-surface); box-shadow: 0 12px 34px rgb(23 53 42 / 0.08); }
