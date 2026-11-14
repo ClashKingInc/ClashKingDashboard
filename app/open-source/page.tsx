@@ -22,7 +22,7 @@ export default function OpenSourcePage() {
           <h2>{t("github.title")}</h2>
           <p>{t("github.description")}</p>
           <div className="cs-info-actions">
-            <Link className="cs-button" href="https://github.com/ClashKingInc/" target="_blank" rel="noopener noreferrer">
+            <Link className="cs-info-secondary cs-store-action" href="https://github.com/ClashKingInc/" target="_blank" rel="noopener noreferrer">
               {t("github.ctaPrimary")} <ExternalLink size={17} aria-hidden="true" />
             </Link>
           </div>
@@ -38,7 +38,7 @@ export default function OpenSourcePage() {
           <h2>{t("api.title")}</h2>
           <p>{t("api.description")}</p>
           <div className="cs-info-actions">
-            <Link className="cs-button" href="https://api.clashk.ing/" target="_blank" rel="noopener noreferrer">
+            <Link className="cs-info-secondary cs-store-action" href="https://api.clashk.ing/" target="_blank" rel="noopener noreferrer">
               {t("api.cta")} <ExternalLink size={17} aria-hidden="true" />
             </Link>
           </div>
@@ -47,10 +47,10 @@ export default function OpenSourcePage() {
           <h2>{t("translation.title")}</h2>
           <p>{t("translation.description")}</p>
           <div className="cs-info-actions">
-            <Link className="cs-info-secondary" href="https://crowdin.com/project/clashkingapp" target="_blank" rel="noopener noreferrer">
+            <Link className="cs-info-secondary cs-store-action" href="https://crowdin.com/project/clashkingapp" target="_blank" rel="noopener noreferrer">
               {t("translation.app")} <ExternalLink size={17} aria-hidden="true" />
             </Link>
-            <Link className="cs-info-secondary" href="https://crowdin.com/project/clashkingbot" target="_blank" rel="noopener noreferrer">
+            <Link className="cs-info-secondary cs-store-action" href="https://crowdin.com/project/clashkingbot" target="_blank" rel="noopener noreferrer">
               {t("translation.bot")} <ExternalLink size={17} aria-hidden="true" />
             </Link>
           </div>

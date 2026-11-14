@@ -62,7 +62,7 @@
 .ck-home .cs-bot-art{padding:0;min-height:0;background:none;border-radius:0;overflow:visible;display:flex;justify-content:center;transform:rotate(2deg)}
 .ck-home .cs-bot-art>.cs-discord-preview{width:min(100%,410px);max-width:410px;border-radius:14px;filter:drop-shadow(0 18px 24px #19322c21)}
 .ck-home .ck-downloads{display:flex;gap:12px;margin-top:28px;flex-wrap:nowrap;align-items:stretch}
-.ck-home .ck-download{display:flex;align-items:center;justify-content:center;gap:12px;background:#18362b;color:#fff;padding:12px 20px;min-height:62px;border-radius:14px;white-space:nowrap}
+.ck-home .ck-download{display:flex;align-items:center;justify-content:center;gap:12px;background:var(--cs-action-bg);color:var(--cs-action-ink);padding:12px 20px;min-height:62px;border-radius:14px;white-space:nowrap}
 .ck-download>svg{width:27px;height:29px;fill:currentColor;flex-shrink:0}.ck-download>span{font-size:17px;line-height:1.2;font-weight:600}.ck-download small{display:block;font-size:10px;font-weight:500;line-height:1.5;color:#d4e2dc}
 .ck-home .cs-resources{grid-template-columns:1fr 1.15fr;gap:70px;border-top:0;padding-block:90px}
 .ck-home .cs-resources h2{font-size:clamp(34px,4vw,60px);line-height:1.12}
@@ -81,7 +81,7 @@
 .ck-home[data-cs-theme=sunset] .cs-language-trigger{background:#241e3580;color:#fff2d5;border-color:#fff3}
 .ck-home[data-cs-theme=sunset] .cs-feature-list article p{color:#dbcbd3}
 .ck-home[data-cs-theme=sunset] .cs-feature-icon{background:#493d56}
-.ck-home[data-cs-theme=sunset] .ck-download{background:#f2e3c9;color:#302637}.ck-home[data-cs-theme=sunset] .ck-download small{color:#5f4f64}
+.ck-home[data-cs-theme=sunset] .ck-download small{color:#5f4f64}
 .ck-home[data-cs-theme=sunset] .section-scribble svg{stroke:#ff9292}
 /* The popover is portaled, so its theme is explicit instead of inherited from the page. */
 .ck-preferences{width:300px!important;padding:14px!important;border-radius:19px!important;border:1px solid #c8d8d1!important;background:#f8fcf9!important;color:#17352a!important;box-shadow:0 12px 40px #17352a26;font:14px ClashKing,sans-serif;max-height:calc(100dvh - 90px)!important}

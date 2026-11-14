@@ -2772,7 +2772,7 @@
           "Discord服务器管理：（即将推出）直接从应用管理身份组和工单。",
           "高级通知：（即将推出）为重要活动设置自定义提醒。"
         ],
-        "ctaPrimary": "Android测试版",
+        "ctaPrimary": "Google Play",
         "ctaSecondary": "App Store"
       },
       "api": {

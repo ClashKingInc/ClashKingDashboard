@@ -2772,7 +2772,7 @@
           "Discord 서버 관리: (출시 예정) 앱에서 역할과 티켓을 관리합니다.",
           "고급 알림: (출시 예정) 중요한 이벤트 알림을 원하는 대로 설정합니다."
         ],
-        "ctaPrimary": "Android 베타",
+        "ctaPrimary": "Google Play",
         "ctaSecondary": "App Store"
       },
       "api": {
