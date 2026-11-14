@@ -306,102 +306,6 @@
     "browserLanguage": "لغة المتصفح",
     "accountSettings": "Account settings"
   },
-  "HomePage": {
-    "badge": "أكثر من {serverCount} خادم يستخدم ClashKing",
-    "title": "الأقوى",
-    "titleHighlight": "بوت Clash of Clans",
-    "subtitle": "أتمت إدارة قبيلتك، وتابع إحصاءات اللاعبين، وأدر الحروب، وحافظ على تفاعل مجتمعك.",
-    "cta": {
-      "heading": "هل أنت مستعد لتطوير قبيلتك؟",
-      "description": "انضم إلى أكثر من {serverCount} خادم Discord يستخدم ClashKing لتطوير مجتمع Clash of Clans. يستغرق الإعداد دقيقتين فقط.",
-      "button": "إضافة ClashKing إلى Discord",
-      "trustBadge": "مجاني دائمًا • لا تلزم بطاقة ائتمان • أكثر من {serverCount} خادم",
-      "addToDiscord": "إضافة إلى Discord",
-      "openDashboard": "فتح لوحة التحكم"
-    },
-    "stats": {
-      "servers": "خوادم Discord",
-      "users": "المستخدمون النشطون",
-      "clans": "القبائل المتتبَّعة"
-    },
-    "features": {
-      "title": "كل ما تحتاجه لإدارة قبيلتك",
-      "subtitle": "ميزات قوية مصممة خصيصًا لمجتمعات Clash of Clans",
-      "autoRoles": {
-        "title": "إدارة الرتب تلقائيًا",
-        "description": "عيّن الرتب تلقائيًا حسب حالة اللاعب وموقعه في القبيلة وإنجازاته، وحافظ على تنظيم خادمك."
-      },
-      "playerStats": {
-        "title": "إحصاءات اللاعب",
-        "description": "تابع إحصاءات اللاعبين التفصيلية، ومخططات التقدم، وسجل الهجمات، واعرف من يتحسن ومن يحتاج إلى مساعدة."
-      },
-      "leaderboards": {
-        "title": "قوائم المتصدرين",
-        "description": "أنشئ لوحات منافسة للتبرعات والكؤوس ونجوم الحرب والمقاييس المخصصة."
-      },
-      "warTracking": {
-        "title": "متابعة الحرب",
-        "description": "راقب تشكيلات الحروب وتتبع الهجمات بالوقت الفعلي واستخرج تحليلات مفصلة لتضمن متابعة كل دقيقة."
-      },
-      "smartReminders": {
-        "title": "تنبيهات ذكية",
-        "description": "تنبيهات تلقائية لألعاب القبيلة وهجمات الحرب ودوري الحروب والفعاليات المخصصة ليكون الجميع على علم بكل جديد."
-      },
-      "customization": {
-        "title": "تخصيص كامل",
-        "description": "تحكّم بالأوامر، ألوان الرسائل المدمجة، الألقاب، والصلاحيات. اجعل البوت يعبر عن قبيلتك."
-      },
-      "familyManagement": {
-        "title": "إدارة عائلة القبائل",
-        "description": "إدارة عدة قبائل كعائلة واحدة. إحصائيات شاملة، لوحات متصدرين مشتركة، وتعيين موحد للرتب."
-      },
-      "analytics": {
-        "title": "تحليلات متقدمة",
-        "description": "رؤى معمقة لأداء القبيلة، وأنماط نشاط اللاعبين، واتجاهات النمو لاتخاذ قرارات مبنية على البيانات."
-      },
-      "performance": {
-        "title": "سرعة فائقة",
-        "description": "أداء سريع مع استجابات فورية للأوامر وتحديثات مباشرة، دون تأخير."
-      },
-      "security": {
-        "title": "آمن وموثوق",
-        "description": "توفر بنسبة 99.9%، وبيانات مشفرة، ونسخ احتياطية منتظمة لحماية بيانات قبيلتك."
-      }
-    },
-    "footer": {
-      "tagline": "أقوى بوت Clash of Clans لمجتمعات Discord.",
-      "about": {
-        "title": "عن",
-        "features": "الميزات",
-        "help": "تحتاج إلى مساعدة؟",
-        "openSource": "مفتوح المصدر",
-        "support": "ادعمنا"
-      },
-      "bot": {
-        "title": "البوت",
-        "dashboard": "لوحة التحكم",
-        "inviteBot": "إضافة البوت"
-      },
-      "resources": {
-        "title": "الموارد",
-        "documentation": "الوثائق",
-        "quickStart": "دليل البدء السريع",
-        "github": "GitHub"
-      },
-      "community": {
-        "title": "المجتمع",
-        "discord": "خادم Discord",
-        "twitter": "X (Twitter)",
-        "reportBug": "الإبلاغ عن خلل",
-        "requestFeature": "طلب ميزة"
-      },
-      "legal": {
-        "copyright": "ClashKing. جميع الحقوق محفوظة.",
-        "privacy": "سياسة الخصوصية",
-        "terms": "شروط الخدمة"
-      }
-    }
-  },
   "DiscordUserDisplay": {
     "unknownUserShort": "ليس في الخادم",
     "unknownUser": "مستخدم غير معروف",
@@ -2868,7 +2772,7 @@
           "إدارة خادم Discord: (قريبًا) أدر الرتب والتذاكر من التطبيق.",
           "إشعارات متقدمة: (قريبًا) خصص التنبيهات للأحداث المهمة."
         ],
-        "ctaPrimary": "بيتا Android",
+        "ctaPrimary": "Google Play",
         "ctaSecondary": "App Store"
       },
       "api": {

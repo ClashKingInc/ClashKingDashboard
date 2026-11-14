@@ -1,26 +1,20 @@
-import { useTranslations } from "use-intl";
+import { useLocale, useTranslations } from "use-intl";
 import Link from "@/components/app-link";
-import { Button } from "@/components/ui/button";
-import { Navbar } from "@/components/landing/navbar";
-import { Footer } from "@/components/landing/footer";
+import { ClanSignalPageShell } from "@/components/landing/explorations/clan-signal/legal-shell";
+import { publicPath, type PublicLocale } from "@/lib/locale-preference";
 
 export default function NotFound() {
   const t = useTranslations("NotFound");
+  const locale = useLocale() as PublicLocale;
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-        <Navbar />
-        <div className="flex-1 flex items-center justify-center px-4 pt-20 pb-10">
-          <div className="text-center space-y-6 max-w-md">
-            <h1 className="text-9xl font-bold text-primary">404</h1>
-            <h2 className="text-3xl font-semibold">{t("title")}</h2>
-            <p className="text-muted-foreground text-lg">{t("description")}</p>
-            <Button asChild size="lg">
-              <Link href="/">{t("goHome")}</Link>
-            </Button>
-          </div>
-        </div>
-        <Footer />
-    </div>
+    <ClanSignalPageShell
+      eyebrow="404"
+      title={t("title")}
+      description={t("description")}
+      contentClassName="cs-not-found-actions"
+    >
+      <Link className="cs-button" href={publicPath(locale, "/")}>{t("goHome")}</Link>
+    </ClanSignalPageShell>
   );
 }

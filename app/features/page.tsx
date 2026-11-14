@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "@/components/app-link";
-import { IOS_APP_STORE_URL } from "@/lib/constants";
 import { ClanSignalPageShell } from "@/components/landing/explorations/clan-signal/legal-shell";
+import { AppStoreLink, PlatformMark } from "@/components/landing/explorations/clan-signal/hero-actions";
 import { CheckCircle2 } from "lucide-react";
 import { useTranslations } from "use-intl";
 
 export default function FeaturesPage() {
   const t = useTranslations("FeaturesPage");
+  const appActions = useTranslations("ClanSignal.actions");
   const features = [
     {
       id: "bot",
@@ -22,8 +23,6 @@ export default function FeaturesPage() {
       title: t("sections.app.title"),
       description: t("sections.app.description"),
       items: (t.raw("sections.app.items") as string[]) ?? [],
-      primary: { label: t("sections.app.ctaPrimary"), href: "https://play.google.com/apps/testing/com.clashking.clashkingapp" },
-      secondary: { label: t("sections.app.ctaSecondary"), href: IOS_APP_STORE_URL },
     },
     {
       id: "api",
@@ -33,7 +32,7 @@ export default function FeaturesPage() {
       primary: { label: t("sections.api.ctaPrimary"), href: "https://api.clashk.ing/" },
       secondary: { label: t("sections.api.ctaSecondary"), href: "https://github.com/ClashKingInc/ClashKingAPI" },
     },
-  ];
+  ] as const;
 
   return (
     <ClanSignalPageShell title={t("hero.title")} eyebrow="ClashKing" description={t("hero.subtitle")} contentClassName="cs-info-document">
@@ -49,10 +48,19 @@ export default function FeaturesPage() {
                 ))}
               </ul>
             )}
-            <div className="cs-info-actions">
-              <Link className="cs-button" href={feature.primary.href} target="_blank" rel="noopener noreferrer">{feature.primary.label}</Link>
-              <Link className="cs-info-secondary" href={feature.secondary.href} target="_blank" rel="noopener noreferrer">{feature.secondary.label}</Link>
-            </div>
+            {feature.id === "app" ? <div className="ck-downloads cs-info-downloads">
+              <AppStoreLink platform="ios" label={appActions("iosApp")} />
+              <AppStoreLink platform="android" label={appActions("androidApp")} />
+            </div> : <div className="cs-info-actions">
+              <Link className="cs-info-secondary cs-store-action cs-platform-action" href={feature.primary.href} target="_blank" rel="noopener noreferrer">
+                {feature.id === "bot" && <PlatformMark platform="discord" />}
+                {feature.primary.label}
+              </Link>
+              <Link className="cs-info-secondary cs-store-action cs-platform-action" href={feature.secondary.href} target="_blank" rel="noopener noreferrer">
+                {feature.id === "bot" && <PlatformMark platform="discord" />}
+                {feature.secondary.label}
+              </Link>
+            </div>}
           </section>
         ))}
       </div>

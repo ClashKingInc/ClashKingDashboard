@@ -306,102 +306,6 @@
     "browserLanguage": "Ngôn ngữ trình duyệt",
     "accountSettings": "Account settings"
   },
-  "HomePage": {
-    "badge": "Hơn {serverCount} máy chủ đang sử dụng ClashKing",
-    "title": "Bot mạnh mẽ nhất",
-    "titleHighlight": "dành cho Clash of Clans",
-    "subtitle": "Tự động hóa việc quản lý bang hội, theo dõi thống kê người chơi, quản lý hội chiến và duy trì sự gắn kết của cộng đồng.",
-    "cta": {
-      "heading": "Sẵn sàng thay đổi bang hội của bạn?",
-      "description": "Tham gia cùng hơn {serverCount} máy chủ Discord đang dùng ClashKing để nâng tầm cộng đồng Clash of Clans. Chỉ mất 2 phút để thiết lập.",
-      "button": "Thêm ClashKing vào Discord",
-      "trustBadge": "Miễn phí mãi mãi • Không cần thẻ tín dụng • Hơn {serverCount} máy chủ",
-      "addToDiscord": "Thêm vào Discord",
-      "openDashboard": "Mở bảng điều khiển"
-    },
-    "stats": {
-      "servers": "Máy chủ Discord",
-      "users": "Người dùng hoạt động",
-      "clans": "Bang hội được theo dõi"
-    },
-    "features": {
-      "title": "Mọi thứ bạn cần để quản lý bang hội",
-      "subtitle": "Các tính năng mạnh mẽ được thiết kế riêng cho cộng đồng Clash of Clans",
-      "autoRoles": {
-        "title": "Quản lý vai trò tự động",
-        "description": "Tự động gán vai trò theo trạng thái, vị trí trong bang hội và thành tích của người chơi, giúp máy chủ luôn ngăn nắp."
-      },
-      "playerStats": {
-        "title": "Thống kê người chơi",
-        "description": "Theo dõi thống kê chi tiết, biểu đồ tiến trình và lịch sử tấn công. Biết ai đang tiến bộ và ai cần trợ giúp."
-      },
-      "leaderboards": {
-        "title": "Bảng xếp hạng",
-        "description": "Tạo bảng xếp hạng thi đua về quyên góp, cúp, sao hội chiến và chỉ số tùy chỉnh để tăng tương tác."
-      },
-      "warTracking": {
-        "title": "Theo dõi hội chiến",
-        "description": "Theo dõi đội hình hội chiến, các lượt tấn công theo thời gian thực và phân tích sau trận, không bỏ sót chi tiết nào."
-      },
-      "smartReminders": {
-        "title": "Nhắc nhở thông minh",
-        "description": "Tự động nhắc về Trò Chơi Bang Hội, lượt tấn công, Giải Đấu Hội Chiến và sự kiện tùy chỉnh để mọi người luôn nắm rõ."
-      },
-      "customization": {
-        "title": "Tùy chỉnh toàn diện",
-        "description": "Tùy chỉnh lệnh, màu nội dung nhúng, biệt danh và quyền để ClashKing thực sự phù hợp với bạn."
-      },
-      "familyManagement": {
-        "title": "Quản lý hệ thống bang hội",
-        "description": "Quản lý nhiều bang hội trong cùng một hệ thống, với thống kê liên bang hội, bảng xếp hạng chung và vai trò thống nhất."
-      },
-      "analytics": {
-        "title": "Phân tích nâng cao",
-        "description": "Thông tin chuyên sâu về hiệu suất bang hội, mẫu hoạt động của người chơi và xu hướng phát triển để ra quyết định dựa trên dữ liệu."
-      },
-      "performance": {
-        "title": "Nhanh như chớp",
-        "description": "Tối ưu hiệu suất với phản hồi lệnh tức thì và cập nhật theo thời gian thực, không giật lag hay trì hoãn."
-      },
-      "security": {
-        "title": "An toàn và đáng tin cậy",
-        "description": "Thời gian hoạt động 99,9%, dữ liệu được mã hóa và sao lưu thường xuyên, giúp dữ liệu bang hội luôn an toàn."
-      }
-    },
-    "footer": {
-      "tagline": "Bot Clash of Clans mạnh mẽ nhất dành cho cộng đồng Discord.",
-      "about": {
-        "title": "Giới thiệu",
-        "features": "Tính năng",
-        "help": "Cần trợ giúp?",
-        "openSource": "Mã nguồn mở",
-        "support": "Ủng hộ chúng tôi"
-      },
-      "bot": {
-        "title": "Bot",
-        "dashboard": "Bảng điều khiển",
-        "inviteBot": "Mời bot"
-      },
-      "resources": {
-        "title": "Tài nguyên",
-        "documentation": "Tài liệu",
-        "quickStart": "Hướng dẫn bắt đầu nhanh",
-        "github": "GitHub"
-      },
-      "community": {
-        "title": "Cộng đồng",
-        "discord": "Máy chủ Discord",
-        "twitter": "X (Twitter)",
-        "reportBug": "Báo lỗi",
-        "requestFeature": "Đề xuất tính năng"
-      },
-      "legal": {
-        "copyright": "ClashKing. Bảo lưu mọi quyền.",
-        "privacy": "Chính sách quyền riêng tư",
-        "terms": "Điều khoản dịch vụ"
-      }
-    }
-  },
   "DiscordUserDisplay": {
     "unknownUserShort": "Không ở trong máy chủ",
     "unknownUser": "Người dùng không xác định",
@@ -2868,7 +2772,7 @@
           "Quản lý máy chủ Discord: (Sắp ra mắt) Quản lý vai trò và phiếu hỗ trợ từ ứng dụng.",
           "Thông báo nâng cao: (Sắp ra mắt) Tùy chỉnh cảnh báo cho các sự kiện quan trọng."
         ],
-        "ctaPrimary": "Bản beta Android",
+        "ctaPrimary": "Google Play",
         "ctaSecondary": "App Store"
       },
       "api": {

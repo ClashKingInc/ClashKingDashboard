@@ -306,102 +306,6 @@
     "browserLanguage": "Idioma del navegador",
     "accountSettings": "Account settings"
   },
-  "HomePage": {
-    "badge": "Més de {serverCount} servidors ja fan servir ClashKing",
-    "title": "El més potent",
-    "titleHighlight": "bot de Clash of Clans",
-    "subtitle": "Automatitza la gestió del teu clan, consulta les estadístiques dels jugadors, gestiona guerres i mantén activa la teva comunitat.",
-    "cta": {
-      "heading": "A punt per transformar el teu clan?",
-      "description": "Uneix-te als més de {serverCount} servidors de Discord que ja fan servir ClashKing. La configuració només triga 2 minuts.",
-      "button": "Afegeix ClashKing a Discord",
-      "trustBadge": "Gratuït per sempre • No requereix targeta • Més de {serverCount} servidors",
-      "addToDiscord": "Afegeix a Discord",
-      "openDashboard": "Obre el tauler"
-    },
-    "stats": {
-      "servers": "Servidors de Discord",
-      "users": "Usuaris actius",
-      "clans": "Clans seguits"
-    },
-    "features": {
-      "title": "Tot el que necessites per gestionar el teu clan",
-      "subtitle": "Funcions potents dissenyades específicament per a comunitats de Clash of Clans",
-      "autoRoles": {
-        "title": "Gestió automàtica de rols",
-        "description": "Assigna rols automàticament segons l’estat, la posició al clan i els assoliments del jugador. Mantén el servidor organitzat sense esforç."
-      },
-      "playerStats": {
-        "title": "Estadístiques de jugador",
-        "description": "Consulta estadístiques detallades, gràfics de progrés i l’historial d’atacs. Descobreix qui millora i qui necessita ajuda."
-      },
-      "leaderboards": {
-        "title": "Classificacions",
-        "description": "Crea classificacions competitives de donacions, trofeus, estrelles de guerra i mètriques personalitzades. Augmenta la participació."
-      },
-      "warTracking": {
-        "title": "Seguiment de guerra",
-        "description": "Controla les alineacions de guerra, segueix els atacs en temps real i consulta les anàlisis posteriors. No et perdis cap detall."
-      },
-      "smartReminders": {
-        "title": "Recordatoris intel·ligents",
-        "description": "Recordatoris automàtics dels Jocs del Clan, atacs de guerra, la Lliga de Guerra de Clans i esdeveniments personalitzats. Mantén tothom informat."
-      },
-      "customization": {
-        "title": "Personalització completa",
-        "description": "Personalitza les ordres, els colors, els sobrenoms i els permisos. Adapta ClashKing a les teves necessitats."
-      },
-      "familyManagement": {
-        "title": "Gestió de famílies",
-        "description": "Gestiona diversos clans com una família, amb estadístiques comunes, classificacions compartides i rols unificats."
-      },
-      "analytics": {
-        "title": "Anàlisis avançades",
-        "description": "Obté informació detallada sobre el rendiment del clan, l’activitat dels jugadors i les tendències de creixement. Pren decisions basades en dades."
-      },
-      "performance": {
-        "title": "Ultraràpid",
-        "description": "Creat per oferir respostes instantànies i actualitzacions en temps real, sense retards."
-      },
-      "security": {
-        "title": "Segur i fiable",
-        "description": "99,9 % de disponibilitat, dades xifrades i còpies de seguretat periòdiques. Les dades del teu clan estan segures."
-      }
-    },
-    "footer": {
-      "tagline": "El bot de Clash of Clans més potent per a comunitats de Discord.",
-      "about": {
-        "title": "Sobre",
-        "features": "Funcions",
-        "help": "Necessites ajuda?",
-        "openSource": "Codi obert",
-        "support": "Dona’ns suport"
-      },
-      "bot": {
-        "title": "Bot",
-        "dashboard": "Tauler",
-        "inviteBot": "Convida bot"
-      },
-      "resources": {
-        "title": "Recursos",
-        "documentation": "Documentació",
-        "quickStart": "Guia d’inici ràpid",
-        "github": "GitHub"
-      },
-      "community": {
-        "title": "Comunitat",
-        "discord": "Servidor de Discord",
-        "twitter": "X (Twitter)",
-        "reportBug": "Informa d’un error",
-        "requestFeature": "Sol·licita funció"
-      },
-      "legal": {
-        "copyright": "ClashKing. Tots els drets reservats.",
-        "privacy": "Política de privacitat",
-        "terms": "Termes del servei"
-      }
-    }
-  },
   "DiscordUserDisplay": {
     "unknownUserShort": "No és al servidor",
     "unknownUser": "Usuari desconegut",
@@ -2868,7 +2772,7 @@
           "Gestió del servidor de Discord: (properament) gestiona rols i tiquets des de l’aplicació.",
           "Notificacions avançades: (properament) personalitza alertes per a esdeveniments importants."
         ],
-        "ctaPrimary": "Beta per a Android",
+        "ctaPrimary": "Google Play",
         "ctaSecondary": "App Store"
       },
       "api": {

@@ -306,102 +306,6 @@
     "browserLanguage": "浏览器语言",
     "accountSettings": "Account settings"
   },
-  "HomePage": {
-    "badge": "已有超过{serverCount}个服务器使用ClashKing",
-    "title": "功能强大的",
-    "titleHighlight": "Clash of Clans机器人",
-    "subtitle": "自动管理部落、追踪玩家数据、管理部落战，并让社区保持活跃。",
-    "cta": {
-      "heading": "准备好改变你的部落了吗？",
-      "description": "加入已有{serverCount}+个使用ClashKing的Discord服务器，提升你的Clash of Clans社区。设置仅需2分钟。",
-      "button": "将ClashKing添加到Discord",
-      "trustBadge": "永久免费 • 无需信用卡 • 超过{serverCount}个服务器",
-      "addToDiscord": "添加到Discord",
-      "openDashboard": "打开控制面板"
-    },
-    "stats": {
-      "servers": "Discord服务器",
-      "users": "活跃用户",
-      "clans": "已追踪部落"
-    },
-    "features": {
-      "title": "管理部落所需的一切",
-      "subtitle": "专为Clash of Clans社区打造的强大功能",
-      "autoRoles": {
-        "title": "自动身份组管理",
-        "description": "根据玩家状态、部落职位和成就自动分配身份组，轻松保持服务器井然有序。"
-      },
-      "playerStats": {
-        "title": "玩家统计",
-        "description": "追踪详细的玩家数据、进度图表和进攻历史，了解谁在进步以及谁需要帮助。"
-      },
-      "leaderboards": {
-        "title": "排行榜",
-        "description": "为捐赠、奖杯、部落战星数和自定义指标创建竞技排行榜，提高社区参与度。"
-      },
-      "warTracking": {
-        "title": "部落战追踪",
-        "description": "实时监控部落战阵容和进攻，并查看战后分析，不错过任何细节。"
-      },
-      "smartReminders": {
-        "title": "智能提醒",
-        "description": "自动提醒部落竞赛、部落战进攻、部落战联赛和自定义活动，让所有人及时掌握情况。"
-      },
-      "customization": {
-        "title": "完整自定义",
-        "description": "自定义命令、嵌入消息颜色、昵称和权限，让ClashKing真正符合你的需求。"
-      },
-      "familyManagement": {
-        "title": "部落家族管理",
-        "description": "像管理一个家族一样管理多个部落，并提供跨部落统计、共享排行榜和统一身份组。"
-      },
-      "analytics": {
-        "title": "高级分析",
-        "description": "深入了解部落表现、玩家活动规律和成长趋势，以数据为依据做出决策。"
-      },
-      "performance": {
-        "title": "闪电般快速",
-        "description": "专为高性能打造，命令即时响应、数据实时更新，无卡顿、无延迟。"
-      },
-      "security": {
-        "title": "安全可靠",
-        "description": "99.9%在线率、加密数据和定期备份，确保部落数据安全可靠。"
-      }
-    },
-    "footer": {
-      "tagline": "为Discord社区打造的强大Clash of Clans机器人。",
-      "about": {
-        "title": "关于",
-        "features": "功能",
-        "help": "需要帮助？",
-        "openSource": "开源",
-        "support": "支持我们"
-      },
-      "bot": {
-        "title": "机器人",
-        "dashboard": "主页",
-        "inviteBot": "邀请机器人"
-      },
-      "resources": {
-        "title": "资源",
-        "documentation": "文档",
-        "quickStart": "快速开始指南",
-        "github": "GitHub"
-      },
-      "community": {
-        "title": "社区",
-        "discord": "Discord服务器",
-        "twitter": "X (Twitter)",
-        "reportBug": "报告错误",
-        "requestFeature": "请求功能"
-      },
-      "legal": {
-        "copyright": "ClashKing。保留所有权利。",
-        "privacy": "隐私政策",
-        "terms": "服务条款"
-      }
-    }
-  },
   "DiscordUserDisplay": {
     "unknownUserShort": "不在服务器",
     "unknownUser": "未知用户",
@@ -2868,7 +2772,7 @@
           "Discord服务器管理：（即将推出）直接从应用管理身份组和工单。",
           "高级通知：（即将推出）为重要活动设置自定义提醒。"
         ],
-        "ctaPrimary": "Android测试版",
+        "ctaPrimary": "Google Play",
         "ctaSecondary": "App Store"
       },
       "api": {

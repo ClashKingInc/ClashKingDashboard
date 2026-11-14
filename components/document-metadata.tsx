@@ -9,11 +9,7 @@ type PublicRoute = { readonly locale: PublicLocale; readonly page: PublicPage };
 function publicRoute(pathname: string): PublicRoute | null {
   const localized = getPublicRoute(pathname);
   if (localized) {
-    return { locale: localized.locale, page: localized.page === "/" ? "home" : localized.page === "/privacy" ? "privacy" : "terms" };
-  }
-  const path = pathname.replace(/\/$/, "");
-  if (path === "/features" || path === "/help" || path === "/open-source" || path === "/support") {
-    return { locale: "en", page: path.slice(1) as PublicPage };
+    return { locale: localized.locale, page: localized.page === "/" ? "home" : localized.page.slice(1) as PublicPage };
   }
   return null;
 }
@@ -65,8 +61,7 @@ export function DocumentMetadata() {
         document.title = metadata.title;
         setMeta("description", metadata.description);
         setMeta("robots", "index, follow");
-        // LocaleProvider owns the rendered document language. Route-neutral
-        // info pages can display a saved language even when their SEO is English.
+        // LocaleProvider owns the rendered document language.
         appendManagedLink("canonical", metadata.canonical);
         for (const [locale, href] of Object.entries(metadata.languageAlternates)) {
           appendManagedLink("alternate", href, locale);

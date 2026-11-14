@@ -28,7 +28,7 @@ const pagePaths = {
   terms: "/terms",
 } as const;
 
-const localizedPages = new Set<PublicPage>(["home", "privacy", "terms"]);
+const localizedPages = new Set<PublicPage>(Object.keys(pagePaths) as PublicPage[]);
 
 const openGraphLocales = Object.fromEntries(
   PUBLIC_LOCALES.map(locale => [locale, `${locale}_${new Intl.Locale(locale).maximize().region}`]),
@@ -47,22 +47,22 @@ export function getPublicPageCopy(locale: PublicLocale, page: PublicPage) {
     };
   }
 
-  if (!localizedPages.has(page)) {
-    const english = messages.en;
+  if (page !== "privacy" && page !== "terms") {
+    const contentMessages = localized;
     const content = page === "features"
-      ? { heading: english.FeaturesPage.hero.title, description: english.FeaturesPage.hero.subtitle }
+      ? { heading: contentMessages.FeaturesPage.hero.title, description: contentMessages.FeaturesPage.hero.subtitle }
       : page === "help"
-        ? { heading: english.HelpPage.title, description: english.HelpPage.subtitle }
+        ? { heading: contentMessages.HelpPage.title, description: contentMessages.HelpPage.subtitle }
         : page === "open-source"
-          ? { heading: english.OpenSourcePage.title, description: english.OpenSourcePage.subtitle }
-          : { heading: english.SupportPage.title, description: english.SupportPage.subtitle };
+          ? { heading: contentMessages.OpenSourcePage.title, description: contentMessages.OpenSourcePage.subtitle }
+          : { heading: contentMessages.SupportPage.title, description: contentMessages.SupportPage.subtitle };
     return {
       title: `${content.heading} | ClashKing`,
       openGraphTitle: content.heading,
       description: content.description,
       heading: content.heading,
       eyebrow: "ClashKing",
-      imageAlt: english.PublicSeo.imageAlt,
+      imageAlt: contentMessages.PublicSeo.imageAlt,
     };
   }
 

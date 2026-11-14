@@ -306,102 +306,6 @@
     "browserLanguage": "Tarayıcı dili",
     "accountSettings": "Account settings"
   },
-  "HomePage": {
-    "badge": "{serverCount}+ sunucu ClashKing kullanıyor",
-    "title": "En Güçlü",
-    "titleHighlight": "Clash of Clans Botu",
-    "subtitle": "Klan yönetimini otomatikleştirin, oyuncu istatistiklerini izleyin, savaşları yönetin ve topluluğunuzu aktif tutun.",
-    "cta": {
-      "heading": "Klanınızı dönüştürmeye hazır mısınız?",
-      "description": "Clash of Clans topluluklarını geliştirmek için ClashKing kullanan {serverCount}+ Discord sunucusuna katılın. Kurulum yalnızca 2 dakika sürer.",
-      "button": "ClashKing'i Discord'a ekle",
-      "trustBadge": "Daima ücretsiz • Kredi kartı gerekmez • {serverCount}+ sunucu",
-      "addToDiscord": "Discord'a ekle",
-      "openDashboard": "Kontrol panelini aç"
-    },
-    "stats": {
-      "servers": "Discord sunucusu",
-      "users": "Aktif kullanıcı",
-      "clans": "İzlenen klan"
-    },
-    "features": {
-      "title": "Klanınızı yönetmek için gereken her şey",
-      "subtitle": "Clash of Clans toplulukları için özel olarak tasarlanmış güçlü özellikler",
-      "autoRoles": {
-        "title": "Otomatik rol yönetimi",
-        "description": "Oyuncu durumuna, klan konumuna ve başarılara göre rolleri otomatik atayın. Sunucunuzu zahmetsizce düzenli tutun."
-      },
-      "playerStats": {
-        "title": "Oyuncu İstatistikleri",
-        "description": "Ayrıntılı oyuncu istatistiklerini, ilerleme grafiklerini ve saldırı geçmişini izleyin. Kimin geliştiğini, kimin yardıma ihtiyacı olduğunu görün."
-      },
-      "leaderboards": {
-        "title": "Liderlik Tabloları",
-        "description": "Bağışlar, kupalar, savaş yıldızları ve özel ölçütler için rekabetçi liderlik tabloları oluşturun. Katılımı artırın."
-      },
-      "warTracking": {
-        "title": "Savaş Takibi",
-        "description": "Savaş kadrolarını ve saldırıları gerçek zamanlı izleyin, savaş sonrası analizleri görüntüleyin. Hiçbir ayrıntıyı kaçırmayın."
-      },
-      "smartReminders": {
-        "title": "Akıllı Hatırlatıcılar",
-        "description": "Klan Oyunları, savaş saldırıları, Klan Savaşı Ligi ve özel etkinlikler için otomatik hatırlatıcılarla herkesi bilgilendirin."
-      },
-      "customization": {
-        "title": "Tam özelleştirme",
-        "description": "Komutları, embed renklerini, takma adları ve izinleri özelleştirin. ClashKing'i kendinize göre ayarlayın."
-      },
-      "familyManagement": {
-        "title": "Klan ailesi yönetimi",
-        "description": "Birden fazla klanı aile olarak yönetin. Klanlar arası istatistikleri, ortak liderlik tablolarını ve birleşik rolleri kullanın."
-      },
-      "analytics": {
-        "title": "Gelişmiş Analizler",
-        "description": "Klan performansı, oyuncu etkinliği ve büyüme eğilimleri hakkında ayrıntılı bilgi edinin. Veriye dayalı kararlar alın."
-      },
-      "performance": {
-        "title": "Yıldırım Hızlı",
-        "description": "Anlık komut yanıtları ve gerçek zamanlı güncellemeler için geliştirildi. Gecikme yaşamayın."
-      },
-      "security": {
-        "title": "Güvenli ve Güvenilir",
-        "description": "%99,9 çalışma süresi, şifreli veriler ve düzenli yedeklemelerle klan verileriniz güvende."
-      }
-    },
-    "footer": {
-      "tagline": "Discord toplulukları için en güçlü Clash of Clans botu.",
-      "about": {
-        "title": "Hakkında",
-        "features": "Özellikler",
-        "help": "Yardıma mı ihtiyacınız var?",
-        "openSource": "Açık Kaynak",
-        "support": "Bizi destekleyin"
-      },
-      "bot": {
-        "title": "Bot",
-        "dashboard": "Kontrol Paneli",
-        "inviteBot": "Botu davet et"
-      },
-      "resources": {
-        "title": "Kaynaklar",
-        "documentation": "Belgeler",
-        "quickStart": "Hızlı başlangıç rehberi",
-        "github": "GitHub"
-      },
-      "community": {
-        "title": "Topluluk",
-        "discord": "Discord Sunucusu",
-        "twitter": "X (Twitter)",
-        "reportBug": "Hata bildir",
-        "requestFeature": "Özellik iste"
-      },
-      "legal": {
-        "copyright": "ClashKing. Tüm hakları saklıdır.",
-        "privacy": "Gizlilik Politikası",
-        "terms": "Hizmet Şartları"
-      }
-    }
-  },
   "DiscordUserDisplay": {
     "unknownUserShort": "Sunucuda değil",
     "unknownUser": "Bilinmeyen kullanıcı",
@@ -2868,7 +2772,7 @@
           "Discord sunucusu yönetimi: (Yakında) Rolleri ve biletleri uygulamadan yönetin.",
           "Gelişmiş bildirimler: (Yakında) Önemli etkinlik uyarılarını özelleştirin."
         ],
-        "ctaPrimary": "Android Beta",
+        "ctaPrimary": "Google Play",
         "ctaSecondary": "App Store"
       },
       "api": {

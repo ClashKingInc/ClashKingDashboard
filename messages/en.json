@@ -306,102 +306,6 @@
     "browserLanguage": "Browser Language",
     "accountSettings": "Account settings"
   },
-  "HomePage": {
-    "badge": "{serverCount}+ servers already using ClashKing",
-    "title": "The Most Powerful",
-    "titleHighlight": "Clash of Clans Bot",
-    "subtitle": "Automate your clan management, track player stats, manage wars, and keep your community engaged.",
-    "cta": {
-      "heading": "Ready to Transform Your Clan?",
-      "description": "Join {serverCount}+ Discord servers already using ClashKing to elevate their Clash of Clans community. Setup takes just 2 minutes.",
-      "button": "Add ClashKing to Discord",
-      "trustBadge": "Free forever \u2022 No credit card required \u2022 {serverCount}+ servers",
-      "addToDiscord": "Add to Discord",
-      "openDashboard": "Open Dashboard"
-    },
-    "stats": {
-      "servers": "Discord Servers",
-      "users": "Active Users",
-      "clans": "Clans Tracked"
-    },
-    "features": {
-      "title": "Everything You Need to Manage Your Clan",
-      "subtitle": "Powerful features designed specifically for Clash of Clans communities",
-      "autoRoles": {
-        "title": "Auto Role Management",
-        "description": "Automatically assign roles based on player status, clan position, and achievements. Keep your server organized effortlessly."
-      },
-      "playerStats": {
-        "title": "Player Statistics",
-        "description": "Track detailed player stats, progress graphs, and attack history. See who's improving and who needs help."
-      },
-      "leaderboards": {
-        "title": "Leaderboards",
-        "description": "Create competitive leaderboards for donations, trophies, war stars, and custom metrics. Boost engagement."
-      },
-      "warTracking": {
-        "title": "War Tracking",
-        "description": "Monitor war lineups, track attacks in real-time, and get post-war analytics. Never miss a war detail."
-      },
-      "smartReminders": {
-        "title": "Smart Reminders",
-        "description": "Automated reminders for Clan Games, war attacks, Clan War League, and custom events. Keep everyone informed."
-      },
-      "customization": {
-        "title": "Full Customization",
-        "description": "Customize commands, embed colors, nicknames, and permissions. Make ClashKing truly yours."
-      },
-      "familyManagement": {
-        "title": "Family Management",
-        "description": "Manage multiple clans as a family. Cross-clan stats, shared leaderboards, and unified roles."
-      },
-      "analytics": {
-        "title": "Advanced Analytics",
-        "description": "Deep insights into clan performance, player activity patterns, and growth trends. Data-driven decisions."
-      },
-      "performance": {
-        "title": "Lightning Fast",
-        "description": "Built for performance with instant command responses and real-time updates. No lag, no delays."
-      },
-      "security": {
-        "title": "Secure & Reliable",
-        "description": "99.9% uptime, encrypted data, and regular backups. Your clan data is safe with us."
-      }
-    },
-    "footer": {
-      "tagline": "The most powerful Clash of Clans bot for Discord communities.",
-      "about": {
-        "title": "About",
-        "features": "Features",
-        "help": "Need Help?",
-        "openSource": "Open Source",
-        "support": "Support Us"
-      },
-      "bot": {
-        "title": "Bot",
-        "dashboard": "Dashboard",
-        "inviteBot": "Invite Bot"
-      },
-      "resources": {
-        "title": "Resources",
-        "documentation": "Documentation",
-        "quickStart": "Quick Start Guide",
-        "github": "GitHub"
-      },
-      "community": {
-        "title": "Community",
-        "discord": "Discord Server",
-        "twitter": "X (Twitter)",
-        "reportBug": "Report a Bug",
-        "requestFeature": "Request Feature"
-      },
-      "legal": {
-        "copyright": "ClashKing. All rights reserved.",
-        "privacy": "Privacy Policy",
-        "terms": "Terms of Service"
-      }
-    }
-  },
   "DiscordUserDisplay": {
     "unknownUserShort": "Not on server",
     "unknownUser": "Unknown user",
@@ -2868,7 +2772,7 @@
           "Discord Server Management: (Coming Soon) Manage roles and tickets from the app.",
           "Advanced Notifications: (Coming Soon) Customize alerts for important events."
         ],
-        "ctaPrimary": "Android Beta",
+        "ctaPrimary": "Google Play",
         "ctaSecondary": "App Store"
       },
       "api": {

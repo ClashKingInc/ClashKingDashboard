@@ -306,102 +306,6 @@
     "browserLanguage": "Browsertaal",
     "accountSettings": "Accountinstellingen"
   },
-  "HomePage": {
-    "badge": "{serverCount}+ servers gebruiken ClashKing al",
-    "title": "De krachtigste",
-    "titleHighlight": "Clash of Clans-bot",
-    "subtitle": "Automatiseer je clanbeheer, volg spelerstatistieken, beheer oorlogen en houd je community betrokken.",
-    "cta": {
-      "heading": "Klaar om je clan te transformeren?",
-      "description": "Sluit je aan bij {serverCount}+ Discord-servers die ClashKing al gebruiken om hun Clash of Clans-gemeenschap te verbeteren. Installatie duurt slechts 2 minuten.",
-      "button": "Voeg ClashKing toe aan Discord",
-      "trustBadge": "Voor altijd gratis • Geen creditcard nodig • {serverCount}+ servers",
-      "addToDiscord": "Toevoegen aan Discord",
-      "openDashboard": "Dashboard openen"
-    },
-    "stats": {
-      "servers": "Discord-servers",
-      "users": "Actieve gebruikers",
-      "clans": "Gevolgde clans"
-    },
-    "features": {
-      "title": "Alles wat je nodig hebt om je clan te beheren",
-      "subtitle": "Krachtige functies speciaal ontworpen voor Clash of Clans-gemeenschappen",
-      "autoRoles": {
-        "title": "Automatisch rollenbeheer",
-        "description": "Wijs automatisch rollen toe op basis van spelerstatus, clanpositie en prestaties. Houd je server moeiteloos georganiseerd."
-      },
-      "playerStats": {
-        "title": "Spelerstatistieken",
-        "description": "Volg gedetailleerde spelerstatistieken, voortgangsgrafieken en aanvalsgeschiedenis. Zie wie verbetert en wie hulp nodig heeft."
-      },
-      "leaderboards": {
-        "title": "Ranglijsten",
-        "description": "Maak competitieve ranglijsten voor donaties, trofeeën, oorlogssterren en aangepaste statistieken. Verhoog de betrokkenheid."
-      },
-      "warTracking": {
-        "title": "Oorlog volgen",
-        "description": "Monitor oorlogsopstellingen, volg aanvallen in realtime en krijg analyses na de oorlog. Mis nooit een oorlogsdetail."
-      },
-      "smartReminders": {
-        "title": "Slimme herinneringen",
-        "description": "Geautomatiseerde herinneringen voor Clanspelen, oorlogsaanvallen, Clan War League en aangepaste evenementen. Houd iedereen op de hoogte."
-      },
-      "customization": {
-        "title": "Volledige aanpassing",
-        "description": "Pas commando's, embed-kleuren, bijnamen en rechten aan. Maak ClashKing echt van jou."
-      },
-      "familyManagement": {
-        "title": "Clanfamiliebeheer",
-        "description": "Beheer meerdere clans als één clanfamilie, met gezamenlijke statistieken, gedeelde ranglijsten en uniforme rollen."
-      },
-      "analytics": {
-        "title": "Geavanceerde analyses",
-        "description": "Diepgaande inzichten in clanprestaties, activiteitspatronen van spelers en groeitrends. Datagestuurde beslissingen."
-      },
-      "performance": {
-        "title": "Razendsnel",
-        "description": "Gebouwd voor prestaties met directe commando-reacties en realtime updates. Geen vertraging, geen wachttijden."
-      },
-      "security": {
-        "title": "Veilig en betrouwbaar",
-        "description": "99,9% uptime, versleutelde gegevens en regelmatige back-ups. Je clangegevens zijn veilig bij ons."
-      }
-    },
-    "footer": {
-      "tagline": "De krachtigste Clash of Clans-bot voor Discord-gemeenschappen.",
-      "about": {
-        "title": "Over",
-        "features": "Functies",
-        "help": "Hulp nodig?",
-        "openSource": "Open source",
-        "support": "Steun ons"
-      },
-      "bot": {
-        "title": "Bot",
-        "dashboard": "Hoofdpaneel",
-        "inviteBot": "Bot uitnodigen"
-      },
-      "resources": {
-        "title": "Bronnen",
-        "documentation": "Documentatie",
-        "quickStart": "Snelstartgids",
-        "github": "GitHub"
-      },
-      "community": {
-        "title": "Gemeenschap",
-        "discord": "Discord-server",
-        "twitter": "X (Twitter)",
-        "reportBug": "Meld een bug",
-        "requestFeature": "Functie aanvragen"
-      },
-      "legal": {
-        "copyright": "ClashKing. Alle rechten voorbehouden.",
-        "privacy": "Privacybeleid",
-        "terms": "Servicevoorwaarden"
-      }
-    }
-  },
   "DiscordUserDisplay": {
     "unknownUserShort": "Niet op de server",
     "unknownUser": "Onbekende gebruiker",
@@ -2868,7 +2772,7 @@
           "Discord-serverbeheer: (binnenkort) beheer rollen en tickets vanuit de app.",
           "Geavanceerde meldingen: (binnenkort) pas meldingen voor belangrijke gebeurtenissen aan."
         ],
-        "ctaPrimary": "Android-bèta",
+        "ctaPrimary": "Google Play",
         "ctaSecondary": "App Store"
       },
       "api": {

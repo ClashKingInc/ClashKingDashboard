@@ -306,102 +306,6 @@
     "browserLanguage": "Browsersprog",
     "accountSettings": "Account settings"
   },
-  "HomePage": {
-    "badge": "{serverCount}+ servere bruger allerede ClashKing",
-    "title": "Den mest effektive",
-    "titleHighlight": "Clash of Clans-bot",
-    "subtitle": "Automatiser klanadministrationen, følg spillerstatistik, administrer krige og hold fællesskabet engageret.",
-    "cta": {
-      "heading": "Klar til at forvandle din klan?",
-      "description": "Bliv en del af de mere end {serverCount} Discord-servere, der allerede bruger ClashKing til deres Clash of Clans-fællesskab. Opsætningen tager kun 2 minutter.",
-      "button": "Tilføj ClashKing til Discord",
-      "trustBadge": "Gratis for altid • Intet kreditkort påkrævet • {serverCount}+ servere",
-      "addToDiscord": "Føj til Discord",
-      "openDashboard": "Åbn dashboard"
-    },
-    "stats": {
-      "servers": "Discord-servere",
-      "users": "Aktive brugere",
-      "clans": "Klaner fulgt"
-    },
-    "features": {
-      "title": "Alt, hvad du behøver for at administrere din klan",
-      "subtitle": "Effektive funktioner, der er udviklet specifikt til Clash of Clans-fællesskaber",
-      "autoRoles": {
-        "title": "Automatisk rolleadministration",
-        "description": "Tildel automatisk roller ud fra spillerstatus, klanposition og præstationer. Hold nemt orden på din server."
-      },
-      "playerStats": {
-        "title": "Spillerstatistik",
-        "description": "Følg detaljerede spillerstatistikker, fremskridtsgrafer og angrebshistorik. Se, hvem der forbedrer sig, og hvem der har brug for hjælp."
-      },
-      "leaderboards": {
-        "title": "Ranglister",
-        "description": "Opret konkurrencelister for donationer, trofæer, krigsstjerner og tilpassede målinger. Øg engagementet."
-      },
-      "warTracking": {
-        "title": "Krigssporing",
-        "description": "Overvåg krigsopstillinger, følg angreb i realtid og få analyser efter krigen. Gå aldrig glip af en detalje."
-      },
-      "smartReminders": {
-        "title": "Smarte påmindelser",
-        "description": "Automatiske påmindelser om klanspil, krigsangreb, klanligaen og tilpassede begivenheder holder alle orienteret."
-      },
-      "customization": {
-        "title": "Fuld tilpasning",
-        "description": "Tilpas kommandoer, embedfarver, kaldenavne og tilladelser. Gør ClashKing til dit eget."
-      },
-      "familyManagement": {
-        "title": "Familieadministration",
-        "description": "Administrer flere klaner som én familie med statistik på tværs af klanerne, fælles ranglister og samordnede roller."
-      },
-      "analytics": {
-        "title": "Avanceret analyse",
-        "description": "Få dyb indsigt i klanens præstationer, spillernes aktivitetsmønstre og væksttendenser. Træf beslutninger på baggrund af data."
-      },
-      "performance": {
-        "title": "Lynhurtig",
-        "description": "Bygget til hurtige kommandosvar og opdateringer i realtid uden forsinkelser."
-      },
-      "security": {
-        "title": "Sikker og pålidelig",
-        "description": "99,9 % oppetid, krypterede data og regelmæssige sikkerhedskopier holder dine klanoplysninger sikre."
-      }
-    },
-    "footer": {
-      "tagline": "Den mest effektive Clash of Clans-bot til Discord-fællesskaber.",
-      "about": {
-        "title": "Om",
-        "features": "Funktioner",
-        "help": "Brug for hjælp?",
-        "openSource": "Open source",
-        "support": "Støt os"
-      },
-      "bot": {
-        "title": "Bot",
-        "dashboard": "Instrumentbræt",
-        "inviteBot": "Inviter botten"
-      },
-      "resources": {
-        "title": "Ressourcer",
-        "documentation": "Dokumentation",
-        "quickStart": "Kom godt i gang",
-        "github": "GitHub"
-      },
-      "community": {
-        "title": "Fællesskab",
-        "discord": "Discord-server",
-        "twitter": "X (Twitter)",
-        "reportBug": "Rapportér en fejl",
-        "requestFeature": "Foreslå en funktion"
-      },
-      "legal": {
-        "copyright": "ClashKing. Alle rettigheder forbeholdes.",
-        "privacy": "Privatlivspolitik",
-        "terms": "Servicevilkår"
-      }
-    }
-  },
   "DiscordUserDisplay": {
     "unknownUserShort": "Ikke på serveren",
     "unknownUser": "Ukendt bruger",
@@ -2868,7 +2772,7 @@
           "Administration af Discord-serveren: (Kommer snart) Administrer roller og tickets fra appen.",
           "Avancerede notifikationer: (Kommer snart) Tilpas advarsler om vigtige begivenheder."
         ],
-        "ctaPrimary": "Android Beta",
+        "ctaPrimary": "Google Play",
         "ctaSecondary": "App Store"
       },
       "api": {

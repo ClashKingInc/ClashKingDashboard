@@ -306,102 +306,6 @@
     "browserLanguage": "Jazyk prohlížeče",
     "accountSettings": "Account settings"
   },
-  "HomePage": {
-    "badge": "ClashKing již používá více než {serverCount} serverů",
-    "title": "Nejvýkonnější",
-    "titleHighlight": "Bot pro Clash of Clans",
-    "subtitle": "Automatizujte správu klanu, sledujte statistiky hráčů, spravujte války a udržujte komunitu aktivní.",
-    "cta": {
-      "heading": "Jste připraveni změnit svůj klan?",
-      "description": "Přidejte se k více než {serverCount} serverům na Discordu, které pomocí ClashKing rozvíjejí svou komunitu Clash of Clans. Nastavení zabere jen 2 minuty.",
-      "button": "Přidat ClashKing do Discordu",
-      "trustBadge": "Navždy zdarma • Bez kreditní karty • Více než {serverCount} serverů",
-      "addToDiscord": "Přidat do Discordu",
-      "openDashboard": "Otevřít ovládací panel"
-    },
-    "stats": {
-      "servers": "Servery na Discordu",
-      "users": "Aktivní uživatelé",
-      "clans": "Sledované klany"
-    },
-    "features": {
-      "title": "Vše potřebné ke správě klanu",
-      "subtitle": "Výkonné funkce navržené pro komunity Clash of Clans",
-      "autoRoles": {
-        "title": "Automatická správa rolí",
-        "description": "Automaticky přidělujte role podle stavu hráče, pozice v klanu a úspěchů. Snadno udržujte server přehledný."
-      },
-      "playerStats": {
-        "title": "Statistiky hráče",
-        "description": "Sledujte podrobné statistiky hráčů, grafy postupu a historii útoků. Zjistěte, kdo se zlepšuje a kdo potřebuje pomoc."
-      },
-      "leaderboards": {
-        "title": "Žebříčky",
-        "description": "Vytvářejte soutěžní žebříčky darů, trofejí, válečných hvězd a vlastních ukazatelů. Zvyšte zapojení."
-      },
-      "warTracking": {
-        "title": "Sledování válek",
-        "description": "Sledujte válečné sestavy a útoky v reálném čase a získávejte poválečné analýzy. Neunikne vám žádný detail."
-      },
-      "smartReminders": {
-        "title": "Chytrá připomenutí",
-        "description": "Automatická připomenutí klanových her, válečných útoků, ligy klanových válek a vlastních událostí udrží všechny v obraze."
-      },
-      "customization": {
-        "title": "Úplné přizpůsobení",
-        "description": "Přizpůsobte příkazy, barvy embedů, přezdívky a oprávnění. Nastavte si ClashKing podle sebe."
-      },
-      "familyManagement": {
-        "title": "Správa rodiny",
-        "description": "Spravujte více klanů jako rodinu se společnými statistikami, žebříčky a sjednocenými rolemi."
-      },
-      "analytics": {
-        "title": "Pokročilé analýzy",
-        "description": "Získejte podrobný přehled o výkonu klanu, aktivitě hráčů a trendech růstu a rozhodujte se podle dat."
-      },
-      "performance": {
-        "title": "Bleskově rychlý",
-        "description": "Okamžité odpovědi na příkazy a aktualizace v reálném čase bez prodlev a zpoždění."
-      },
-      "security": {
-        "title": "Bezpečný a spolehlivý",
-        "description": "Dostupnost 99,9 %, šifrovaná data a pravidelné zálohy. Data vašeho klanu jsou u nás v bezpečí."
-      }
-    },
-    "footer": {
-      "tagline": "Nejvýkonnější bot Clash of Clans pro komunity na Discordu.",
-      "about": {
-        "title": "O",
-        "features": "Funkce",
-        "help": "Potřebujete pomoc?",
-        "openSource": "Otevřený zdrojový kód",
-        "support": "Podpořte nás"
-      },
-      "bot": {
-        "title": "Bot",
-        "dashboard": "Nástěnka",
-        "inviteBot": "Pozvat bota"
-      },
-      "resources": {
-        "title": "Zdroje",
-        "documentation": "Dokumentace",
-        "quickStart": "Průvodce rychlým startem",
-        "github": "GitHub"
-      },
-      "community": {
-        "title": "Komunita",
-        "discord": "Server Discord",
-        "twitter": "X (Twitter)",
-        "reportBug": "Nahlásit chybu",
-        "requestFeature": "Navrhnout funkci"
-      },
-      "legal": {
-        "copyright": "ClashKing. Všechna práva vyhrazena.",
-        "privacy": "Zásady ochrany osobních údajů",
-        "terms": "Podmínky služby"
-      }
-    }
-  },
   "DiscordUserDisplay": {
     "unknownUserShort": "Není na serveru",
     "unknownUser": "Neznámý uživatel",
@@ -2868,7 +2772,7 @@
           "Správa serveru na Discordu: (Již brzy) Spravujte role a tikety z aplikace.",
           "Pokročilá oznámení: (Již brzy) Přizpůsobte si upozornění na důležité události."
         ],
-        "ctaPrimary": "Android Beta",
+        "ctaPrimary": "Google Play",
         "ctaSecondary": "App Store"
       },
       "api": {

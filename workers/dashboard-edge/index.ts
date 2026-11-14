@@ -25,7 +25,7 @@ export function resolveDomainRedirect(requestUrl: URL): URL | null {
   }
 
   // English lives at the unprefixed URL; preserve links to the old /en variant.
-  const englishAlias = /^\/en(?:\/(privacy|terms))?\/?$/.exec(requestUrl.pathname);
+  const englishAlias = /^\/en(?:\/(features|help|open-source|support|privacy|terms))?\/?$/.exec(requestUrl.pathname);
   if (englishAlias && requestUrl.hostname !== DASHBOARD_HOST) {
     redirectUrl.protocol = requestUrl.protocol;
     redirectUrl.pathname = englishAlias[1] ? `/${englishAlias[1]}` : "/";
