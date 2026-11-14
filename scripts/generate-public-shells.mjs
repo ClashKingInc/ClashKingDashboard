@@ -10,7 +10,7 @@ const socialImage = `${siteOrigin}/og/clashking-landing.png`;
 const discordEmbed = JSON.stringify({
   component: {
     type: 17,
-    accent_color: 5793266,
+    accent_color: 0xD90709,
     components: [
       {
         type: 9,
@@ -18,7 +18,7 @@ const discordEmbed = JSON.stringify({
           {
             type: 10,
             content:
-              "**[ClashKing | Run your clan](https://clashk.ing)**\nManage wars, rosters, accounts, reminders, and clan settings with ClashKing across Discord, mobile, and the web."
+              "## [ClashKing | Run your clan](https://clashk.ing)\nManage wars, rosters, accounts, reminders, and clan settings with ClashKing across Discord, mobile, and the web."
           }
         ],
         accessory: {
