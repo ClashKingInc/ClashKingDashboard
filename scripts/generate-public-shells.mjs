@@ -55,7 +55,7 @@ const pagePaths = {
   terms: "/terms",
 };
 
-const localizedPages = new Set(["home", "privacy", "terms"]);
+const localizedPages = new Set(Object.keys(pagePaths));
 
 const escapeHtml = (value) => value
   .replaceAll("&", "&amp;")
@@ -72,7 +72,7 @@ function pageCopy(messages, page) {
       imageAlt: messages.PublicSeo.imageAlt,
     };
   }
-  if (!localizedPages.has(page)) {
+  if (page !== "privacy" && page !== "terms") {
     const content = page === "features"
       ? { heading: messages.FeaturesPage.hero.title, description: messages.FeaturesPage.hero.subtitle }
       : page === "help"

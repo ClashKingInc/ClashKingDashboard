@@ -2,7 +2,8 @@ export const DASHBOARD_LOCALE_STORAGE_KEY = "clashking_locale";
 export const DASHBOARD_LOCALE_MODE_STORAGE_KEY = "clashking_locale_mode";
 
 export type LocaleMode = "manual" | "browser";
-export type PublicPagePath = "/" | "/privacy" | "/terms";
+export const PUBLIC_PAGE_PATHS = ["/", "/features", "/help", "/open-source", "/support", "/privacy", "/terms"] as const;
+export type PublicPagePath = (typeof PUBLIC_PAGE_PATHS)[number];
 
 export const SUPPORTED_LOCALES = [
   "af",
@@ -141,7 +142,7 @@ export function getPublicRoute(pathname: string): {
   page: PublicPagePath;
 } | undefined {
   const normalizedPath = pathname !== "/" ? pathname.replace(/\/$/, "") : pathname;
-  const match = normalizedPath.match(new RegExp(`^/?(?:(${PUBLIC_LOCALES.join("|")})(?=/|$))?(/privacy|/terms)?$`));
+  const match = normalizedPath.match(new RegExp(`^/?(?:(${PUBLIC_LOCALES.join("|")})(?=/|$))?(${PUBLIC_PAGE_PATHS.filter(page => page !== "/").join("|")})?$`));
   if (!match) return undefined;
 
   return {
