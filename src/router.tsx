@@ -8,7 +8,7 @@ import {
   type RouteComponent,
 } from "@tanstack/react-router";
 import type { ComponentType } from "react";
-import { PUBLIC_LOCALES, publicPath } from "@/lib/locale-preference";
+import { PUBLIC_LOCALES, PUBLIC_PAGE_PATHS, publicPath, type PublicPagePath } from "@/lib/locale-preference";
 
 import DashboardRouteLoading from "@/app/dashboard/loading";
 import GiveawaysLoadingPage from "@/app/dashboard/giveaways/loading";
@@ -78,6 +78,16 @@ function dashboardPage<const TPath extends string>(
   });
 }
 
+const localizedPublicImporters: Record<PublicPagePath, PageImporter> = {
+  "/": () => import("@/app/localized-public-page"),
+  "/privacy": () => import("@/app/localized-public-page"),
+  "/terms": () => import("@/app/localized-public-page"),
+  "/features": () => import("@/app/features/page"),
+  "/help": () => import("@/app/help/page"),
+  "/open-source": () => import("@/app/open-source/page"),
+  "/support": () => import("@/app/support/page"),
+};
+
 const publicRoutes = [
   rootPage("/", () => import("@/app/page")),
   rootPage("features", () => import("@/app/features/page")),
@@ -87,8 +97,8 @@ const publicRoutes = [
   rootPage("privacy", () => import("@/app/privacy/page")),
   rootPage("terms", () => import("@/app/terms/page")),
   ...PUBLIC_LOCALES.filter(locale => locale !== "en").flatMap(locale =>
-    (["/", "/privacy", "/terms"] as const).map(page =>
-      rootPage(publicPath(locale, page), () => import("@/app/localized-public-page")),
+    PUBLIC_PAGE_PATHS.map(page =>
+      rootPage(publicPath(locale, page), localizedPublicImporters[page]),
     ),
   ),
   rootPage("concepts/clan-signal", () => import("@/app/concepts/clan-signal/page")),

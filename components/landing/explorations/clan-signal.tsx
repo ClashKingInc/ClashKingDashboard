@@ -8,12 +8,11 @@ import { useLocale, useTranslations } from "use-intl";
 import { ClanSignalHeroModel } from "./clan-signal/hero-model";
 import { ClanSignalFooter } from "./clan-signal/footer";
 import { RotatingHeadline, SectionTitle, Scribble } from "./clan-signal/rotating-headline";
-import { HeroActions, PlatformMark } from "./clan-signal/hero-actions";
+import { AppStoreLink, HeroActions } from "./clan-signal/hero-actions";
 import { LandingCounts } from "./clan-signal/counts";
 import { useLandingMotion } from "./clan-signal/motion";
 import { useLandingTheme } from "./clan-signal/use-landing-theme";
 import { ClanSignalHeader } from "./clan-signal/header";
-import { IOS_APP_STORE_URL } from "@/lib/constants";
 import "../../../app/explorations/clan-signal.css";
 import "../../../app/explorations/clan-signal-rally.css";
 
@@ -176,8 +175,8 @@ export function ClanSignal() {
           <p className="cs-section-intro">{t("app.intro")}</p>
           <FeatureList features={appFeatures} />
           <div className="cs-actions ck-downloads">
-            <a className="ck-download" href={IOS_APP_STORE_URL} target="_blank" rel="noreferrer"><PlatformMark platform="ios" /><span><small>{t('actions.iosApp')}</small>App Store</span></a>
-            <a className="ck-download" href="https://play.google.com/store/apps/details?id=com.clashking.clashkingapp" target="_blank" rel="noreferrer"><PlatformMark platform="android" /><span><small>{t('actions.androidApp')}</small>Google Play</span></a>
+            <AppStoreLink platform="ios" label={t('actions.iosApp')} />
+            <AppStoreLink platform="android" label={t('actions.androidApp')} />
           </div>
         </div>
       </section>

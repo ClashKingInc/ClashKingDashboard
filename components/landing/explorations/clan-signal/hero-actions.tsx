@@ -1,4 +1,10 @@
+import { GOOGLE_PLAY_STORE_URL, IOS_APP_STORE_URL } from "@/lib/constants";
+
 type Platform = "ios" | "android" | "app" | "discord";
+
+export function AppStoreLink({ platform, label }: Readonly<{ platform: "ios" | "android"; label: string }>) {
+  return <a className="ck-download" href={platform === "ios" ? IOS_APP_STORE_URL : GOOGLE_PLAY_STORE_URL} target="_blank" rel="noopener noreferrer"><PlatformMark platform={platform} /><span><small>{label}</small>{platform === "ios" ? "App Store" : "Google Play"}</span></a>;
+}
 export function PlatformMark({ platform }: Readonly<{ platform: Platform }>) {
   if (platform === "ios") {
     return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.7 12.8c0-2 1.7-3 1.8-3.1a4 4 0 0 0-3.1-1.7c-1.3-.2-2.6.8-3.3.8-.7 0-1.7-.8-2.8-.8-1.5 0-2.9.9-3.7 2.2-1.6 2.7-.4 6.8 1.1 9 .8 1 1.6 2.2 2.8 2.1 1.1 0 1.6-.7 3-.7s1.8.7 3 .7c1.2 0 2-1.1 2.7-2.1.9-1.2 1.2-2.4 1.2-2.5-.1 0-2.7-1.1-2.7-3.9Zm-2.2-6.2c.6-.8 1-1.9.9-3-.9 0-2 .6-2.7 1.4-.6.7-1.1 1.8-1 2.9 1 .1 2.1-.5 2.8-1.3Z" /></svg>;

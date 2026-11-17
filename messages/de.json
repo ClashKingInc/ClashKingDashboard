@@ -306,102 +306,6 @@
     "browserLanguage": "Browsersprache",
     "accountSettings": "Account settings"
   },
-  "HomePage": {
-    "badge": "Über {serverCount} Server verwenden bereits ClashKing",
-    "title": "Der leistungsstärkste",
-    "titleHighlight": "Clash-of-Clans-Bot",
-    "subtitle": "Automatisiere deine Clanverwaltung, verfolge Spielerstatistiken, verwalte Kriege und halte deine Community aktiv.",
-    "cta": {
-      "heading": "Bereit, deinen Clan zu verändern?",
-      "description": "Schließe dich über {serverCount} Discord-Servern an, die ihre Clash-of-Clans-Community bereits mit ClashKing verbessern. Die Einrichtung dauert nur 2 Minuten.",
-      "button": "ClashKing zu Discord hinzufügen",
-      "trustBadge": "Für immer kostenlos • Keine Kreditkarte erforderlich • Über {serverCount} Server",
-      "addToDiscord": "Zu Discord hinzufügen",
-      "openDashboard": "Dashboard öffnen"
-    },
-    "stats": {
-      "servers": "Discord-Server",
-      "users": "Aktive Benutzer",
-      "clans": "Verfolgte Clans"
-    },
-    "features": {
-      "title": "Alles, was du zur Verwaltung deines Clans brauchst",
-      "subtitle": "Leistungsstarke Funktionen speziell für Clash-of-Clans-Communitys",
-      "autoRoles": {
-        "title": "Automatische Rollenverwaltung",
-        "description": "Weise Rollen automatisch anhand von Spielerstatus, Clanposition und Erfolgen zu. So bleibt dein Server mühelos organisiert."
-      },
-      "playerStats": {
-        "title": "Spielerstatistiken",
-        "description": "Verfolge detaillierte Spielerstatistiken, Fortschrittsdiagramme und die Angriffshistorie. Erkenne, wer sich verbessert und wer Hilfe benötigt."
-      },
-      "leaderboards": {
-        "title": "Bestenlisten",
-        "description": "Erstelle Bestenlisten für Spenden, Trophäen, Kriegssterne und eigene Kennzahlen. Das fördert die Beteiligung."
-      },
-      "warTracking": {
-        "title": "Kriegsverfolgung",
-        "description": "Überwache Kriegsaufstellungen und Angriffe in Echtzeit und erhalte Analysen nach dem Krieg. So entgeht dir kein Detail."
-      },
-      "smartReminders": {
-        "title": "Intelligente Erinnerungen",
-        "description": "Automatische Erinnerungen an Clanspiele, Kriegsangriffe, Clankriegsliga und eigene Ereignisse halten alle auf dem Laufenden."
-      },
-      "customization": {
-        "title": "Vollständig anpassbar",
-        "description": "Passe Befehle, Embed-Farben, Spitznamen und Berechtigungen an. Mach ClashKing zu deinem eigenen Bot."
-      },
-      "familyManagement": {
-        "title": "Familienverwaltung",
-        "description": "Verwalte mehrere Clans als Familie – mit clanübergreifenden Statistiken, gemeinsamen Bestenlisten und einheitlichen Rollen."
-      },
-      "analytics": {
-        "title": "Erweiterte Analysen",
-        "description": "Erhalte tiefe Einblicke in Clanleistung, Aktivitätsmuster der Spieler und Wachstumstrends, um datenbasierte Entscheidungen zu treffen."
-      },
-      "performance": {
-        "title": "Blitzschnell",
-        "description": "Auf Leistung ausgelegt, mit sofortigen Befehlsantworten und Echtzeitaktualisierungen. Keine Verzögerungen."
-      },
-      "security": {
-        "title": "Sicher und zuverlässig",
-        "description": "99,9 % Verfügbarkeit, verschlüsselte Daten und regelmäßige Sicherungen. Deine Clandaten sind bei uns sicher."
-      }
-    },
-    "footer": {
-      "tagline": "Der leistungsstärkste Clash-of-Clans-Bot für Discord-Communitys.",
-      "about": {
-        "title": "Über uns",
-        "features": "Funktionen",
-        "help": "Brauchst du Hilfe?",
-        "openSource": "Open Source",
-        "support": "Unterstütze uns"
-      },
-      "bot": {
-        "title": "Bot",
-        "dashboard": "Übersicht",
-        "inviteBot": "Bot einladen"
-      },
-      "resources": {
-        "title": "Ressourcen",
-        "documentation": "Dokumentation",
-        "quickStart": "Schnellstartanleitung",
-        "github": "GitHub"
-      },
-      "community": {
-        "title": "Community",
-        "discord": "Discord-Server",
-        "twitter": "X (Twitter)",
-        "reportBug": "Fehler melden",
-        "requestFeature": "Funktion vorschlagen"
-      },
-      "legal": {
-        "copyright": "ClashKing. Alle Rechte vorbehalten.",
-        "privacy": "Datenschutzerklärung",
-        "terms": "Nutzungsbedingungen"
-      }
-    }
-  },
   "DiscordUserDisplay": {
     "unknownUserShort": "Nicht auf dem Server",
     "unknownUser": "Unbekannter Benutzer",
@@ -2868,7 +2772,7 @@
           "Discord-Serververwaltung: (Demnächst verfügbar) Verwalte Rollen und Tickets direkt in der App.",
           "Erweiterte Benachrichtigungen: (Demnächst verfügbar) Passe Benachrichtigungen für wichtige Ereignisse an."
         ],
-        "ctaPrimary": "Android Beta",
+        "ctaPrimary": "Google Play",
         "ctaSecondary": "App Store"
       },
       "api": {
