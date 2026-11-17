@@ -55,7 +55,14 @@ export async function mountLogger(host: HTMLElement, canMove: () => boolean, sig
     host.dataset.model = 'ready'; host.dataset.loopStartFrame = '85'; host.dataset.cameraZ = '68';
     const resize = () => {
       const width = Math.max(1, host.clientWidth), height = Math.max(1, host.clientHeight);
-      renderer.setSize(width, height, false); camera.aspect = width / height; camera.updateProjectionMatrix();
+      // A WebGL canvas clips at its own edges, even when CSS overflow is visible.
+      // Render beyond the layout box while preserving the original framing inside it.
+      const paddingX = Math.ceil(width * .5), paddingY = Math.ceil(height * .25);
+      const renderWidth = width + paddingX * 2, renderHeight = height + paddingY * 2;
+      renderer.setSize(renderWidth, renderHeight, false);
+      canvas.style.width = `${renderWidth}px`; canvas.style.height = `${renderHeight}px`;
+      canvas.style.left = `${-paddingX}px`; canvas.style.top = `${-paddingY}px`;
+      camera.setViewOffset(width, height, -paddingX, -paddingY, renderWidth, renderHeight);
     };
     const observer = new ResizeObserver(resize); observer.observe(host); resize();
     const tick = (now: number) => {
@@ -81,7 +88,7 @@ export async function mountLogger(host: HTMLElement, canMove: () => boolean, sig
     };
     const move = (event: PointerEvent) => {
       if (drag?.id === event.pointerId) targetYaw = THREE.MathUtils.clamp(drag.yaw + (event.clientX - drag.x) * .007, -.85, .85);
-      else if (event.pointerType === 'mouse' && canMove()) { const bounds = canvas.getBoundingClientRect(); targetYaw = -.15 + ((event.clientX - bounds.left) / bounds.width - .5) * .35; }
+      else if (event.pointerType === 'mouse' && canMove()) { const bounds = host.getBoundingClientRect(); targetYaw = -.15 + (THREE.MathUtils.clamp((event.clientX - bounds.left) / bounds.width, 0, 1) - .5) * .35; }
     };
     const up = () => { drag = null; };
     const leave = () => { if (!drag) targetYaw = -.15; };
