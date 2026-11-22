@@ -211,7 +211,3 @@ api.utils.*      // 17 utility methods
 - ✅ Independent testing of each module
 - ✅ Type-safe with full TypeScript support
 - ✅ Easy to extend and maintain
-
-## Examples
-
-See [.github/api-reference/openapi-private.json](../../.github/api-reference/openapi-private.json) for complete API reference.
