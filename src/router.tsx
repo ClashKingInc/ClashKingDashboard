@@ -13,7 +13,6 @@ import { PUBLIC_LOCALES, publicPath } from "@/lib/locale-preference";
 import DashboardRouteLoading from "@/app/dashboard/loading";
 import GiveawaysLoadingPage from "@/app/dashboard/giveaways/loading";
 import { AuthSessionProvider } from "@/components/auth-session-provider";
-import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { DocumentMetadata } from "@/components/document-metadata";
 import { LocaleProvider } from "@/components/locale-provider";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -38,14 +37,6 @@ function RootLayout() {
   );
 }
 
-function DashboardLayout() {
-  return (
-    <DashboardShell>
-      <Outlet />
-    </DashboardShell>
-  );
-}
-
 const rootRoute = createRootRoute({
   component: RootLayout,
   notFoundComponent: lazyRouteComponent(() => import("@/app/not-found")),
@@ -62,7 +53,11 @@ function rootPage<const TPath extends string>(path: TPath, importer: PageImporte
 const dashboardRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "dashboard",
-  component: DashboardLayout,
+  component: lazyRouteComponent(
+    () => import("@/components/dashboard/dashboard-shell"),
+    "DashboardLayout",
+  ),
+  pendingComponent: DashboardRouteLoading,
 });
 
 function dashboardPage<const TPath extends string>(
