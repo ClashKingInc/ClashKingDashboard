@@ -4,21 +4,6 @@ const CLAN_BADGE_BASE_URL = "https://badges.clashk.ing";
 export type ClanBadgeSize = "small" | "medium" | "large";
 export type ClanBadgeFormat = "png" | "avif";
 
-const BADGE_SIZE_ALIASES: Readonly<Record<string, ClanBadgeSize>> = {
-  small: "small",
-  medium: "medium",
-  large: "large",
-  "64": "small",
-  "128": "medium",
-  "256": "medium",
-  "512": "large",
-};
-
-export function normalizeClanBadgeSize(value: string | null | undefined, fallback: ClanBadgeSize = "medium"): ClanBadgeSize {
-  if (!value) return fallback;
-  return BADGE_SIZE_ALIASES[value] ?? fallback;
-}
-
 export function clanBadgeUrl(tag: string, size: ClanBadgeSize = "medium", format: ClanBadgeFormat = "png"): string {
   const trimmed = tag.trim();
   const normalized = (trimmed.startsWith("#") ? trimmed.slice(1) : trimmed).toUpperCase();
@@ -48,6 +33,8 @@ export function clanBadgeSources(src: string): { png: string; avif: string } | n
   if (url.origin !== CLAN_BADGE_BASE_URL) return null;
   let tag: string;
   try { tag = decodeURIComponent(url.pathname.slice(1)).replace(/\.(png|avif)$/i, ""); } catch { return null; }
-  const size = normalizeClanBadgeSize(url.searchParams.get("size"), "medium");
-  return { png: clanBadgeUrl(tag, size), avif: clanBadgeUrl(tag, size, "avif") };
+  const size = url.searchParams.get("size");
+  const normalizedSize: ClanBadgeSize =
+    size === "small" || size === "medium" || size === "large" ? size : "medium";
+  return { png: clanBadgeUrl(tag, normalizedSize), avif: clanBadgeUrl(tag, normalizedSize, "avif") };
 }
