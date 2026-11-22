@@ -1,3 +1,4 @@
 export const SERVER_COUNT = "12.5k";
 
 export const IOS_APP_STORE_URL = "https://apps.apple.com/us/app/clashking/id6502886269";
+export const GOOGLE_PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=com.clashking.clashkingapp";

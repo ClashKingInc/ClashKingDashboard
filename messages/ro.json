@@ -306,102 +306,6 @@
     "browserLanguage": "Limba browserului",
     "accountSettings": "Account settings"
   },
-  "HomePage": {
-    "badge": "Peste {serverCount} de servere folosesc deja ClashKing",
-    "title": "Cel mai puternic",
-    "titleHighlight": "bot de Clash of Clans",
-    "subtitle": "Automatizează gestionarea clanului, urmărește statisticile jucătorilor, gestionează războaiele și menține comunitatea activă.",
-    "cta": {
-      "heading": "Ești gata să-ți transformi clanul?",
-      "description": "Alătură-te celor peste {serverCount} de servere Discord care folosesc deja ClashKing. Configurarea durează doar 2 minute.",
-      "button": "Adaugă ClashKing pe Discord",
-      "trustBadge": "Gratuit pentru totdeauna • Nu necesită card • Peste {serverCount} de servere",
-      "addToDiscord": "Adaugă pe Discord",
-      "openDashboard": "Deschide panoul"
-    },
-    "stats": {
-      "servers": "Servere Discord",
-      "users": "Utilizatori activi",
-      "clans": "Clanuri urmărite"
-    },
-    "features": {
-      "title": "Tot ce ai nevoie pentru a-ți gestiona clanul",
-      "subtitle": "Funcții puternice concepute special pentru comunitățile Clash of Clans",
-      "autoRoles": {
-        "title": "Gestionare automată a rolurilor",
-        "description": "Atribuie automat roluri în funcție de starea, poziția în clan și realizările jucătorului. Păstrează serverul organizat fără efort."
-      },
-      "playerStats": {
-        "title": "Statisticile jucătorilor",
-        "description": "Consultă statistici detaliate, grafice de progres și istoricul atacurilor. Află cine progresează și cine are nevoie de ajutor."
-      },
-      "leaderboards": {
-        "title": "Clasamente",
-        "description": "Creează clasamente competitive pentru donații, trofee, stele de război și indicatori personalizați. Încurajează participarea."
-      },
-      "warTracking": {
-        "title": "Urmărirea războaielor",
-        "description": "Monitorizează formațiile de război, urmărește atacurile în timp real și consultă analizele ulterioare. Nu rata niciun detaliu."
-      },
-      "smartReminders": {
-        "title": "Mementouri inteligente",
-        "description": "Trimite automat mementouri pentru Jocurile Clanului, atacurile de război, Liga Războaielor Clanurilor și evenimente personalizate. Ține-i pe toți la curent."
-      },
-      "customization": {
-        "title": "Personalizare completă",
-        "description": "Personalizează comenzile, culorile, poreclele și permisiunile. Adaptează ClashKing nevoilor tale."
-      },
-      "familyManagement": {
-        "title": "Gestionarea familiilor",
-        "description": "Gestionează mai multe clanuri ca o singură familie, cu statistici comune, clasamente partajate și roluri unificate."
-      },
-      "analytics": {
-        "title": "Analize avansate",
-        "description": "Obține informații detaliate despre performanța clanului, activitatea jucătorilor și tendințele de creștere. Ia decizii bazate pe date."
-      },
-      "performance": {
-        "title": "Ultrarapid",
-        "description": "Creat pentru performanță, cu răspunsuri instantanee și actualizări în timp real, fără întârzieri."
-      },
-      "security": {
-        "title": "Sigur și fiabil",
-        "description": "Disponibilitate de 99,9%, date criptate și copii de siguranță periodice. Datele clanului tău sunt în siguranță."
-      }
-    },
-    "footer": {
-      "tagline": "Cel mai puternic bot Clash of Clans pentru comunitățile Discord.",
-      "about": {
-        "title": "Despre",
-        "features": "Funcții",
-        "help": "Ai nevoie de ajutor?",
-        "openSource": "Cod sursă deschis",
-        "support": "Susține-ne"
-      },
-      "bot": {
-        "title": "Bot",
-        "dashboard": "Panou",
-        "inviteBot": "Invită bot"
-      },
-      "resources": {
-        "title": "Resurse",
-        "documentation": "Documentație",
-        "quickStart": "Ghid de pornire rapidă",
-        "github": "GitHub"
-      },
-      "community": {
-        "title": "Comunitate",
-        "discord": "Server de Discord",
-        "twitter": "X (Twitter)",
-        "reportBug": "Raportează o eroare",
-        "requestFeature": "Solicită o funcție"
-      },
-      "legal": {
-        "copyright": "ClashKing. Toate drepturile rezervate.",
-        "privacy": "Politica de confidențialitate",
-        "terms": "Termenii serviciului"
-      }
-    }
-  },
   "DiscordUserDisplay": {
     "unknownUserShort": "Nu este pe server",
     "unknownUser": "Utilizator necunoscut",
@@ -2868,7 +2772,7 @@
           "Gestionarea serverului Discord: (în curând) gestionează rolurile și tichetele din aplicație.",
           "Notificări avansate: (în curând) personalizează alertele pentru evenimente importante."
         ],
-        "ctaPrimary": "Beta pentru Android",
+        "ctaPrimary": "Google Play",
         "ctaSecondary": "App Store"
       },
       "api": {
