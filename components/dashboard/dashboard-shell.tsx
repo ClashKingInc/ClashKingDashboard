@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { Outlet } from "@tanstack/react-router";
 import { useLocale, useTranslations } from "use-intl";
 import { useRouter } from "@/lib/navigation";
 import { Loader2 } from "lucide-react";
@@ -60,5 +61,13 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         </DashboardAccessProvider>
       </DashboardRouteProvider>
     </DashboardQueryProvider>
+  );
+}
+
+export function DashboardLayout() {
+  return (
+    <DashboardShell>
+      <Outlet />
+    </DashboardShell>
   );
 }
